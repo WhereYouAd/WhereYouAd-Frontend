@@ -1,0 +1,64 @@
+name: CI/CD (main)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # Node 버전을 고정해서 팀/CI 환경 차이 방지
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Create .env file
+        run: |
+          echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate build
+        run: pnpm run build
+
+      # AWS 인증
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # dist -> S3 배포 (Vite 기본 빌드 산출물: dist)
+      - name: Deploy to S3
+        run: |
+          aws s3 cp --recursive dist s3://${{ secrets.AWS_BUCKET_NAME }}
+
+      # CloudFront 캐시 무효화
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} \
+            --paths "/*"
+        continue-on-error: true
+
+      # 디스코드 알림
+      - name: Notify Discord
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{\"content\": \"✅ 배포가 완료되었습니다! (브랜치: main)\"}" \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
