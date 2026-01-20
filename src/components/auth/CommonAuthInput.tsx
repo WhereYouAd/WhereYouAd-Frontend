@@ -3,10 +3,10 @@ import React, { useState } from "react";
 
 import formatInputNumber from "@/utils/formatPhoneNumber";
 
-import EyeOffIcon from "@/assets/auth/password/eye-off.svg?react";
-import EyeIcon from "@/assets/auth/password/eye.svg?react";
 import Button from "@/components/common/Button";
 
+import EyeIcon from "@/assets/auth/password/eye.svg?react";
+import EyeOffIcon from "@/assets/auth/password/eye-off.svg?react";
 
 type TCommonAuthInputProps = {
   type?: string;
@@ -56,80 +56,79 @@ const CommonAuthInput = React.forwardRef<
     return (
       <div className="flex flex-col w-full gap-2 relative">
         {title && (
-            <div className={`font-body1 text-brand-900 select-none`}>
-            {title}
-            </div>
+          <div className={`font-body1 text-brand-900 select-none`}>{title}</div>
         )}
 
         <div className="relative w-full">
-            <input
+          <input
             ref={ref}
             type={inputType === "phoneNum" ? "text" : inputType}
             placeholder={placeholder}
             value={value}
             className={`w-full h-[54px] px-5 bg-brand-200 border rounding-15 text-body1 text-brand-900
                         placeholder:text-text-placeholder focus:outline-none transition-colors duration-200
-                        ${error
+                        ${
+                          error
                             ? "border-status-red caret-status-red"
                             : validation
-                                ? "border-brand-500"
-                                : "border-brand-400 focus:border-status-blue focus:ring-1 focus:ring-status-blue"
+                              ? "border-brand-500"
+                              : "border-brand-400 focus:border-status-blue focus:ring-1 focus:ring-status-blue"
                         }
                         ${button || short || validationState ? "pr-[100px]" : "pr-5"}
                         `}
             onChange={(e) => {
-                const rawValue = e.target.value;
-                const formatted =
+              const rawValue = e.target.value;
+              const formatted =
                 type === "phoneNum" ? formatInputNumber(rawValue) : rawValue;
 
-                if (rest.onChange) {
+              if (rest.onChange) {
                 rest.onChange({
-                    ...e,
-                    target: {
+                  ...e,
+                  target: {
                     ...e.target,
                     value: formatted,
-                    },
+                  },
                 });
-                }
+              }
             }}
             {...rest}
-            />
-            {type === "password" && (
+          />
+          {type === "password" && (
             <button
-                type="button"
-                onClick={handleTogglePassword}
-                className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-[24px] h-[24px]"
+              type="button"
+              onClick={handleTogglePassword}
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-[24px] h-[24px]"
             >
-                {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+              {showPassword ? <EyeIcon /> : <EyeOffIcon />}
             </button>
-            )}
-            {(button || validationState) && (
-                <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                    {button && (
-                    <Button
-                        size="small"
-                        children={buttonText}
-                        disabled={type === "code" ? false : error || !validation}
-                        variant={validation ? "dark" : "custom"}
-                        className={`!py-1 !px-3 !text-[12px] h-[36px]`}
-                        onClick={buttonOnclick}
-                        type="button"
-                    />
-                    )}
-                    {validationState && (
-                    <Button
-                        size="small"
-                        children={validationState}
-                        disabled={!validation}
-                        variant={validation ? "dark" : "custom"}
-                         className={`!py-1 !px-3 !text-[12px] h-[36px] cursor-default`}
-                    />
-                    )}
-                </div>
-            )}
-             {short && (
-                <div className="absolute right-0 top-0 h-full w-[80px] bg-transparent" />
-            )}
+          )}
+          {(button || validationState) && (
+            <div className="absolute right-2 top-1/2 -translate-y-1/2">
+              {button && (
+                <Button
+                  size="small"
+                  children={buttonText}
+                  disabled={type === "code" ? false : error || !validation}
+                  variant={validation ? "dark" : "custom"}
+                  className={`!py-1 !px-3 !text-[12px] h-[36px]`}
+                  onClick={buttonOnclick}
+                  type="button"
+                />
+              )}
+              {validationState && (
+                <Button
+                  size="small"
+                  children={validationState}
+                  disabled={!validation}
+                  variant={validation ? "dark" : "custom"}
+                  className={`!py-1 !px-3 !text-[12px] h-[36px] cursor-default`}
+                />
+              )}
+            </div>
+          )}
+          {short && (
+            <div className="absolute right-0 top-0 h-full w-[80px] bg-transparent" />
+          )}
         </div>
 
         {error && errorMessage && (

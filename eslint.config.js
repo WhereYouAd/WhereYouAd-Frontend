@@ -3,6 +3,7 @@ import typescriptParser from "@typescript-eslint/parser";
 import prettierPluginRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
 
+import tseslint from "typescript-eslint";
 import defaultConfig from "./eslint/default.mjs";
 import importConfig from "./eslint/import.mjs";
 import reactConfig from "./eslint/react.mjs";
@@ -30,6 +31,10 @@ export default [
         version: "detect",
       },
     },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    ...tseslint.configs.disableTypeChecked,
   },
   tsConfig,
   pluginJs.configs.recommended,

@@ -39,8 +39,9 @@ export default function Button({
         sizeClasses[size],
         variantClasses[variant],
         fullWidth && "w-full relative",
-        (disabled || isLoading) && "opacity-50 cursor-not-allowed pointer-events-none",
-        className
+        (disabled || isLoading) &&
+          "opacity-50 cursor-not-allowed pointer-events-none",
+        className,
       )}
       disabled={disabled || isLoading}
       {...rest}
@@ -49,11 +50,15 @@ export default function Button({
         <span className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
       )}
       {!isLoading && leftIcon && (
-        <span className={cx(fullWidth ? "absolute left-6" : "")}>{leftIcon}</span>
+        <span className={cx(fullWidth ? "absolute left-6" : "")}>
+          {leftIcon}
+        </span>
       )}
       <span>{children}</span>
       {!isLoading && rightIcon && (
-        <span className={cx(fullWidth ? "absolute right-6" : "")}>{rightIcon}</span>
+        <span className={cx(fullWidth ? "absolute right-6" : "")}>
+          {rightIcon}
+        </span>
       )}
     </button>
   );
