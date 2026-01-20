@@ -32,14 +32,14 @@ export default [
       },
     },
   },
-  {
-    files: ["**/*.{js,mjs,cjs}"],
-    ...tseslint.configs.disableTypeChecked,
-  },
   tsConfig,
   pluginJs.configs.recommended,
   defaultConfig,
   importConfig,
   reactConfig,
   prettierPluginRecommended,
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    ...tseslint.configs.disableTypeChecked,
+  },
 ];
