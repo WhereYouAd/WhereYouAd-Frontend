@@ -3,10 +3,11 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import AuthLayout from "@/layout/auth/AuthLayout";
 import Layout from "@/layout/common/Layout";
+import Error from "@/pages/common/Error";
+
 import FindPw from "@/pages/auth/FindPw";
 import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
-import Error from "@/pages/common/Error";
 import OverviewDashboard from "@/pages/dashboard/overview/OverviewDashboard";
 import PlatformDashboard from "@/pages/dashboard/platform/PlatformDashboard";
 import ReplayDashboard from "@/pages/dashboard/replay/ReplayDashboard";
@@ -68,6 +69,7 @@ const router = createBrowserRouter([
         path: "find-pw",
         element: <FindPw />,
       },
+
     ],
   },
   {

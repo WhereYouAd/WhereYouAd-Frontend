@@ -1,1 +1,133 @@
 @import "tailwindcss";
+
+* {
+  font-family: "Pretendard";
+}
+
+html,
+body {
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+@theme {
+  /* Logo */
+  --color-logo-1: #2eb4ff;
+  --color-logo-2: #6088fe;
+
+  /* Brand */
+  --color-brand-900: #000000;
+  --color-brand-800: #001f5b;
+  --color-brand-700: #213e68;
+  --color-brand-600: #466a9c;
+  --color-brand-500: #88c1ff;
+  --color-brand-400: #dce7f2;
+  --color-brand-300: #f9fafb;
+  --color-brand-200: #ffffff;
+
+  /* Charts */
+  --color-chart-1: #0a3d91;
+  --color-chart-2: #0056b3;
+  --color-chart-3: #1485ff;
+  --color-chart-4: #00aeef;
+  --color-chart-5: #4fc3f7;
+
+  /* Status */
+  --color-status-red: #ff2a4b;
+  --color-status-blue: #0084fe;
+
+  /* Text */
+  --color-text-main: #212121;
+  --color-text-auth-sub: #546171;
+  --color-text-sub: #8b8b8f;
+  --color-text-placeholder: #c3c3c3;
+  --color-text-disabled: #e6e6e6;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/PretendardVariable.woff2") format("font-woff2");
+  font-display: swap;
+  font-weight: 45 920;
+}
+
+@layer utilities {
+  .font-hero {
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 140%;
+  }
+
+  .font-heading1 {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 130%;
+  }
+
+  .font-heading2 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 130%;
+  }
+
+  .font-heading3 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 130%;
+  }
+
+  .font-body1 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 140%;
+  }
+
+  .font-body2 {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+  }
+
+  .font-caption {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 130%;
+  }
+
+  /* Rounding */
+  .rounding-15 {
+    border-radius: 15px;
+  }
+
+  .rounding-20 {
+    border-radius: 20px;
+  }
+
+  .rounding-30 {
+    border-radius: 30px;
+  }
+
+  /* Shadows */
+  .shadow-Soft {
+    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-Medium {
+    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
+  }
+}
