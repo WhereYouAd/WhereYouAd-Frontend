@@ -35,7 +35,7 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
         isActive ? "opacity-100 z-10" : "opacity-0 z-0"
       }`}
     >
-      <div className="flex h-full w-full flex-col justify-center gap-[10vh]">
+      <div className="flex h-full w-full flex-col justify-center gap-[15vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-[540px] flex flex-col items-start text-left">
             <div className="mb-4 text-[28px] font-heading2 text-logo-1">
