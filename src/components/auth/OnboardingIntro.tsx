@@ -42,7 +42,7 @@ export default function OnboardingIntro() {
             key={index}
             onClick={() => setCurrentSlide(index)}
             className={`h-2.5 rounded-full transition-all duration-300 ${getIndicatorColor(
-              index
+              index,
             )}`}
             aria-label={`Go to slide ${index + 1}`}
           />

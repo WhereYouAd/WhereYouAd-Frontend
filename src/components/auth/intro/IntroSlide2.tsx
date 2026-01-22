@@ -51,19 +51,19 @@ export default function IntroSlide2({ isActive }: { isActive: boolean }) {
 
         <div className="relative flex w-full flex-1 items-end justify-center pb-20">
           <div className="w-full overflow-hidden py-10">
-          <div className="flex w-max animate-scroll gap-6 px-3">
-            {CAROUSEL_ITEMS.map((platform, index) => (
-              <div
-                key={`${platform.id}-${index}`}
-                className={`flex h-50 w-50 items-center justify-center rounded-full shadow-Medium ${platform.bgColor}`}
-              >
-                <platform.icon
-                  className={`${platform.className} ${platform.size}`}
-                />
-              </div>
-            ))}
+            <div className="flex w-max animate-scroll gap-6 px-3">
+              {CAROUSEL_ITEMS.map((platform, index) => (
+                <div
+                  key={`${platform.id}-${index}`}
+                  className={`flex h-50 w-50 items-center justify-center rounded-full shadow-Medium ${platform.bgColor}`}
+                >
+                  <platform.icon
+                    className={`${platform.className} ${platform.size}`}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

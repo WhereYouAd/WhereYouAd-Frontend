@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+
 import OnboardingIntro from "@/components/auth/OnboardingIntro";
 
 export default function AuthLayout() {
@@ -15,4 +16,3 @@ export default function AuthLayout() {
     </div>
   );
 }
-

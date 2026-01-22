@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import AiTalk from "@/assets/auth/introSlide/ai_talk.svg?react";
 
 export default function IntroSlide3({ isActive }: { isActive: boolean }) {
@@ -49,7 +50,10 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
         </div>
 
         <div className="relative flex w-full flex-1 items-end justify-center pb-20">
-          <div key={isActive ? "active" : "inactive"} className="flex h-[300px] items-end gap-5">
+          <div
+            key={isActive ? "active" : "inactive"}
+            className="flex h-[300px] items-end gap-5"
+          >
             {bars.map((bar, index) => (
               <div
                 key={index}
