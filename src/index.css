@@ -75,7 +75,7 @@ button {
 
   .font-heading1 {
     font-size: 38px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 130%;
   }
 
@@ -129,5 +129,34 @@ button {
 
   .shadow-Medium {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Scroll Animation */
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll 50s linear infinite;
+  }
+
+  /* Graph Animation */
+  @keyframes graph-up {
+    from {
+      height: 0%;
+    }
+    to {
+      height: var(--target-height);
+    }
+  }
+
+  .animate-graph-up {
+    animation: graph-up 0.7s ease-out forwards;
+    height: 0%;
   }
 }
