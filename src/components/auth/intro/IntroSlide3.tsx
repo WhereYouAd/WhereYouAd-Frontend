@@ -37,7 +37,7 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
     >
       <div className="flex h-full w-full flex-col justify-center gap-[15vh]">
         <div className="w-full flex justify-center px-20">
-          <div className="w-full max-w-[540px] flex flex-col items-start text-left">
+          <div className="w-full max-w-150 flex flex-col items-start text-left">
             <div className="mb-4 text-[28px] font-heading2 text-logo-1">
               AI 성과 요약
             </div>
@@ -52,16 +52,16 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
         <div className="flex w-full justify-center">
           <div
             key={isActive ? "active" : "inactive"}
-            className="flex h-[300px] items-end gap-5"
+            className="flex h-75 items-end gap-5"
           >
             {bars.map((bar, index) => (
               <div
                 key={index}
-                className={`relative w-[70px] rounded-t-[15px] ${
+                className={`relative w-17.5 rounded-t-[15px] ${
                   isActive ? "animate-graph-up" : "h-0"
                 } ${
                   bar.isBlue
-                    ? "bg-gradient-to-b from-logo-1 to-logo-2"
+                    ? "bg-linear-to-b from-logo-1 to-logo-2"
                     : "bg-[#E5E5E5]"
                 }`}
                 style={

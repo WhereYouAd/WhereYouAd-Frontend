@@ -37,7 +37,7 @@ export default function IntroSlide2({ isActive }: { isActive: boolean }) {
     >
       <div className="flex h-full w-full flex-col justify-center gap-[22vh]">
         <div className="w-full flex justify-center px-20">
-          <div className="w-full max-w-[540px] flex flex-col items-start text-left">
+          <div className="w-full max-w-150 flex flex-col items-start text-left">
             <div className="mb-4 text-[28px] font-heading2 text-logo-1">
               통합 광고 성과 관리
             </div>
