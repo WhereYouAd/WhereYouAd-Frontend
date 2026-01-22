@@ -15,7 +15,7 @@ import Workspace from "@/pages/workspace/Workspace";
 
 const checkAuth = (): boolean => {
   // 실제 인증 로직으로 교체 필요합니다.
-  return true;
+  return false;
 };
 
 function ProtectedRoute({ children }: PropsWithChildren) {
