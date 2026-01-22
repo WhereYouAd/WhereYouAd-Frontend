@@ -35,7 +35,7 @@ export default function IntroSlide2({ isActive }: { isActive: boolean }) {
         isActive ? "opacity-100 z-10" : "opacity-0 z-0"
       }`}
     >
-      <div className="flex h-full w-full flex-col justify-between pt-[250px] pb-50">
+      <div className="flex h-full w-full flex-col justify-center gap-[10vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-[540px] flex flex-col items-start text-left">
             <div className="mb-4 text-[28px] font-heading2 text-logo-1">
@@ -49,13 +49,13 @@ export default function IntroSlide2({ isActive }: { isActive: boolean }) {
           </div>
         </div>
 
-        <div className="relative flex w-full flex-1 items-end justify-center pb-20">
-          <div className="w-full overflow-hidden py-10">
+        <div className="flex w-full justify-center">
+          <div className="w-full overflow-hidden">
             <div className="flex w-max animate-scroll gap-6 px-3">
               {CAROUSEL_ITEMS.map((platform, index) => (
                 <div
                   key={`${platform.id}-${index}`}
-                  className={`flex h-50 w-50 items-center justify-center rounded-full shadow-Medium ${platform.bgColor}`}
+                  className={`flex h-50 w-50 items-center justify-center rounded-full ${platform.bgColor}`}
                 >
                   <platform.icon
                     className={`${platform.className} ${platform.size}`}
