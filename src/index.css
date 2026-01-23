@@ -57,6 +57,11 @@ button {
   --color-text-sub: #8b8b8f;
   --color-text-placeholder: #c3c3c3;
   --color-text-disabled: #e6e6e6;
+
+  /* Social */
+  --color-social-kakao: #ffeb3c;
+  --color-social-naver: #01c73c;
+  --color-social-google: #ffffff;
 }
 
 @font-face {
@@ -74,7 +79,7 @@ button {
   }
 
   .font-heading1 {
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 600;
     line-height: 130%;
   }
@@ -86,7 +91,7 @@ button {
   }
 
   .font-heading3 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 130%;
   }

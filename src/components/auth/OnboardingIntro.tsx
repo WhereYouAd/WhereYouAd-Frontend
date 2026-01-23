@@ -30,12 +30,9 @@ export default function OnboardingIntro() {
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden text-white">
-      {/* 슬라이드 패널 */}
       <IntroSlide1 isActive={currentSlide === 0} />
       <IntroSlide2 isActive={currentSlide === 1} />
       <IntroSlide3 isActive={currentSlide === 2} />
-
-      {/* 인디케이터 */}
       <div className="absolute bottom-12 z-20 flex gap-3">
         {[0, 1, 2].map((index) => (
           <button

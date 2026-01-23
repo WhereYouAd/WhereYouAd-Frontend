@@ -26,7 +26,6 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
     { height: "35%", delay: "300ms", isBlue: false },
     { height: "65%", delay: "400ms", isBlue: false },
     { height: "100%", delay: "550ms", isBlue: true },
-    { height: "65%", delay: "650ms", isBlue: false },
   ];
 
   return (
@@ -35,16 +34,13 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
         isActive ? "opacity-100 z-10" : "opacity-0 z-0"
       }`}
     >
-      <div className="flex h-full w-full flex-col justify-center gap-[15vh]">
+      <div className="flex h-full w-full flex-col justify-center gap-[20vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <div className="mb-4 text-[28px] font-heading2 text-logo-1">
-              AI 성과 요약
-            </div>
+            <div className="mb-4 font-heading2 text-logo-1">AI 성과 요약</div>
             <div className="space-y-7 pt-8 font-heading1 text-text-main">
               <p>광고 데이터를 자동으로 분석해</p>
-              <p>중요한 성과 변화와 핵심만 정리하고</p>
-              <p>빠르게 파악할 수 있도록 제공합니다.</p>
+              <p>중요한 인사이트를 빠르게 확인할 수 있어요.</p>
             </div>
           </div>
         </div>
@@ -73,7 +69,7 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
               >
                 {bar.isBlue && (
                   <div
-                    className={`absolute bottom-full left-1/2 mb-6 -translate-x-1/2 transition-all duration-700 ease-out ${
+                    className={`absolute bottom-full left-1/2 mb-5 -translate-x-1/2 transition-all duration-700 ease-out ${
                       showBubble
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 translate-y-4"

@@ -1,3 +1,91 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+import Step01Email from "@/components/auth/signupStep/Step01Email";
+import Step02Password from "@/components/auth/signupStep/Step02Password";
+import Step03Profile from "@/components/auth/signupStep/Step03Profile";
+import Button from "@/components/common/Button";
+
+import GoogleIcon from "@/assets/auth/social/google.svg?react";
+import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
+import MailIcon from "@/assets/auth/social/mail.svg?react";
+import NaverIcon from "@/assets/auth/social/naver.svg?react";
+
 export default function Signup() {
-  return <div>Signup</div>;
+  const [step, setStep] = useState(0);
+
+  const handleEmailStart = () => {
+    setStep(1);
+  };
+
+  const handleNext = () => {
+    setStep((prev) => prev + 1);
+  };
+
+  if (step === 1) {
+    return <Step01Email onNext={handleNext} />;
+  }
+  if (step === 2) {
+    return <Step02Password onNext={handleNext} />;
+  }
+  if (step === 3) {
+    return <Step03Profile />;
+  }
+
+  return (
+    <div className="flex w-full flex-col items-center">
+      <div className="flex w-full flex-col gap-10">
+        <Button
+          fullWidth
+          size="big"
+          variant="dark"
+          leftIcon={<MailIcon className="w-6 h-auto" />}
+          onClick={handleEmailStart}
+          className="font-heading3"
+        >
+          이메일로 시작하기
+        </Button>
+
+        <Button
+          fullWidth
+          size="big"
+          variant="custom"
+          leftIcon={<GoogleIcon className="w-6 h-auto" />}
+          onClick={() => {}}
+          className="bg-social-google border border-text-disabled text-text-main font-heading3"
+        >
+          구글 로그인
+        </Button>
+
+        <Button
+          fullWidth
+          size="big"
+          variant="custom"
+          leftIcon={<KakaoIcon className="w-6 h-auto" />}
+          onClick={() => {}}
+          className="bg-social-kakao text-text-main font-heading3"
+        >
+          카카오 로그인
+        </Button>
+
+        <Button
+          fullWidth
+          size="big"
+          variant="custom"
+          leftIcon={<NaverIcon className="w-6 h-auto" />}
+          onClick={() => {}}
+          className="bg-social-naver text-white font-heading3"
+        >
+          네이버 로그인
+        </Button>
+      </div>
+
+      <div className="font-body3 text-text-sub mt-15 flex gap-2">
+        <span>이미 사용자 계정이 있다면?</span>
+        <Link to="/auth/login" className="text-text-sub underline">
+          로그인하기
+        </Link>
+      </div>
+    </div>
+  );
 }

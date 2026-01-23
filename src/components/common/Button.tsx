@@ -6,7 +6,6 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "dark" | "custom";
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
   fullWidth?: boolean;
 }
 
@@ -16,14 +15,13 @@ export default function Button({
   isLoading = false,
   disabled = false,
   leftIcon,
-  rightIcon,
   fullWidth = false,
   className,
   children,
   ...rest
 }: IButtonProps) {
   const sizeClasses = {
-    big: "h-[50px] px-6 rounding-15 font-heading3",
+    big: "h-[55px] px-6 rounding-15 font-heading3",
     small: "h-[40px] px-4 rounding-15 font-body1",
   };
 
@@ -55,11 +53,6 @@ export default function Button({
         </span>
       )}
       <span>{children}</span>
-      {!isLoading && rightIcon && (
-        <span className={cx(fullWidth ? "absolute right-6" : "")}>
-          {rightIcon}
-        </span>
-      )}
     </button>
   );
 }

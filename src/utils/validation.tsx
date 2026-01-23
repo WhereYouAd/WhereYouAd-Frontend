@@ -52,5 +52,5 @@ export const signupSchema = z
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1, "비밀번호는 필수입니다."),
+  password: passwordSchema,
 });
