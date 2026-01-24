@@ -38,10 +38,10 @@ export default function Signup() {
         <Button
           fullWidth
           size="big"
-          variant="dark"
-          leftIcon={<MailIcon className="w-6 h-auto" />}
+          variant="gradient"
+          leftIcon={<MailIcon className="w-6 h-6" />}
           onClick={handleEmailStart}
-          className="font-heading3"
+          className="font-heading3 shadow-md hover:shadow-lg transition-all"
         >
           이메일로 시작하기
         </Button>
@@ -50,9 +50,9 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<GoogleIcon className="w-6 h-auto" />}
+          leftIcon={<GoogleIcon className="w-6 h-6" />}
           onClick={() => {}}
-          className="bg-social-google border border-text-disabled text-text-main font-heading3"
+          className="bg-white border border-gray-100 text-text-main font-heading3 shadow-sm hover:bg-gray-50"
         >
           구글 로그인
         </Button>
@@ -61,9 +61,9 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<KakaoIcon className="w-6 h-auto" />}
+          leftIcon={<KakaoIcon className="w-6 h-6" />}
           onClick={() => {}}
-          className="bg-social-kakao text-text-main font-heading3"
+          className="bg-social-kakao text-text-main font-heading3 shadow-sm hover:opacity-90"
         >
           카카오 로그인
         </Button>
@@ -72,9 +72,9 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<NaverIcon className="w-6 h-auto" />}
+          leftIcon={<NaverIcon className="w-5 h-5 text-white" />}
           onClick={() => {}}
-          className="bg-social-naver text-white font-heading3"
+          className="bg-social-naver text-white font-heading3 shadow-sm hover:opacity-90"
         >
           네이버 로그인
         </Button>

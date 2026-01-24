@@ -58,7 +58,9 @@ const CommonAuthInput = React.forwardRef<
     return (
       <div className="flex flex-col w-full gap-2 relative">
         {title && (
-          <div className={`font-body1 text-brand-900 select-none`}>{title}</div>
+          <div className={`font-label text-brand-900 select-none ml-1 mb-2`}>
+            {title}
+          </div>
         )}
 
         <div className="relative w-full">
@@ -67,14 +69,14 @@ const CommonAuthInput = React.forwardRef<
             type={inputType === "phoneNum" ? "text" : inputType}
             placeholder={placeholder}
             value={value}
-            className={`w-full h-13.5 px-5 bg-brand-200 border rounding-15 text-body1 text-brand-900
-                        placeholder:text-text-placeholder focus:outline-none transition-colors duration-200
+            className={`w-full h-14 px-5 bg-gray-50 border-transparent rounded-2xl text-body1 text-brand-900
+                        placeholder:text-text-placeholder focus:outline-none focus:bg-white focus:ring-2 focus:ring-logo-1/30 transition-all duration-200
                         ${
                           error
-                            ? "border-status-red caret-status-red"
+                            ? "ring-2 ring-status-red bg-status-red/5"
                             : validation
-                              ? "border-brand-500"
-                              : "border-brand-400 focus:border-status-blue focus:ring-1 focus:ring-status-blue"
+                              ? "ring-2 ring-logo-1 bg-white"
+                              : "hover:bg-gray-100"
                         }
                         ${
                           button || short || validationState || timer

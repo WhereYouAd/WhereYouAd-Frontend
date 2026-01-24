@@ -25,7 +25,7 @@ export default function SignupProfile() {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TStep03FormValues>({
     mode: "onBlur",
     resolver: zodResolver(step03Schema),
@@ -89,7 +89,13 @@ export default function SignupProfile() {
           </div>
 
           <div className="mt-10">
-            <Button size="big" fullWidth type="submit">
+            <Button
+              size="big"
+              fullWidth
+              type="submit"
+              variant="gradient"
+              disabled={!isValid}
+            >
               회원 가입
             </Button>
           </div>

@@ -34,7 +34,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     handleSubmit,
     control,
     trigger,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TStep01FormValues>({
     mode: "onBlur",
     resolver: zodResolver(step01Schema),
@@ -55,18 +55,8 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   };
 
   const onSubmit: SubmitHandler<TStep01FormValues> = async (data) => {
-    if (!codeVerify) {
-      if (data.code === "123456") {
-        setCodeVerify(true);
-        setEmail(data.email);
-        onNext();
-      } else {
-        setCodeError("인증번호가 일치하지 않습니다. (테스트: 123456)");
-      }
-    } else {
-      setEmail(data.email);
-      onNext();
-    }
+    setEmail(data.email);
+    onNext();
   };
 
   useEffect(() => {
@@ -131,7 +121,13 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
         </div>
 
         <div className="mt-10">
-          <Button size="big" fullWidth onClick={handleSubmit(onSubmit)}>
+          <Button
+            size="big"
+            fullWidth
+            onClick={handleSubmit(onSubmit)}
+            variant="gradient"
+            disabled={!isValid}
+          >
             다음으로
           </Button>
         </div>

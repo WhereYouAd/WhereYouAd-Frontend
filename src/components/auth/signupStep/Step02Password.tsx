@@ -30,7 +30,7 @@ export default function SignupPassword({ onNext }: IStep02PasswordProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TStep02FormValues>({
     mode: "onBlur",
     resolver: zodResolver(step02Schema),
@@ -68,7 +68,13 @@ export default function SignupPassword({ onNext }: IStep02PasswordProps) {
           />
 
           <div className="mt-10">
-            <Button size="big" fullWidth type="submit">
+            <Button
+              size="big"
+              fullWidth
+              type="submit"
+              variant="gradient"
+              disabled={!isValid}
+            >
               다음으로
             </Button>
           </div>

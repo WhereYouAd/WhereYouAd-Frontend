@@ -23,9 +23,9 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
     { height: "25%", delay: "0ms", isBlue: false },
     { height: "45%", delay: "100ms", isBlue: false },
     { height: "35%", delay: "200ms", isBlue: false },
-    { height: "35%", delay: "300ms", isBlue: false },
-    { height: "65%", delay: "400ms", isBlue: false },
-    { height: "100%", delay: "550ms", isBlue: true },
+    { height: "90%", delay: "300ms", isBlue: true },
+    { height: "50%", delay: "400ms", isBlue: false },
+    { height: "80%", delay: "550ms", isBlue: false },
   ];
 
   return (
@@ -34,53 +34,62 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
         isActive ? "opacity-100 z-10" : "opacity-0 z-0"
       }`}
     >
-      <div className="flex h-full w-full flex-col justify-center gap-[20vh]">
+      <div className="flex h-full w-full flex-col justify-center gap-[18vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <div className="mb-4 font-heading2 text-logo-1">AI 성과 요약</div>
-            <div className="space-y-7 pt-8 font-heading1 text-text-main">
-              <p>광고 데이터를 자동으로 분석해</p>
-              <p>중요한 인사이트를 빠르게 확인할 수 있어요.</p>
-            </div>
+            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 text-sm font-bold text-logo-2">
+              AI 성과 분석
+            </span>
+            <h2 className="font-heading1 text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
+              복잡한 데이터 분석,{"\n"}
+              AI가 대신 해드릴게요
+            </h2>
+            <p className="mt-6 text-xl text-text-sub font-medium leading-relaxed whitespace-pre-line">
+              광고 성과를 자동으로 분석해서{"\n"}
+              중요한 인사이트만 쏙쏙 뽑아드려요
+            </p>
           </div>
         </div>
 
-        <div className="flex w-full justify-center">
-          <div
-            key={isActive ? "active" : "inactive"}
-            className="flex h-75 items-end gap-5"
-          >
-            {bars.map((bar, index) => (
-              <div
-                key={index}
-                className={`relative w-17.5 rounded-t-[15px] ${
-                  isActive ? "animate-graph-up" : "h-0"
-                } ${
-                  bar.isBlue
-                    ? "bg-linear-to-b from-logo-1 to-logo-2"
-                    : "bg-[#E5E5E5]"
-                }`}
-                style={
-                  {
-                    "--target-height": bar.height,
-                    animationDelay: bar.delay,
-                  } as React.CSSProperties
-                }
-              >
-                {bar.isBlue && (
-                  <div
-                    className={`absolute bottom-full left-1/2 mb-5 -translate-x-1/2 transition-all duration-700 ease-out ${
-                      showBubble
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-4"
-                    }`}
-                    style={{ whiteSpace: "nowrap" }}
-                  >
-                    <AiTalk />
-                  </div>
-                )}
-              </div>
-            ))}
+        <div className="flex w-full justify-center px-20">
+          <div className="w-full max-w-150 flex justify-start pl-2">
+            <div
+              key={isActive ? "active" : "inactive"}
+              className="flex h-60 items-end gap-3 sm:gap-4 lg:gap-5"
+            >
+              {bars.map((bar, index) => (
+                <div
+                  key={index}
+                  className={`relative w-12 sm:w-16 rounded-t-2xl transition-all duration-500 ${
+                    isActive ? "animate-graph-up" : "h-0"
+                  } ${
+                    bar.isBlue
+                      ? "bg-gradient-to-b from-logo-1 to-logo-2"
+                      : "bg-chart-inactive"
+                  }`}
+                  style={
+                    {
+                      "--target-height": bar.height,
+                      animationDelay: bar.delay,
+                    } as React.CSSProperties
+                  }
+                >
+                  {bar.isBlue && (
+                    <div
+                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) z-50 ${
+                        showBubble
+                          ? "opacity-100 translate-y-0 scale-100"
+                          : "opacity-0 translate-y-8 scale-50"
+                      }`}
+                    >
+                      <div className="relative drop-shadow-xl hover:scale-105 transition-transform duration-300">
+                        <AiTalk className="w-auto h-auto min-w-[180px]" />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

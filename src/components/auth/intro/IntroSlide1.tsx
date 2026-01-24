@@ -7,9 +7,11 @@ export default function IntroSlide1({ isActive }: { isActive: boolean }) {
         isActive ? "opacity-100 z-10" : "opacity-0 z-0"
       }`}
     >
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="flex h-96 w-96 items-center justify-center">
-          <SymbolWhite className="h-full w-full" />
+      <div className="flex h-full w-full items-center justify-center relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px] bg-white/15 blur-[90px] rounded-full pointer-events-none" />
+
+        <div className="flex h-96 w-96 items-center justify-center relative z-10 transform hover:scale-105 transition-transform duration-700 ease-out">
+          <SymbolWhite className="h-full w-full drop-shadow-xl" />
         </div>
       </div>
     </div>

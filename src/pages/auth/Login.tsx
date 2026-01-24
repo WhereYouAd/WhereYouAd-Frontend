@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">
-        <h1 className="text-center font-heading1 text-text-main mb-10">
+        <h1 className="text-center font-heading1 text-3xl font-bold text-text-main mb-12">
           로그인
         </h1>
 
@@ -66,7 +66,7 @@ export default function Login() {
           </Link>
 
           <div className="mt-10">
-            <Button size="big" fullWidth type="submit">
+            <Button size="big" fullWidth type="submit" variant="gradient">
               로그인하기
             </Button>
           </div>
@@ -76,44 +76,44 @@ export default function Login() {
           <div className="flex items-center gap-12">
             <button
               type="button"
-              className="w-15 h-15 rounded-full flex items-center justify-center bg-social-kakao"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="카카오로 로그인"
               onClick={() => {
                 // 소셜 로그인
               }}
             >
-              <KakaoIcon className="w-7 h-auto" />
+              <KakaoIcon className="w-6 h-auto" />
             </button>
 
             <button
               type="button"
-              className="w-15 h-15 rounded-full flex items-center justify-center bg-social-naver"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="네이버로 로그인"
               onClick={() => {
                 // 소셜 로그인
               }}
             >
-              <NaverIcon className="w-6 h-auto" />
+              <NaverIcon className="w-5 h-auto text-white" />
             </button>
 
             <button
               type="button"
-              className="w-15 h-15 rounded-full flex items-center justify-center bg-social-google border border-text-disabled"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="구글로 로그인"
               onClick={() => {
                 // 소셜 로그인
               }}
             >
-              <GoogleIcon className="w-7 h-auto" />
+              <GoogleIcon className="w-6 h-auto" />
             </button>
           </div>
 
-          <div className="w-full mt-12 flex items-center gap-4">
-            <div className="flex-1 h-px bg-text-disabled" />
-            <span className="font-body2 text-text-placeholder select-none">
+          <div className="w-full mt-12 flex items-center gap-4 px-10">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="font-body2 text-text-placeholder text-sm select-none">
               또는
             </span>
-            <div className="flex-1 h-px bg-text-disabled" />
+            <div className="flex-1 h-px bg-gray-100" />
           </div>
 
           <Link
