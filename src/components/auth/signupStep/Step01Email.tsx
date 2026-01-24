@@ -26,7 +26,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   const { setEmail } = useAuthStore();
 
   const [sendCode, setSendCode] = useState(false);
-  const [codeVerify, setCodeVerify] = useState(false);
+  const [, setCodeVerify] = useState(false);
   const [codeError, setCodeError] = useState("");
 
   const {

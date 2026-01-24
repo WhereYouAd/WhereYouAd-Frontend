@@ -64,7 +64,7 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
                     isActive ? "animate-graph-up" : "h-0"
                   } ${
                     bar.isBlue
-                      ? "bg-gradient-to-b from-logo-1 to-logo-2"
+                      ? "bg-linear-to-b from-logo-1 to-logo-2"
                       : "bg-chart-inactive"
                   }`}
                   style={
@@ -83,7 +83,7 @@ export default function IntroSlide3({ isActive }: { isActive: boolean }) {
                       }`}
                     >
                       <div className="relative drop-shadow-xl hover:scale-105 transition-transform duration-300">
-                        <AiTalk className="w-auto h-auto min-w-[180px]" />
+                        <AiTalk className="w-auto h-auto min-w-45" />
                       </div>
                     </div>
                   )}
