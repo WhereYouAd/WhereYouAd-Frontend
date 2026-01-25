@@ -50,7 +50,30 @@ export const signupSchema = z
     message: "비밀번호와 비밀번호 확인이 일치하지 않아요.",
   });
 
+export const termsSchema = z.boolean().refine((val) => val === true);
+
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
+});
+
+export const step01Schema = z.object({
+  email: emailSchema,
+  code: codeSchema,
+});
+
+export const step02Schema = z
+  .object({
+    password: passwordSchema,
+    repassword: z.string().min(1, "비밀번호 확인은 필수입니다."),
+  })
+  .refine((data) => data.password === data.repassword, {
+    path: ["repassword"],
+    message: "비밀번호가 일치하지 않습니다.",
+  });
+
+export const step03Schema = z.object({
+  name: nameSchema,
+  phoneNum: phoneSchema,
+  terms: termsSchema,
 });

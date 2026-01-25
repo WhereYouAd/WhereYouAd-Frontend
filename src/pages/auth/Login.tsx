@@ -26,7 +26,7 @@ export default function Login() {
   });
 
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
-    // Mock Login
+    // 임시 로그인 처리
     console.log("Login submit:", data);
     toast.success("로그인 성공!", {
       description: `이메일: ${data.email}`,
@@ -60,7 +60,7 @@ export default function Login() {
 
           <Link
             to="/auth/find-pw"
-            className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4"
+            className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일/비밀번호를 잊어버렸어요
           </Link>
@@ -118,7 +118,8 @@ export default function Login() {
 
           <Link
             to="/auth/signup"
-            className="mt-6 font-body3 text-text-main underline underline-offset-4"
+            state={{ step: 1 }}
+            className="mt-6 font-body3 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일로 회원가입
           </Link>

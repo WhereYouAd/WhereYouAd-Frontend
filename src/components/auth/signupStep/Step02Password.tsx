@@ -1,8 +1,8 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { passwordSchema } from "@/utils/validation";
+import { step02Schema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/CommonAuthInput";
 import Button from "@/components/common/Button";
@@ -12,16 +12,6 @@ import useAuthStore from "@/store/useAuthStore";
 interface IStep02PasswordProps {
   onNext: () => void;
 }
-
-const step02Schema = z
-  .object({
-    password: passwordSchema,
-    repassword: z.string().min(1, "비밀번호 확인은 필수입니다."),
-  })
-  .refine((data) => data.password === data.repassword, {
-    path: ["repassword"],
-    message: "비밀번호가 일치하지 않습니다.",
-  });
 
 type TStep02FormValues = z.infer<typeof step02Schema>;
 

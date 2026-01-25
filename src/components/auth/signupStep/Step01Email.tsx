@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { z } from "zod";
+import type { z } from "zod";
 
-import { codeSchema, emailSchema } from "@/utils/validation";
+import { step01Schema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/CommonAuthInput";
 import Button from "@/components/common/Button";
@@ -14,11 +14,6 @@ import useAuthStore from "@/store/useAuthStore";
 interface IStep01EmailProps {
   onNext: () => void;
 }
-
-const step01Schema = z.object({
-  email: emailSchema,
-  code: codeSchema,
-});
 
 type TStep01FormValues = z.infer<typeof step01Schema>;
 
@@ -90,7 +85,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
               </div>
               <Button
                 variant="custom"
-                className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-caption whitespace-nowrap"
+                className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
                 onClick={postSendCode}
                 type="button"
               >
@@ -109,7 +104,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           <CommonAuthInput
             placeholder={
               sendCode
-                ? "이메일로 발송된 6자리 인증번호 (123456)"
+                ? "이메일로 발송된 6자리 인증번호"
                 : "인증번호를 입력하세요"
             }
             type="text"
@@ -137,7 +132,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             <button
               type="button"
               onClick={() => setSendCode(false)}
-              className="font-body2 text-text-placeholder underline underline-offset-4"
+              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
             >
               인증번호 다시 받기
             </button>

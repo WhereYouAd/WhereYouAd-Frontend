@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import Step01Email from "@/components/auth/signupStep/Step01Email";
 import Step02Password from "@/components/auth/signupStep/Step02Password";
@@ -12,7 +12,8 @@ import MailIcon from "@/assets/auth/social/mail.svg?react";
 import NaverIcon from "@/assets/auth/social/naver.svg?react";
 
 export default function Signup() {
-  const [step, setStep] = useState(0);
+  const location = useLocation();
+  const [step, setStep] = useState<number>(location.state?.step || 0);
 
   const handleEmailStart = () => {
     setStep(1);
@@ -82,7 +83,10 @@ export default function Signup() {
 
       <div className="font-body3 text-text-sub mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
-        <Link to="/auth/login" className="text-text-sub underline">
+        <Link
+          to="/auth/login"
+          className="text-text-sub underline hover:text-text-auth-sub"
+        >
           로그인하기
         </Link>
       </div>

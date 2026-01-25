@@ -174,4 +174,29 @@ button {
     animation: graph-up 0.7s ease-out forwards;
     height: 0%;
   }
+
+  /* checkbox */
+  .checkbox {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #E5E8EB;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    flex-shrink: 0;
+  }
+  .checkbox:checked {
+    background-color: #0084fe;
+    background-image: url("/src/assets/icon/check-white.svg");
+    background-size: 60% 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  /* Tab 접근성 고려 */
+  .checkbox:focus-visible {
+    outline: 2px solid #0084fe;
+    outline-offset: 2px;
+  }
 }
