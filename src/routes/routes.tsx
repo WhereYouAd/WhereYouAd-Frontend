@@ -9,7 +9,7 @@ import Signup from "@/pages/auth/Signup";
 import Error from "@/pages/common/Error";
 import OverviewDashboard from "@/pages/dashboard/overview/OverviewDashboard";
 import PlatformDashboard from "@/pages/dashboard/platform/PlatformDashboard";
-import ReplayDashboard from "@/pages/dashboard/replay/ReplayDashboard";
+import Timeline from "@/pages/dashboard/timeline/Timeline";
 import Setting from "@/pages/setting/Setting";
 import Workspace from "@/pages/workspace/Workspace";
 
@@ -88,8 +88,8 @@ const router = createBrowserRouter([
         element: <OverviewDashboard />,
       },
       {
-        path: "replay",
-        element: <ReplayDashboard />,
+        path: "timeline",
+        element: <Timeline />,
       },
       {
         path: "platform",

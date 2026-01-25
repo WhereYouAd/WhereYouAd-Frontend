@@ -21,6 +21,7 @@ type TCommonAuthInputProps = {
   buttonText?: string;
   buttonOnclick?: () => void;
   short?: boolean;
+  timer?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const CommonAuthInput = React.forwardRef<
@@ -41,6 +42,7 @@ const CommonAuthInput = React.forwardRef<
       buttonOnclick,
       short,
       validationState,
+      timer,
       ...rest
     }: TCommonAuthInputProps,
     ref,
@@ -56,7 +58,9 @@ const CommonAuthInput = React.forwardRef<
     return (
       <div className="flex flex-col w-full gap-2 relative">
         {title && (
-          <div className={`font-body1 text-brand-900 select-none`}>{title}</div>
+          <div className={`font-label text-brand-900 select-none ml-1 mb-2`}>
+            {title}
+          </div>
         )}
 
         <div className="relative w-full">
@@ -65,44 +69,47 @@ const CommonAuthInput = React.forwardRef<
             type={inputType === "phoneNum" ? "text" : inputType}
             placeholder={placeholder}
             value={value}
-            className={`w-full h-[54px] px-5 bg-brand-200 border rounding-15 text-body1 text-brand-900
-                        placeholder:text-text-placeholder focus:outline-none transition-colors duration-200
+            className={`w-full h-14 px-5 bg-gray-50 border-transparent rounded-2xl text-body1 text-brand-900
+                        placeholder:text-text-placeholder focus:outline-none focus:bg-white focus:ring-2 focus:ring-logo-1/30 transition-all duration-200
                         ${
                           error
-                            ? "border-status-red caret-status-red"
+                            ? "ring-2 ring-status-red bg-status-red/5"
                             : validation
-                              ? "border-brand-500"
-                              : "border-brand-400 focus:border-status-blue focus:ring-1 focus:ring-status-blue"
+                              ? "ring-2 ring-logo-1 bg-white"
+                              : "hover:bg-gray-100"
                         }
-                        ${button || short || validationState ? "pr-[100px]" : "pr-5"}
+                        ${
+                          button || short || validationState || timer
+                            ? "pr-25"
+                            : "pr-5"
+                        }
                         `}
+            {...rest}
             onChange={(e) => {
               const rawValue = e.target.value;
               const formatted =
                 type === "phoneNum" ? formatInputNumber(rawValue) : rawValue;
 
               if (rest.onChange) {
-                rest.onChange({
-                  ...e,
-                  target: {
-                    ...e.target,
-                    value: formatted,
-                  },
-                });
+                e.target.value = formatted;
+                rest.onChange(e);
               }
             }}
-            {...rest}
           />
           {type === "password" && (
             <button
               type="button"
               onClick={handleTogglePassword}
-              className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-[24px] h-[24px]"
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6"
             >
-              {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+              {showPassword ? (
+                <EyeIcon className="w-5 h-auto text-text-auth-sub" />
+              ) : (
+                <EyeOffIcon className="w-5 h-auto text-text-auth-sub" />
+              )}
             </button>
           )}
-          {(button || validationState) && (
+          {(button || validationState || timer) && (
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               {button && (
                 <Button
@@ -110,7 +117,7 @@ const CommonAuthInput = React.forwardRef<
                   children={buttonText}
                   disabled={type === "code" ? false : error || !validation}
                   variant={validation ? "dark" : "custom"}
-                  className={`!py-1 !px-3 !text-[12px] h-[36px]`}
+                  className={`py-1! px-3! h-full`}
                   onClick={buttonOnclick}
                   type="button"
                 />
@@ -121,18 +128,21 @@ const CommonAuthInput = React.forwardRef<
                   children={validationState}
                   disabled={!validation}
                   variant={validation ? "dark" : "custom"}
-                  className={`!py-1 !px-3 !text-[12px] h-[36px] cursor-default`}
+                  className={`py-1! px-3! h-full cursor-default`}
                 />
+              )}
+              {timer && (
+                <span className="text-status-red font-body2 mr-3">{timer}</span>
               )}
             </div>
           )}
           {short && (
-            <div className="absolute right-0 top-0 h-full w-[80px] bg-transparent" />
+            <div className="absolute right-0 top-0 h-full w-20 bg-transparent" />
           )}
         </div>
 
         {error && errorMessage && (
-          <div className="font-caption text-status-red pl-[4px]">
+          <div className="font-caption text-status-red pl-1">
             {errorMessage}
           </div>
         )}

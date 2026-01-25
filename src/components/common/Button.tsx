@@ -3,10 +3,9 @@ import cx from "clsx";
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "big" | "small";
-  variant?: "dark" | "custom";
+  variant?: "dark" | "gradient" | "custom";
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
   fullWidth?: boolean;
 }
 
@@ -16,19 +15,20 @@ export default function Button({
   isLoading = false,
   disabled = false,
   leftIcon,
-  rightIcon,
   fullWidth = false,
   className,
   children,
   ...rest
 }: IButtonProps) {
   const sizeClasses = {
-    big: "h-[50px] px-6 rounding-15 font-heading3",
-    small: "h-[40px] px-4 rounding-15 font-body1",
+    big: "h-[55px] px-6 rounded-2xl font-heading3",
+    small: "h-[40px] px-4 rounded-2xl font-body1",
   };
 
   const variantClasses = {
-    dark: "bg-brand-800 text-white hover:bg-brand-700 disabled:bg-gray-300",
+    dark: "bg-brand-800 text-white hover:bg-brand-700 disabled:bg-bg-disabled disabled:text-text-disabled disabled:hover:bg-bg-disabled",
+    gradient:
+      "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-none disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none disabled:opacity-100",
     custom: "",
   };
 
@@ -55,11 +55,6 @@ export default function Button({
         </span>
       )}
       <span>{children}</span>
-      {!isLoading && rightIcon && (
-        <span className={cx(fullWidth ? "absolute right-6" : "")}>
-          {rightIcon}
-        </span>
-      )}
     </button>
   );
 }
