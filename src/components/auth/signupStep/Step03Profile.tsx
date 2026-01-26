@@ -118,7 +118,6 @@ export default function SignupProfile() {
             </button>
           </div>
 
-
           <div className="mt-8">
             <Button
               size="big"
