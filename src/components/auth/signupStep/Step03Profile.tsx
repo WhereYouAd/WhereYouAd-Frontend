@@ -86,7 +86,12 @@ export default function SignupProfile() {
               openModal({
                 modalType: MODAL_TYPES.PRIVACY,
                 modalProps: {
+                  initialState: {
+                    privacy: watch("terms") || false,
+                    marketing: watch("marketing") || false,
+                  },
                   onAgree: (agreements) => {
+                    setValue("marketing", agreements.marketing);
                     if (agreements.privacy) {
                       setValue("terms", true, { shouldValidate: true });
                       toast.success("약관에 동의하였습니다.");

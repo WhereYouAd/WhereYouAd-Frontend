@@ -13,12 +13,17 @@ type TAgreementType = "privacy" | "marketing";
 type TPrivacyModalProps = {
   onClose: () => void;
   onAgree?: (agreements: { privacy: boolean; marketing: boolean }) => void;
+  initialState?: { privacy: boolean; marketing: boolean };
 };
 
-export default function PrivacyModal({ onClose, onAgree }: TPrivacyModalProps) {
+export default function PrivacyModal({
+  onClose,
+  onAgree,
+  initialState,
+}: TPrivacyModalProps) {
   const [agreements, setAgreements] = useState({
-    privacy: false,
-    marketing: false,
+    privacy: initialState?.privacy ?? false,
+    marketing: initialState?.marketing ?? false,
   });
 
   const [expanded, setExpanded] = useState<Record<TAgreementType, boolean>>({

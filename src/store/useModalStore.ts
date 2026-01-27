@@ -6,11 +6,11 @@ export type TModalType = (typeof MODAL_TYPES)[keyof typeof MODAL_TYPES];
 
 export type TModalProps = {
   [MODAL_TYPES.PRIVACY]: {
-    onAgree?: (agreements: {
+    onAgree?: (agreements: { privacy: boolean; marketing: boolean }) => void;
+    initialState?: {
       privacy: boolean;
       marketing: boolean;
-      thirdParty: boolean;
-    }) => void;
+    };
   };
 };
 
