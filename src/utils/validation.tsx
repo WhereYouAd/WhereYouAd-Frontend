@@ -76,4 +76,5 @@ export const step03Schema = z.object({
   name: nameSchema,
   phoneNum: phoneSchema,
   terms: termsSchema,
+  marketing: z.boolean().optional(),
 });

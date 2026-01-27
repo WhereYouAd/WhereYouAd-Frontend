@@ -8,19 +8,24 @@ import { step03Schema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/CommonAuthInput";
 import Button from "@/components/common/Button";
+import { MODAL_TYPES } from "@/components/modal/ModalProvider";
 
 import useAuthStore from "@/store/useAuthStore";
+import useModalStore from "@/store/useModalStore";
 
 type TStep03FormValues = z.infer<typeof step03Schema>;
 
 export default function SignupProfile() {
   const navigate = useNavigate();
   const { email, password } = useAuthStore();
+  const { openModal } = useModalStore();
 
   const {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<TStep03FormValues>({
     mode: "onChange",
@@ -75,12 +80,35 @@ export default function SignupProfile() {
             )}
           />
 
-          <div className="flex items-center mt-3 pl-1 w-full justify-between">
+          <div
+            className="flex items-center mt-3 pl-1 w-full justify-between cursor-pointer"
+            onClick={() => {
+              openModal({
+                modalType: MODAL_TYPES.PRIVACY,
+                modalProps: {
+                  initialState: {
+                    privacy: watch("terms") || false,
+                    marketing: watch("marketing") || false,
+                  },
+                  onAgree: (agreements) => {
+                    setValue("marketing", agreements.marketing);
+                    if (agreements.privacy) {
+                      setValue("terms", true, { shouldValidate: true });
+                      toast.success("약관에 동의하였습니다.");
+                    } else {
+                      setValue("terms", false, { shouldValidate: true });
+                    }
+                  },
+                },
+              });
+            }}
+          >
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
-                className="checkbox"
-                {...register("terms")}
+                className="checkbox pointer-events-none"
+                checked={watch("terms")}
+                readOnly
               />
               <span className="font-body2 text-text-main flex items-center gap-2">
                 <span className="text-brand-700 font-body2">(필수)</span>
@@ -88,9 +116,8 @@ export default function SignupProfile() {
               </span>
             </div>
             <button
-              type="button" // form submit 방지
+              type="button"
               className="text-text-sub underline hover:text-text-main font-body2 whitespace-nowrap"
-              onClick={() => toast.info("개인정보 처리방침 내용입니다.")}
             >
               내용 보기
             </button>
