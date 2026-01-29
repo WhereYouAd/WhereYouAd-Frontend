@@ -8,11 +8,13 @@ import FindPw from "@/pages/auth/FindPw";
 import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import Error from "@/pages/common/Error";
+
 import OverviewDashboard from "@/pages/dashboard/overview/OverviewDashboard";
 import PlatformDashboard from "@/pages/dashboard/platform/PlatformDashboard";
 import Timeline from "@/pages/dashboard/timeline/Timeline";
 import Setting from "@/pages/setting/Setting";
 import Workspace from "@/pages/workspace/Workspace";
+import FindEmail from "@/pages/auth/FindEmail";
 
 const checkAuth = (): boolean => {
   // 실제 인증 로직으로 교체 필요합니다.
@@ -69,6 +71,10 @@ const router = createBrowserRouter([
             element: <Login />,
           },
           {
+            path: "find-email",
+            element: <FindEmail />,
+          },
+          {
             path: "find-pw",
             element: <FindPw />,
           },
@@ -120,6 +126,7 @@ const router = createBrowserRouter([
           },
         ],
       },
+
     ],
   },
 ]);

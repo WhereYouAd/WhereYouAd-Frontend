@@ -4,7 +4,7 @@ import type { z } from "zod";
 
 import { step02Schema } from "@/utils/validation";
 
-import CommonAuthInput from "@/components/auth/CommonAuthInput";
+import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 
 import useAuthStore from "@/store/useAuthStore";

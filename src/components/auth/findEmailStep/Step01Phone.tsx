@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { step01Schema } from "@/utils/validation";
+import { findEmailStep01Schema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 
 import useAuthStore from "@/store/useAuthStore";
 
-interface IStep01EmailProps {
+interface IStep01PhoneProps {
   onNext: () => void;
 }
 
-type TStep01FormValues = z.infer<typeof step01Schema>;
+type TStep01FormValues = z.infer<typeof findEmailStep01Schema>;
 
-export default function SignupEmail({ onNext }: IStep01EmailProps) {
+export default function Step01Phone({ onNext }: IStep01PhoneProps) {
+  const navigate = useNavigate();
   const { setEmail } = useAuthStore();
 
   const [sendCode, setSendCode] = useState(false);
@@ -32,16 +34,16 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     formState: { errors, isValid },
   } = useForm<TStep01FormValues>({
     mode: "onBlur",
-    resolver: zodResolver(step01Schema),
+    resolver: zodResolver(findEmailStep01Schema),
   });
 
-  const watchedEmail = useWatch({ control, name: "email" });
+  const watchedPhone = useWatch({ control, name: "phoneNum" });
   const watchedCode = useWatch({ control, name: "code" });
 
   const postSendCode = async () => {
     setCodeVerify(false);
-    const isEmailValid = await trigger("email");
-    if (isEmailValid && watchedEmail) {
+    const isPhoneValid = await trigger("phoneNum");
+    if (isPhoneValid && watchedPhone) {
       setSendCode(true);
       toast.success("인증번호가 발송되었습니다.", {
         description: "테스트용: 아무 번호나 입력하세요",
@@ -49,26 +51,27 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     }
   };
 
-  const onSubmit: SubmitHandler<TStep01FormValues> = async (data) => {
-    setEmail(data.email);
+  const onSubmit: SubmitHandler<TStep01FormValues> = async () => {
+    // 임시 이메일
+    setEmail("smu2021@naver.com");
     onNext();
   };
 
   useEffect(() => {
     setCodeVerify(false);
     setCodeError("");
-  }, [watchedCode, watchedEmail]);
+  }, [watchedCode, watchedPhone]);
 
   useEffect(() => {
     setSendCode(false);
-  }, [watchedEmail]);
+  }, [watchedPhone]);
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>회원가입을 위해</p>
-          <p>이메일 인증을 진행할게요</p>
+          <p>이메일 찾기를 위해</p>
+          <p>휴대폰 인증을 진행할게요</p>
         </h1>
 
         <div className="flex flex-col gap-6">
@@ -76,11 +79,11 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             <div className="flex gap-2 w-full items-start">
               <div className="flex-1">
                 <CommonAuthInput
-                  placeholder="메일을 입력하세요"
-                  type="email"
-                  {...register("email")}
-                  error={!!errors.email}
-                  errorMessage={errors.email?.message}
+                  placeholder="전화번호를 입력하세요"
+                  type="phoneNum"
+                  {...register("phoneNum")}
+                  error={!!errors.phoneNum}
+                  errorMessage={errors.phoneNum?.message}
                 />
               </div>
               <Button
@@ -95,7 +98,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           ) : (
             <CommonAuthInput
               type="text"
-              value={watchedEmail || ""}
+              value={watchedPhone || ""}
               readOnly
               className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
             />
@@ -104,7 +107,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           <CommonAuthInput
             placeholder={
               sendCode
-                ? "이메일로 발송된 6자리 인증번호"
+                ? "문자로 발송된 6자리 인증번호"
                 : "인증번호를 입력하세요"
             }
             type="text"
@@ -127,17 +130,15 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           </Button>
         </div>
 
-        {sendCode && (
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={() => setSendCode(false)}
-              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
-            >
-              인증번호 다시 받기
-            </button>
-          </div>
-        )}
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+            onClick={() => navigate("/auth/find-pw")}
+          >
+            비밀번호 찾기
+          </button>
+        </div>
       </div>
     </div>
   );

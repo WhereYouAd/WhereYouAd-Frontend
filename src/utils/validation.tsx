@@ -52,11 +52,13 @@ export const signupSchema = z
 
 export const termsSchema = z.boolean().refine((val) => val === true);
 
+// 로그인
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
+// 단계별 회원가입
 export const step01Schema = z.object({
   email: emailSchema,
   code: codeSchema,
@@ -77,4 +79,10 @@ export const step03Schema = z.object({
   phoneNum: phoneSchema,
   terms: termsSchema,
   marketing: z.boolean().optional(),
+});
+
+// 이메일 찾기1 - 휴대폰 번호 인증
+export const findEmailStep01Schema = z.object({
+  phoneNum: phoneSchema,
+  code: codeSchema,
 });
