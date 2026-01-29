@@ -5,7 +5,6 @@ import { Toaster } from "sonner";
 
 import { router } from "@/routes/Router";
 
-
 function App() {
   return (
     <>
