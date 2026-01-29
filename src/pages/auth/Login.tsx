@@ -59,7 +59,7 @@ export default function Login() {
           />
 
           <Link
-            to="/auth/find-pw"
+            to="/auth/find-email"
             className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일/비밀번호를 잊어버렸어요
