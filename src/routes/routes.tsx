@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "@/layout/auth/AuthLayout";
 import Layout from "@/layout/common/Layout";
 import RootLayout from "@/layout/common/RootLayout";
+import FindEmail from "@/pages/auth/FindEmail";
 import FindPw from "@/pages/auth/FindPw";
 import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
           {
             path: "login",
             element: <Login />,
+          },
+          {
+            path: "find-email",
+            element: <FindEmail />,
           },
           {
             path: "find-pw",

@@ -6,7 +6,7 @@ import type { z } from "zod";
 
 import { step03Schema } from "@/utils/validation";
 
-import CommonAuthInput from "@/components/auth/CommonAuthInput";
+import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 import { MODAL_TYPES } from "@/components/modal/ModalProvider";
 

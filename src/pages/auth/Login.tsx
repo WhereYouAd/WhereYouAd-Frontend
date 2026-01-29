@@ -6,7 +6,7 @@ import type { z } from "zod";
 
 import { loginSchema } from "@/utils/validation";
 
-import CommonAuthInput from "@/components/auth/CommonAuthInput";
+import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 
 import GoogleIcon from "@/assets/auth/social/google.svg?react";
@@ -36,7 +36,7 @@ export default function Login() {
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">
-        <h1 className="text-center font-heading1 text-3xl font-bold text-text-main mb-12">
+        <h1 className="text-center font-heading1 text-3xl font-bold text-text-main mb-10">
           로그인
         </h1>
 
@@ -59,7 +59,7 @@ export default function Login() {
           />
 
           <Link
-            to="/auth/find-pw"
+            to="/auth/find-email"
             className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일/비밀번호를 잊어버렸어요
