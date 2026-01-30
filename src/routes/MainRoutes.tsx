@@ -9,7 +9,7 @@ const PlatformDashboard = lazy(
 );
 const Timeline = lazy(() => import("@/pages/dashboard/timeline/Timeline"));
 const AdsListPage = lazy(() => import("@/pages/ads/list/AdsListPage"));
-const AdsCreatePage = lazy(() => import("@/pages/AdsCreatePage"));
+const AdsCreatePage = lazy(() => import("@/pages/ads/new/AdsCreatePage"));
 
 const MainRoutes: RouteObject[] = [
   {
