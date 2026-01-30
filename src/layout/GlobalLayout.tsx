@@ -3,7 +3,7 @@ import { Toaster } from "sonner";
 
 import ModalProvider from "@/components/modal/ModalProvider";
 
-export default function DefaultLayout() {
+export default function GlobalLayout() {
   return (
     <>
       <Outlet />

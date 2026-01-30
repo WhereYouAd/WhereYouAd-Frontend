@@ -46,7 +46,7 @@ button {
   --color-chart-3: #1485ff;
   --color-chart-4: #00aeef;
   --color-chart-5: #4fc3f7;
-  --color-chart-inactive: #F2F4F6;
+  --color-chart-inactive: #f2f4f6;
 
   /* Status */
   --color-status-red: #ff2a4b;
@@ -57,14 +57,14 @@ button {
   --color-text-auth-sub: #546171;
   --color-text-sub: #8b8b8f;
   --color-text-placeholder: #c3c3c3;
-  --color-text-disabled: #B0B8C1;
-  --color-bg-disabled: #E5E8EB;
+  --color-text-disabled: #b0b8c1;
+  --color-bg-disabled: #e5e8eb;
 
   /* Social */
-  --color-social-kakao: #FEE500;
-  --color-social-naver: #03C75A;
+  --color-social-kakao: #fee500;
+  --color-social-naver: #03c75a;
   --color-social-google: #ffffff;
-  --color-social-text-kakao: #3A1D1D;
+  --color-social-text-kakao: #3a1d1d;
 }
 
 @font-face {
@@ -117,7 +117,7 @@ button {
     line-height: 130%;
   }
 
-   /* CommonAuthInput 위 폰트 */
+  /* CommonAuthInput 위 폰트 */
   .font-label {
     font-size: 14px;
     font-weight: 700;
@@ -181,10 +181,12 @@ button {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: #E5E8EB;
+    background-color: #e5e8eb;
     cursor: pointer;
     position: relative;
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
     flex-shrink: 0;
   }
   .checkbox:checked {
@@ -231,5 +233,21 @@ button {
 
   .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  /* Shimmer */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
   }
 }
