@@ -8,7 +8,7 @@ export default function LoginSkeleton() {
     <div className="flex min-h-screen w-full items-center justify-center bg-white">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">
         <div className="mb-10 flex justify-center">
-          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-8 w-32" />
         </div>
 
         <div className="flex flex-col gap-7">

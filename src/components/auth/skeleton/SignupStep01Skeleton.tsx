@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/common/skeleton/Skeleton";
 export default function SignupStep01Skeleton() {
   return (
     <div className="flex w-full flex-col items-center">
-      <div className="w-full">
+      <div className="w-full max-w-90">
         <div className="mb-10 flex flex-col gap-2">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-8 w-56" />
