@@ -134,7 +134,7 @@ export default function Step01Phone({ onNext }: IStep01PhoneProps) {
           <button
             type="button"
             className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
-            onClick={() => navigate("/auth/find-pw")}
+            onClick={() => navigate("/find-pw")}
           >
             비밀번호 찾기
           </button>

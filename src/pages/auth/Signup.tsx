@@ -84,7 +84,7 @@ export default function Signup() {
       <div className="font-body3 text-text-sub mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
         <Link
-          to="/auth/login"
+          to="/login"
           className="text-text-sub underline hover:text-text-auth-sub"
         >
           로그인하기

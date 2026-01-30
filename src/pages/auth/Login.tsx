@@ -59,7 +59,7 @@ export default function Login() {
           />
 
           <Link
-            to="/auth/find-email"
+            to="/find-email"
             className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일/비밀번호를 잊어버렸어요
@@ -117,7 +117,7 @@ export default function Login() {
           </div>
 
           <Link
-            to="/auth/signup"
+            to="/signup"
             state={{ step: 1 }}
             className="mt-6 font-body3 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
           >
