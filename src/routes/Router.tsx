@@ -8,6 +8,7 @@ import UserRoutes from "./UserRoutes";
 import AuthLayout from "@/layout/auth/AuthLayout";
 import DefaultLayout from "@/layout/default/DefaultLayout";
 import MainLayout from "@/layout/main/MainLayout";
+import Error from "@/pages/common/Error";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   // 실제 인증 상태 확인 로직으로 대체 예정
@@ -23,6 +24,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export const router = createBrowserRouter([
   {
     element: <DefaultLayout />,
+    errorElement: <Error />,
     children: [
       {
         element: <AuthLayout />,
