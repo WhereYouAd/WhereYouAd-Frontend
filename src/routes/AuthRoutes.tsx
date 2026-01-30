@@ -1,15 +1,46 @@
-import { lazy } from "react";
-import type { RouteObject } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { type RouteObject, useLocation } from "react-router-dom";
 
-const FindEmail = lazy(() => import("@/pages/auth/FindEmail"));
-const FindPw = lazy(() => import("@/pages/auth/FindPw"));
-const Login = lazy(() => import("@/pages/auth/Login"));
+import { loadable } from "@/utils/loadable";
+
+import AuthFormSkeleton from "@/components/auth/skeleton/AuthFormSkeleton";
+import LoginSkeleton from "@/components/auth/skeleton/LoginSkeleton";
+import SignupSkeleton from "@/components/auth/skeleton/SignupSkeleton";
+import SignupStep01Skeleton from "@/components/auth/skeleton/SignupStep01Skeleton";
+
+const FindEmail = loadable(
+  lazy(() => import("@/pages/auth/FindEmail")),
+  <AuthFormSkeleton />,
+);
+const FindPw = loadable(
+  lazy(() => import("@/pages/auth/FindPw")),
+  <AuthFormSkeleton />,
+);
+const Login = loadable(
+  lazy(() => import("@/pages/auth/Login")),
+  <LoginSkeleton />,
+);
+
+// Signup은 Fallback이 달라짐 -> raw lazy 컴포넌트 사용
 const Signup = lazy(() => import("@/pages/auth/Signup"));
+
+function SignupPage() {
+  const location = useLocation();
+  const step = location.state?.step;
+
+  return (
+    <Suspense
+      fallback={step === 1 ? <SignupStep01Skeleton /> : <SignupSkeleton />}
+    >
+      <Signup />
+    </Suspense>
+  );
+}
 
 const AuthRoutes: RouteObject[] = [
   {
     path: "signup",
-    element: <Signup />,
+    element: <SignupPage />,
   },
   {
     path: "login",

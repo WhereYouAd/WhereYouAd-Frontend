@@ -1,15 +1,25 @@
 import { lazy } from "react";
 import type { RouteObject } from "react-router-dom";
 
-const OverviewDashboard = lazy(
-  () => import("@/pages/dashboard/overview/OverviewDashboard"),
+import { loadable } from "@/utils/loadable";
+
+const OverviewDashboard = loadable(
+  lazy(() => import("@/pages/dashboard/overview/OverviewDashboard")),
 );
-const PlatformDashboard = lazy(
-  () => import("@/pages/dashboard/platform/PlatformDashboard"),
+const PlatformDashboard = loadable(
+  lazy(() => import("@/pages/dashboard/platform/PlatformDashboard")),
 );
-const Timeline = lazy(() => import("@/pages/dashboard/timeline/Timeline"));
-const AdsListPage = lazy(() => import("@/pages/ads/list/AdsListPage"));
-const AdsCreatePage = lazy(() => import("@/pages/ads/new/AdsCreatePage"));
+const Timeline = loadable(
+  lazy(() => import("@/pages/dashboard/timeline/Timeline")),
+);
+const AdsListPage = loadable(
+  lazy(() => import("@/pages/ads/list/AdsListPage")),
+);
+const AdsCreatePage = loadable(
+  lazy(() => import("@/pages/ads/new/AdsCreatePage")),
+);
+const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
+const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
 
 const MainRoutes: RouteObject[] = [
   {
@@ -31,6 +41,14 @@ const MainRoutes: RouteObject[] = [
   {
     path: "ads/create",
     element: <AdsCreatePage />,
+  },
+  {
+    path: "setting",
+    element: <Setting />,
+  },
+  {
+    path: "workspace",
+    element: <Workspace />,
   },
 ];
 

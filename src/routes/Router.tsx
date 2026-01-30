@@ -3,10 +3,9 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import AuthRoutes from "./AuthRoutes";
 import MainRoutes from "./MainRoutes";
-import UserRoutes from "./UserRoutes";
 
 import AuthLayout from "@/layout/auth/AuthLayout";
-import DefaultLayout from "@/layout/default/DefaultLayout";
+import GlobalLayout from "@/layout/GlobalLayout";
 import MainLayout from "@/layout/main/MainLayout";
 import Error from "@/pages/common/Error";
 
@@ -23,7 +22,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
 export const router = createBrowserRouter([
   {
-    element: <DefaultLayout />,
+    element: <GlobalLayout />,
     errorElement: <Error />,
     children: [
       {
@@ -36,7 +35,7 @@ export const router = createBrowserRouter([
             <MainLayout />
           </AuthGuard>
         ),
-        children: [...MainRoutes, ...UserRoutes],
+        children: MainRoutes,
       },
     ],
   },

@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
 import OnboardingIntro from "@/components/auth/common/OnboardingIntro";
@@ -12,9 +11,7 @@ export default function AuthLayout() {
 
       <div className="flex w-full items-center justify-center bg-white 2xl:w-[65%]">
         <div className="w-full max-w-md px-6">
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
+          <Outlet />
         </div>
       </div>
     </div>
