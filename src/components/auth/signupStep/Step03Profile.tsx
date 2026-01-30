@@ -45,7 +45,7 @@ export default function SignupProfile() {
     toast.success("회원가입이 완료되었습니다!", {
       description: `이름: ${data.name}, 환영합니다!`,
     });
-    navigate("/auth/login");
+    navigate("/login");
   };
 
   return (

@@ -30,7 +30,7 @@ export default function Step02Email() {
           <button
             type="button"
             className="shrink-0 h-8 px-2 border border-gray-200 bg-white rounded-lg text-xs text-text-sub hover:bg-gray-50 transition-colors"
-            onClick={() => navigate("/auth/find-pw")}
+            onClick={() => navigate("/find-pw")}
           >
             비밀번호 재설정
           </button>
@@ -39,7 +39,7 @@ export default function Step02Email() {
         <Button
           size="big"
           fullWidth
-          onClick={() => navigate("/auth/login")}
+          onClick={() => navigate("/login")}
           variant="gradient"
         >
           로그인으로 돌아가기

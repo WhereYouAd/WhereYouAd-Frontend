@@ -31,7 +31,7 @@ export default function Step02ResetPassword() {
     toast.success("비밀번호가 변경되었습니다.", {
       description: "로그인 페이지로 이동합니다.",
     });
-    navigate("/auth/login");
+    navigate("/login");
   };
 
   return (
