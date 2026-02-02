@@ -6,12 +6,13 @@ import type { z } from "zod";
 
 import { step01Schema } from "@/utils/validation";
 
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useTimer } from "@/hooks/useTimer";
+
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 
 import useAuthStore from "@/store/useAuthStore";
-import { useAuth } from "@/hooks/auth/useAuth";
-import { useTimer } from "@/hooks/useTimer";
 
 interface IStep01EmailProps {
   onNext: () => void;
@@ -60,7 +61,9 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             restart();
           },
           onError: (error) => {
-            toast.error(error.response?.data?.message || "메일 발송에 실패했습니다.");
+            toast.error(
+              error.response?.data?.message || "메일 발송에 실패했습니다.",
+            );
           },
         },
       );
@@ -76,7 +79,9 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           onNext();
         },
         onError: (error) => {
-          setCodeError(error.response?.data?.message || "인증번호가 올바르지 않습니다.");
+          setCodeError(
+            error.response?.data?.message || "인증번호가 올바르지 않습니다.",
+          );
         },
       },
     );
@@ -143,7 +148,9 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             disabled={isExpired}
             error={!!errors.code || !!codeError || (isExpired && sendCode)}
             errorMessage={
-              isExpired ? "인증 시간이 만료되었습니다." : errors.code?.message || codeError
+              isExpired
+                ? "인증 시간이 만료되었습니다."
+                : errors.code?.message || codeError
             }
           />
         </div>
