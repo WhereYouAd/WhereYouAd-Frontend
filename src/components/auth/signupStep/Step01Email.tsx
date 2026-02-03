@@ -25,7 +25,6 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   const { useSendCode, useCheckCode } = useAuth();
 
   const [sendCode, setSendCode] = useState(false);
-  const [, setCodeVerify] = useState(false);
   const [codeError, setCodeError] = useState("");
 
   const {
@@ -54,7 +53,6 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   }, [stop]);
 
   const postSendCode = async () => {
-    setCodeVerify(false);
     const isEmailValid = await trigger("email");
     if (isEmailValid && watchedEmail) {
       useSendCode.mutate(
@@ -93,7 +91,6 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   };
 
   useEffect(() => {
-    setCodeVerify(false);
     setCodeError("");
   }, [watchedCode, watchedEmail]);
 
