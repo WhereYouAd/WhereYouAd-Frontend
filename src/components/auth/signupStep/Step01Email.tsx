@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
 import { step01Schema } from "@/utils/validation";
+
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useTimer } from "@/hooks/useTimer";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
@@ -19,6 +22,7 @@ type TStep01FormValues = z.infer<typeof step01Schema>;
 
 export default function SignupEmail({ onNext }: IStep01EmailProps) {
   const { setEmail } = useAuthStore();
+  const { useSendCode, useCheckCode } = useAuth();
 
   const [sendCode, setSendCode] = useState(false);
   const [, setCodeVerify] = useState(false);
@@ -38,20 +42,54 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   const watchedEmail = useWatch({ control, name: "email" });
   const watchedCode = useWatch({ control, name: "code" });
 
+  const { formattedTime, restart, stop, isExpired } = useTimer(180, {
+    onExpire: () => {
+      toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const resetVerification = useCallback(() => {
+    setSendCode(false);
+    stop();
+  }, [stop]);
+
   const postSendCode = async () => {
     setCodeVerify(false);
     const isEmailValid = await trigger("email");
     if (isEmailValid && watchedEmail) {
-      setSendCode(true);
-      toast.success("인증번호가 발송되었습니다.", {
-        description: "테스트용: 아무 번호나 입력하세요",
-      });
+      useSendCode.mutate(
+        { email: watchedEmail },
+        {
+          onSuccess: () => {
+            setSendCode(true);
+            toast.success("인증번호가 발송되었습니다.");
+            restart();
+          },
+          onError: (error) => {
+            toast.error(
+              error.response?.data?.message || "메일 발송에 실패했습니다.",
+            );
+          },
+        },
+      );
     }
   };
 
   const onSubmit: SubmitHandler<TStep01FormValues> = async (data) => {
-    setEmail(data.email);
-    onNext();
+    useCheckCode.mutate(
+      { email: data.email, authCode: data.code },
+      {
+        onSuccess: () => {
+          setEmail(data.email);
+          onNext();
+        },
+        onError: (error) => {
+          setCodeError(
+            error.response?.data?.message || "인증번호가 올바르지 않습니다.",
+          );
+        },
+      },
+    );
   };
 
   useEffect(() => {
@@ -60,8 +98,8 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   }, [watchedCode, watchedEmail]);
 
   useEffect(() => {
-    setSendCode(false);
-  }, [watchedEmail]);
+    resetVerification();
+  }, [watchedEmail, resetVerification]);
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
@@ -88,6 +126,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
                 className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
                 onClick={postSendCode}
                 type="button"
+                disabled={useSendCode.isPending}
               >
                 인증번호 받기
               </Button>
@@ -108,10 +147,15 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
                 : "인증번호를 입력하세요"
             }
             type="text"
-            timer={sendCode ? "03:00" : undefined}
+            timer={sendCode ? formattedTime : undefined}
             {...register("code")}
-            error={!!errors.code || !!codeError}
-            errorMessage={errors.code?.message || codeError}
+            disabled={isExpired}
+            error={!!errors.code || !!codeError || (isExpired && sendCode)}
+            errorMessage={
+              isExpired
+                ? "인증 시간이 만료되었습니다."
+                : errors.code?.message || codeError
+            }
           />
         </div>
 
@@ -121,7 +165,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             fullWidth
             onClick={handleSubmit(onSubmit)}
             variant="gradient"
-            disabled={!isValid}
+            disabled={!isValid || useCheckCode.isPending || isExpired}
           >
             다음으로
           </Button>
@@ -131,7 +175,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           <div className="mt-6 flex justify-center">
             <button
               type="button"
-              onClick={() => setSendCode(false)}
+              onClick={resetVerification}
               className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
             >
               인증번호 다시 받기
