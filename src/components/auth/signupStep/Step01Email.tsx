@@ -47,10 +47,29 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     },
   });
 
-  const resetVerification = useCallback(() => {
+  const handleEditEmail = useCallback(() => {
     setSendCode(false);
     stop();
   }, [stop]);
+
+  const handleResendEmail = () => {
+    if (watchedEmail) {
+      useSendCode.mutate(
+        { email: watchedEmail },
+        {
+          onSuccess: () => {
+            toast.success("인증번호가 재발송되었습니다.");
+            restart();
+          },
+          onError: (error) => {
+            toast.error(
+              error.response?.data?.message || "메일 발송에 실패했습니다.",
+            );
+          },
+        },
+      );
+    }
+  };
 
   const postSendCode = async () => {
     const isEmailValid = await trigger("email");
@@ -94,10 +113,6 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     setCodeError("");
   }, [watchedCode, watchedEmail]);
 
-  useEffect(() => {
-    resetVerification();
-  }, [watchedEmail, resetVerification]);
-
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
@@ -129,12 +144,21 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
               </Button>
             </div>
           ) : (
-            <CommonAuthInput
-              type="text"
-              value={watchedEmail || ""}
-              readOnly
-              className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
-            />
+            <div className="relative w-full">
+              <CommonAuthInput
+                type="text"
+                value={watchedEmail || ""}
+                readOnly
+                className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+              />
+              <button
+                type="button"
+                onClick={handleEditEmail}
+                className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-auth-sub"
+              >
+                수정
+              </button>
+            </div>
           )}
 
           <CommonAuthInput
@@ -172,7 +196,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           <div className="mt-6 flex justify-center">
             <button
               type="button"
-              onClick={resetVerification}
+              onClick={handleResendEmail}
               className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
             >
               인증번호 다시 받기
