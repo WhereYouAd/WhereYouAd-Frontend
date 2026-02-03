@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -48,6 +48,11 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     },
   });
 
+  const resetVerification = useCallback(() => {
+  setSendCode(false);
+  stop();
+}, [stop]);
+
   const postSendCode = async () => {
     setCodeVerify(false);
     const isEmailValid = await trigger("email");
@@ -92,10 +97,10 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     setCodeError("");
   }, [watchedCode, watchedEmail]);
 
+
   useEffect(() => {
-    setSendCode(false);
-    stop();
-  }, [watchedEmail, stop]);
+    resetVerification();
+  }, [watchedEmail, resetVerification]);
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
@@ -171,10 +176,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
           <div className="mt-6 flex justify-center">
             <button
               type="button"
-              onClick={() => {
-                setSendCode(false);
-                stop();
-              }}
+              onClick={resetVerification}
               className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
             >
               인증번호 다시 받기
