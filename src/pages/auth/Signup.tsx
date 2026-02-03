@@ -10,7 +10,6 @@ import GoogleIcon from "@/assets/auth/social/google.svg?react";
 import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
 import MailIcon from "@/assets/auth/social/mail.svg?react";
 import NaverIcon from "@/assets/auth/social/naver.svg?react";
-
 import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {
