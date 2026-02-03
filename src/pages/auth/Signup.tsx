@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import Step01Email from "@/components/auth/signupStep/Step01Email";
@@ -11,9 +11,18 @@ import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
 import MailIcon from "@/assets/auth/social/mail.svg?react";
 import NaverIcon from "@/assets/auth/social/naver.svg?react";
 
+import useAuthStore from "@/store/useAuthStore";
+
 export default function Signup() {
   const location = useLocation();
+  const { resetAuth } = useAuthStore();
   const [step, setStep] = useState<number>(location.state?.step || 0);
+
+  useEffect(() => {
+    return () => {
+      resetAuth();
+    };
+  }, [resetAuth]);
 
   const handleEmailStart = () => {
     setStep(1);
