@@ -34,7 +34,6 @@ export const useTimer = (
       return;
     }
 
-    // 이미 0이면 그냥 만료 처리
     if (timeLeft <= 0) {
       setIsActive(false);
       clear();
@@ -45,10 +44,6 @@ export const useTimer = (
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          // 1 -> 0 되는 순간 만료 처리
-          clear();
-          setIsActive(false);
-          onExpireRef.current?.();
           return 0;
         }
         return prev - 1;
