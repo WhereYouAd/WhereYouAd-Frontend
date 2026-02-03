@@ -106,7 +106,6 @@ export default function SignupProfile() {
                     setValue("marketing", agreements.marketing);
                     if (agreements.privacy) {
                       setValue("terms", true, { shouldValidate: true });
-                      toast.success("약관에 동의하였습니다.");
                     } else {
                       setValue("terms", false, { shouldValidate: true });
                     }
