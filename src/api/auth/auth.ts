@@ -4,6 +4,8 @@ import type {
   IEmailSendRequest,
   IEmailSendResponse,
   IEmailVerifyRequest,
+  ISignUpRequest,
+  ISignUpResponse,
 } from "../../types/auth/auth";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -26,4 +28,15 @@ export const verifyEmail = async ({
     authCode,
   });
   return data;
+};
+
+// 단순 회원가입
+export const signUp = async (
+  data: ISignUpRequest,
+): Promise<ICommonResponse<ISignUpResponse>> => {
+  const { data: responseData } = await axiosInstance.post(
+    "/api/users/signup",
+    data,
+  );
+  return responseData;
 };

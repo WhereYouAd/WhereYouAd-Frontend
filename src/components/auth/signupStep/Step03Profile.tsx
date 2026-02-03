@@ -6,6 +6,8 @@ import type { z } from "zod";
 
 import { step03Schema } from "@/utils/validation";
 
+import { useAuth } from "@/hooks/auth/useAuth";
+
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
 import { MODAL_TYPES } from "@/components/modal/ModalProvider";
@@ -17,8 +19,9 @@ type TStep03FormValues = z.infer<typeof step03Schema>;
 
 export default function SignupProfile() {
   const navigate = useNavigate();
-  const { email, password } = useAuthStore();
+  const { email, password, resetAuth } = useAuthStore();
   const { openModal } = useModalStore();
+  const { useSignUp } = useAuth();
 
   const {
     register,
@@ -33,19 +36,28 @@ export default function SignupProfile() {
   });
 
   const onSubmit: SubmitHandler<TStep03FormValues> = (data) => {
-    // 최종 회원가입 데이터 (예시)
-    const finalSignupData = {
-      email,
-      password,
-      ...data,
-    };
-
-    console.log("Final Signup Data:", finalSignupData);
-
-    toast.success("회원가입이 완료되었습니다!", {
-      description: `이름: ${data.name}, 환영합니다!`,
-    });
-    navigate("/login");
+    useSignUp.mutate(
+      {
+        email,
+        password,
+        name: data.name,
+        phone_number: data.phoneNum,
+      },
+      {
+        onSuccess: () => {
+          toast.success("회원가입이 완료되었습니다!", {
+            description: `${data.name}님, 환영합니다!`,
+          });
+          resetAuth();
+          navigate("/login");
+        },
+        onError: (error) => {
+          toast.error(
+            error.response?.data?.message || "회원가입에 실패했습니다.",
+          );
+        },
+      },
+    );
   };
 
   return (
@@ -129,7 +141,7 @@ export default function SignupProfile() {
               fullWidth
               type="submit"
               variant="gradient"
-              disabled={!isValid}
+              disabled={!isValid || useSignUp.isPending}
             >
               회원 가입
             </Button>
