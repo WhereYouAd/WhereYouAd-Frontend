@@ -49,9 +49,9 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
   });
 
   const resetVerification = useCallback(() => {
-  setSendCode(false);
-  stop();
-}, [stop]);
+    setSendCode(false);
+    stop();
+  }, [stop]);
 
   const postSendCode = async () => {
     setCodeVerify(false);
@@ -96,7 +96,6 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
     setCodeVerify(false);
     setCodeError("");
   }, [watchedCode, watchedEmail]);
-
 
   useEffect(() => {
     resetVerification();
