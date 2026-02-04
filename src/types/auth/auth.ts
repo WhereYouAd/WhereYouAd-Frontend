@@ -29,3 +29,16 @@ export interface ISignUpResponse {
   userId: number;
   createdAt: string;
 }
+
+// 로그인 요청 타입
+export interface ILoginRequest {
+  email: string;
+  password: string;
+}
+
+// 로그인 응답 타입
+export interface ILoginResponse {
+  grantType: string;
+  accessToken: string;
+  accessTokenExpiresIn: number;
+}

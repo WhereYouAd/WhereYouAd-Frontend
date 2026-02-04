@@ -1,10 +1,12 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
 import { loginSchema } from "@/utils/validation";
+
+import { useAuth } from "@/hooks/auth/useAuth";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
@@ -12,6 +14,7 @@ import Button from "@/components/common/Button";
 import GoogleIcon from "@/assets/auth/social/google.svg?react";
 import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
 import NaverIcon from "@/assets/auth/social/naver.svg?react";
+import useAuthStore from "@/store/useAuthStore";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 
@@ -25,11 +28,25 @@ export default function Login() {
     resolver: zodResolver(loginSchema),
   });
 
+  const navigate = useNavigate();
+  const { useLogin } = useAuth();
+  const { login: loginAction } = useAuthStore();
+
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
-    // 임시 로그인 처리
-    console.log("Login submit:", data);
-    toast.success("로그인 성공!", {
-      description: `이메일: ${data.email}`,
+    useLogin.mutate(data, {
+      onSuccess: (response) => {
+        const { accessToken } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+        loginAction(data.email);
+
+        // 개발 단계에서는 임시 토스트 알림 제공
+        toast.success("로그인 성공!");
+        navigate("/");
+      },
+      onError: (error: any) => {
+        console.error("Login error:", error);
+        toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
+      },
     });
   };
 
