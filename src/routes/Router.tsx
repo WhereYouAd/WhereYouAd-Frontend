@@ -11,7 +11,7 @@ import Error from "@/pages/common/Error";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   // 실제 인증 상태 확인 로직으로 대체 예정
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   if (!isAuthenticated) {
     return <Navigate to="/signup" replace />;

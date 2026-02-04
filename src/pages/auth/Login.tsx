@@ -38,9 +38,6 @@ export default function Login() {
         const { accessToken } = response.data;
         localStorage.setItem("accessToken", accessToken);
         loginAction(data.email);
-
-        // 개발 단계에서는 임시 토스트 알림 제공
-        toast.success("로그인 성공!");
         navigate("/");
       },
       onError: (error: any) => {
