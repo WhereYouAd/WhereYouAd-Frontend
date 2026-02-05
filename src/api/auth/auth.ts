@@ -8,6 +8,7 @@ import type {
   ILoginResponse,
   ISignUpRequest,
   ISignUpResponse,
+  ITokenRefreshResponse,
 } from "../../types/auth/auth";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -41,6 +42,14 @@ export const signUp = async (
     data,
   );
   return responseData;
+};
+
+// 토큰 재발급
+export const reissueToken = async (): Promise<
+  ICommonResponse<ITokenRefreshResponse>
+> => {
+  const { data } = await axiosInstance.post("/api/auth/reissue");
+  return data;
 };
 
 // 로그인
