@@ -38,7 +38,7 @@ export default function Login() {
         const { accessToken } = response.data;
         localStorage.setItem("accessToken", accessToken);
         loginAction(data.email);
-        navigate("/");
+        navigate("/", { replace: true });
       },
       onError: (error: any) => {
         console.error("Login error:", error);
