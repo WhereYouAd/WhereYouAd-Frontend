@@ -4,6 +4,8 @@ import type {
   IEmailSendRequest,
   IEmailSendResponse,
   IEmailVerifyRequest,
+  ILoginRequest,
+  ILoginResponse,
   ISignUpRequest,
   ISignUpResponse,
 } from "../../types/auth/auth";
@@ -38,5 +40,17 @@ export const signUp = async (
     "/api/users/signup",
     data,
   );
+  return responseData;
+};
+
+// 로그인
+export const login = async (
+  data: ILoginRequest,
+): Promise<ICommonResponse<ILoginResponse>> => {
+  const { data: responseData } = await axiosInstance.post(
+    "/api/auth/login",
+    data,
+  );
+
   return responseData;
 };
