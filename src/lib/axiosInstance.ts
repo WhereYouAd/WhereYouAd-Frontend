@@ -1,14 +1,20 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig } from "axios";
 
 import useAuthStore from "@/store/useAuthStore";
 
-export const axiosInstance = axios.create({
+const axiosConfig: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
-});
+};
+
+// 일반 API 요청용
+export const axiosInstance = axios.create(axiosConfig);
+
+// 토큰 재발급 전용
+export const authInstance = axios.create(axiosConfig);
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -70,11 +76,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/api/auth/reissue`,
-          {},
-          { withCredentials: true },
-        );
+        const { data } = await authInstance.post("/api/auth/reissue");
 
         const newAccessToken = data.data.accessToken;
         localStorage.setItem("accessToken", newAccessToken);
