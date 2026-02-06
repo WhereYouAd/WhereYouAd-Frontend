@@ -61,10 +61,10 @@ export const useEmailVerification = ({
     useSendCode.mutate(
       { email },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setSendCode(true);
           toast.success(successMessage);
-          restart();
+          restart(data.data.expireIn);
         },
         onError: (error) => {
           toast.error(
