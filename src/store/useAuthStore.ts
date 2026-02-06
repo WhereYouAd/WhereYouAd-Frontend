@@ -5,7 +5,8 @@ interface IAuthState {
   email: string;
   password: string;
   socialId: number;
-  login: (email: string) => void;
+
+  login: (email: string, accessToken: string) => void;
   logout: () => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
@@ -18,11 +19,15 @@ const useAuthStore = create<IAuthState>((set) => ({
   email: "",
   password: "",
   socialId: -1,
-  login: (email) => set({ isLoggedIn: true, email }),
+  login: (email, accessToken) => {
+    localStorage.setItem("accessToken", accessToken);
+    set({ isLoggedIn: true, email });
+  },
   logout: () => {
     localStorage.removeItem("accessToken");
     set({ isLoggedIn: false, email: "", password: "", socialId: -1 });
   },
+
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setSocialId: (socialId) => set({ socialId }),

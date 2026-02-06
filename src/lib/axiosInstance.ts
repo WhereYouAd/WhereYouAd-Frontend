@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
         originalRequest.url?.includes("/api/auth/reissue") ||
         originalRequest._retry
       ) {
-        useAuthStore.getState().logout();
+        localStorage.removeItem("accessToken");
         return Promise.reject(error);
       }
 
