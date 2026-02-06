@@ -42,3 +42,15 @@ export interface ILoginResponse {
   accessToken: string;
   accessTokenExpiresIn: number;
 }
+
+// 토큰 재발급 요청 타입
+export interface ITokenRefreshRequest {
+  refreshToken: string;
+}
+
+// 토큰 재발급 응답 타입
+export interface ITokenRefreshResponse {
+  grantType: string;
+  accessToken: string;
+  accessTokenExpiresIn: number;
+}
