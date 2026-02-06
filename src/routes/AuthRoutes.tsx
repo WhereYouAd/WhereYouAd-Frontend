@@ -21,6 +21,11 @@ const Login = loadable(
   <LoginSkeleton />,
 );
 
+const RedirectPage = loadable(
+  lazy(() => import("@/pages/auth/RedirectPage")),
+  <AuthFormSkeleton />,
+);
+
 // Signup은 Fallback이 달라짐 -> raw lazy 컴포넌트 사용
 const Signup = lazy(() => import("@/pages/auth/Signup"));
 
@@ -53,6 +58,10 @@ const AuthRoutes: RouteObject[] = [
   {
     path: "find-pw",
     element: <FindPw />,
+  },
+  {
+    path: "oauth2/redirect",
+    element: <RedirectPage />,
   },
 ];
 

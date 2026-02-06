@@ -69,10 +69,13 @@ export const useTimer = (
     setTimeLeft(Math.max(0, initialTime));
   }, [initialTime]);
 
-  const restart = useCallback(() => {
-    setTimeLeft(Math.max(0, initialTime));
-    setIsActive(true);
-  }, [initialTime]);
+  const restart = useCallback(
+    (newTime?: number) => {
+      setTimeLeft(Math.max(0, newTime ?? initialTime));
+      setIsActive(true);
+    },
+    [initialTime],
+  );
 
   const formattedTime = useMemo(() => {
     const minutes = Math.floor(timeLeft / 60);

@@ -7,6 +7,7 @@ import type { z } from "zod";
 import { loginSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
+import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/Button";
@@ -31,13 +32,13 @@ export default function Login() {
   const navigate = useNavigate();
   const { useLogin } = useAuth();
   const { login: loginAction } = useAuthStore();
+  const { handleSocialLogin } = useSocialLogin();
 
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
       onSuccess: (response) => {
         const { accessToken } = response.data;
-        localStorage.setItem("accessToken", accessToken);
-        loginAction(data.email);
+        loginAction(data.email, accessToken);
         navigate("/", { replace: true });
       },
       onError: (error: any) => {
@@ -92,9 +93,7 @@ export default function Login() {
               type="button"
               className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="카카오로 로그인"
-              onClick={() => {
-                // 소셜 로그인
-              }}
+              onClick={() => handleSocialLogin("kakao")}
             >
               <KakaoIcon className="w-6 h-auto" />
             </button>
@@ -103,9 +102,7 @@ export default function Login() {
               type="button"
               className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="네이버로 로그인"
-              onClick={() => {
-                // 소셜 로그인
-              }}
+              onClick={() => handleSocialLogin("naver")}
             >
               <NaverIcon className="w-5 h-auto text-white" />
             </button>
@@ -114,9 +111,7 @@ export default function Login() {
               type="button"
               className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-sm"
               aria-label="구글로 로그인"
-              onClick={() => {
-                // 소셜 로그인
-              }}
+              onClick={() => toast.error("준비중입니다.")}
             >
               <GoogleIcon className="w-6 h-auto" />
             </button>

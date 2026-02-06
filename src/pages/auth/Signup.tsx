@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
+
 import Step01Email from "@/components/auth/signupStep/Step01Email";
 import Step02Password from "@/components/auth/signupStep/Step02Password";
 import Step03Profile from "@/components/auth/signupStep/Step03Profile";
@@ -31,6 +33,8 @@ export default function Signup() {
     setStep((prev) => prev + 1);
   };
 
+  const { handleSocialLogin } = useSocialLogin();
+
   if (step === 1) {
     return <Step01Email onNext={handleNext} />;
   }
@@ -60,7 +64,7 @@ export default function Signup() {
           size="big"
           variant="custom"
           leftIcon={<GoogleIcon className="w-6 h-6" />}
-          onClick={() => {}}
+          onClick={() => handleSocialLogin("google")}
           className="bg-white border border-gray-100 text-text-main font-heading3 shadow-sm hover:bg-gray-50"
         >
           구글 로그인
@@ -71,7 +75,7 @@ export default function Signup() {
           size="big"
           variant="custom"
           leftIcon={<KakaoIcon className="w-6 h-6" />}
-          onClick={() => {}}
+          onClick={() => handleSocialLogin("kakao")}
           className="bg-social-kakao text-text-main font-heading3 shadow-sm hover:opacity-90"
         >
           카카오 로그인
@@ -82,7 +86,7 @@ export default function Signup() {
           size="big"
           variant="custom"
           leftIcon={<NaverIcon className="w-5 h-5 text-white" />}
-          onClick={() => {}}
+          onClick={() => handleSocialLogin("naver")}
           className="bg-social-naver text-white font-heading3 shadow-sm hover:opacity-90"
         >
           네이버 로그인
