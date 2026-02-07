@@ -4,8 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { AUTH_TIMER_DURATION } from "@/constants/auth";
-
 import { step01Schema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -43,14 +41,11 @@ export const useEmailVerification = ({
   const watchedEmail = useWatch({ control, name: "email" });
   const watchedCode = useWatch({ control, name: "code" });
 
-  const { formattedTime, restart, stop, isExpired } = useTimer(
-    AUTH_TIMER_DURATION,
-    {
-      onExpire: () => {
-        toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
-      },
+  const { formattedTime, restart, stop, isExpired } = useTimer(0, {
+    onExpire: () => {
+      toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
     },
-  );
+  });
 
   const handleEditEmail = useCallback(() => {
     setSendCode(false);
