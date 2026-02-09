@@ -2,23 +2,26 @@ import axios, { type AxiosRequestConfig } from "axios";
 
 import useAuthStore from "@/store/useAuthStore";
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+if (!BASE_URL) {
+  throw new Error("API 서버 주소(VITE_API_BASE_URL)가 설정되지 않았습니다.");
+}
+
 const axiosConfig: AxiosRequestConfig = {
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: BASE_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
 };
 
-// 일반 API 요청용
 export const axiosInstance = axios.create(axiosConfig);
-
-// 토큰 재발급 전용
 export const authInstance = axios.create(axiosConfig);
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = useAuthStore.getState().accessToken;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -31,16 +34,28 @@ axiosInstance.interceptors.request.use(
 );
 
 let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
+interface IRefreshSubscriber {
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+}
 
-// 대기 요청 처리
+let refreshSubscribers: IRefreshSubscriber[] = [];
+
 const onRefreshed = (accessToken: string) => {
-  refreshSubscribers.forEach((callback) => callback(accessToken));
+  refreshSubscribers.forEach(({ resolve }) => resolve(accessToken));
   refreshSubscribers = [];
 };
 
-const addRefreshSubscriber = (callback: (token: string) => void) => {
-  refreshSubscribers.push(callback);
+const onRefreshFailed = (error: unknown) => {
+  refreshSubscribers.forEach(({ reject }) => reject(error));
+  refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (
+  resolve: (token: string) => void,
+  reject: (error: unknown) => void,
+) => {
+  refreshSubscribers.push({ resolve, reject });
 };
 
 axiosInstance.interceptors.response.use(
@@ -50,28 +65,29 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 401 에러 감지
     if (error.response?.status === 401) {
-      // 재발급 진행 중: 대기열 등록
       if (isRefreshing) {
-        return new Promise((resolve) => {
-          addRefreshSubscriber((accessToken: string) => {
-            originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-            resolve(axiosInstance(originalRequest));
-          });
+        return new Promise((resolve, reject) => {
+          addRefreshSubscriber(
+            (accessToken: string) => {
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+              resolve(axiosInstance(originalRequest));
+            },
+            (refreshError: unknown) => {
+              reject(refreshError);
+            },
+          );
         });
       }
 
-      // 재발급 실패: 로그아웃
       if (
         originalRequest.url?.includes("/api/auth/reissue") ||
         originalRequest._retry
       ) {
-        localStorage.removeItem("accessToken");
+        useAuthStore.getState().logout();
         return Promise.reject(error);
       }
 
-      // 첫 401: 재발급 시도
       originalRequest._retry = true;
       isRefreshing = true;
 
@@ -79,21 +95,18 @@ axiosInstance.interceptors.response.use(
         const { data } = await authInstance.post("/api/auth/reissue");
 
         const newAccessToken = data.data.accessToken;
-        localStorage.setItem("accessToken", newAccessToken);
 
-        // 대기 요청 일괄 처리
+        useAuthStore.getState().setAccessToken(newAccessToken);
         onRefreshed(newAccessToken);
 
-        // 현재 요청 재시도
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // 재발급 실패: 로그아웃
-        console.error("Token reissue failed:", refreshError);
+        console.error("토큰 재발급 실패:", refreshError);
+        onRefreshFailed(refreshError);
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       } finally {
-        // 상태 초기화
         isRefreshing = false;
         refreshSubscribers = [];
       }

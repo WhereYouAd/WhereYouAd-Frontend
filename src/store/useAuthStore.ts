@@ -2,12 +2,14 @@ import { create } from "zustand";
 
 interface IAuthState {
   isLoggedIn: boolean;
+  accessToken: string | null;
   email: string;
   password: string;
   socialId: number;
 
   login: (email: string, accessToken: string) => void;
   logout: () => void;
+  setAccessToken: (token: string) => void;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setSocialId: (socialId: number) => void;
@@ -16,22 +18,31 @@ interface IAuthState {
 
 const useAuthStore = create<IAuthState>((set) => ({
   isLoggedIn: false,
+  accessToken: null,
   email: "",
   password: "",
   socialId: -1,
+
   login: (email, accessToken) => {
-    localStorage.setItem("accessToken", accessToken);
-    set({ isLoggedIn: true, email });
+    set({ isLoggedIn: true, email, accessToken });
   },
   logout: () => {
     localStorage.removeItem("accessToken");
-    set({ isLoggedIn: false, email: "", password: "", socialId: -1 });
+    localStorage.removeItem("refreshToken");
+    set({
+      isLoggedIn: false,
+      accessToken: null,
+      email: "",
+      password: "",
+      socialId: -1,
+    });
   },
 
+  setAccessToken: (token) => set({ accessToken: token }),
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setSocialId: (socialId) => set({ socialId }),
-  resetAuth: () => set({ email: "", password: "" }),
+  resetAuth: () => set({ email: "", password: "", accessToken: null }),
 }));
 
 export default useAuthStore;

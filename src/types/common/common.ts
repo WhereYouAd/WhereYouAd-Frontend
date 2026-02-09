@@ -11,7 +11,6 @@ export interface ICommonResponse<T> {
   data: T;
 }
 
-// useCoreQuery 옵션 타입
 export type TUseQueryCustomOptions<
   TQueryFnData = unknown,
   TData = TQueryFnData,
@@ -20,7 +19,6 @@ export type TUseQueryCustomOptions<
   "queryKey" | "queryFn"
 >;
 
-// useCoreMutation 옵션 타입
 export type TUseMutationCustomOptions<
   TData = unknown,
   TVariables = unknown,

@@ -19,16 +19,22 @@ export default function RedirectPage() {
       if (parts.length === 2) return parts.pop()?.split(";").shift();
     };
 
+    const deleteCookie = (name: string) => {
+      document.cookie =
+        name + "=; Max-Age=0; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    };
+
     const accessToken = getCookie("access_token");
 
     if (accessToken) {
-      // TODO: Zustand 로그인 상태 업데이트 - 추후 내 정보 조회 API 연동 시 수정
+      // TODO: 로그인 상태 업데이트
       login("social@user.com", accessToken);
+
+      deleteCookie("access_token");
 
       toast.success("소셜 로그인되었습니다.");
       navigate("/", { replace: true });
     } else {
-      console.error("No access token found in cookies.");
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
       navigate("/login", { replace: true });
     }
