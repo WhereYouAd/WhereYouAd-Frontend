@@ -1,0 +1,51 @@
+language: "ko-KR"
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+
+  request_changes_workflow: false
+
+  path_filters:
+    - "src/**"
+    - "!dist/**"
+    - "!pnpm-lock.yaml"
+
+chat:
+  auto_reply: true
+
+tone_instructions: >
+  모든 리뷰는 반드시 한국어로 작성한다.
+  구조, 상태 관리, 타입 안정성, 성능 중심으로 리뷰한다.
+  피드백은 명확하고 구체적으로 작성하며, 문제의 원인과 개선 방법을 함께 제시한다.
+  차분하고 전문적인 톤을 유지하되, 이해하기 쉽게 전달한다.
+
+review_instructions: >
+  다음 핵심 영역에 집중하여 리뷰한다.
+
+  1. 상태 관리
+  - 서버 상태는 React Query로 일관되게 관리되고 있는지 확인한다.
+  - 서버 데이터를 전역 상태(zustand)에 중복 저장하지 않았는지 검토한다.
+  - queryKey 설계가 명확한지 확인한다.
+
+  2. 구조와 책임 분리
+  - 페이지에 비즈니스 로직이 과도하게 포함되지 않았는지 검토한다.
+  - 컴포넌트가 단일 책임을 유지하는지 확인한다.
+
+  3. Hook 사용
+  - useEffect 등 Hook의 의존성 배열이 정확한지 확인한다.
+  - 불필요한 Hook 사용이 없는지 검토한다.
+
+  4. 타입 안정성
+  - TypeScript 타입이 명확히 정의되어 있는지 확인한다.
+
+  5. 성능
+  - 대시보드 및 리스트 화면에서 불필요한 리렌더링이 없는지 확인한다.
+
+  6. 에러 처리
+  - API 실패 및 예외 상황에 대한 처리와 사용자 피드백이 적절한지 검토한다.
