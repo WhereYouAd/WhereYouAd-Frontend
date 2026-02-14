@@ -1,0 +1,43 @@
+language: "ko-KR"
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "main"
+      - "develop"
+
+  request_changes_workflow: false
+
+  path_filters:
+    - "src/**"
+    - "!dist/**"
+    - "!pnpm-lock.yaml"
+    - "!build/**"
+    - "!**/*.lock"
+
+  path_instructions:
+    - path: "src/**"
+      instructions: >
+        다음 핵심 영역에 집중하여 리뷰한다.
+        1. 상태 관리: 서버 상태(React Query)와 전역 상태(Zustand)의 분리 여부 확인. useMutation, useQuery의 올바른 사용 확인.
+        2. 구조와 책임 분리: 페이지에 비즈니스 로직이 과도하지 않은지 확인. 커스텀 훅으로의 분리 여부 검토.
+        3. Hook 사용: useEffect 의존성 배열 및 불필요한 사용 검토. useCallback, useMemo의 적절한 사용.
+        4. 타입 안정성: TypeScript 타입의 명확성 확인. any 사용 지양, 제네릭 활용 검토.
+        5. 성능: 불필요한 리렌더링 체크. React.memo, useCallback 사용 검토.
+        6. 에러 처리: API 실패 대응 및 사용자 피드백 적절성 검토. 에러 바운더리 사용 확인.
+        7. 접근성: 시맨틱 HTML, ARIA 속성 사용 확인.
+
+chat:
+  auto_reply: true
+
+tone_instructions: >
+  모든 리뷰는 반드시 한국어로, 팀원들에게 말하듯이 작성한다.
+  구조, 상태 관리, 접근성, 성능, 안정성, 버그 중심으로 리뷰한다.
+  피드백은 명확하고 구체적으로 작성하며, 문제의 원인과 개선 방법을 함께 제시한다.
+  차분하고 전문적인 톤을 유지하되, 이해하기 쉽게 전달한다.
