@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import IntroSlide1 from "@/components/auth/intro/IntroSlide1";
-import IntroSlide2 from "@/components/auth/intro/IntroSlide2";
-import IntroSlide3 from "@/components/auth/intro/IntroSlide3";
+import IntroSlide2 from "@/components/auth/intro/IntroAdManagement";
+import IntroSlide3 from "@/components/auth/intro/IntroAIAnalytics";
+import IntroSlide1 from "@/components/auth/intro/IntroLogo";
 
 export default function OnboardingIntro() {
   const [currentSlide, setCurrentSlide] = useState(0);
