@@ -18,8 +18,9 @@ export default function PasswordSetupStep({ onNext }: IPasswordSetupStepProps) {
     <PasswordForm
       title={
         <>
-          <p>로그인에 사용할</p>
-          <p>비밀번호를 입력해 주세요</p>
+          로그인에 사용할
+          <br />
+          비밀번호를 입력해 주세요
         </>
       }
       buttonText="다음으로"

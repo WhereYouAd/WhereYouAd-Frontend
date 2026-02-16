@@ -21,8 +21,9 @@ export default function NewPasswordStep() {
     <PasswordForm
       title={
         <>
-          <p>새로운 비밀번호를 </p>
-          <p>입력해 주세요</p>
+          새로운 비밀번호를
+          <br />
+          입력해 주세요
         </>
       }
       buttonText="비밀번호 변경하기"
