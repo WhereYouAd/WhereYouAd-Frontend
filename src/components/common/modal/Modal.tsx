@@ -1,4 +1,10 @@
-import React, { type ReactNode, useCallback, useEffect, useRef } from "react";
+import React, {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+} from "react";
 import { createPortal } from "react-dom";
 import { RemoveScroll } from "react-remove-scroll";
 import { twMerge } from "tailwind-merge";
@@ -30,6 +36,7 @@ function Modal({
 }: IModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const titleId = useId();
 
   // 포커스 관리: 모달 열릴 때 포커스 이동, 닫힐 때 원래 위치로 복귀
   useEffect(() => {
@@ -105,7 +112,7 @@ function Modal({
         onClick={handleOverlayClick}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? "modal-title" : undefined}
+        aria-labelledby={title ? titleId : undefined}
       >
         <div
           ref={modalRef}
@@ -118,6 +125,11 @@ function Modal({
           onClick={handleContentClick}
           tabIndex={-1}
         >
+          {title && (
+            <h2 id={titleId} className="sr-only">
+              {title}
+            </h2>
+          )}
           {!hideCloseButton && (
             <button
               onClick={onClose}
