@@ -33,7 +33,7 @@ export default function Button({
     outline:
       "bg-transparent border-2 border-brand-800 text-brand-800 hover:bg-brand-50 disabled:border-gray-300 disabled:text-text-disabled disabled:hover:bg-transparent",
     gradient:
-      "bg-gradient-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-none disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none disabled:opacity-100",
+      "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-none disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none disabled:opacity-100",
     custom: "",
   };
 
