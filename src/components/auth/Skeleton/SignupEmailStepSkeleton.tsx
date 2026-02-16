@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
-export default function SignupStep01Skeleton() {
+export default function SignupEmailStepSkeleton() {
   return (
     <div className="flex w-full flex-col items-center">
       <div className="w-full max-w-90">
