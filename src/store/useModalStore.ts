@@ -16,13 +16,6 @@ export type TGlobalModalProps = {
   };
 };
 
-export type TModalPayload = {
-  [K in keyof TGlobalModalProps]: {
-    modalType: K;
-    modalProps: TGlobalModalProps[K];
-  };
-}[keyof TGlobalModalProps];
-
 type TModalState =
   | {
       modalType: null;
