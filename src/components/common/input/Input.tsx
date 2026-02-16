@@ -55,12 +55,11 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         <div
           className={twMerge(
             "flex items-center w-full h-input bg-gray-50 border-transparent rounded-component-lg transition-smooth overflow-hidden",
-            "focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/30",
             error
               ? "ring-2 ring-status-red bg-status-red/5"
               : success
                 ? "ring-2 ring-logo-1 bg-white"
-                : "hover:bg-gray-100",
+                : "hover:bg-gray-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/30",
             containerClassName,
           )}
         >
