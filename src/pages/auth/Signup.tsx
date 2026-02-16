@@ -4,9 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import { useStepNavigation } from "@/hooks/common/useStepNavigation";
 
-import Step01Email from "@/components/auth/signupStep/Step01Email";
-import Step02Password from "@/components/auth/signupStep/Step02Password";
-import Step03Profile from "@/components/auth/signupStep/Step03Profile";
+import Step01Email from "@/components/auth/flows/signup/EnterEmailStep";
+import Step02Password from "@/components/auth/flows/signup/PasswordSetupStep";
+import Step03Profile from "@/components/auth/flows/signup/ProfileSetupStep";
 import Button from "@/components/common/button/Button";
 
 import GoogleIcon from "@/assets/auth/social/google.svg?react";

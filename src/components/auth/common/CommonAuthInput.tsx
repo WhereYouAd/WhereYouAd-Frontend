@@ -106,19 +106,12 @@ const CommonAuthInput = React.forwardRef<
         rightElement={renderRightElement()}
         containerClassName={className}
         onChange={(e) => {
-          const rawValue = e.target.value;
-          const formatted = isPhoneNum ? formatPhoneNumber(rawValue) : rawValue;
-
-          if (onChange) {
-            const newEvent = {
-              ...e,
-              target: {
-                ...e.target,
-                value: formatted,
-              },
-            } as React.ChangeEvent<HTMLInputElement>;
-            onChange(newEvent);
+          if (isPhoneNum) {
+            const formatted = formatPhoneNumber(e.target.value);
+            e.target.value = formatted;
           }
+
+          onChange?.(e);
         }}
         {...rest}
       />
