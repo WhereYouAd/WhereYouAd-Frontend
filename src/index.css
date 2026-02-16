@@ -26,11 +26,9 @@ button {
 }
 
 @theme {
-  /* Logo */
   --color-logo-1: #2eb4ff;
   --color-logo-2: #6088fe;
 
-  /* Brand */
   --color-brand-900: #000000;
   --color-brand-800: #001f5b;
   --color-brand-700: #213e68;
@@ -40,7 +38,6 @@ button {
   --color-brand-300: #f9fafb;
   --color-brand-200: #ffffff;
 
-  /* Charts */
   --color-chart-1: #0a3d91;
   --color-chart-2: #0056b3;
   --color-chart-3: #1485ff;
@@ -48,11 +45,9 @@ button {
   --color-chart-5: #4fc3f7;
   --color-chart-inactive: #f2f4f6;
 
-  /* Status */
   --color-status-red: #ff2a4b;
   --color-status-blue: #0084fe;
 
-  /* Text */
   --color-text-main: #212121;
   --color-text-auth-sub: #546171;
   --color-text-sub: #8b8b8f;
@@ -60,11 +55,45 @@ button {
   --color-text-disabled: #b0b8c1;
   --color-bg-disabled: #e5e8eb;
 
-  /* Social */
   --color-social-kakao: #fee500;
   --color-social-naver: #03c75a;
   --color-social-google: #ffffff;
   --color-social-text-kakao: #3a1d1d;
+
+  --height-input: 56px;
+  --height-button-big: 55px;
+  --height-button-small: 40px;
+
+  --spacing-component-xs: 0.5rem;
+  --spacing-component-sm: 1rem;
+  --spacing-component-md: 1.5rem;
+  --spacing-component-lg: 2rem;
+  --spacing-component-xl: 3rem;
+
+  --radius-component-sm: 0.5rem;
+  --radius-component-md: 1rem;
+  --radius-component-lg: 1.5rem;
+
+  --padding-none: 0;
+  --padding-sm: 1rem;
+  --padding-md: 1.5rem;
+  --padding-lg: 2rem;
+
+  --max-width-sm: 384px;
+  --max-width-md: 512px;
+  --max-width-lg: 672px;
+  --max-width-xl: 896px;
+
+  /* 애니메이션 이징 */
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 애니메이션 속도 */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
 }
 
 @font-face {
@@ -75,6 +104,69 @@ button {
 }
 
 @layer utilities {
+  .h-input {
+    height: var(--height-input);
+  }
+  .h-button-big {
+    height: var(--height-button-big);
+  }
+  .h-button-small {
+    height: var(--height-button-small);
+  }
+
+  .rounded-component-sm {
+    border-radius: var(--radius-component-sm);
+  }
+  .rounded-component-md {
+    border-radius: var(--radius-component-md);
+  }
+  .rounded-component-lg {
+    border-radius: var(--radius-component-lg);
+  }
+
+  .max-w-modal-sm {
+    max-width: var(--max-width-sm);
+  }
+  .max-w-modal-md {
+    max-width: var(--max-width-md);
+  }
+  .max-w-modal-lg {
+    max-width: var(--max-width-lg);
+  }
+  .max-w-modal-xl {
+    max-width: var(--max-width-xl);
+  }
+
+  .p-modal-none {
+    padding: var(--padding-none);
+  }
+  .p-modal-sm {
+    padding: var(--padding-sm);
+  }
+  .p-modal-md {
+    padding: var(--padding-md);
+  }
+  .p-modal-lg {
+    padding: var(--padding-lg);
+  }
+
+  /* 기본 트랜지션 */
+  .transition-smooth {
+    transition: all var(--duration-normal) var(--ease-smooth);
+  }
+
+  .transition-fast {
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+
+  /* 클릭 */
+  .active-scale {
+    transition: transform var(--duration-fast) var(--ease-in-out);
+  }
+  .active-scale:active {
+    transform: scale(0.98);
+  }
+
   .font-hero {
     font-size: 54px;
     font-weight: 700;
@@ -117,14 +209,12 @@ button {
     line-height: 130%;
   }
 
-  /* CommonAuthInput 위 폰트 */
   .font-label {
     font-size: 14px;
     font-weight: 700;
     line-height: 140%;
   }
 
-  /* Rounding */
   .rounding-15 {
     border-radius: 15px;
   }
@@ -137,7 +227,6 @@ button {
     border-radius: 30px;
   }
 
-  /* Shadows */
   .shadow-Soft {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.1);
   }
@@ -146,7 +235,63 @@ button {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
   }
 
-  /* Scroll Animation */
+  .checkbox {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #e5e8eb;
+    cursor: pointer;
+    position: relative;
+    transition:
+      background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
+    flex-shrink: 0;
+  }
+
+  .checkbox:checked {
+    background-color: #0084fe;
+    background-image: url("/src/assets/icon/check-white.svg");
+    background-size: 60% 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .checkbox:focus-visible {
+    outline: 2px solid #0084fe;
+    outline-offset: 2px;
+  }
+
+  /* 모달 애니메이션 */
+  @keyframes modal-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes modal-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-modal-overlay {
+    animation: modal-fade-in var(--duration-normal) var(--ease-out);
+  }
+
+  .animate-modal-content {
+    animation: modal-scale-in var(--duration-normal) var(--ease-out);
+  }
+
+  /* 스크롤 애니메이션 */
   @keyframes scroll {
     from {
       transform: translateX(0);
@@ -160,7 +305,7 @@ button {
     animation: scroll 50s linear infinite;
   }
 
-  /* Graph Animation */
+  /* 그래프 상승 애니메이션 */
   @keyframes graph-up {
     from {
       height: 0%;
@@ -175,67 +320,7 @@ button {
     height: 0%;
   }
 
-  /* checkbox */
-  .checkbox {
-    appearance: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #e5e8eb;
-    cursor: pointer;
-    position: relative;
-    transition:
-      background-color 0.2s ease-in-out,
-      border-color 0.2s ease-in-out;
-    flex-shrink: 0;
-  }
-  .checkbox:checked {
-    background-color: #0084fe;
-    background-image: url("/src/assets/icon/check-white.svg");
-    background-size: 60% 60%;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-  /* Tab 접근성 고려 */
-  .checkbox:focus-visible {
-    outline: 2px solid #0084fe;
-    outline-offset: 2px;
-  }
-
-  /* Float Animation */
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-20px);
-    }
-    100% {
-      transform: translateY(0px);
-    }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  /* Fade In Up */
-  @keyframes fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
-  }
-
-  /* Shimmer */
+  /* 로딩 애니메이션 */
   @keyframes shimmer {
     0% {
       background-position: -200% 0;

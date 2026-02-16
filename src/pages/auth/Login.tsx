@@ -1,6 +1,7 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { AxiosError } from "axios";
 import { toast } from "sonner";
 import type { z } from "zod";
 
@@ -10,7 +11,7 @@ import { useAuth } from "@/hooks/auth/useAuth";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
-import Button from "@/components/common/Button";
+import Button from "@/components/common/button/Button";
 
 import GoogleIcon from "@/assets/auth/social/google.svg?react";
 import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
@@ -41,8 +42,7 @@ export default function Login() {
         loginAction(data.email, accessToken);
         navigate("/", { replace: true });
       },
-      onError: (error: any) => {
-        console.error("Login error:", error);
+      onError: (error: AxiosError<{ message?: string }>) => {
         toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
       },
     });

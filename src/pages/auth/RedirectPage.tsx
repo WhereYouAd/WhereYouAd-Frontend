@@ -6,7 +6,7 @@ import useAuthStore from "@/store/useAuthStore";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
-  const { login, setSocialId, setEmail } = useAuthStore();
+  const { login } = useAuthStore();
   const processed = useRef(false);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function RedirectPage() {
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
       navigate("/login", { replace: true });
     }
-  }, [navigate, login, setEmail, setSocialId]);
+  }, [navigate, login]);
 
   return (
     <div className="relative flex justify-center items-center h-screen w-full bg-white">

@@ -1,4 +1,4 @@
-export default function formatInputNumber(value: string): string {
+export default function formatPhoneNumber(value: string): string {
   // 1. 숫자만 남기기
   const digits = value.replace(/\D/g, "").slice(0, 11);
 

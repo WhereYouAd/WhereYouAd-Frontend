@@ -1,48 +1,52 @@
+import { type ReactNode } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import type { z } from "zod";
 
 import { step02Schema } from "@/utils/validation";
 
-import Button from "@/components/common/Button";
+import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
+import Button from "@/components/common/button/Button";
 
-import CommonAuthInput from "../common/CommonAuthInput";
+type TPasswordFormValues = z.infer<typeof step02Schema>;
 
-import useAuthStore from "@/store/useAuthStore";
+interface IPasswordFormProps {
+  title: ReactNode;
+  buttonText: string;
+  onSubmit: (password: string) => void;
+  disabled?: boolean;
+}
 
-type TStep02FormValues = z.infer<typeof step02Schema>;
-
-export default function Step02ResetPassword() {
-  const navigate = useNavigate();
-  const { setPassword } = useAuthStore();
+export default function PasswordForm({
+  title,
+  buttonText,
+  onSubmit,
+  disabled,
+}: IPasswordFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TStep02FormValues>({
+  } = useForm<TPasswordFormValues>({
     mode: "onBlur",
     resolver: zodResolver(step02Schema),
   });
 
-  const onSubmit: SubmitHandler<TStep02FormValues> = (data) => {
-    setPassword(data.password);
-    toast.success("비밀번호가 변경되었습니다.", {
-      description: "로그인 페이지로 이동합니다.",
-    });
-    navigate("/login");
+  const handleFormSubmit: SubmitHandler<TPasswordFormValues> = (data) => {
+    onSubmit(data.password);
   };
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>새로운 비밀번호를 </p>
-          <p>입력해 주세요</p>
+          {title}
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
+        <form
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="flex flex-col gap-7"
+        >
           <CommonAuthInput
             title="비밀번호"
             placeholder="비밀번호를 입력하세요"
@@ -66,9 +70,9 @@ export default function Step02ResetPassword() {
               fullWidth
               type="submit"
               variant="gradient"
-              disabled={!isValid}
+              disabled={!isValid || disabled}
             >
-              비밀번호 변경하기
+              {buttonText}
             </Button>
           </div>
         </form>

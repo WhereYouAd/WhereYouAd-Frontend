@@ -1,13 +1,13 @@
 import { useEmailVerification } from "@/hooks/auth/useEmailVerification";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
-import Button from "@/components/common/Button";
+import Button from "@/components/common/button/Button";
 
-interface IStep01EmailProps {
+interface IEnterEmailStepProps {
   onNext: () => void;
 }
 
-export default function SignupEmail({ onNext }: IStep01EmailProps) {
+export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
   const {
     form: { register },
     watchedEmail,
@@ -87,7 +87,7 @@ export default function SignupEmail({ onNext }: IStep01EmailProps) {
             disabled={isExpired}
             error={!!errors.code || !!codeError || (isExpired && sendCode)}
             errorMessage={
-              isExpired
+              isExpired && sendCode
                 ? "인증 시간이 만료되었습니다."
                 : errors.code?.message || codeError
             }

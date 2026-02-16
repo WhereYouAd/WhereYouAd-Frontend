@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from "react";
-import cx from "clsx";
+import { twMerge } from "tailwind-merge";
 
 interface ISkeletonProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -8,7 +8,7 @@ interface ISkeletonProps extends HTMLAttributes<HTMLDivElement> {
 export function Skeleton({ className, ...props }: ISkeletonProps) {
   return (
     <div
-      className={cx("animate-shimmer rounded bg-gray-200", className)}
+      className={twMerge("animate-shimmer rounded bg-gray-200", className)}
       {...props}
     />
   );
@@ -17,7 +17,7 @@ export function Skeleton({ className, ...props }: ISkeletonProps) {
 export function SkeletonCircle({ className, ...props }: ISkeletonProps) {
   return (
     <div
-      className={cx("animate-shimmer rounded-full bg-gray-200", className)}
+      className={twMerge("animate-shimmer rounded-full bg-gray-200", className)}
       {...props}
     />
   );

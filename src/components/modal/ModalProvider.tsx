@@ -3,29 +3,36 @@ import { useLocation } from "react-router-dom";
 
 import PrivacyModal from "./privacyModal/PrivacyModal";
 
-import useModalStore from "@/store/useModalStore";
+import useModalStore, {
+  MODAL_TYPES,
+  type TGlobalModalProps,
+} from "@/store/useModalStore";
 
-export const MODAL_TYPES = {
-  PRIVACY: "PRIVACY",
-} as const;
-
-// 모달 등록
-export const MODAL_COMPONENTS = {
-  [MODAL_TYPES.PRIVACY]: PrivacyModal,
-};
-
-export default function ModalProvider() {
+function ModalProvider() {
   const { modalType, closeModal, modalProps } = useModalStore();
   const location = useLocation();
+
   useEffect(() => {
     closeModal();
-  }, [location]);
+  }, [location.pathname, closeModal]);
 
   if (!modalType) {
     return null;
   }
 
-  const ModalComponent = MODAL_COMPONENTS[modalType];
+  switch (modalType) {
+    case MODAL_TYPES.PRIVACY: {
+      const props = modalProps as TGlobalModalProps[typeof MODAL_TYPES.PRIVACY];
+      return <PrivacyModal onClose={closeModal} {...props} />;
+    }
 
-  return <ModalComponent onClose={closeModal} {...modalProps} />;
+    default: {
+      if (import.meta.env.DEV) {
+        console.warn(`Modal component not found for type: ${modalType}`);
+      }
+      return null;
+    }
+  }
 }
+
+export default ModalProvider;
