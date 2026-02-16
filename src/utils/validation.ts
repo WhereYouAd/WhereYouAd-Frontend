@@ -3,7 +3,7 @@ import { z } from "zod";
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const phonePattern = /^010-\d{4}-\d{4}$/;
 const realNamePattern = /^[가-힣]+$/;
-const PasswordPattern =
+const passwordPattern =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[ !"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{8,16}$/;
 
 export const emailSchema = z
@@ -29,42 +29,26 @@ export const phoneSchema = z
 export const passwordSchema = z
   .string()
   .min(1, "비밀번호는 필수입니다.")
-  .regex(PasswordPattern, "영문, 숫자, 특수문자가 모두 들어간 8 -16글자");
+  .regex(passwordPattern, "영문, 숫자, 특수문자가 모두 들어간 8 -16글자");
 
 export const codeSchema = z
   .string()
   .trim()
   .min(1, "인증코드를 반드시 입력해주세요.");
 
-export const signupSchema = z
-  .object({
-    email: emailSchema,
-    password: passwordSchema,
-    repassword: z.string().min(1, "비밀번호 확인은 필수입니다."),
-    name: nameSchema,
-    phoneNum: phoneSchema,
-    code: codeSchema,
-  })
-  .refine((data) => data.password === data.repassword, {
-    path: ["repassword"],
-    message: "비밀번호와 비밀번호 확인이 일치하지 않아요.",
-  });
-
 export const termsSchema = z.boolean().refine((val) => val === true);
 
-// 로그인
 export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
 
-// 단계별 회원가입
-export const step01Schema = z.object({
+export const signupEmailSchema = z.object({
   email: emailSchema,
   code: codeSchema,
 });
 
-export const step02Schema = z
+export const signupPasswordSchema = z
   .object({
     password: passwordSchema,
     repassword: z.string().min(1, "비밀번호 확인은 필수입니다."),
@@ -74,15 +58,14 @@ export const step02Schema = z
     message: "비밀번호가 일치하지 않습니다.",
   });
 
-export const step03Schema = z.object({
+export const signupProfileSchema = z.object({
   name: nameSchema,
   phoneNum: phoneSchema,
   terms: termsSchema,
   marketing: z.boolean().optional(),
 });
 
-// 이메일 찾기1 - 휴대폰 번호 인증
-export const findEmailStep01Schema = z.object({
+export const findEmailSchema = z.object({
   phoneNum: phoneSchema,
   code: codeSchema,
 });

@@ -3,12 +3,12 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 
-import { step02Schema } from "@/utils/validation";
+import { signupPasswordSchema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
-type TPasswordFormValues = z.infer<typeof step02Schema>;
+type TSignupPasswordFormValues = z.infer<typeof signupPasswordSchema>;
 
 interface IPasswordFormProps {
   title: ReactNode;
@@ -27,12 +27,12 @@ export default function PasswordForm({
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<TPasswordFormValues>({
+  } = useForm<TSignupPasswordFormValues>({
     mode: "onBlur",
-    resolver: zodResolver(step02Schema),
+    resolver: zodResolver(signupPasswordSchema),
   });
 
-  const handleFormSubmit: SubmitHandler<TPasswordFormValues> = (data) => {
+  const handleFormSubmit: SubmitHandler<TSignupPasswordFormValues> = (data) => {
     onSubmit(data.password);
   };
 

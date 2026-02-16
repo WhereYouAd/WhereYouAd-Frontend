@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { findEmailStep01Schema } from "@/utils/validation";
+import { findEmailSchema } from "@/utils/validation";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
@@ -16,7 +16,7 @@ interface IEnterPhoneStepProps {
   onNext: () => void;
 }
 
-type TStep01FormValues = z.infer<typeof findEmailStep01Schema>;
+type TFindEmailFormValues = z.infer<typeof findEmailSchema>;
 
 export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const navigate = useNavigate();
@@ -31,9 +31,9 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
     control,
     trigger,
     formState: { errors, isValid },
-  } = useForm<TStep01FormValues>({
+  } = useForm<TFindEmailFormValues>({
     mode: "onBlur",
-    resolver: zodResolver(findEmailStep01Schema),
+    resolver: zodResolver(findEmailSchema),
   });
 
   const watchedPhone = useWatch({ control, name: "phoneNum" });
@@ -49,7 +49,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
     }
   };
 
-  const onSubmit: SubmitHandler<TStep01FormValues> = async () => {
+  const onSubmit: SubmitHandler<TFindEmailFormValues> = async () => {
     // 임시 이메일
     setEmail("smu2021@naver.com");
     onNext();

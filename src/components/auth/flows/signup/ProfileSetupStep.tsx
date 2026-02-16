@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { step03Schema } from "@/utils/validation";
+import { signupProfileSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 
@@ -14,7 +14,7 @@ import Button from "@/components/common/button/Button";
 import useAuthStore from "@/store/useAuthStore";
 import useModalStore, { MODAL_TYPES } from "@/store/useModalStore";
 
-type TStep03FormValues = z.infer<typeof step03Schema>;
+type TSignupProfileFormValues = z.infer<typeof signupProfileSchema>;
 
 export default function ProfileSetupStep() {
   const navigate = useNavigate();
@@ -28,12 +28,12 @@ export default function ProfileSetupStep() {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm<TStep03FormValues>({
+  } = useForm<TSignupProfileFormValues>({
     mode: "onChange",
-    resolver: zodResolver(step03Schema),
+    resolver: zodResolver(signupProfileSchema),
   });
 
-  const onSubmit: SubmitHandler<TStep03FormValues> = (data) => {
+  const onSubmit: SubmitHandler<TSignupProfileFormValues> = (data) => {
     useSignUp.mutate(
       {
         email,
