@@ -98,6 +98,7 @@ export default function EmailVerificationStep({
 
         <div className="mt-10">
           <Button
+            type="button"
             size="big"
             fullWidth
             onClick={handleSubmit}

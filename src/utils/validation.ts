@@ -29,7 +29,7 @@ export const phoneSchema = z
 export const passwordSchema = z
   .string()
   .min(1, "비밀번호는 필수입니다.")
-  .regex(passwordPattern, "영문, 숫자, 특수문자가 모두 들어간 8 -16글자");
+  .regex(passwordPattern, "영문, 숫자, 특수문자가 모두 들어간 8-16글자");
 
 export const codeSchema = z
   .string()
