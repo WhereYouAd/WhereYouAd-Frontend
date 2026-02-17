@@ -13,41 +13,61 @@ export const mainNav: INavItem[] = [
     id: "dashboard",
     label: "대시보드",
     icon: DashboardIcon,
+    path: "/",
     children: [
       {
         id: "dashboard-integrated",
         label: "통합 대시보드",
-        path: "/dashboard/integrated",
+        path: "/",
       },
       {
         id: "dashboard-platform",
         label: "플랫폼별 대시보드",
-        path: "/dashboard/platform",
+        path: "/platform",
       },
       {
         id: "dashboard-timeline",
         label: "성과 타임라인",
-        path: "/dashboard/timeline",
+        path: "/timeline",
       },
     ],
   },
   {
     id: "ads",
     label: "광고",
-    path: "/ads",
     icon: AdsIcon,
+    path: "/ads",
+    children: [
+      {
+        id: "ads-list",
+        label: "광고 목록",
+        path: "/ads",
+      },
+      {
+        id: "ads-campaign-group",
+        label: "캠페인 그룹 정보 설정",
+        path: "/ads/campaign-group",
+      },
+    ],
   },
   {
     id: "map",
     label: "지도",
-    path: "/map",
     icon: MapIcon,
+    // path: "/map",
   },
   {
     id: "workspace",
     label: "워크스페이스",
-    path: "/workspace",
     icon: WorkspaceIcon,
+    path: "/workspace",
+    children: [
+      {
+        id: "workspace-billing",
+        label: "플랜 및 결제",
+        path: "/workspace/billing",
+      },
+    ],
   },
 ];
 
@@ -60,7 +80,7 @@ export const footerNav: INavItem[] = [
   {
     id: "settings",
     label: "설정",
-    path: "/settings",
+    path: "/setting",
     icon: SettingsIcon,
   },
   {
