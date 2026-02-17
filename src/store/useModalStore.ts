@@ -1,10 +1,12 @@
 import { create } from "zustand";
 
-import type { MODAL_TYPES } from "@/components/modal/ModalProvider";
+export const MODAL_TYPES = {
+  PRIVACY: "PRIVACY",
+} as const;
 
 export type TModalType = (typeof MODAL_TYPES)[keyof typeof MODAL_TYPES];
 
-export type TModalProps = {
+export type TGlobalModalProps = {
   [MODAL_TYPES.PRIVACY]: {
     onAgree?: (agreements: { privacy: boolean; marketing: boolean }) => void;
     initialState?: {
@@ -14,40 +16,41 @@ export type TModalProps = {
   };
 };
 
-export type TModalState = {
-  [K in TModalType]: {
-    modalType: K;
-    modalProps: K extends keyof TModalProps ? TModalProps[K] : never;
-  };
-}[TModalType];
+type TModalState =
+  | {
+      modalType: null;
+      modalProps: Record<string, never>;
+    }
+  | {
+      [K in TModalType]: {
+        modalType: K;
+        modalProps: TGlobalModalProps[K];
+      };
+    }[TModalType];
 
-interface IModalStoreState {
-  modalType: TModalType | null;
-  modalProps: any;
-  isOpen: boolean;
-  openModal: <T extends TModalType>(payload: {
-    modalType: T;
-    modalProps: T extends keyof TModalProps ? TModalProps[T] : never;
-  }) => void;
+interface IModalStoreActions {
+  openModal: <T extends TModalType>(
+    modalType: T,
+    modalProps: TGlobalModalProps[T],
+  ) => void;
   closeModal: () => void;
 }
 
-const useModalStore = create<IModalStoreState>((set) => ({
+type TModalStoreState = TModalState & IModalStoreActions;
+
+const useModalStore = create<TModalStoreState>((set) => ({
   modalType: null,
-  isOpen: false,
   modalProps: {},
-  openModal: (payload) =>
-    set(() => ({
-      modalType: payload.modalType,
-      modalProps: payload.modalProps,
-      isOpen: true,
-    })),
+  openModal: (modalType, modalProps) =>
+    set({
+      modalType,
+      modalProps,
+    } as TModalState),
   closeModal: () =>
-    set(() => ({
+    set({
       modalType: null,
       modalProps: {},
-      isOpen: false,
-    })),
+    }),
 }));
 
 export default useModalStore;

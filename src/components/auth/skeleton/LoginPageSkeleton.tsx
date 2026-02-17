@@ -3,7 +3,7 @@ import {
   SkeletonCircle,
 } from "@/components/common/skeleton/Skeleton";
 
-export default function LoginSkeleton() {
+export default function LoginPageSkeleton() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-white">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">

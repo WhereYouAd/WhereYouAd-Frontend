@@ -1,23 +1,22 @@
-import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { step03Schema } from "@/utils/validation";
+import { signupProfileSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
-import Button from "@/components/common/Button";
-import { MODAL_TYPES } from "@/components/modal/ModalProvider";
+import Button from "@/components/common/button/Button";
 
 import useAuthStore from "@/store/useAuthStore";
-import useModalStore from "@/store/useModalStore";
+import useModalStore, { MODAL_TYPES } from "@/store/useModalStore";
 
-type TStep03FormValues = z.infer<typeof step03Schema>;
+type TSignupProfileFormValues = z.infer<typeof signupProfileSchema>;
 
-export default function SignupProfile() {
+export default function ProfileSetupStep() {
   const navigate = useNavigate();
   const { email, password, resetAuth } = useAuthStore();
   const { openModal } = useModalStore();
@@ -26,16 +25,15 @@ export default function SignupProfile() {
   const {
     register,
     handleSubmit,
-    control,
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm<TStep03FormValues>({
+  } = useForm<TSignupProfileFormValues>({
     mode: "onChange",
-    resolver: zodResolver(step03Schema),
+    resolver: zodResolver(signupProfileSchema),
   });
 
-  const onSubmit: SubmitHandler<TStep03FormValues> = (data) => {
+  const onSubmit: SubmitHandler<TSignupProfileFormValues> = (data) => {
     useSignUp.mutate(
       {
         email,
@@ -76,40 +74,30 @@ export default function SignupProfile() {
             error={!!errors.name}
             errorMessage={errors.name?.message}
           />
-          <Controller
-            control={control}
-            name="phoneNum"
-            render={({ field: { onChange, value } }) => (
-              <CommonAuthInput
-                title="전화번호"
-                placeholder="전화번호를 입력하세요"
-                type="phoneNum"
-                value={value || ""}
-                onChange={onChange}
-                error={!!errors.phoneNum}
-                errorMessage={errors.phoneNum?.message}
-              />
-            )}
+          <CommonAuthInput
+            title="전화번호"
+            placeholder="전화번호를 입력하세요"
+            type="tel"
+            {...register("phoneNum")}
+            error={!!errors.phoneNum}
+            errorMessage={errors.phoneNum?.message}
           />
 
           <div
             className="flex items-center mt-3 pl-1 w-full justify-between cursor-pointer"
             onClick={() => {
-              openModal({
-                modalType: MODAL_TYPES.PRIVACY,
-                modalProps: {
-                  initialState: {
-                    privacy: watch("terms") || false,
-                    marketing: watch("marketing") || false,
-                  },
-                  onAgree: (agreements) => {
-                    setValue("marketing", agreements.marketing);
-                    if (agreements.privacy) {
-                      setValue("terms", true, { shouldValidate: true });
-                    } else {
-                      setValue("terms", false, { shouldValidate: true });
-                    }
-                  },
+              openModal(MODAL_TYPES.PRIVACY, {
+                initialState: {
+                  privacy: watch("terms") || false,
+                  marketing: watch("marketing") || false,
+                },
+                onAgree: (agreements) => {
+                  setValue("marketing", agreements.marketing);
+                  if (agreements.privacy) {
+                    setValue("terms", true, { shouldValidate: true });
+                  } else {
+                    setValue("terms", false, { shouldValidate: true });
+                  }
                 },
               });
             }}

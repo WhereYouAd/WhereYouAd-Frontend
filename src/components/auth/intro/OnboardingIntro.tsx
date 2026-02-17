@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import IntroSlide1 from "../intro/IntroSlide1";
-import IntroSlide2 from "../intro/IntroSlide2";
-import IntroSlide3 from "../intro/IntroSlide3";
+import IntroSlide2 from "@/components/auth/intro/IntroAdManagement";
+import IntroSlide3 from "@/components/auth/intro/IntroAIAnalytics";
+import IntroSlide1 from "@/components/auth/intro/IntroLogo";
 
 export default function OnboardingIntro() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -41,7 +41,7 @@ export default function OnboardingIntro() {
             className={`h-2.5 rounded-full transition-all duration-300 ${getIndicatorColor(
               index,
             )}`}
-            aria-label={`Go to slide ${index + 1}`}
+            aria-label={`${index + 1}번 슬라이드로 이동`}
           />
         ))}
       </div>

@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 
 import { maskEmail } from "@/utils/maskEmail";
 
-import Button from "@/components/common/Button";
+import Button from "@/components/common/button/Button";
 
 import useAuthStore from "@/store/useAuthStore";
 
-export default function Step02Email() {
+export default function ShowEmailResultStep() {
   const navigate = useNavigate();
   const { email } = useAuthStore();
 

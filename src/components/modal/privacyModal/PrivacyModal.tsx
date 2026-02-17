@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import Button from "@/components/common/Button";
+import Button from "@/components/common/button/Button";
+import Modal from "@/components/common/modal/Modal";
 
 import AgreementItem from "./AgreementItem";
-import Modal from "../Modal";
 
 import marketingContent from "@/assets/docs/marketing-agreement.md?raw";
 import privacyContent from "@/assets/docs/privacy-collection.md?raw";
@@ -63,8 +63,15 @@ export default function PrivacyModal({
   const isRequiredChecked = agreements.privacy;
 
   return (
-    <Modal onClose={onClose}>
-      <div className="flex flex-col w-125 max-h-[80vh] bg-white rounded-15 overflow-hidden">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      disableOverlayClick
+      padding="none"
+      size="lg"
+      className="w-125 max-h-[80vh] overflow-hidden"
+    >
+      <div className="flex flex-col w-full h-full">
         <div className="px-6 pt-8 pb-4">
           <h2 className="font-heading2 text-text-main">개인정보 수집 동의</h2>
         </div>

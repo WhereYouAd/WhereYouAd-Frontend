@@ -4,9 +4,9 @@ import { type RouteObject, useLocation } from "react-router-dom";
 import { loadable } from "@/utils/loadable";
 
 import AuthFormSkeleton from "@/components/auth/skeleton/AuthFormSkeleton";
-import LoginSkeleton from "@/components/auth/skeleton/LoginSkeleton";
-import SignupSkeleton from "@/components/auth/skeleton/SignupSkeleton";
-import SignupStep01Skeleton from "@/components/auth/skeleton/SignupStep01Skeleton";
+import LoginPageSkeleton from "@/components/auth/skeleton/LoginPageSkeleton";
+import SignupEmailStepSkeleton from "@/components/auth/skeleton/SignupEmailStepSkeleton";
+import SignupPageSkeleton from "@/components/auth/skeleton/SignupPageSkeleton";
 
 const FindEmail = loadable(
   lazy(() => import("@/pages/auth/FindEmail")),
@@ -18,7 +18,7 @@ const FindPw = loadable(
 );
 const Login = loadable(
   lazy(() => import("@/pages/auth/Login")),
-  <LoginSkeleton />,
+  <LoginPageSkeleton />,
 );
 
 const RedirectPage = loadable(
@@ -26,7 +26,6 @@ const RedirectPage = loadable(
   <AuthFormSkeleton />,
 );
 
-// Signup은 Fallback이 달라짐 -> raw lazy 컴포넌트 사용
 const Signup = lazy(() => import("@/pages/auth/Signup"));
 
 function SignupPage() {
@@ -35,7 +34,9 @@ function SignupPage() {
 
   return (
     <Suspense
-      fallback={step === 1 ? <SignupStep01Skeleton /> : <SignupSkeleton />}
+      fallback={
+        step === 1 ? <SignupEmailStepSkeleton /> : <SignupPageSkeleton />
+      }
     >
       <Signup />
     </Suspense>
