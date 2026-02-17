@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { step01Schema } from "@/utils/validation";
+import { signupEmailSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useTimer } from "@/hooks/common/useTimer";
 
 import useAuthStore from "@/store/useAuthStore";
 
-export type TStep01FormValues = z.infer<typeof step01Schema>;
+export type TSignupEmailFormValues = z.infer<typeof signupEmailSchema>;
 
 interface IUseEmailVerificationProps {
   onNext: () => void;
@@ -26,9 +26,9 @@ export const useEmailVerification = ({
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
 
-  const form = useForm<TStep01FormValues>({
+  const form = useForm<TSignupEmailFormValues>({
     mode: "onBlur",
-    resolver: zodResolver(step01Schema),
+    resolver: zodResolver(signupEmailSchema),
   });
 
   const {
@@ -83,7 +83,7 @@ export const useEmailVerification = ({
     }
   };
 
-  const onSubmit = async (data: TStep01FormValues) => {
+  const onSubmit = async (data: TSignupEmailFormValues) => {
     useCheckCode.mutate(
       { email: data.email, authCode: data.code },
       {

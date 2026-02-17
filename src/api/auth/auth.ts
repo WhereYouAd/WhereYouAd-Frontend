@@ -1,5 +1,3 @@
-import type { ICommonResponse } from "@/types/common/common";
-
 import type {
   IEmailSendRequest,
   IEmailSendResponse,
@@ -9,7 +7,8 @@ import type {
   ISignUpRequest,
   ISignUpResponse,
   ITokenRefreshResponse,
-} from "../../types/auth/auth";
+} from "@/types/auth/auth";
+import type { ICommonResponse } from "@/types/common/common";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 

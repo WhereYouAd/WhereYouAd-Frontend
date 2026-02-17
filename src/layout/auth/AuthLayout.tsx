@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import OnboardingIntro from "@/components/auth/common/OnboardingIntro";
+import OnboardingIntro from "@/components/auth/intro/OnboardingIntro";
 
 export default function AuthLayout() {
   return (

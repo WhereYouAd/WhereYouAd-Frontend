@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import AiTalk from "@/assets/auth/introSlide/ai_talk.svg?react";
 
-export default function IntroSlide3({ isActive }: { isActive: boolean }) {
+export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
   const [showBubble, setShowBubble] = useState(false);
 
   useEffect(() => {

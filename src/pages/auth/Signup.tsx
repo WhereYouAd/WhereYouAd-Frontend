@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
+import { useStepNavigation } from "@/hooks/common/useStepNavigation";
 
-import Step01Email from "@/components/auth/signupStep/Step01Email";
-import Step02Password from "@/components/auth/signupStep/Step02Password";
-import Step03Profile from "@/components/auth/signupStep/Step03Profile";
-import Button from "@/components/common/Button";
+import Step01Email from "@/components/auth/flows/signup/EnterEmailStep";
+import Step02Password from "@/components/auth/flows/signup/PasswordSetupStep";
+import Step03Profile from "@/components/auth/flows/signup/ProfileSetupStep";
+import Button from "@/components/common/button/Button";
 
 import GoogleIcon from "@/assets/auth/social/google.svg?react";
 import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
@@ -17,21 +18,15 @@ import useAuthStore from "@/store/useAuthStore";
 export default function Signup() {
   const location = useLocation();
   const { resetAuth } = useAuthStore();
-  const [step, setStep] = useState<number>(location.state?.step || 0);
+  const { step, setStep, handleNext } = useStepNavigation(
+    location.state?.step || 0,
+  );
 
   useEffect(() => {
     return () => {
       resetAuth();
     };
   }, [resetAuth]);
-
-  const handleEmailStart = () => {
-    setStep(1);
-  };
-
-  const handleNext = () => {
-    setStep((prev) => prev + 1);
-  };
 
   const { handleSocialLogin } = useSocialLogin();
 
@@ -53,7 +48,7 @@ export default function Signup() {
           size="big"
           variant="gradient"
           leftIcon={<MailIcon className="w-6 h-6" />}
-          onClick={handleEmailStart}
+          onClick={() => setStep(1)}
           className="font-heading3 shadow-md hover:shadow-lg transition-all"
         >
           이메일로 시작하기

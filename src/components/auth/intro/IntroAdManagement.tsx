@@ -28,7 +28,7 @@ const PLATFORMS = [
 
 const CAROUSEL_ITEMS = [...PLATFORMS, ...PLATFORMS, ...PLATFORMS, ...PLATFORMS];
 
-export default function IntroSlide2({ isActive }: { isActive: boolean }) {
+export default function IntroAdManagement({ isActive }: { isActive: boolean }) {
   return (
     <div
       className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out bg-brand-300 ${

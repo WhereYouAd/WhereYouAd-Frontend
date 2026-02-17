@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
-export default function SignupSkeleton() {
+export default function SignupPageSkeleton() {
   return (
     <div className="flex w-full flex-col items-center">
       <div className="flex w-full flex-col gap-10">

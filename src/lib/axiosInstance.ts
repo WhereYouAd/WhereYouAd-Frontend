@@ -102,7 +102,6 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error("토큰 재발급 실패:", refreshError);
         onRefreshFailed(refreshError);
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);
@@ -112,7 +111,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    console.error("API Error:", error);
     return Promise.reject(error);
   },
 );
