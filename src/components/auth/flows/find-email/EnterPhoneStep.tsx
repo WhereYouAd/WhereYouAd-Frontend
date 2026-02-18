@@ -86,7 +86,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
     stop();
   };
 
-  const onSubmit: SubmitHandler<TFindEmailFormValues> = async (formData) => {
+  const onSubmit: SubmitHandler<TFindEmailFormValues> = (formData) => {
     const phoneNumber = stripPhoneHyphens(formData.phoneNum);
     verifySMSMutate(
       { phoneNumber, verificationCode: formData.code },
