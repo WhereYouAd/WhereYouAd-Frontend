@@ -27,9 +27,6 @@ export default function RedirectPage() {
     const accessToken = getCookie("access_token");
 
     if (accessToken) {
-      // TODO: 로그인 상태 업데이트
-      login("social@user.com", accessToken);
-
       deleteCookie("access_token");
 
       toast.success("소셜 로그인되었습니다.");
