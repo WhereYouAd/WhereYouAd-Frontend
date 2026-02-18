@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
+import ChevronIcon from "@/assets/icon/common/chevron-up.svg?react";
 import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean) {
@@ -24,6 +26,16 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const activeParent = mainNav.find((item) =>
+      item.children?.some((c) => c.path === location.pathname),
+    );
+
+    if (activeParent) setOpenId(activeParent.id);
+  }, [location.pathname]);
+
   return (
     <div className="flex h-full w-64 flex-col bg-white rounded-3xl drop-shadow-md">
       <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
@@ -37,25 +49,76 @@ export default function Sidebar() {
           {mainNav.map((item) => {
             const Icon = item.icon;
 
+            const isOpen = openId === item.id;
+            const isChildActive =
+              item.children?.some((c) => c.path === location.pathname) ?? false;
+
             const isParentActive =
-              (item.path && location.pathname === item.path) ||
-              (item.children?.some((c) => c.path === location.pathname) ??
-                false);
+              (item.path && location.pathname === item.path) || isChildActive;
+            const showChevron =
+              !!item.children?.length && (isOpen || isParentActive);
 
             // children 있는 부모 메뉴
             if (item.children?.length) {
               return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={getMainItemClass(isParentActive)}
-                  onClick={() => {
-                    if (item.path) navigate(item.path);
-                  }}
-                >
-                  {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                  <span>{item.label}</span>
-                </button>
+                <div key={item.id} className="flex flex-col">
+                  <div className={getMainItemClass(isParentActive)}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpenId(item.id);
+                        if (item.path) navigate(item.path);
+                      }}
+                      className="flex flex-1 items-center gap-4"
+                    >
+                      {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
+                      <span>{item.label}</span>
+                    </button>
+
+                    {showChevron && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenId((prev) =>
+                            prev === item.id ? null : item.id,
+                          );
+                        }}
+                        className="ml-auto p-2"
+                      >
+                        <ChevronIcon
+                          className={[
+                            "h-3 w-3",
+                            isOpen ? "rotate-0" : "rotate-180",
+                          ].join(" ")}
+                        />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* 하위 메뉴 */}
+                  {isOpen && (
+                    <div className="ml-11 mt-1 flex flex-col gap-1">
+                      {item.children.map((child) => (
+                        <NavLink
+                          key={child.id}
+                          to={child.path ?? "#"}
+                          end={child.path === item.path}
+                          className={({ isActive }) =>
+                            [
+                              "pl-4 flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
+                              isActive
+                                ? "bg-chart-3 text-white"
+                                : "text-text-auth-sub hover:bg-[#F6F6F6]",
+                            ].join(" ")
+                          }
+                        >
+                          {child.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                </div>
               );
             }
 
@@ -96,6 +159,7 @@ export default function Sidebar() {
                 <NavLink
                   key={item.id}
                   to={item.path}
+                  onClick={() => setOpenId(null)}
                   className={({ isActive }) => getFooterItemClass(isActive)}
                 >
                   {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
@@ -108,6 +172,7 @@ export default function Sidebar() {
               <button
                 key={item.id}
                 type="button"
+                onClick={() => setOpenId(null)}
                 className={getFooterItemClass(false)}
               >
                 {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}

@@ -15,7 +15,7 @@ const Timeline = loadable(
 const AdsListPage = loadable(
   lazy(() => import("@/pages/ads/list/AdsListPage")),
 );
-const AdsCreatePage = loadable(
+const AdsCampaignGroup = loadable(
   lazy(() => import("@/pages/ads/new/AdsCreatePage")),
 );
 const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
@@ -39,8 +39,8 @@ const MainRoutes: RouteObject[] = [
     element: <AdsListPage />,
   },
   {
-    path: "ads/create",
-    element: <AdsCreatePage />,
+    path: "ads/campaign-group",
+    element: <AdsCampaignGroup />,
   },
   {
     path: "setting",
