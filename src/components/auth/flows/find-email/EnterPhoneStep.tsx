@@ -41,6 +41,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
     handleSubmit,
     control,
     trigger,
+    setValue,
     formState: { errors, isValid },
   } = useForm<TFindEmailFormValues>({
     mode: "onBlur",
@@ -84,6 +85,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const handleEditPhone = () => {
     setSendCode(false);
     stop();
+    setValue("code", "");
   };
 
   const onSubmit: SubmitHandler<TFindEmailFormValues> = (formData) => {
@@ -146,6 +148,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
                 type="text"
                 value={watchedPhone || ""}
                 readOnly
+                aria-label="입력된 전화번호"
                 className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
               />
               <button
