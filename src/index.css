@@ -47,6 +47,8 @@ button {
 
   --color-status-red: #ff2a4b;
   --color-status-blue: #0084fe;
+  --color-status-green: #22c55e;
+  --color-status-yellow: #facc15;
 
   --color-text-main: #212121;
   --color-text-auth-sub: #546171;
