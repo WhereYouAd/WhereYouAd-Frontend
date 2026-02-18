@@ -7,6 +7,8 @@ import type { z } from "zod";
 
 import { findEmailSchema } from "@/utils/validation";
 
+import { useAuth } from "@/hooks/auth/useAuth";
+
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -21,6 +23,9 @@ type TFindEmailFormValues = z.infer<typeof findEmailSchema>;
 export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const navigate = useNavigate();
   const { setEmail } = useAuthStore();
+  const { useSendSMS, useVerifySMS } = useAuth();
+  const { mutate: sendSMSMutate } = useSendSMS;
+  const { mutate: verifySMSMutate } = useVerifySMS;
 
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
@@ -42,17 +47,40 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const postSendCode = async () => {
     const isPhoneValid = await trigger("phoneNum");
     if (isPhoneValid && watchedPhone) {
-      setSendCode(true);
-      toast.success("인증번호가 발송되었습니다.", {
-        description: "테스트용: 아무 번호나 입력하세요",
-      });
+      const phoneNumber = watchedPhone.replace(/-/g, "");
+      sendSMSMutate(
+        { phoneNumber },
+        {
+          onSuccess: () => {
+            setSendCode(true);
+            toast.success("인증번호가 발송되었습니다.");
+          },
+          onError: () => {
+            toast.error("인증번호 발송에 실패했습니다.");
+          },
+        },
+      );
     }
   };
 
-  const onSubmit: SubmitHandler<TFindEmailFormValues> = async () => {
-    // 임시 이메일
-    setEmail("smu2021@naver.com");
-    onNext();
+  const onSubmit: SubmitHandler<TFindEmailFormValues> = async (formData) => {
+    const phoneNumber = formData.phoneNum.replace(/-/g, "");
+    verifySMSMutate(
+      { phoneNumber, verificationCode: formData.code },
+      {
+        onSuccess: (res) => {
+          if (res.data.isVerified) {
+            setEmail(res.data.email);
+            onNext();
+          } else {
+            setCodeError(res.data.verificationMessage);
+          }
+        },
+        onError: () => {
+          setCodeError("인증번호가 올바르지 않습니다.");
+        },
+      },
+    );
   };
 
   useEffect(() => {

@@ -6,6 +6,10 @@ import type {
   ILoginResponse,
   ISignUpRequest,
   ISignUpResponse,
+  ISmsSendRequest,
+  ISmsSendResponse,
+  ISmsVerifyRequest,
+  ISmsVerifyResponse,
   ITokenRefreshResponse,
 } from "@/types/auth/auth";
 import type { ICommonResponse } from "@/types/common/common";
@@ -60,5 +64,27 @@ export const login = async (
     data,
   );
 
+  return responseData;
+};
+
+// SMS 인증 코드 전송
+export const sendSMS = async (
+  data: ISmsSendRequest,
+): Promise<ICommonResponse<ISmsSendResponse>> => {
+  const { data: responseData } = await axiosInstance.post(
+    "/api/users/sms-send",
+    data,
+  );
+  return responseData;
+};
+
+// SMS 인증 코드 검증
+export const verifySMS = async (
+  data: ISmsVerifyRequest,
+): Promise<ICommonResponse<ISmsVerifyResponse>> => {
+  const { data: responseData } = await axiosInstance.post(
+    "/api/users/sms-verify",
+    data,
+  );
   return responseData;
 };
