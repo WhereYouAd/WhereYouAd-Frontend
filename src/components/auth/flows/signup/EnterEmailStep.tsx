@@ -30,8 +30,8 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>회원가입을 위해</p>
-          <p>이메일 인증을 진행할게요</p>
+          <span className="block">회원가입을 위해</span>
+          <span className="block">이메일 인증을 진행할게요</span>
         </h1>
 
         <div className="flex flex-col gap-6">
