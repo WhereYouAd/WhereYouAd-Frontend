@@ -35,6 +35,7 @@ export default function Badge({
 
   return (
     <span
+      role="status"
       className={twMerge(
         "inline-flex items-center gap-2 rounded-full whitespace-nowrap",
         sizeClasses[size],

@@ -32,9 +32,21 @@ export function DropdownMenu({
 
   return (
     <div ref={ref} className={["relative inline-block", className].join(" ")}>
-      <button type="button" onClick={() => setOpen((v) => !v)}>
+      <div
+        role="button"
+        tabIndex={0}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((v) => !v);
+          }
+        }}
+      >
         {trigger}
-      </button>
+      </div>
       {open && (
         <div className="absolute left-0 mt-2 w-72 rounding-15 bg-brand-200 py-3 px-1 shadow-Medium">
           <div className="space-y-1">

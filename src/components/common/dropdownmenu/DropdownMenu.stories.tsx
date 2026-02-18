@@ -14,7 +14,7 @@ type TDropdownMenuStory = StoryObj<typeof DropdownMenu>;
 export const Default: TDropdownMenuStory = {
   render: () => (
     <DropdownMenu
-      trigger={<button>...</button>}
+      trigger={<span>...</span>}
       items={[
         { label: "선택된 부분", active: true, onClick: () => alert("선택됨") },
         { label: "선택 안 된 부분", onClick: () => alert("선택 안됨") },
