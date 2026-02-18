@@ -8,6 +8,7 @@ import type { z } from "zod";
 import { findEmailSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
+import { useTimer } from "@/hooks/common/useTimer";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
@@ -29,6 +30,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
 
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
+  const { formattedTime, isExpired, restart } = useTimer(180);
 
   const {
     register,
@@ -53,6 +55,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
         {
           onSuccess: () => {
             setSendCode(true);
+            restart();
             toast.success("인증번호가 발송되었습니다.");
           },
           onError: () => {
@@ -136,10 +139,15 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
                 : "인증번호를 입력하세요"
             }
             type="text"
-            timer={sendCode ? "03:00" : undefined}
+            timer={sendCode ? formattedTime : undefined}
             {...register("code")}
-            error={!!errors.code || !!codeError}
-            errorMessage={errors.code?.message || codeError}
+            disabled={isExpired && sendCode}
+            error={!!errors.code || !!codeError || (isExpired && sendCode)}
+            errorMessage={
+              isExpired && sendCode
+                ? "인증 시간이 만료되었습니다."
+                : errors.code?.message || codeError
+            }
           />
         </div>
 
@@ -149,7 +157,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             fullWidth
             onClick={handleSubmit(onSubmit)}
             variant="gradient"
-            disabled={!isValid}
+            disabled={!isValid || (isExpired && sendCode)}
           >
             다음으로
           </Button>
