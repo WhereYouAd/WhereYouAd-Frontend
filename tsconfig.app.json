@@ -29,5 +29,10 @@
     }
   },
 
-  "include": ["src", "vite-env.d.ts"]
+  "include": [
+    "src",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "vite-env.d.ts"
+  ]
 }
