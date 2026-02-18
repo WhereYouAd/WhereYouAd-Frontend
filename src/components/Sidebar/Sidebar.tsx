@@ -4,20 +4,23 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import ChevronIcon from "@/assets/icon/common/chevron-up.svg?react";
+import CollapseIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
 import Logo from "@/assets/logo/symbol-color.svg?react";
 
-function getMainItemClass(isActive: boolean) {
+function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex h-[55px] items-center gap-4 rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    isCollapsed ? "h-13 w-13 mx-auto justify-center" : "h-[55px] gap-4 px-3",
     isActive
       ? "bg-chart-3 text-white"
       : "text-text-auth-sub hover:bg-[#F6F6F6]",
   ].join(" ");
 }
 
-function getFooterItemClass(isActive: boolean) {
+function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex h-[55px] items-center gap-4 rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
   ].join(" ");
 }
@@ -27,6 +30,7 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const [openId, setOpenId] = useState<string | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const activeParent = mainNav.find((item) =>
@@ -37,12 +41,41 @@ export default function Sidebar() {
   }, [location.pathname]);
 
   return (
-    <div className="flex h-full w-64 flex-col bg-white rounded-3xl drop-shadow-md">
+    <div
+      className={[
+        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-300",
+        isCollapsed ? "w-25" : "w-64",
+      ].join(" ")}
+    >
       <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
-        <NavLink to="/" className="mt-5 mb-2 flex h-16 items-center gap-3 px-4">
+        <NavLink
+          to="/"
+          className={[
+            "mt-5 mb-2 flex h-16 items-center",
+            isCollapsed ? "justify-center" : "gap-3 px-4",
+          ].join(" ")}
+        >
           <Logo className="h-12 w-12" />
-          <span className="text-xl font-semibold">WhereYouAd</span>
+          {!isCollapsed && (
+            <span className="text-xl font-semibold">WhereYouAd</span>
+          )}
         </NavLink>
+
+        <button
+          type="button"
+          onClick={() => {
+            setIsCollapsed((prev) => !prev);
+            setOpenId(null);
+          }}
+          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
+        >
+          <CollapseIcon
+            className={[
+              "h-2 w-2 transition-transform duration-300",
+              isCollapsed ? "rotate-180" : "",
+            ].join(" ")}
+          />
+        </button>
 
         {/* Main */}
         <nav className="flex flex-1 flex-col gap-1 px-2">
@@ -56,23 +89,55 @@ export default function Sidebar() {
             const isParentActive =
               (item.path && location.pathname === item.path) || isChildActive;
             const showChevron =
-              !!item.children?.length && (isOpen || isParentActive);
+              !isCollapsed &&
+              !!item.children?.length &&
+              (isOpen || isParentActive);
 
             // children 있는 부모 메뉴
             if (item.children?.length) {
               return (
-                <div key={item.id} className="flex flex-col">
-                  <div className={getMainItemClass(isParentActive)}>
+                <div
+                  key={item.id}
+                  className="relative flex flex-col"
+                  onMouseEnter={() => {
+                    if (isCollapsed) setOpenId(item.id);
+                  }}
+                  onMouseLeave={() => {
+                    if (isCollapsed) setOpenId(null);
+                  }}
+                >
+                  <div
+                    className={getMainItemClass(isParentActive, isCollapsed)}
+                  >
                     <button
                       type="button"
                       onClick={() => {
                         setOpenId(item.id);
                         if (item.path) navigate(item.path);
                       }}
-                      className="flex flex-1 items-center gap-4"
+                      className={[
+                        "flex items-center",
+                        isCollapsed ? "justify-center w-full" : "flex-1 gap-4",
+                      ].join(" ")}
                     >
-                      {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                      <span>{item.label}</span>
+                      {Icon && (
+                        <Icon
+                          className={[
+                            "h-6 w-6 shrink-0",
+                            isCollapsed ? "" : "ml-2",
+                          ].join(" ")}
+                        />
+                      )}
+                      <span
+                        className={[
+                          "whitespace-nowrap transition-all duration-200",
+                          isCollapsed
+                            ? "opacity-0 w-0 overflow-hidden"
+                            : "opacity-100 ml-0",
+                        ].join(" ")}
+                      >
+                        {item.label}
+                      </span>
                     </button>
 
                     {showChevron && (
@@ -97,7 +162,8 @@ export default function Sidebar() {
                   </div>
 
                   {/* 하위 메뉴 */}
-                  {isOpen && (
+                  {/* 확장 상태 */}
+                  {!isCollapsed && isOpen && (
                     <div className="ml-11 mt-1 flex flex-col gap-1">
                       {item.children.map((child) => (
                         <NavLink
@@ -107,6 +173,27 @@ export default function Sidebar() {
                           className={({ isActive }) =>
                             [
                               "pl-4 flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
+                              isActive
+                                ? "bg-chart-3 text-white"
+                                : "text-text-auth-sub hover:bg-[#F6F6F6]",
+                            ].join(" ")
+                          }
+                        >
+                          {child.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
+                  {/* 축소 상태 */}
+                  {isCollapsed && isOpen && (
+                    <div className="absolute left-full top-0 ml-3 w-52 rounded-2xl bg-white p-2 shadow-lg">
+                      {item.children.map((child) => (
+                        <NavLink
+                          key={child.id}
+                          to={child.path ?? "#"}
+                          className={({ isActive }) =>
+                            [
+                              "flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
                               isActive
                                 ? "bg-chart-3 text-white"
                                 : "text-text-auth-sub hover:bg-[#F6F6F6]",
@@ -128,10 +215,28 @@ export default function Sidebar() {
                 <NavLink
                   key={item.id}
                   to={item.path}
-                  className={({ isActive }) => getMainItemClass(isActive)}
+                  className={({ isActive }) =>
+                    getMainItemClass(isActive, isCollapsed)
+                  }
                 >
-                  {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                  <span>{item.label}</span>
+                  {Icon && (
+                    <Icon
+                      className={[
+                        "h-6 w-6 shrink-0",
+                        isCollapsed ? "" : "ml-2",
+                      ].join(" ")}
+                    />
+                  )}
+                  <span
+                    className={[
+                      "whitespace-nowrap transition-all duration-200",
+                      isCollapsed
+                        ? "opacity-0 w-0 overflow-hidden"
+                        : "opacity-100 ml-0",
+                    ].join(" ")}
+                  >
+                    {item.label}
+                  </span>
                 </NavLink>
               );
             }
@@ -140,17 +245,33 @@ export default function Sidebar() {
               <button
                 key={item.id}
                 type="button"
-                className={getMainItemClass(false)}
+                className={getMainItemClass(false, isCollapsed)}
               >
-                {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                <span>{item.label}</span>
+                {Icon && (
+                  <Icon
+                    className={[
+                      "h-6 w-6 shrink-0",
+                      isCollapsed ? "" : "ml-2",
+                    ].join(" ")}
+                  />
+                )}
+                <span
+                  className={[
+                    "whitespace-nowrap transition-all duration-200",
+                    isCollapsed
+                      ? "opacity-0 w-0 overflow-hidden"
+                      : "opacity-100 ml-0",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </span>
               </button>
             );
           })}
         </nav>
 
         {/* Footer */}
-        <div className="px-2 py-2 mb-3">
+        <div className={["py-2 mb-3", isCollapsed ? "" : "px-2"].join(" ")}>
           {footerNav.map((item) => {
             const Icon = item.icon;
 
@@ -160,10 +281,28 @@ export default function Sidebar() {
                   key={item.id}
                   to={item.path}
                   onClick={() => setOpenId(null)}
-                  className={({ isActive }) => getFooterItemClass(isActive)}
+                  className={({ isActive }) =>
+                    getFooterItemClass(isActive, isCollapsed)
+                  }
                 >
-                  {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                  <span>{item.label}</span>
+                  {Icon && (
+                    <Icon
+                      className={[
+                        "h-6 w-6 shrink-0",
+                        isCollapsed ? "" : "ml-2",
+                      ].join(" ")}
+                    />
+                  )}
+                  <span
+                    className={[
+                      "whitespace-nowrap transition-all duration-200",
+                      isCollapsed
+                        ? "opacity-0 w-0 overflow-hidden"
+                        : "opacity-100 ml-0",
+                    ].join(" ")}
+                  >
+                    {item.label}
+                  </span>
                 </NavLink>
               );
             }
@@ -173,10 +312,26 @@ export default function Sidebar() {
                 key={item.id}
                 type="button"
                 onClick={() => setOpenId(null)}
-                className={getFooterItemClass(false)}
+                className={getFooterItemClass(false, isCollapsed)}
               >
-                {Icon && <Icon className="ml-2 h-6 w-6 shrink-0" />}
-                <span>{item.label}</span>
+                {Icon && (
+                  <Icon
+                    className={[
+                      "h-6 w-6 shrink-0",
+                      isCollapsed ? "" : "ml-2",
+                    ].join(" ")}
+                  />
+                )}
+                <span
+                  className={[
+                    "whitespace-nowrap transition-all duration-200",
+                    isCollapsed
+                      ? "opacity-0 w-0 overflow-hidden"
+                      : "opacity-100 ml-0",
+                  ].join(" ")}
+                >
+                  {item.label}
+                </span>
               </button>
             );
           })}
