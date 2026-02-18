@@ -25,8 +25,8 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const navigate = useNavigate();
   const { setEmail } = useAuthStore();
   const { useSendSMS, useVerifySMS } = useAuth();
-  const { mutate: sendSMSMutate } = useSendSMS;
-  const { mutate: verifySMSMutate } = useVerifySMS;
+  const { mutate: sendSMSMutate, isPending: isSending } = useSendSMS;
+  const { mutate: verifySMSMutate, isPending: isVerifying } = useVerifySMS;
 
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
@@ -114,8 +114,8 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>이메일 찾기를 위해</p>
-          <p>휴대폰 인증을 진행할게요</p>
+          <span className="block">이메일 찾기를 위해</span>
+          <span className="block">휴대폰 인증을 진행할게요</span>
         </h1>
 
         <div className="flex flex-col gap-6">
@@ -135,6 +135,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
                 className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
                 onClick={postSendCode}
                 type="button"
+                disabled={isSending}
               >
                 인증번호 받기
               </Button>
@@ -183,7 +184,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             fullWidth
             onClick={handleSubmit(onSubmit)}
             variant="gradient"
-            disabled={!isValid || (isExpired && sendCode)}
+            disabled={!isValid || isVerifying || (isExpired && sendCode)}
           >
             다음으로
           </Button>
@@ -194,7 +195,8 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             <button
               type="button"
               onClick={handleResendSMS}
-              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+              disabled={isSending}
+              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub disabled:opacity-50"
             >
               인증번호 다시 받기
             </button>

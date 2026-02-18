@@ -14,8 +14,8 @@ export default function ShowEmailResultStep() {
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>입력하신 정보로</p>
-          <p>WYA에 가입된 계정을 찾았어요</p>
+          <span className="block">입력하신 정보로</span>
+          <span className="block">WYA에 가입된 계정을 찾았어요</span>
         </h1>
 
         <div className="w-full h-24 bg-gray-50 rounded-2xl flex items-center justify-between px-5 mb-10">
