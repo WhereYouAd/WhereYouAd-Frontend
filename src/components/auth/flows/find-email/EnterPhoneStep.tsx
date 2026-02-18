@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -23,7 +23,6 @@ interface IEnterPhoneStepProps {
 type TFindEmailFormValues = z.infer<typeof findEmailSchema>;
 
 export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
-  const navigate = useNavigate();
   const { setEmail } = useAuthStore();
   const { useSendSMS, useVerifySMS } = useAuth();
   const { mutate: sendSMSMutate, isPending: isSending } = useSendSMS;
@@ -205,13 +204,12 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
         )}
 
         <div className="mt-10 flex justify-center">
-          <button
-            type="button"
+          <Link
+            to="/find-pw"
             className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
-            onClick={() => navigate("/find-pw")}
           >
             비밀번호 찾기
-          </button>
+          </Link>
         </div>
       </div>
     </div>
