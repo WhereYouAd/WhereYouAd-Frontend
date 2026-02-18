@@ -20,6 +20,7 @@ const AdsCampaignGroup = loadable(
 );
 const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
 const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
+const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const MainRoutes: RouteObject[] = [
   {
@@ -49,6 +50,10 @@ const MainRoutes: RouteObject[] = [
   {
     path: "workspace",
     element: <Workspace />,
+  },
+  {
+    path: "workspace/billing",
+    element: <Billing />,
   },
 ];
 
