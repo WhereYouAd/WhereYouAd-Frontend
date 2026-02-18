@@ -39,7 +39,7 @@ export default function ProfileSetupStep() {
         email,
         password,
         name: data.name,
-        phone_number: data.phoneNum,
+        phone_number: data.phoneNum.replace(/-/g, ""),
       },
       {
         onSuccess: () => {
