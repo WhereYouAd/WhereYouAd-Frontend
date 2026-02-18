@@ -30,7 +30,11 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
 
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
-  const { formattedTime, isExpired, restart } = useTimer(180);
+  const { formattedTime, isExpired, restart, stop } = useTimer(0, {
+    onExpire: () => {
+      toast.error("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+    },
+  });
 
   const {
     register,
@@ -46,24 +50,40 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const watchedPhone = useWatch({ control, name: "phoneNum" });
   const watchedCode = useWatch({ control, name: "code" });
 
+  const sendVerificationSMS = (phoneNumber: string, message: string) => {
+    sendSMSMutate(
+      { phoneNumber },
+      {
+        onSuccess: (res) => {
+          setSendCode(true);
+          restart(res.data.expireIn);
+          toast.success(message);
+        },
+        onError: () => {
+          toast.error("인증번호 발송에 실패했습니다.");
+        },
+      },
+    );
+  };
+
   const postSendCode = async () => {
     const isPhoneValid = await trigger("phoneNum");
     if (isPhoneValid && watchedPhone) {
       const phoneNumber = watchedPhone.replace(/-/g, "");
-      sendSMSMutate(
-        { phoneNumber },
-        {
-          onSuccess: () => {
-            setSendCode(true);
-            restart();
-            toast.success("인증번호가 발송되었습니다.");
-          },
-          onError: () => {
-            toast.error("인증번호 발송에 실패했습니다.");
-          },
-        },
-      );
+      sendVerificationSMS(phoneNumber, "인증번호가 발송되었습니다.");
     }
+  };
+
+  const handleResendSMS = () => {
+    if (watchedPhone) {
+      const phoneNumber = watchedPhone.replace(/-/g, "");
+      sendVerificationSMS(phoneNumber, "인증번호가 재발송되었습니다.");
+    }
+  };
+
+  const handleEditPhone = () => {
+    setSendCode(false);
+    stop();
   };
 
   const onSubmit: SubmitHandler<TFindEmailFormValues> = async (formData) => {
@@ -89,10 +109,6 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   useEffect(() => {
     setCodeError("");
   }, [watchedCode, watchedPhone]);
-
-  useEffect(() => {
-    setSendCode(false);
-  }, [watchedPhone]);
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
@@ -124,12 +140,22 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
               </Button>
             </div>
           ) : (
-            <CommonAuthInput
-              type="text"
-              value={watchedPhone || ""}
-              readOnly
-              className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
-            />
+            <div className="relative w-full">
+              <CommonAuthInput
+                type="text"
+                value={watchedPhone || ""}
+                readOnly
+                className="w-full h-13.5 px-5 border rounding-15 text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+              />
+              <button
+                type="button"
+                onClick={handleEditPhone}
+                aria-label="전화번호 수정"
+                className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-main"
+              >
+                수정
+              </button>
+            </div>
           )}
 
           <CommonAuthInput
@@ -162,6 +188,18 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             다음으로
           </Button>
         </div>
+
+        {sendCode && (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={handleResendSMS}
+              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+            >
+              인증번호 다시 받기
+            </button>
+          </div>
+        )}
 
         <div className="mt-10 flex justify-center">
           <button
