@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import { stripPhoneHyphens } from "@/utils/formatPhoneNumber";
 import { findEmailSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -69,14 +70,14 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   const postSendCode = async () => {
     const isPhoneValid = await trigger("phoneNum");
     if (isPhoneValid && watchedPhone) {
-      const phoneNumber = watchedPhone.replace(/-/g, "");
+      const phoneNumber = stripPhoneHyphens(watchedPhone);
       sendVerificationSMS(phoneNumber, "인증번호가 발송되었습니다.");
     }
   };
 
   const handleResendSMS = () => {
     if (watchedPhone) {
-      const phoneNumber = watchedPhone.replace(/-/g, "");
+      const phoneNumber = stripPhoneHyphens(watchedPhone);
       sendVerificationSMS(phoneNumber, "인증번호가 재발송되었습니다.");
     }
   };
@@ -87,7 +88,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   };
 
   const onSubmit: SubmitHandler<TFindEmailFormValues> = async (formData) => {
-    const phoneNumber = formData.phoneNum.replace(/-/g, "");
+    const phoneNumber = stripPhoneHyphens(formData.phoneNum);
     verifySMSMutate(
       { phoneNumber, verificationCode: formData.code },
       {

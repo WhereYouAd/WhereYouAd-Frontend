@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import { stripPhoneHyphens } from "@/utils/formatPhoneNumber";
 import { signupProfileSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -39,7 +40,7 @@ export default function ProfileSetupStep() {
         email,
         password,
         name: data.name,
-        phone_number: data.phoneNum.replace(/-/g, ""),
+        phone_number: stripPhoneHyphens(data.phoneNum),
       },
       {
         onSuccess: () => {
