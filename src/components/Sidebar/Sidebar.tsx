@@ -113,6 +113,8 @@ export default function Sidebar() {
                   >
                     <button
                       type="button"
+                      aria-haspopup="true"
+                      aria-expanded={isOpen}
                       onClick={() => {
                         setOpenId(item.id);
                         if (item.path) navigate(item.path);
