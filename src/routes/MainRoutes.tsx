@@ -15,11 +15,12 @@ const Timeline = loadable(
 const AdsListPage = loadable(
   lazy(() => import("@/pages/ads/list/AdsListPage")),
 );
-const AdsCreatePage = loadable(
+const AdsCampaignGroup = loadable(
   lazy(() => import("@/pages/ads/new/AdsCreatePage")),
 );
 const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
 const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
+const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const MainRoutes: RouteObject[] = [
   {
@@ -39,8 +40,8 @@ const MainRoutes: RouteObject[] = [
     element: <AdsListPage />,
   },
   {
-    path: "ads/create",
-    element: <AdsCreatePage />,
+    path: "ads/campaign-group",
+    element: <AdsCampaignGroup />,
   },
   {
     path: "setting",
@@ -49,6 +50,10 @@ const MainRoutes: RouteObject[] = [
   {
     path: "workspace",
     element: <Workspace />,
+  },
+  {
+    path: "workspace/billing",
+    element: <Billing />,
   },
 ];
 
