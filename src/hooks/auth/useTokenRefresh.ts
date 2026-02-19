@@ -7,6 +7,8 @@ export const useTokenRefresh = () => {
   const { setAccessToken, logout } = useAuthStore();
 
   useEffect(() => {
+    if (!localStorage.getItem("hasSession")) return;
+
     const initAuth = async () => {
       try {
         const { data } = await reissueToken();

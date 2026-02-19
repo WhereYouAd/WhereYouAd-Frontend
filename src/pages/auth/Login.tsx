@@ -16,7 +16,6 @@ import Button from "@/components/common/button/Button";
 import GoogleIcon from "@/assets/auth/social/google.svg?react";
 import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
 import NaverIcon from "@/assets/auth/social/naver.svg?react";
-import useAuthStore from "@/store/useAuthStore";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 
@@ -32,14 +31,11 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { useLogin } = useAuth();
-  const { login: loginAction } = useAuthStore();
   const { handleSocialLogin } = useSocialLogin();
 
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
-      onSuccess: (response) => {
-        const { accessToken } = response.data;
-        loginAction(data.email, accessToken);
+      onSuccess: () => {
         navigate("/", { replace: true });
       },
       onError: (error: AxiosError<{ message?: string }>) => {
