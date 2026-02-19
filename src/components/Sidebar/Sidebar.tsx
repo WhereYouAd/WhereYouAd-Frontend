@@ -63,6 +63,7 @@ export default function Sidebar() {
 
         <button
           type="button"
+          aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
           onClick={() => {
             setIsCollapsed((prev) => !prev);
             setOpenId(null);
@@ -143,6 +144,9 @@ export default function Sidebar() {
                     {showChevron && (
                       <button
                         type="button"
+                        aria-label={
+                          isOpen ? "하위 메뉴 닫기" : "하위 메뉴 열기"
+                        }
                         onClick={(e) => {
                           e.stopPropagation();
                           setOpenId((prev) =>
