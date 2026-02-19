@@ -38,6 +38,7 @@ export function DropdownMenu({
         tabIndex={0}
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-controls="dropdown-menu"
         onClick={() => setOpen((v) => !v)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
@@ -49,12 +50,17 @@ export function DropdownMenu({
         {trigger}
       </div>
       {open && (
-        <div className="absolute left-0 mt-2 w-72 rounding-15 bg-brand-200 py-3 px-1 shadow-Medium">
+        <div
+          id="dropdown-menu"
+          role="menu"
+          className="absolute left-0 mt-2 w-72 rounding-15 bg-brand-200 py-3 px-1 shadow-Medium"
+        >
           <div className="space-y-1">
             {items.map((it, idx) => (
               <div key={idx} className="px-2">
                 <button
                   type="button"
+                  role="menuitem"
                   onClick={() => {
                     it.onClick();
                     setOpen(false);

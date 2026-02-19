@@ -22,7 +22,7 @@ export const HelperText: TInputStory = {
   args: { helperText: "도움말 텍스트" },
 };
 
-export const Error: TInputStory = {
+export const ErrorState: TInputStory = {
   args: {
     error: true,
     helperText: "에러 메시지",
@@ -33,7 +33,7 @@ export const Success: TInputStory = {
   args: {
     success: true,
     helperText: "성공 메시지",
-    value: "정상 입력",
+    readOnly: true,
   },
 };
 
