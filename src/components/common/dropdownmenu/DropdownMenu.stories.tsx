@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 
 import { DropdownMenu } from "./DropdownMenu";
 
@@ -16,8 +17,8 @@ export const Default: TDropdownMenuStory = {
     <DropdownMenu
       trigger={<span>...</span>}
       items={[
-        { label: "선택된 부분", active: true, onClick: () => alert("선택됨") },
-        { label: "선택 안 된 부분", onClick: () => alert("선택 안됨") },
+        { label: "선택된 부분", active: true, onClick: fn() },
+        { label: "선택 안 된 부분", onClick: fn() },
       ]}
     />
   ),
