@@ -1,7 +1,7 @@
 import "../src/index.css";
 
 import { MemoryRouter } from "react-router-dom";
-import type { Preview } from "@storybook/react-vite";
+import type { Preview } from "@storybook/react";
 
 const preview: Preview = {
   decorators: [
