@@ -50,6 +50,7 @@ export default function Sidebar() {
       <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
         <NavLink
           to="/"
+          aria-label="홈으로 이동"
           className={[
             "mt-5 mb-2 flex h-16 items-center",
             isCollapsed ? "justify-center" : "gap-3 px-4",
