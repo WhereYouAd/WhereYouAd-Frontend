@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import { stripPhoneHyphens } from "@/utils/formatPhoneNumber";
 import { signupProfileSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -39,7 +40,7 @@ export default function ProfileSetupStep() {
         email,
         password,
         name: data.name,
-        phone_number: data.phoneNum,
+        phone_number: stripPhoneHyphens(data.phoneNum),
       },
       {
         onSuccess: () => {
@@ -62,8 +63,8 @@ export default function ProfileSetupStep() {
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pb-12">
         <h1 className="text-start font-heading2 text-text-main mb-10">
-          <p>사용자의</p>
-          <p>기본 정보를 입력해 주세요</p>
+          <span className="block">사용자의</span>
+          <span className="block">기본 정보를 입력해 주세요</span>
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">

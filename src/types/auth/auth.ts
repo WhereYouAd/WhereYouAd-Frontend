@@ -58,3 +58,28 @@ export interface ITokenRefreshResponse {
 
 // 소셜 로그인 플랫폼
 export type TSocialLoginPlatform = "kakao" | "naver" | "google";
+
+// SMS 인증 요청
+export interface ISmsSendRequest {
+  phoneNumber: string;
+}
+
+// SMS 인증 요청 응답
+export interface ISmsSendResponse {
+  message: string;
+  phoneNumber: string;
+  expireIn: number;
+}
+
+// SMS 인증 확인 요청
+export interface ISmsVerifyRequest {
+  phoneNumber: string;
+  verificationCode: string;
+}
+
+// SMS 인증 확인 응답
+export interface ISmsVerifyResponse {
+  isVerified: boolean;
+  verificationMessage: string;
+  email: string;
+}
