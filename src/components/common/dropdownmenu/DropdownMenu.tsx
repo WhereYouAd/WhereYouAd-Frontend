@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 export type TMenuItem = {
   label: string;
@@ -31,7 +32,7 @@ export function DropdownMenu({
   }, []);
 
   return (
-    <div ref={ref} className={["relative inline-block", className].join(" ")}>
+    <div ref={ref} className={twMerge("relative inline-block", className)}>
       <div
         role="button"
         tabIndex={0}
@@ -58,19 +59,19 @@ export function DropdownMenu({
                     it.onClick();
                     setOpen(false);
                   }}
-                  className={[
+                  className={twMerge(
                     "flex w-full items-center gap-3 rounding-15 px-5 py-4 text-left font-body1 transition-fast",
                     it.active
                       ? "bg-brand-300 text-status-blue"
                       : "text-text-main hover:bg-brand-300",
-                  ].join(" ")}
+                  )}
                 >
                   {it.icon}
                   <span
-                    className={[
+                    className={twMerge(
                       "whitespace-nowrap",
                       it.active ? "font-semibold" : "font-medium",
-                    ].join(" ")}
+                    )}
                   >
                     {it.label}
                   </span>
