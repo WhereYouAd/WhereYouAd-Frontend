@@ -40,7 +40,10 @@ const useAuthStore = create<IAuthState>((set) => ({
     });
   },
 
-  setAccessToken: (token) => set({ accessToken: token }),
+  setAccessToken: (token) => {
+    localStorage.setItem("hasSession", "true");
+    set({ accessToken: token, isLoggedIn: true });
+  },
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setSocialId: (socialId) => set({ socialId }),

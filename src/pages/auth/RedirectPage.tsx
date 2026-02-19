@@ -29,7 +29,6 @@ export default function RedirectPage() {
     if (accessToken) {
       deleteCookie("access_token");
       setAccessToken(accessToken);
-      localStorage.setItem("hasSession", "true");
 
       toast.success("소셜 로그인되었습니다.");
       navigate("/", { replace: true });
