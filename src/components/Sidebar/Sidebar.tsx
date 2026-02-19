@@ -198,6 +198,7 @@ export default function Sidebar() {
                         <NavLink
                           key={child.id}
                           to={child.path ?? "#"}
+                          end={child.path === item.path}
                           className={({ isActive }) =>
                             [
                               "flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
