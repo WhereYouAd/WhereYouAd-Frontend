@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { toast } from "sonner";
 import type { z } from "zod";
+
+import type { IEmailSendRequest, IEmailSendResponse } from "@/types/auth/auth";
+import type { ICommonResponse } from "@/types/common/common";
 
 import { signupEmailSchema } from "@/utils/validation";
 
@@ -13,15 +18,24 @@ import useAuthStore from "@/store/useAuthStore";
 
 export type TSignupEmailFormValues = z.infer<typeof signupEmailSchema>;
 
+type TSendCodeMutation = UseMutationResult<
+  ICommonResponse<IEmailSendResponse>,
+  AxiosError<{ message?: string }>,
+  IEmailSendRequest
+>;
+
 interface IUseEmailVerificationProps {
   onNext: () => void;
+  sendMutation?: TSendCodeMutation;
 }
 
 export const useEmailVerification = ({
   onNext,
+  sendMutation,
 }: IUseEmailVerificationProps) => {
   const { setEmail } = useAuthStore();
   const { useSendCode, useCheckCode } = useAuth();
+  const activeSendCode = sendMutation ?? useSendCode;
 
   const [sendCode, setSendCode] = useState(false);
   const [codeError, setCodeError] = useState("");
@@ -53,7 +67,7 @@ export const useEmailVerification = ({
   }, [stop]);
 
   const sendVerificationEmail = (email: string, successMessage: string) => {
-    useSendCode.mutate(
+    activeSendCode.mutate(
       { email },
       {
         onSuccess: (data) => {
@@ -113,7 +127,7 @@ export const useEmailVerification = ({
     codeError,
     errors,
     isValid,
-    isPending: useSendCode.isPending || useCheckCode.isPending,
+    isPending: activeSendCode.isPending || useCheckCode.isPending,
     handlers: {
       postSendCode,
       handleResendEmail,

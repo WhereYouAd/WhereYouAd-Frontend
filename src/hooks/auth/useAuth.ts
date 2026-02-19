@@ -2,6 +2,8 @@ import { useCoreMutation } from "@/hooks/customQuery";
 
 import {
   login,
+  requestPasswordReset,
+  resetPassword,
   sendEmail,
   sendSMS,
   signUp,
@@ -16,6 +18,8 @@ export const useAuth = () => {
   const useCheckCode = useCoreMutation(verifyEmail);
   const useSendSMS = useCoreMutation(sendSMS);
   const useVerifySMS = useCoreMutation(verifySMS);
+  const useRequestPasswordReset = useCoreMutation(requestPasswordReset);
+  const useResetPassword = useCoreMutation(resetPassword);
 
   return {
     useLogin,
@@ -24,5 +28,7 @@ export const useAuth = () => {
     useCheckCode,
     useSendSMS,
     useVerifySMS,
+    useRequestPasswordReset,
+    useResetPassword,
   };
 };

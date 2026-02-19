@@ -4,6 +4,7 @@ import type {
   IEmailVerifyRequest,
   ILoginRequest,
   ILoginResponse,
+  IPasswordResetRequest,
   ISignUpRequest,
   ISignUpResponse,
   ISmsSendRequest,
@@ -91,5 +92,33 @@ export const verifySMS = async ({
     phoneNumber,
     verificationCode,
   });
+  return data;
+};
+
+// 비밀번호 재설정 요청
+export const requestPasswordReset = async ({
+  email,
+}: IEmailSendRequest): Promise<ICommonResponse<IEmailSendResponse>> => {
+  const { data } = await axiosInstance.post(
+    "/api/users/password-reset/request",
+    {
+      email,
+    },
+  );
+  return data;
+};
+
+// 비밀번호 재설정
+export const resetPassword = async ({
+  email,
+  password,
+}: IPasswordResetRequest): Promise<ICommonResponse<string>> => {
+  const { data } = await axiosInstance.post(
+    "/api/users/password-reset/confirm",
+    {
+      email,
+      password,
+    },
+  );
   return data;
 };

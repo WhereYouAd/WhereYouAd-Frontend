@@ -4,15 +4,14 @@ import { reissueToken } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
 
 export const useTokenRefresh = () => {
-  const { login, logout } = useAuthStore();
+  const { setAccessToken, logout } = useAuthStore();
 
   useEffect(() => {
     const initAuth = async () => {
       try {
         const { data } = await reissueToken();
         if (data.accessToken) {
-          // TODO: 재발급 성공 시 로그인 처리
-          login("user@example.com", data.accessToken);
+          setAccessToken(data.accessToken);
         }
       } catch {
         logout();
@@ -20,5 +19,5 @@ export const useTokenRefresh = () => {
     };
 
     initAuth();
-  }, [login, logout]);
+  }, [setAccessToken, logout]);
 };
