@@ -20,7 +20,7 @@ export default function NewPasswordStep() {
           toast.success("비밀번호가 변경되었습니다.", {
             description: "로그인 페이지로 이동합니다.",
           });
-          navigate("/login");
+          navigate("/login", { replace: true });
         },
         onError: (error) => {
           toast.error(
