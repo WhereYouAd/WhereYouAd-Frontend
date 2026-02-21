@@ -6,7 +6,7 @@ import useAuthStore from "@/store/useAuthStore";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
-  const { login } = useAuthStore();
+  const { setAccessToken } = useAuthStore();
   const processed = useRef(false);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export default function RedirectPage() {
 
     if (accessToken) {
       deleteCookie("access_token");
+      setAccessToken(accessToken);
 
       toast.success("소셜 로그인되었습니다.");
       navigate("/", { replace: true });
@@ -35,7 +36,7 @@ export default function RedirectPage() {
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
       navigate("/login", { replace: true });
     }
-  }, [navigate, login]);
+  }, [navigate, setAccessToken]);
 
   return (
     <div className="relative flex justify-center items-center h-screen w-full bg-white">

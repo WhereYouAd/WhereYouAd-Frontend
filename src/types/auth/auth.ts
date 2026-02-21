@@ -83,3 +83,9 @@ export interface ISmsVerifyResponse {
   verificationMessage: string;
   email: string;
 }
+
+// 비밀번호 재설정 요청
+export interface IPasswordResetRequest {
+  email: string;
+  password: string;
+}

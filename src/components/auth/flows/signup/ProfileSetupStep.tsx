@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +23,12 @@ export default function ProfileSetupStep() {
   const { email, password, resetAuth } = useAuthStore();
   const { openModal } = useModalStore();
   const { useSignUp } = useAuth();
+
+  useEffect(() => {
+    if (!email || !password) {
+      navigate("/signup", { replace: true });
+    }
+  }, [email, password, navigate]);
 
   const {
     register,

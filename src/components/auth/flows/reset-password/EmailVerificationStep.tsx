@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import { useEmailVerification } from "@/hooks/auth/useEmailVerification";
 
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
@@ -10,6 +11,7 @@ interface IEmailVerificationStepProps {
 export default function EmailVerificationStep({
   onNext,
 }: IEmailVerificationStepProps) {
+  const { useRequestPasswordReset } = useAuth();
   const {
     form: { register },
     watchedEmail,
@@ -26,7 +28,7 @@ export default function EmailVerificationStep({
       handleEditEmail,
       handleSubmit,
     },
-  } = useEmailVerification({ onNext });
+  } = useEmailVerification({ onNext, sendMutation: useRequestPasswordReset });
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
