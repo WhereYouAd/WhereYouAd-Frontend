@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
+
+import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import ChevronIcon from "@/assets/icon/common/chevron-up.svg?react";
 import CollapseIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
@@ -26,19 +27,14 @@ function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
 }
 
 export default function Sidebar() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  useEffect(() => {
-    const activeParent = mainNav.find((item) =>
-      item.children?.some((c) => c.path === location.pathname),
-    );
-
-    if (activeParent) setOpenId(activeParent.id);
-  }, [location.pathname]);
+  const {
+    isCollapsed,
+    openId,
+    setOpenId,
+    toggleSidebar,
+    handleItemClick,
+    location,
+  } = useSidebar();
 
   return (
     <div
@@ -65,10 +61,7 @@ export default function Sidebar() {
         <button
           type="button"
           aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
-          onClick={() => {
-            setIsCollapsed((prev) => !prev);
-            setOpenId(null);
-          }}
+          onClick={toggleSidebar}
           className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
         >
           <CollapseIcon
@@ -116,8 +109,11 @@ export default function Sidebar() {
                       aria-haspopup="true"
                       aria-expanded={isOpen}
                       onClick={() => {
-                        setOpenId(item.id);
-                        if (item.path) navigate(item.path);
+                        handleItemClick(
+                          item.id,
+                          !!item.children?.length,
+                          item.path,
+                        );
                       }}
                       className={[
                         "flex items-center",
