@@ -10,7 +10,7 @@ interface ISubMenuProps {
 export function SubMenu({ items, isCollapsed }: ISubMenuProps) {
   const getSubItemClass = (isActive: boolean) =>
     [
-      "flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
+      "flex h-10 items-center rounded-xl pl-4 px-3 text-sm transition-colors",
       isCollapsed ? "" : "pl-4",
       isActive
         ? "bg-chart-3 text-white"
@@ -18,7 +18,7 @@ export function SubMenu({ items, isCollapsed }: ISubMenuProps) {
     ].join(" ");
 
   const menuContainerClass = isCollapsed
-    ? "absolute left-full top-0 ml-3 w-52 rounded-2xl bg-white p-2 shadow-lg z-50"
+    ? "absolute left-full top-0 pl-2 w-52 flex flex-col gap-1 rounded-2xl bg-white p-2 shadow-lg z-50"
     : "ml-11 mt-1 flex flex-col gap-1";
 
   return (
