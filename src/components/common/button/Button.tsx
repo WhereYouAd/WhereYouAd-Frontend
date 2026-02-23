@@ -37,7 +37,7 @@ export default function Button({
     primary:
       "bg-chart-3 text-white hover:opacity-80 disabled:bg-bg-disabled disabled:text-text-disabled disabled:hover:opacity-50",
     secondary:
-      "bg-gray-100 text-brand-900 hover:bg-gray-200 disabled:bg-bg-disabled disabled:text-text-disabled disabled:hover:opacity-50",
+      "bg-gray-100 text-brand-900 hover:bg-gray-200 disabled:bg-bg-disabled disabled:text-text-disabled disabled:hover:opacity-50 disabled:hover:opacity-50",
     outline:
       "bg-transparent border border-chart-3 text-chart-3 hover:bg-brand-300 disabled:border-gray-300 disabled:text-text-disabled disabled:hover:bg-transparent",
     danger:
@@ -45,7 +45,7 @@ export default function Button({
     dangerSoft:
       "bg-status-red/10 text-status-red border border-status-red hover:bg-status-red/20 disabled:bg-bg-disabled disabled:text-text-disabled disabled:border-gray-300 disabled:hover:bg-bg-disabled",
     gradient:
-      "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none",
+      "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none disabled:hover:opacity-50",
     custom: "",
   };
 
