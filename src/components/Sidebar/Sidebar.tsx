@@ -140,66 +140,20 @@ export default function Sidebar() {
         {/* Footer */}
         <div className={["py-2 mb-3", isCollapsed ? "" : "px-2"].join(" ")}>
           {footerNav.map((item) => {
-            const Icon = item.icon;
-
-            if (item.path) {
-              return (
-                <NavLink
-                  key={item.id}
-                  to={item.path}
-                  onClick={() => setOpenId(null)}
-                  className={({ isActive }) =>
-                    getFooterItemClass(isActive, isCollapsed)
-                  }
-                >
-                  {Icon && (
-                    <Icon
-                      className={[
-                        "h-6 w-6 shrink-0",
-                        isCollapsed ? "" : "ml-2",
-                      ].join(" ")}
-                    />
-                  )}
-                  <span
-                    className={[
-                      "whitespace-nowrap transition-all duration-200",
-                      isCollapsed
-                        ? "opacity-0 w-0 overflow-hidden"
-                        : "opacity-100 ml-0",
-                    ].join(" ")}
-                  >
-                    {item.label}
-                  </span>
-                </NavLink>
-              );
-            }
+            const isActive = item.path
+              ? location.pathname === item.path
+              : false;
 
             return (
-              <button
+              <SidebarItem
                 key={item.id}
-                type="button"
-                onClick={() => setOpenId(null)}
-                className={getFooterItemClass(false, isCollapsed)}
-              >
-                {Icon && (
-                  <Icon
-                    className={[
-                      "h-6 w-6 shrink-0",
-                      isCollapsed ? "" : "ml-2",
-                    ].join(" ")}
-                  />
-                )}
-                <span
-                  className={[
-                    "whitespace-nowrap transition-all duration-200",
-                    isCollapsed
-                      ? "opacity-0 w-0 overflow-hidden"
-                      : "opacity-100 ml-0",
-                  ].join(" ")}
-                >
-                  {item.label}
-                </span>
-              </button>
+                item={item}
+                isCollapsed={isCollapsed}
+                className={getFooterItemClass(isActive, isCollapsed)}
+                onClick={() => {
+                  setOpenId(null);
+                }}
+              />
             );
           })}
         </div>
