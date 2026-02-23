@@ -35,6 +35,10 @@ export const DangerSoft: TButtonStory = {
   args: { variant: "dangerSoft" },
 };
 
+export const Gradient: TButtonStory = {
+  args: { variant: "gradient" },
+};
+
 export const Disabled: TButtonStory = {
   args: { disabled: true },
 };

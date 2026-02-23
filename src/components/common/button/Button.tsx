@@ -9,6 +9,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     | "outline"
     | "danger"
     | "dangerSoft"
+    | "gradient"
     | "custom";
   isLoading?: boolean;
   leftIcon?: ReactNode;
@@ -43,6 +44,8 @@ export default function Button({
       "bg-status-red text-white hover:opacity-80 disabled:bg-bg-disabled disabled:text-text-disabled disabled:hover:opacity-100",
     dangerSoft:
       "bg-status-red/10 text-status-red border border-status-red hover:bg-status-red/20 disabled:bg-bg-disabled disabled:text-text-disabled disabled:border-gray-300",
+    gradient:
+      "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none",
     custom: "",
   };
 
