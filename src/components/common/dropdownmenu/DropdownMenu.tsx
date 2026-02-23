@@ -53,7 +53,7 @@ export function DropdownMenu({
         <div
           id="dropdown-menu"
           role="menu"
-          className="absolute left-0 mt-2 w-72 rounding-15 bg-brand-200 py-3 px-1 shadow-Medium"
+          className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-40px)] rounding-15 bg-brand-200 py-3 px-1 shadow-Medium z-50"
         >
           <div className="space-y-1">
             {items.map((it, idx) => (
