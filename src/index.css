@@ -176,7 +176,7 @@ button {
   }
 
   .font-heading1 {
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 600;
     line-height: 130%;
   }
@@ -188,20 +188,14 @@ button {
   }
 
   .font-heading3 {
-    font-size: 25px;
-    font-weight: 500;
-    line-height: 130%;
-  }
-
-  .font-heading4 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 18px;
+    font-weight: 400;
     line-height: 130%;
   }
 
   .font-body1 {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 140%;
   }
 
