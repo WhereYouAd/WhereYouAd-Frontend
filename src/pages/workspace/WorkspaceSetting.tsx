@@ -66,7 +66,7 @@ export default function WorkspaceSetting() {
             <Input
               label="워크스페이스명"
               value={name}
-              placeholder="WhereYouAd" //API에서 받아오는이름으로 변경예정
+              placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
               onChange={(e) => setName(e.target.value)}
             />
             <div className="flex flex-col">
@@ -79,7 +79,7 @@ export default function WorkspaceSetting() {
               <textarea
                 id="workspace-setting-desc"
                 className="w-full min-h-[220px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
-                placeholder="광고 실시간 모니터링 및 분석 플랫폼" //API에서 받아오는이름으로 변경예정
+                placeholder="워크스페이스에 대한 설명을 입력해주세요"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
               />

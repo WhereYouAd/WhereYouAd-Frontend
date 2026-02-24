@@ -11,9 +11,11 @@ import {
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 
+import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
+import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
 import VectorIcon from "@/assets/icon/workspace/Vector.svg?react";
 
 export default function WorkspacePage() {
@@ -55,12 +57,14 @@ export default function WorkspacePage() {
 
   const menuItems = (id: TWorkspace["id"]): TMenuItem[] => [
     {
+      icon: <EditContainIcon />,
       label: "정보 수정하기",
       onClick: () => {
         void navigate(`/workspace/${id}/settings`);
       },
     },
     {
+      icon: <UserProfileIcon />,
       label: "멤버 관리",
       onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
     },
