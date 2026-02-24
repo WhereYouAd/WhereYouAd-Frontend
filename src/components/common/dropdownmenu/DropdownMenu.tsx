@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export type TMenuItem = {
@@ -21,6 +21,7 @@ export function DropdownMenu({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const menuId = useId();
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -40,7 +41,7 @@ export function DropdownMenu({
         tabIndex={0}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-controls="dropdown-menu"
+        aria-controls={menuId}
         aria-label={ariaLabel}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={(e) => {
@@ -54,7 +55,7 @@ export function DropdownMenu({
       </div>
       {open && (
         <div
-          id="dropdown-menu"
+          id={menuId}
           role="menu"
           className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-40px)] rounding-15 bg-brand-200 py-3 px-1 shadow-Medium z-50"
         >
