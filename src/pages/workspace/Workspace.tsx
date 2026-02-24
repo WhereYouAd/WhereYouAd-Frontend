@@ -79,7 +79,7 @@ export default function WorkspacePage() {
   return (
     <section className="py-8 px-20">
       <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크 스페이스 관리</h1>
+        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
         <p className="font-body1 text-text-sub">
           워크스페이스 정보를 확인하고 관리하세요.
         </p>
@@ -112,7 +112,13 @@ export default function WorkspacePage() {
             <div className="flex items-center gap-5 min-w-0">
               <div className="w-20 h-20 bg-gray-200 shrink-0 rounded-component-sm">
                 {/* TODO: 스타일 확인을 위해 bg-gray-200넣어둠. API연동할때 삭제예정 */}
-                {w.logoUrl}
+                (w.logoUrl ?(
+                <img
+                  src={w.logoUrl}
+                  alt={`${w.name} 로고`}
+                  className="w-full h-full object-cover rounded-b-component-sm"
+                />
+                ): null)
               </div>
               <div className="min-w-0">
                 <div className="font-heading3 text-text-main truncate">

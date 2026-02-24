@@ -42,7 +42,10 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         className={twMerge("flex flex-col w-full relative", wrapperClassName)}
       >
         {label && (
-          <label htmlFor={inputId} className="text-text-main select-none ml-1">
+          <label
+            htmlFor={inputId}
+            className="text-text-main select-none ml-1 mb-1"
+          >
             {label}
           </label>
         )}

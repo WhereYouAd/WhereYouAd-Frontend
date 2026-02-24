@@ -28,7 +28,7 @@ export default function WorkspaceSetting() {
   return (
     <section className="py-8 px-20">
       <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크 스페이스 관리</h1>
+        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
         <p className="font-body1 text-text-sub">
           워크스페이스 정보를 확인하고 관리하세요.
         </p>
@@ -57,7 +57,7 @@ export default function WorkspaceSetting() {
                 variant="custom"
                 className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                 onClick={() => alert("TODO:추후 초기화연결")}
-                aria-label="로고 이미지 초기화 버튼 "
+                aria-label="로고 이미지 초기화 버튼"
               >
                 초기화
               </Button>
