@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
@@ -24,6 +24,8 @@ export default function WorkspacePage() {
 
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const openFile = () => fileRef.current?.click();
   const workspaces: TWorkspace[] = useMemo(
     () => [
       {
@@ -71,6 +73,11 @@ export default function WorkspacePage() {
     setNewName("");
     setNewDesc("");
     setCreateOpen(true);
+  };
+
+  const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
   };
 
   // TODO: API 연동 후에 생성 동작 연결하기
@@ -136,21 +143,34 @@ export default function WorkspacePage() {
           </p>
           <div className="space-y-6 mx-auto w-full max-w-[800px]">
             <div className="max-w-[560px] mx-auto w-full mb-10">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={onPickFile}
+              />
               <div className="flex items-center justify-between mb-2">
                 <div className="font-label text-text-sub">로고 이미지</div>
                 <Button
                   variant="custom"
                   className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                  onClick={() => alert("TODO:추후 업로드")}
+                  onClick={openFile}
+                  type="button"
                 >
                   업로드
                 </Button>
               </div>
-              <div className="rounded-component-lg border border-gray-100 bg-gray-50 h-[260px] flex items-center justify-center">
+              <button
+                type="button"
+                aria-label="로고 이미지 업로드"
+                onClick={openFile}
+                className="w-full rounded-component-lg border border-gray-100 bg-gray-50 h-[260px] flex items-center justify-center hover:bg-gray-100 transition-colors"
+              >
                 <span className="text-text-sub">
                   <UpLoadImgIcon />
                 </span>
-              </div>
+              </button>
             </div>
 
             <Input
