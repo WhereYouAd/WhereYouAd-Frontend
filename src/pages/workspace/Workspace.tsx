@@ -112,13 +112,13 @@ export default function WorkspacePage() {
             <div className="flex items-center gap-5 min-w-0">
               <div className="w-20 h-20 bg-gray-200 shrink-0 rounded-component-sm">
                 {/* TODO: 스타일 확인을 위해 bg-gray-200넣어둠. API연동할때 삭제예정 */}
-                (w.logoUrl ?(
-                <img
-                  src={w.logoUrl}
-                  alt={`${w.name} 로고`}
-                  className="w-full h-full object-cover rounded-b-component-sm"
-                />
-                ): null)
+                {w.logoUrl ? (
+                  <img
+                    src={w.logoUrl}
+                    alt={`${w.name} 로고`}
+                    className="w-full h-full object-cover rounded-b-component-sm"
+                  />
+                ) : null}
               </div>
               <div className="min-w-0">
                 <div className="font-heading3 text-text-main truncate">
