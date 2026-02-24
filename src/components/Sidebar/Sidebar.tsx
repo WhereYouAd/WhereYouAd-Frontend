@@ -13,8 +13,10 @@ import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
-    isCollapsed ? "h-13 w-13 mx-auto justify-center" : "h-[55px] gap-4 px-3",
+    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-300",
+    isCollapsed
+      ? "h-[55px] w-[55px] mx-auto flex justify-center"
+      : "h-[55px] gap-4 px-3",
     isActive
       ? "bg-chart-3 text-white"
       : "text-text-auth-sub hover:bg-[#F6F6F6]",
@@ -23,7 +25,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-300",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
   ].join(" ");
@@ -42,7 +44,7 @@ export default function Sidebar() {
   return (
     <div
       className={[
-        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-300",
+        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-300 ease-in-out",
         isCollapsed ? "w-25" : "w-64",
       ].join(" ")}
     >
@@ -52,14 +54,19 @@ export default function Sidebar() {
           to="/"
           aria-label="홈으로 이동"
           className={[
-            "mt-5 mb-2 flex h-16 items-center",
+            "mt-5 mb-2 flex h-16 items-center transition-all duration-300",
             isCollapsed ? "justify-center" : "gap-3 px-4",
           ].join(" ")}
         >
-          <Logo className="h-12 w-12" />
-          {!isCollapsed && (
-            <span className="text-xl font-semibold">WhereYouAd</span>
-          )}
+          <Logo className="h-12 w-12 shrink-0" />
+          <span
+            className={[
+              "text-xl font-semibold whitespace-nowrap transition-all duration-300 ease-in-out overflow-hidden",
+              isCollapsed ? "w-0 opacity-0 invisible" : "w-auto opacity-100",
+            ].join(" ")}
+          >
+            WhereYouAd
+          </span>
         </NavLink>
 
         <button

@@ -31,13 +31,16 @@ export function SidebarItem({
     >
       {Icon && (
         <Icon
-          className={["h-6 w-6 shrink-0", isCollapsed ? "" : "ml-2"].join(" ")}
+          className={[
+            "h-6 w-6 shrink-0 transition-all duration-400",
+            isCollapsed ? "" : "ml-2",
+          ].join(" ")}
         />
       )}
       <span
         className={[
-          "whitespace-nowrap transition-all duration-200",
-          isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 ml-0",
+          "whitespace-nowrap transition-all duration-300 ease-in-out",
+          isCollapsed ? "opacity-0 w-0 invisible" : "opacity-100 ml-0",
         ].join(" ")}
       >
         {item.label}
