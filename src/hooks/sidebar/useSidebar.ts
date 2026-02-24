@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { mainNav } from "@/constants/sidebarNav";
@@ -9,12 +9,18 @@ export const useSidebar = () => {
   const [openId, setOpenId] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const lastPathRef = useRef("");
+
   useEffect(() => {
     if (isCollapsed) return;
     const activeParent = mainNav.find((item) =>
       item.children?.some((c) => c.path === location.pathname),
     );
-    if (activeParent) setOpenId(activeParent.id);
+
+    if (activeParent && location.pathname !== lastPathRef.current) {
+      setOpenId(activeParent.id);
+      lastPathRef.current = location.pathname;
+    }
   }, [location.pathname, isCollapsed]);
 
   const toggleSidebar = () => {
