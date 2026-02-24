@@ -25,7 +25,7 @@ export default function WorkspaceSetting() {
   };
 
   return (
-    <section className="py-8 px-20">
+    <section className="w-full">
       <header className="mb-7">
         <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
         <p className="font-body1 text-text-sub">
@@ -37,10 +37,10 @@ export default function WorkspaceSetting() {
         <p className="font-body2 text-text-sub mt-2">
           워크스페이스의 대표적인 정보를 설정합니다.
         </p>
-        <div className="mt-7 grid grid-cols-1 md:grid-cols-[640px_1fr] gap-8">
+        <div className="mt-7 grid grid-cols-1 lg:grid-cols-[minmax(320px,560px)_1fr] gap-8">
           <div>
             <div className="text-text-main">로고 이미지</div>
-            <div className="border border-gray-100 bg-gray-50 h-80 rounded-component-lg flex items-center justify-center">
+            <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-56 sm:h-72 lg:h-80">
               <UpLoadImgIcon />
             </div>
             <div className="flex gap-3 mt-3 justify-center">
@@ -94,12 +94,13 @@ export default function WorkspaceSetting() {
           onClick={onSave}
           disabled={!name.trim()}
           aria-label="변경사항 저장하기"
+          className="w-full sm:w-auto"
         >
           변경사항 저장하기
         </Button>
       </div>
-      <div className="bg-status-red/10 border border-status-red rounded-component-lg p-8 mt-18 flex justify-between items-center">
-        <div className="flex gap-8 items-center">
+      <div className="bg-status-red/10 border border-status-red rounded-component-lg p-6 sm:p-8 mt-12 flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
+        <div className="flex gap-4 sm:gap-8 items-start sm:items-center">
           <WarningIcon />
           <div>
             <div className="text-status-red font-heading3">
@@ -144,7 +145,7 @@ export default function WorkspaceSetting() {
               size="big"
               aria-label="워크스페이스 최종 삭제 버튼"
               onClick={onDelete}
-              className="px-12"
+              className="w-full md:w-auto"
             >
               삭제하기
             </Button>

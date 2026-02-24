@@ -25,7 +25,11 @@ export default function WorkspacePage() {
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const openFile = () => fileRef.current?.click();
+  const openFile = () => {
+    if (!fileRef.current) return;
+    fileRef.current.value = "";
+    fileRef.current?.click();
+  };
   const workspaces: TWorkspace[] = useMemo(
     () => [
       {
@@ -86,14 +90,14 @@ export default function WorkspacePage() {
   };
 
   return (
-    <section className="py-8 px-20">
+    <section className="w-full">
       <header className="mb-7">
         <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
         <p className="font-body1 text-text-sub">
           워크스페이스 정보를 확인하고 관리하세요.
         </p>
       </header>
-      <div className="mb-6 flex items-center gap-4">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <Input
             placeholder="조직을 검색하세요"
@@ -106,7 +110,7 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto w-full"
+          className="bg-chart-3 flex w-full shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           워크스페이스 생성하기
