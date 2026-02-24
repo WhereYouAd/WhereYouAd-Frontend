@@ -27,6 +27,14 @@ export const Outline: TButtonStory = {
   args: { variant: "outline" },
 };
 
+export const Danger: TButtonStory = {
+  args: { variant: "danger" },
+};
+
+export const DangerSoft: TButtonStory = {
+  args: { variant: "dangerSoft" },
+};
+
 export const Gradient: TButtonStory = {
   args: { variant: "gradient" },
 };
