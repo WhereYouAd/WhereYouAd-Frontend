@@ -4,19 +4,17 @@ import { useNavigate } from "react-router-dom";
 import type { TWorkspace } from "@/types/workspace/workspace";
 
 import Button from "@/components/common/button/Button";
-import {
-  DropdownMenu,
-  type TMenuItem,
-} from "@/components/common/dropdownmenu/DropdownMenu";
+import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import TextareaField from "@/components/common/textarea/TextareaField";
+import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
-import VectorIcon from "@/assets/icon/workspace/Vector.svg?react";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
@@ -107,57 +105,20 @@ export default function WorkspacePage() {
           워크스페이스 생성하기
         </Button>
       </div>
-      <div className="space-y-5">
+      <ul className="space-y-5">
         {filtered.map((w) => (
-          <div
+          <WorkspaceCard
             key={String(w.id)}
-            className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-sm border border-gray-100"
-          >
-            <div className="flex items-center gap-5 min-w-0">
-              <div className="w-20 h-20 bg-gray-200 shrink-0 rounded-component-sm">
-                {/* TODO: 스타일 확인을 위해 bg-gray-200넣어둠. API연동할때 삭제예정 */}
-                {w.logoUrl ? (
-                  <img
-                    src={w.logoUrl}
-                    alt={`${w.name} 로고`}
-                    className="w-full h-full object-cover rounded-b-component-sm"
-                  />
-                ) : null}
-              </div>
-              <div className="min-w-0">
-                <div className="font-heading3 text-text-main truncate">
-                  {w.name}
-                </div>
-                <div className="font-body1 text-text-main mt-1 truncate">
-                  {w.description ?? ""}
-                </div>
-                <div className="font-body1 text-text-sub mt-2">
-                  {w.myRole ?? "내 직책 및 역할"}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 shrink-0">
-              <DropdownMenu
-                trigger={
-                  <button
-                    type="button"
-                    aria-label="워크스페이스 메뉴"
-                    className="h-10 w-10 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center"
-                  >
-                    <VectorIcon />
-                  </button>
-                }
-                items={menuItems(w.id)}
-              />
-            </div>
-          </div>
+            workspace={w}
+            menuItems={menuItems(w.id)}
+          />
         ))}
         {filtered.length === 0 && (
-          <div className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
+          <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
             <p className="font-body2 text-text-sub">워크스페이스가 없습니다.</p>
-          </div>
+          </li>
         )}
-      </div>
+      </ul>
       <Modal
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
@@ -198,21 +159,13 @@ export default function WorkspacePage() {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
-            <div className="flex flex-col">
-              <label
-                className="text-text-main select-none ml-1"
-                htmlFor="workspace-desc"
-              >
-                워크스페이스 설명
-              </label>
-              <textarea
-                id="workspace-desc"
-                className="w-full min-h-[120px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
-                placeholder="조직에 대한 간단한 설명을 입력하세요."
-                value={newDesc}
-                onChange={(e) => setNewDesc(e.target.value)}
-              />
-            </div>
+            <TextareaField
+              id="workspace-desc"
+              label="워크스페이스 설명"
+              placeholder="조직에 대한 간단한 설명을 입력하세요"
+              value={newDesc}
+              onChange={(e) => setNewDesc(e.target.value)}
+            />
             <Button
               size="big"
               variant="primary"
