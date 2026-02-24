@@ -33,9 +33,17 @@ export const useSidebar = () => {
 
   const handleItemClick = (id: string, hasChildren: boolean) => {
     if (hasChildren) {
-      setOpenId((prev) => (prev === id ? null : id));
+      if (openId !== id) {
+        setOpenId(id);
+      }
     } else {
-      setOpenId(null);
+      const parentOfClicked = mainNav.find((item) =>
+        item.children?.some((child) => child.id === id),
+      );
+
+      if (!parentOfClicked || parentOfClicked.id !== openId) {
+        setOpenId(null);
+      }
     }
   };
 
