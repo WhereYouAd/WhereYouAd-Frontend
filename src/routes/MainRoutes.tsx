@@ -18,7 +18,6 @@ const AdsListPage = loadable(
 const AdsCampaignGroup = loadable(
   lazy(() => import("@/pages/ads/new/AdsCreatePage")),
 );
-const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
 const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
 const WorkspaceSetting = loadable(
   lazy(() => import("@/pages/workspace/WorkspaceSetting")),

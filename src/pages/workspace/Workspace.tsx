@@ -77,7 +77,7 @@ export default function WorkspacePage() {
   };
 
   return (
-    <section className="p-8">
+    <section className="py-8 px-20">
       <header className="mb-7">
         <h1 className="font-heading2 text-text-main">워크 스페이스 관리</h1>
         <p className="font-body1 text-text-sub">
