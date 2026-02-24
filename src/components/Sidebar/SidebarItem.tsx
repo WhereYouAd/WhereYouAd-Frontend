@@ -8,7 +8,7 @@ interface ISidebarItemProps {
   isCollapsed: boolean;
   isOpen?: boolean;
   className: string;
-  onClick: () => void;
+  onClick: (id: string, hasChildren: boolean) => void;
   children?: React.ReactNode;
 }
 
@@ -58,7 +58,7 @@ export function SidebarItem({
         className={() => className}
         onClick={(e) => {
           if (e.defaultPrevented) return;
-          onClick();
+          onClick(item.id, hasChildren);
         }}
       >
         <div className="flex w-full items-center">{content}</div>
@@ -75,7 +75,7 @@ export function SidebarItem({
       className={className}
       onClick={(e) => {
         if (e.defaultPrevented) return;
-        onClick();
+        onClick(item.id, hasChildren);
       }}
     >
       {content}

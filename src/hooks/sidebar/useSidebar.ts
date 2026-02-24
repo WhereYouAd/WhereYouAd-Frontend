@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { mainNav } from "@/constants/sidebarNav";
 
 export const useSidebar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [openId, setOpenId] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -32,12 +31,10 @@ export const useSidebar = () => {
     setOpenId(null);
   };
 
-  const handleItemClick = (id: string, hasChildren: boolean, path?: string) => {
+  const handleItemClick = (id: string, hasChildren: boolean) => {
     if (hasChildren) {
       setOpenId((prev) => (prev === id ? null : id));
-      if (path) navigate(path);
-    } else if (path) {
-      navigate(path);
+    } else {
       setOpenId(null);
     }
   };

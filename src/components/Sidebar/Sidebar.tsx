@@ -109,7 +109,7 @@ export default function Sidebar() {
                   isOpen={isOpen}
                   className={getMainItemClass(isParentActive, isCollapsed)}
                   onClick={() =>
-                    handleItemClick(item.id, !!item.children?.length, item.path)
+                    handleItemClick(item.id, !!item.children?.length)
                   }
                 >
                   {showChevron && (
@@ -157,9 +157,7 @@ export default function Sidebar() {
                 item={item}
                 isCollapsed={isCollapsed}
                 className={getFooterItemClass(isActive, isCollapsed)}
-                onClick={() => {
-                  setOpenId(null);
-                }}
+                onClick={handleItemClick}
               />
             );
           })}
