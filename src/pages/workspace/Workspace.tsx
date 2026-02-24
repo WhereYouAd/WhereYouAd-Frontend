@@ -131,7 +131,6 @@ export default function WorkspacePage() {
         onClose={() => setCreateOpen(false)}
         size="xl"
         padding="lg"
-        title="워크스페이스 생성"
       >
         <div className="px-2">
           <h2 className="font-heading3 text-text-main mb-2">
