@@ -14,7 +14,6 @@ export default function WorkspaceSetting() {
   const { workspaceId } = useParams();
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [website, setWebsite] = useState("");
   const [deleteOpen, setDeleteOpen] = useState(false);
   const onSave = () => {
     alert(`API 연동후 저장예정 (workspaceId=${workspaceId})`);
@@ -79,18 +78,12 @@ export default function WorkspaceSetting() {
               </label>
               <textarea
                 id="workspace-setting-desc"
-                className="w-full min-h-[120px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
+                className="w-full min-h-[220px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
                 placeholder="광고 실시간 모니터링 및 분석 플랫폼" //API에서 받아오는이름으로 변경예정
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
               />
-            </div>
-            <Input
-              label="웹사이트"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-              placeholder="https://www.wya.com" //API에서 받아오는이름으로 변경예정
-            />
+            </div>{" "}
           </div>
         </div>
       </div>
