@@ -13,7 +13,7 @@ import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-300",
+    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
@@ -103,15 +103,16 @@ export default function Sidebar() {
                 onMouseEnter={() => isCollapsed && setOpenId(item.id)}
                 onMouseLeave={() => isCollapsed && setOpenId(null)}
               >
-                <SidebarItem
-                  item={item}
-                  isCollapsed={isCollapsed}
-                  isOpen={isOpen}
-                  className={getMainItemClass(isParentActive, isCollapsed)}
-                  onClick={() =>
-                    handleItemClick(item.id, !!item.children?.length)
-                  }
-                >
+                <div className={getMainItemClass(isParentActive, isCollapsed)}>
+                  <SidebarItem
+                    item={item}
+                    isCollapsed={isCollapsed}
+                    isOpen={isOpen}
+                    className="flex-1 h-full"
+                    onClick={() =>
+                      handleItemClick(item.id, !!item.children?.length)
+                    }
+                  />
                   {showChevron && (
                     <button
                       type="button"
@@ -123,7 +124,7 @@ export default function Sidebar() {
                           prev === item.id ? null : item.id,
                         );
                       }}
-                      className="ml-auto p-2"
+                      className="ml-auto p-2 hover:bg-black/5 rounded-lg transition-colors"
                     >
                       <ChevronIcon
                         className={[
@@ -133,7 +134,7 @@ export default function Sidebar() {
                       />
                     </button>
                   )}
-                </SidebarItem>
+                </div>
 
                 {/* SubMenu */}
                 {isOpen && item.children && (
@@ -152,13 +153,19 @@ export default function Sidebar() {
               : false;
 
             return (
-              <SidebarItem
+              <div
                 key={item.id}
-                item={item}
-                isCollapsed={isCollapsed}
                 className={getFooterItemClass(isActive, isCollapsed)}
-                onClick={handleItemClick}
-              />
+              >
+                <SidebarItem
+                  item={item}
+                  isCollapsed={isCollapsed}
+                  className="w-full h-full"
+                  onClick={() =>
+                    handleItemClick(item.id, !!item.children?.length)
+                  }
+                />
+              </div>
             );
           })}
         </div>
