@@ -20,6 +20,7 @@ export function SidebarItem({
   onClick,
   children,
 }: ISidebarItemProps) {
+  const hasChildren = !!item.children?.length;
   const Icon = item.icon;
 
   const content = (
@@ -69,8 +70,8 @@ export function SidebarItem({
   return (
     <button
       type="button"
-      aria-haspopup="true"
-      aria-expanded={isOpen}
+      aria-haspopup={hasChildren ? "menu" : undefined}
+      aria-expanded={hasChildren ? isOpen : undefined}
       className={className}
       onClick={(e) => {
         if (e.defaultPrevented) return;

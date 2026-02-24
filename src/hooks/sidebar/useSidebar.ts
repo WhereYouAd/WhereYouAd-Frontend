@@ -24,7 +24,11 @@ export const useSidebar = () => {
   }, [location.pathname, isCollapsed]);
 
   const toggleSidebar = () => {
-    setIsCollapsed((prev) => !prev);
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      if (next) lastPathRef.current = "";
+      return next;
+    });
     setOpenId(null);
   };
 
