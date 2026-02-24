@@ -9,19 +9,21 @@ import {
   type TMenuItem,
 } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
 
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
+import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import VectorIcon from "@/assets/icon/workspace/Vector.svg?react";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
 
   const [query, setQuery] = useState("");
-  // const [createOpen, setCreateOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
 
-  // const [newName, setNewName] = useState("");
-  // const [newIntro, setNewIntro] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newDesc, setNewDesc] = useState("");
   const workspaces: TWorkspace[] = useMemo(
     () => [
       {
@@ -63,16 +65,16 @@ export default function WorkspacePage() {
       onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
     },
   ];
-  // const onOpenCreate = () => {
-  //   setNewName("");
-  //   setNewIntro("");
-  //   setCreateOpen(true);
-  // };
+  const onOpenCreate = () => {
+    setNewName("");
+    setNewDesc("");
+    setCreateOpen(true);
+  };
 
-  //TODO: API 연동 후에 생성 동작 연결하기
-  // const onSubmitCreate = () => {
-  //   alert("API 연동 후에 생성 기능 연결예정");
-  // };
+  // TODO: API 연동 후에 생성 동작 연결하기
+  const onSubmitCreate = () => {
+    alert("API 연동 후에 생성 기능 연결예정");
+  };
 
   return (
     <section className="p-8">
@@ -92,7 +94,7 @@ export default function WorkspacePage() {
           />
         </div>
         <Button
-          // onClick={onOpenCreate}
+          onClick={onOpenCreate}
           size="big"
           variant="primary"
           className="bg-chart-3 flex shrink-0 whitespace sm:w-auto w-full"
@@ -146,6 +148,73 @@ export default function WorkspacePage() {
           </div>
         )}
       </div>
+      <Modal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        size="xl"
+        padding="lg"
+        title="워크스페이스 생성"
+      >
+        <div className="px-2">
+          <h2 className="font-heading3 text-text-main mb-2">
+            워크스페이스 생성
+          </h2>
+          <p className="font-body1 text-text-sub mb-6">
+            워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.{" "}
+            <br /> 로고 이미지와 기본 정보를 입력해 주세요.
+          </p>
+          <div className="space-y-6 mx-auto w-full max-w-[800px]">
+            <div className="max-w-[560px] mx-auto w-full mb-10">
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-label text-text-sub">로고 이미지</div>
+                <Button
+                  variant="custom"
+                  className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-full bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                  onClick={() => alert("TODO:추후 업로드")}
+                >
+                  업로드
+                </Button>
+              </div>
+              <div className="rounded-component-lg border border-gray-100 bg-gray-50 h-[260px] flex items-center justify-center">
+                <span className="text-text-sub">
+                  <UpLoadImgIcon />
+                </span>
+              </div>
+            </div>
+
+            <Input
+              label="워크스페이스 이름"
+              placeholder="조직의 이름을 입력하세요."
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <div className="flex flex-col">
+              <label
+                className="text-text-main select-none ml-1"
+                htmlFor="workspace-desc"
+              >
+                워크스페이스 설명
+              </label>
+              <textarea
+                id="workspace-desc"
+                className="w-full min-h-[120px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
+                placeholder="조직에 대한 간단한 설명을 입력하세요."
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
+              />
+            </div>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={onSubmitCreate}
+              disabled={!newName.trim()}
+              className="mx-auto px-10 mt-10"
+            >
+              생성하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 }
