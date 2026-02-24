@@ -45,15 +45,9 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
 
       <div className="flex items-center gap-4 shrink-0">
         <DropdownMenu
-          trigger={
-            <button
-              type="button"
-              aria-label={`${w.name} 워크스페이스 메뉴`}
-              className="h-10 w-10 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center"
-            >
-              <VectorIcon />
-            </button>
-          }
+          trigger={<VectorIcon aria-hidden="true" />}
+          aria-label={`${w.name} 워크스페이스 메뉴`}
+          triggerClassName="h-10 w-10 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center"
           items={menuItems}
         />
       </div>

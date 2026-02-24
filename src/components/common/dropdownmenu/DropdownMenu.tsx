@@ -12,10 +12,12 @@ export function DropdownMenu({
   trigger,
   items,
   className,
+  "aria-label": ariaLabel,
 }: {
   trigger: React.ReactNode;
   items: TMenuItem[];
   className?: string;
+  "aria-label"?: string;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -39,6 +41,7 @@ export function DropdownMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls="dropdown-menu"
+        aria-label={ariaLabel}
         onClick={() => setOpen((v) => !v)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
