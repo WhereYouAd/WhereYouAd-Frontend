@@ -97,10 +97,10 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex shrink-0 whitespace sm:w-auto w-full"
+          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto w-full"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
-          <span>워크스페이스 생성하기</span>
+          워크스페이스 생성하기
         </Button>
       </div>
       <div className="space-y-5">
@@ -169,7 +169,7 @@ export default function WorkspacePage() {
                 <div className="font-label text-text-sub">로고 이미지</div>
                 <Button
                   variant="custom"
-                  className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-full bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                  className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                   onClick={() => alert("TODO:추후 업로드")}
                 >
                   업로드

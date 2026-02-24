@@ -70,7 +70,7 @@ export default function Button({
           {leftIcon}
         </span>
       )}
-      <span>{children}</span>
+      {children}
     </button>
   );
 }
