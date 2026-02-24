@@ -61,7 +61,7 @@ export default function Sidebar() {
           <Logo className="h-12 w-12 shrink-0" />
           <span
             className={[
-              "text-xl font-semibold whitespace-nowrap transition-all duration-300 ease-in-out overflow-hidden",
+              "text-[22px] font-semibold whitespace-nowrap bg-gradient-to-r from-logo-1 to-logo-2 bg-clip-text text-transparent transition-opacity duration-300 transition-all ease-in-out overflow-hidden",
               isCollapsed ? "w-0 opacity-0 invisible" : "w-auto opacity-100",
             ].join(" ")}
           >
