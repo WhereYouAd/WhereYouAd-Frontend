@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
@@ -28,8 +28,10 @@ export default function WorkspacePage() {
   const openFile = () => {
     if (!fileRef.current) return;
     fileRef.current.value = "";
-    fileRef.current?.click();
+    fileRef.current.click();
   };
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const workspaces: TWorkspace[] = useMemo(
     () => [
       {
@@ -82,7 +84,16 @@ export default function WorkspacePage() {
   const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
   };
+
+  // TODO: 모달 닫힐때 preview URL 해제필요
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
 
   // TODO: API 연동 후에 생성 동작 연결하기
   const onSubmitCreate = () => {
@@ -100,6 +111,7 @@ export default function WorkspacePage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <Input
+            aria-label="조직 검색"
             placeholder="조직을 검색하세요"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -107,6 +119,7 @@ export default function WorkspacePage() {
           />
         </div>
         <Button
+          type="button"
           onClick={onOpenCreate}
           size="big"
           variant="primary"
@@ -195,6 +208,7 @@ export default function WorkspacePage() {
               onClick={onSubmitCreate}
               disabled={!newName.trim()}
               className="mx-auto px-10 mt-10"
+              type="button"
             >
               생성하기
             </Button>
