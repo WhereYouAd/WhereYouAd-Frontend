@@ -97,6 +97,16 @@ export default function WorkspacePage() {
 
   // TODO: API 연동 후에 생성 동작 연결하기
   const onSubmitCreate = () => {
+    const form = new FormData();
+    form.append("name", newName.trim());
+    form.append("description", newDesc.trim());
+    if (logoFile) form.append("logo", logoFile);
+
+    console.log("create payload", {
+      name: newName.trim(),
+      description: newDesc.trim(),
+      logoFile,
+    });
     alert("API 연동 후에 생성 기능 연결예정");
   };
 
