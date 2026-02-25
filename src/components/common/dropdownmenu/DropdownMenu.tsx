@@ -70,13 +70,25 @@ export function DropdownMenu({
                     setOpen(false);
                   }}
                   className={twMerge(
-                    "flex w-full items-center gap-3 rounding-15 px-5 py-4 text-left font-body1 transition-fast",
+                    "group flex w-full items-center gap-3 rounding-15 px-5 py-4 text-left font-body1 transition-fast",
                     it.active
                       ? "bg-brand-300 text-status-blue"
-                      : "text-text-main hover:bg-brand-300",
+                      : "text-text-main hover:bg-brand-300 hover:text-status-blue",
                   )}
                 >
-                  {it.icon}
+                  {it.icon ? (
+                    <span
+                      className={twMerge(
+                        "inline-flex h-5 w-5 items-center justify-center text-text-main",
+                        it.active
+                          ? "text-status-blue"
+                          : "group-hover:text-status-blue",
+                      )}
+                      aria-hidden="true"
+                    >
+                      {it.icon}
+                    </span>
+                  ) : null}
                   <span
                     className={twMerge(
                       "whitespace-nowrap",
