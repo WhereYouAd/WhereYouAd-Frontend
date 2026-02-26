@@ -29,6 +29,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
       containerClassName,
       inputClassName,
       id,
+      disabled,
       ...props
     },
     ref,
@@ -52,11 +53,13 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         <div
           className={twMerge(
             "flex items-center w-full h-input bg-white ring-1 ring-logo-1/30 rounded-component-md transition-colors duration-200 ease-out overflow-hidden",
-            error
-              ? "ring-2 ring-status-red bg-status-red/5"
-              : success
-                ? "rubg-2 ring-status-green bg-status-green/5"
-                : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
+            disabled
+              ? "bg-gray-100 cursor-not-allowed"
+              : error
+                ? "ring-2 ring-status-red bg-status-red/5"
+                : success
+                  ? "ring-2 ring-status-green bg-status-green/5"
+                  : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
             containerClassName,
           )}
         >
@@ -64,13 +67,14 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             ref={ref}
             className={twMerge(
               "flex-1 h-full w-full bg-transparent border-none outline-none text-body1 text-text-main placeholder:text-text-placeholder px-5",
-              "disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-text-disabled",
+              "disabled:cursor-not-allowed disabled:text-text-disabled",
               rightElement ? "pr-2" : "",
               inputClassName,
             )}
             id={inputId}
             aria-invalid={error ? "true" : "false"}
             aria-describedby={helperTextId}
+            disabled={disabled}
             {...props}
           />
           {rightElement && (
@@ -84,7 +88,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             id={helperTextId}
             aria-live="polite"
             className={twMerge(
-              "font-caption pl-1",
+              "font-caption pl-1 mt-1.5",
               error ? "text-status-red" : "text-text-sub",
             )}
           >

@@ -18,9 +18,13 @@ import useModalStore, { MODAL_TYPES } from "@/store/useModalStore";
 
 type TSignupProfileFormValues = z.infer<typeof signupProfileSchema>;
 
-export default function ProfileSetupStep() {
+interface IProfileSetupStepProps {
+  password: string;
+}
+
+export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
   const navigate = useNavigate();
-  const { email, password, resetAuth } = useAuthStore();
+  const { email, resetAuth } = useAuthStore();
   const { openModal } = useModalStore();
   const { useSignUp } = useAuth();
 

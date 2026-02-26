@@ -8,13 +8,18 @@ import AuthLayout from "@/layout/auth/AuthLayout";
 import GlobalLayout from "@/layout/GlobalLayout";
 import MainLayout from "@/layout/main/MainLayout";
 import Error from "@/pages/common/Error";
+import useAuthStore from "@/store/useAuthStore";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  // 실제 인증 상태 확인 로직으로 대체 예정
-  const isAuthenticated = true;
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isTokenInitialized = useAuthStore((state) => state.isTokenInitialized);
 
-  if (!isAuthenticated) {
-    return <Navigate to="/signup" replace />;
+  if (!isTokenInitialized) {
+    return null;
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;

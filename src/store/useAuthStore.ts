@@ -2,41 +2,38 @@ import { create } from "zustand";
 
 interface IAuthState {
   isLoggedIn: boolean;
+  isTokenInitialized: boolean;
   accessToken: string | null;
   email: string;
-  password: string;
-  socialId: number;
+  socialId: number | null;
 
   login: (email: string, accessToken: string) => void;
   logout: () => void;
   setAccessToken: (token: string) => void;
+  setTokenInitialized: () => void;
   setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
-  setSocialId: (socialId: number) => void;
+  setSocialId: (socialId: number | null) => void;
   resetAuth: () => void;
 }
 
 const useAuthStore = create<IAuthState>((set) => ({
   isLoggedIn: false,
+  isTokenInitialized: false,
   accessToken: null,
   email: "",
-  password: "",
-  socialId: -1,
+  socialId: null,
 
   login: (email, accessToken) => {
     localStorage.setItem("hasSession", "true");
     set({ isLoggedIn: true, email, accessToken });
   },
   logout: () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
     localStorage.removeItem("hasSession");
     set({
       isLoggedIn: false,
       accessToken: null,
       email: "",
-      password: "",
-      socialId: -1,
+      socialId: null,
     });
   },
 
@@ -44,10 +41,10 @@ const useAuthStore = create<IAuthState>((set) => ({
     localStorage.setItem("hasSession", "true");
     set({ accessToken: token, isLoggedIn: true });
   },
+  setTokenInitialized: () => set({ isTokenInitialized: true }),
   setEmail: (email) => set({ email }),
-  setPassword: (password) => set({ password }),
   setSocialId: (socialId) => set({ socialId }),
-  resetAuth: () => set({ email: "", password: "", accessToken: null }),
+  resetAuth: () => set({ email: "", socialId: null }),
 }));
 
 export default useAuthStore;

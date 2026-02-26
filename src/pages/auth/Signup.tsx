@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
@@ -21,6 +21,7 @@ export default function Signup() {
   const { step, setStep, handleNext } = useStepNavigation(
     location.state?.step || 0,
   );
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     return () => {
@@ -34,10 +35,17 @@ export default function Signup() {
     return <Step01Email onNext={handleNext} />;
   }
   if (step === 2) {
-    return <Step02Password onNext={handleNext} />;
+    return (
+      <Step02Password
+        onNext={(pw) => {
+          setPassword(pw);
+          handleNext();
+        }}
+      />
+    );
   }
   if (step === 3) {
-    return <Step03Profile />;
+    return <Step03Profile password={password} />;
   }
 
   return (
