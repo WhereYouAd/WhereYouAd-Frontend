@@ -4,6 +4,7 @@ import type {
   IEmailVerifyRequest,
   ILoginRequest,
   ILoginResponse,
+  IMyPageInfoResponse,
   IPasswordResetRequest,
   ISignUpRequest,
   ISignUpResponse,
@@ -15,9 +16,8 @@ import type {
 } from "@/types/auth/auth";
 import type { ICommonResponse } from "@/types/common/common";
 
-import { axiosInstance } from "@/lib/axiosInstance";
+import { authInstance, axiosInstance } from "@/lib/axiosInstance";
 
-// 이메일 인증 코드 전송
 export const sendEmail = async ({
   email,
 }: IEmailSendRequest): Promise<ICommonResponse<IEmailSendResponse>> => {
@@ -25,7 +25,6 @@ export const sendEmail = async ({
   return data;
 };
 
-// 이메일 인증 코드 검증
 export const verifyEmail = async ({
   email,
   authCode,
@@ -37,7 +36,6 @@ export const verifyEmail = async ({
   return data;
 };
 
-// 단순 회원가입
 export const signUp = async ({
   email,
   password,
@@ -53,7 +51,6 @@ export const signUp = async ({
   return data;
 };
 
-// 토큰 재발급
 export const reissueToken = async (): Promise<
   ICommonResponse<ITokenRefreshResponse>
 > => {
@@ -61,19 +58,17 @@ export const reissueToken = async (): Promise<
   return data;
 };
 
-// 로그인
 export const login = async ({
   email,
   password,
 }: ILoginRequest): Promise<ICommonResponse<ILoginResponse>> => {
-  const { data } = await axiosInstance.post("/api/auth/login", {
+  const { data } = await authInstance.post("/api/auth/login", {
     email,
     password,
   });
   return data;
 };
 
-// SMS 인증 코드 전송
 export const sendSMS = async ({
   phoneNumber,
 }: ISmsSendRequest): Promise<ICommonResponse<ISmsSendResponse>> => {
@@ -83,7 +78,6 @@ export const sendSMS = async ({
   return data;
 };
 
-// SMS 인증 코드 검증
 export const verifySMS = async ({
   phoneNumber,
   verificationCode,
@@ -95,7 +89,6 @@ export const verifySMS = async ({
   return data;
 };
 
-// 비밀번호 재설정 요청
 export const requestPasswordReset = async ({
   email,
 }: IEmailSendRequest): Promise<ICommonResponse<IEmailSendResponse>> => {
@@ -108,7 +101,6 @@ export const requestPasswordReset = async ({
   return data;
 };
 
-// 비밀번호 재설정
 export const resetPassword = async ({
   email,
   password,
@@ -120,5 +112,12 @@ export const resetPassword = async ({
       password,
     },
   );
+  return data;
+};
+
+export const getMyInfo = async (): Promise<
+  ICommonResponse<IMyPageInfoResponse>
+> => {
+  const { data } = await axiosInstance.get("/api/users/my");
   return data;
 };

@@ -1,19 +1,10 @@
 import PasswordForm from "@/components/auth/common/PasswordForm";
 
-import useAuthStore from "@/store/useAuthStore";
-
 interface IPasswordSetupStepProps {
-  onNext: () => void;
+  onNext: (password: string) => void;
 }
 
 export default function PasswordSetupStep({ onNext }: IPasswordSetupStepProps) {
-  const { setPassword } = useAuthStore();
-
-  const handleSubmit = (password: string) => {
-    setPassword(password);
-    onNext();
-  };
-
   return (
     <PasswordForm
       title={
@@ -24,7 +15,7 @@ export default function PasswordSetupStep({ onNext }: IPasswordSetupStepProps) {
         </>
       }
       buttonText="다음으로"
-      onSubmit={handleSubmit}
+      onSubmit={onNext}
     />
   );
 }

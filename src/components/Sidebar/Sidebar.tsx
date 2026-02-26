@@ -47,7 +47,7 @@ export default function Sidebar() {
         isCollapsed ? "w-25" : "w-64",
       ].join(" ")}
     >
-      <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
+      <div className="mx-auto flex w-full max-w-58 flex-1 flex-col">
         <NavLink
           to="/"
           aria-label="홈으로 이동"

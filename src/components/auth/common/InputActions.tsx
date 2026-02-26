@@ -29,9 +29,7 @@ export default function InputActions({
 
   return (
     <div className="flex items-center gap-2">
-      {timer && (
-        <span className="text-status-red font-body2 mr-3">{timer}</span>
-      )}
+      {timer && <span className="text-status-red font-body2">{timer}</span>}
       {button && (
         <Button
           size="small"

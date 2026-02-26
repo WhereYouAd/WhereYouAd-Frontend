@@ -4,14 +4,17 @@ import { reissueToken } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
 
 export const useTokenRefresh = () => {
-  const { setAccessToken, logout } = useAuthStore();
+  const { setAccessToken, logout, setTokenInitialized } = useAuthStore();
   const initialized = useRef(false);
 
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
 
-    if (!localStorage.getItem("hasSession")) return;
+    if (!localStorage.getItem("hasSession")) {
+      setTokenInitialized();
+      return;
+    }
 
     const initAuth = async () => {
       try {
@@ -21,9 +24,11 @@ export const useTokenRefresh = () => {
         }
       } catch {
         logout();
+      } finally {
+        setTokenInitialized();
       }
     };
 
     initAuth();
-  }, [setAccessToken, logout]);
+  }, [setAccessToken, logout, setTokenInitialized]);
 };
