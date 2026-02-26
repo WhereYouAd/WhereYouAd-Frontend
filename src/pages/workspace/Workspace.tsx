@@ -180,7 +180,7 @@ export default function WorkspacePage() {
                 <div className="font-label text-text-sub">로고 이미지</div>
                 <Button
                   variant="custom"
-                  className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                  className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                   onClick={openFile}
                   type="button"
                 >

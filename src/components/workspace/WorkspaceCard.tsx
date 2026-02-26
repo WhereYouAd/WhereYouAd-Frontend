@@ -27,14 +27,16 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <BuildingIcon className="w-12 h-12" />
+              <BuildingIcon className="w-8 h-8 text-text-placeholder" />
             </div>
           )}
         </div>
 
         <div className="min-w-0">
-          <div className="font-heading4 text-text-main truncate">{w.name}</div>
-          <div className="font-body1 text-text-main mt-1 truncate">
+          <div className="font-heading4 font-semibold! text-text-main truncate">
+            {w.name}
+          </div>
+          <div className="font-body3 text-text-main mt-1 truncate">
             {w.description ?? ""}
           </div>
           <div className="font-body1 text-text-sub mt-2">

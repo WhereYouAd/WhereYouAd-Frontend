@@ -46,7 +46,7 @@ export default function WorkspaceSetting() {
             <div className="flex gap-3 mt-3 justify-center">
               <Button
                 variant="custom"
-                className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                 onClick={() => alert("TODO:추후 업로드")}
                 aria-label="로고 이미지 업로드 버튼"
               >
@@ -54,7 +54,7 @@ export default function WorkspaceSetting() {
               </Button>
               <Button
                 variant="custom"
-                className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                 onClick={() => alert("TODO:추후 초기화연결")}
                 aria-label="로고 이미지 초기화 버튼"
               >
