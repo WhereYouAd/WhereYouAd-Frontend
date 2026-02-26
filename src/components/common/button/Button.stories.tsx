@@ -39,6 +39,10 @@ export const Gradient: TButtonStory = {
   args: { variant: "gradient" },
 };
 
+export const Tertiary: TButtonStory = {
+  args: { variant: "tertiary" },
+};
+
 export const Disabled: TButtonStory = {
   args: { disabled: true },
 };

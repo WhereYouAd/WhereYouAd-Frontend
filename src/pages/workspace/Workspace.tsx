@@ -1,3 +1,230 @@
-export default function Workspace() {
-  return <div>Workspace</div>;
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import type { TWorkspace } from "@/types/workspace/workspace";
+
+import Button from "@/components/common/button/Button";
+import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
+import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
+import TextareaField from "@/components/common/textarea/TextareaField";
+import WorkspaceCard from "@/components/workspace/WorkspaceCard";
+
+import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
+import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
+import SearchIcon from "@/assets/icon/workspace/search.svg?react";
+import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
+import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
+
+export default function WorkspacePage() {
+  const navigate = useNavigate();
+
+  const [query, setQuery] = useState("");
+  const [createOpen, setCreateOpen] = useState(false);
+
+  const [newName, setNewName] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const openFile = () => {
+    if (!fileRef.current) return;
+    fileRef.current.value = "";
+    fileRef.current.click();
+  };
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const workspaces: TWorkspace[] = useMemo(
+    () => [
+      {
+        id: "1",
+        name: "광고회사1",
+        description: "광고회사1입니다.",
+        myRole: "admin",
+      },
+      {
+        id: "2",
+        name: "광고회사2",
+        description: "광고회사2입니다.",
+        myRole: "admin",
+      },
+      {
+        id: "3",
+        name: "광고회사3",
+        description: "광고회사3입니다.",
+        myRole: "admin",
+      },
+    ],
+    [],
+  );
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return workspaces;
+    return workspaces.filter((w) => w.name.toLowerCase().includes(q));
+  }, [query, workspaces]);
+
+  const menuItems = (id: TWorkspace["id"]): TMenuItem[] => [
+    {
+      icon: <EditContainIcon className="h-5 w-5 fill-none stroke-current" />,
+      label: "정보 수정하기",
+      onClick: () => {
+        void navigate(`/workspace/${id}/settings`);
+      },
+    },
+    {
+      icon: <UserProfileIcon className="h-5 w-5 fill-none stroke-current" />,
+      label: "멤버 관리",
+      onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
+    },
+  ];
+  const onOpenCreate = () => {
+    setNewName("");
+    setNewDesc("");
+    setCreateOpen(true);
+  };
+
+  const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+  };
+
+  // TODO: 모달 닫힐때 preview URL 해제필요
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
+
+  // TODO: API 연동 후에 생성 동작 연결하기
+  const onSubmitCreate = () => {
+    const form = new FormData();
+    form.append("name", newName.trim());
+    form.append("description", newDesc.trim());
+    if (logoFile) form.append("logo", logoFile);
+
+    console.log("create payload", {
+      name: newName.trim(),
+      description: newDesc.trim(),
+      logoFile,
+    });
+    alert("API 연동 후에 생성 기능 연결예정");
+  };
+
+  return (
+    <section className="w-full">
+      <header className="mb-7">
+        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
+        <p className="font-body1 text-text-sub">
+          워크스페이스 정보를 확인하고 관리하세요.
+        </p>
+      </header>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="flex-1">
+          <Input
+            aria-label="조직 검색"
+            placeholder="조직을 검색하세요"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            rightElement={<SearchIcon className="w-6 h-6 fill-chart-3" />}
+          />
+        </div>
+        <Button
+          type="button"
+          onClick={onOpenCreate}
+          size="big"
+          variant="primary"
+          className="bg-chart-3 flex w-full shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto"
+        >
+          <PlusIcon className="w-3 h-3 fill-white" />
+          워크스페이스 생성하기
+        </Button>
+      </div>
+      <ul className="space-y-5">
+        {filtered.map((w) => (
+          <WorkspaceCard
+            key={String(w.id)}
+            workspace={w}
+            menuItems={menuItems(w.id)}
+          />
+        ))}
+        {filtered.length === 0 && (
+          <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
+            <p className="font-body2 text-text-sub">워크스페이스가 없습니다.</p>
+          </li>
+        )}
+      </ul>
+      <Modal
+        isOpen={createOpen}
+        onClose={() => setCreateOpen(false)}
+        size="xl"
+        padding="lg"
+      >
+        <div className="px-2">
+          <h2 className="font-heading3 text-text-main mb-2">
+            워크스페이스 생성
+          </h2>
+          <p className="font-body1 text-text-sub mb-6">
+            워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.{" "}
+            <br /> 로고 이미지와 기본 정보를 입력해 주세요.
+          </p>
+          <div className="space-y-6 mx-auto w-full max-w-[800px]">
+            <div className="max-w-[560px] mx-auto w-full mb-10">
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={onPickFile}
+              />
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-label text-text-sub">로고 이미지</div>
+                <Button
+                  variant="custom"
+                  className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                  onClick={openFile}
+                  type="button"
+                >
+                  업로드
+                </Button>
+              </div>
+              <button
+                type="button"
+                aria-label="로고 이미지 업로드"
+                onClick={openFile}
+                className="w-full rounded-component-lg border border-gray-100 bg-gray-50 h-[260px] flex items-center justify-center hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-text-sub">
+                  <UpLoadImgIcon />
+                </span>
+              </button>
+            </div>
+
+            <Input
+              label="워크스페이스 이름"
+              placeholder="조직의 이름을 입력하세요."
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+            <TextareaField
+              id="workspace-desc"
+              label="워크스페이스 설명"
+              placeholder="조직에 대한 간단한 설명을 입력하세요"
+              value={newDesc}
+              onChange={(e) => setNewDesc(e.target.value)}
+            />
+            <Button
+              size="big"
+              variant="primary"
+              onClick={onSubmitCreate}
+              disabled={!newName.trim()}
+              className="mx-auto px-10 mt-10"
+              type="button"
+            >
+              생성하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </section>
+  );
 }
