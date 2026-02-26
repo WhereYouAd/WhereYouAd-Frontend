@@ -13,7 +13,7 @@ type TAgreementItemProps = {
 const markdownComponents: Components = {
   h2: ({ ...props }) => (
     <h2
-      className="font-heading3 text-text-main font-bold mb-2 mt-4 first:mt-0"
+      className="font-heading4 text-text-main font-bold mb-2 mt-4 first:mt-0"
       {...props}
     />
   ),

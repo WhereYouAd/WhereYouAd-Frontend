@@ -29,7 +29,7 @@ export default function Button({
   ...rest
 }: IButtonProps) {
   const sizeClasses = {
-    big: "h-button-big px-6 rounded-component-md font-heading3 transition-colors duration-normal ease-out",
+    big: "h-button-big px-6 rounded-component-md font-heading4 transition-colors duration-normal ease-out",
     small:
       "h-button-small px-4 rounded-component-sm font-body1 transition-colors duration-normal ease-out",
   };

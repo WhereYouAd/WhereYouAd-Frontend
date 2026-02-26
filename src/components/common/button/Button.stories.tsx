@@ -66,7 +66,7 @@ export const Sizes: TButtonStory = {
 
 export const FullWidth: TButtonStory = {
   render: () => (
-    <div className="w-[360px]">
+    <div className="w-90">
       <Button fullWidth variant="primary">
         Full width
       </Button>

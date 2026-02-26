@@ -33,7 +33,7 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
         </div>
 
         <div className="min-w-0">
-          <div className="font-heading3 text-text-main truncate">{w.name}</div>
+          <div className="font-heading4 text-text-main truncate">{w.name}</div>
           <div className="font-body1 text-text-main mt-1 truncate">
             {w.description ?? ""}
           </div>
