@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
@@ -12,7 +13,7 @@ import CollapseIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
 import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
-  return [
+  return twMerge(
     "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
@@ -20,15 +21,15 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
     isActive
       ? "bg-chart-3 text-white"
       : "text-text-auth-sub hover:bg-[#F6F6F6]",
-  ].join(" ");
+  );
 }
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
-  return [
-    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-300",
+  return twMerge(
+    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
-  ].join(" ");
+  );
 }
 
 export default function Sidebar() {
@@ -43,27 +44,27 @@ export default function Sidebar() {
 
   return (
     <div
-      className={[
-        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-300 ease-in-out",
+      className={twMerge(
+        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-200 ease-in-out",
         isCollapsed ? "w-25" : "w-64",
-      ].join(" ")}
+      )}
     >
       <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
         {/* Logo */}
         <NavLink
           to="/"
           aria-label="홈으로 이동"
-          className={[
-            "mt-5 mb-2 flex h-16 items-center transition-all duration-300",
+          className={twMerge(
+            "mt-5 mb-2 flex h-16 items-center transition-all duration-200",
             isCollapsed ? "justify-center" : "gap-3 px-4",
-          ].join(" ")}
+          )}
         >
           <Logo className="h-12 w-12 shrink-0" />
           <span
-            className={[
-              "text-[22px] font-semibold whitespace-nowrap bg-gradient-to-r from-logo-1 to-logo-2 bg-clip-text text-transparent transition-opacity duration-300 transition-all ease-in-out overflow-hidden",
+            className={twMerge(
+              "text-[22px] font-semibold whitespace-nowrap bg-gradient-to-r from-logo-1 to-logo-2 bg-clip-text text-transparent transition-opacity duration-200 transition-all ease-in-out overflow-hidden",
               isCollapsed ? "w-0 opacity-0 invisible" : "w-auto opacity-100",
-            ].join(" ")}
+            )}
           >
             WhereYouAd
           </span>
@@ -76,10 +77,10 @@ export default function Sidebar() {
           className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
         >
           <CollapseIcon
-            className={[
-              "h-2 w-2 transition-transform duration-300",
+            className={twMerge(
+              "h-2 w-2 transition-transform duration-200",
               isCollapsed ? "rotate-180" : "",
-            ].join(" ")}
+            )}
           />
         </button>
 
@@ -127,10 +128,10 @@ export default function Sidebar() {
                       className="ml-auto p-2 hover:bg-black/5 rounded-lg transition-colors"
                     >
                       <ChevronIcon
-                        className={[
+                        className={twMerge(
                           "h-3 w-3",
                           isOpen ? "rotate-0" : "rotate-180",
-                        ].join(" ")}
+                        )}
                       />
                     </button>
                   )}
@@ -146,7 +147,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className={["py-2 mb-3", isCollapsed ? "" : "px-2"].join(" ")}>
+        <div className={twMerge("py-2 mb-3", isCollapsed ? "" : "px-2")}>
           {footerNav.map((item) => {
             const isActive = item.path
               ? location.pathname === item.path
