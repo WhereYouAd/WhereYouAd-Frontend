@@ -39,34 +39,31 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
 
     return (
       <div
-        className={twMerge(
-          "flex flex-col w-full gap-2 relative",
-          wrapperClassName,
-        )}
+        className={twMerge("flex flex-col w-full relative", wrapperClassName)}
       >
         {label && (
           <label
             htmlFor={inputId}
-            className="font-label text-brand-900 select-none ml-1 mb-2"
+            className="text-text-main select-none ml-1 mb-1"
           >
             {label}
           </label>
         )}
         <div
           className={twMerge(
-            "flex items-center w-full h-input bg-gray-50 border-transparent rounded-component-lg transition-smooth overflow-hidden",
+            "flex items-center w-full h-input bg-white ring-1 ring-logo-1/30 rounded-component-md transition-colors duration-200 ease-out overflow-hidden",
             error
               ? "ring-2 ring-status-red bg-status-red/5"
               : success
-                ? "ring-2 ring-logo-1 bg-white"
-                : "hover:bg-gray-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/30",
+                ? "rubg-2 ring-status-green bg-status-green/5"
+                : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
             containerClassName,
           )}
         >
           <input
             ref={ref}
             className={twMerge(
-              "flex-1 h-full w-full bg-transparent border-none outline-none text-body1 text-brand-900 placeholder:text-text-placeholder px-5",
+              "flex-1 h-full w-full bg-transparent border-none outline-none text-body1 text-text-main placeholder:text-text-placeholder px-5",
               "disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-text-disabled",
               rightElement ? "pr-2" : "",
               inputClassName,
