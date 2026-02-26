@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
@@ -10,7 +10,7 @@ import { SubMenu } from "./SubMenu";
 
 import ChevronIcon from "@/assets/icon/common/chevron-up.svg?react";
 import CollapseIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
-import Logo from "@/assets/logo/symbol-color.svg?react";
+// import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
@@ -49,9 +49,9 @@ export default function Sidebar() {
         isCollapsed ? "w-25" : "w-64",
       )}
     >
-      <div className="mx-auto flex w-full max-w-[232px] flex-1 flex-col">
+      <div className="mx-auto mt-10 flex w-full max-w-[232px] flex-1 flex-col">
         {/* Logo */}
-        <NavLink
+        {/* <NavLink
           to="/"
           aria-label="홈으로 이동"
           className={twMerge(
@@ -68,13 +68,13 @@ export default function Sidebar() {
           >
             WhereYouAd
           </span>
-        </NavLink>
+        </NavLink> */}
 
         <button
           type="button"
           aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
           onClick={toggleSidebar}
-          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
+          className="absolute -right-3 top-3 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
         >
           <CollapseIcon
             className={twMerge(
