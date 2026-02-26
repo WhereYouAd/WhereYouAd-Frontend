@@ -9,7 +9,7 @@ import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    "flex items-center rounded-component-md px-3 text-sm cursor-pointer transition-colors",
     isCollapsed ? "h-13 w-13 mx-auto justify-center" : "h-[55px] gap-4 px-3",
     isActive
       ? "bg-chart-3 text-white"
@@ -19,7 +19,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return [
-    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-colors",
+    "flex w-full h-[55px] items-center rounded-component-md px-3 text-sm cursor-pointer transition-colors",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
   ].join(" ");
@@ -43,7 +43,7 @@ export default function Sidebar() {
   return (
     <div
       className={[
-        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-300",
+        "relative flex h-full flex-col bg-white rounded-component-lg drop-shadow-md transition-all duration-300",
         isCollapsed ? "w-25" : "w-64",
       ].join(" ")}
     >
@@ -69,7 +69,7 @@ export default function Sidebar() {
             setIsCollapsed((prev) => !prev);
             setOpenId(null);
           }}
-          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-bg-surface transition hover:bg-bg-surface"
+          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-component-sm bg-white border border-bg-surface transition hover:bg-bg-surface"
         >
           <CollapseIcon
             className={[
@@ -179,7 +179,7 @@ export default function Sidebar() {
                           end={child.path === item.path}
                           className={({ isActive }) =>
                             [
-                              "pl-4 flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
+                              "pl-4 flex h-10 items-center rounded-component-md px-3 text-sm transition-colors",
                               isActive
                                 ? "bg-chart-3 text-white"
                                 : "text-text-auth-sub hover:bg-bg-surface",
@@ -193,7 +193,7 @@ export default function Sidebar() {
                   )}
                   {/* 축소 상태 */}
                   {isCollapsed && isOpen && (
-                    <div className="absolute left-full top-0 ml-3 w-52 rounded-2xl bg-white p-2 shadow-lg">
+                    <div className="absolute left-full top-0 ml-3 w-52 rounded-component-md bg-white p-2 shadow-lg">
                       {item.children.map((child) => (
                         <NavLink
                           key={child.id}
@@ -201,7 +201,7 @@ export default function Sidebar() {
                           end={child.path === item.path}
                           className={({ isActive }) =>
                             [
-                              "flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
+                              "flex h-10 items-center rounded-component-md px-3 text-sm transition-colors",
                               isActive
                                 ? "bg-chart-3 text-white"
                                 : "text-text-auth-sub hover:bg-bg-surface",

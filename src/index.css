@@ -224,18 +224,6 @@ button {
     line-height: 140%;
   }
 
-  .rounding-15 {
-    border-radius: 15px;
-  }
-
-  .rounding-20 {
-    border-radius: 20px;
-  }
-
-  .rounding-30 {
-    border-radius: 30px;
-  }
-
   .shadow-Soft {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.1);
   }
