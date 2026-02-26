@@ -12,7 +12,7 @@ interface IAuthState {
   setAccessToken: (token: string) => void;
   setTokenInitialized: () => void;
   setEmail: (email: string) => void;
-  setSocialId: (socialId: number) => void;
+  setSocialId: (socialId: number | null) => void;
   resetAuth: () => void;
 }
 
@@ -44,7 +44,7 @@ const useAuthStore = create<IAuthState>((set) => ({
   setTokenInitialized: () => set({ isTokenInitialized: true }),
   setEmail: (email) => set({ email }),
   setSocialId: (socialId) => set({ socialId }),
-  resetAuth: () => set({ email: "" }),
+  resetAuth: () => set({ email: "", socialId: null }),
 }));
 
 export default useAuthStore;
