@@ -13,7 +13,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
     isCollapsed ? "h-13 w-13 mx-auto justify-center" : "h-[55px] gap-4 px-3",
     isActive
       ? "bg-chart-3 text-white"
-      : "text-text-auth-sub hover:bg-[#F6F6F6]",
+      : "text-text-auth-sub hover:bg-bg-surface",
   ].join(" ");
 }
 
@@ -69,7 +69,7 @@ export default function Sidebar() {
             setIsCollapsed((prev) => !prev);
             setOpenId(null);
           }}
-          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
+          className="absolute -right-3 top-10 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-bg-surface transition hover:bg-bg-surface"
         >
           <CollapseIcon
             className={[
@@ -182,7 +182,7 @@ export default function Sidebar() {
                               "pl-4 flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
                               isActive
                                 ? "bg-chart-3 text-white"
-                                : "text-text-auth-sub hover:bg-[#F6F6F6]",
+                                : "text-text-auth-sub hover:bg-bg-surface",
                             ].join(" ")
                           }
                         >
@@ -204,7 +204,7 @@ export default function Sidebar() {
                               "flex h-10 items-center rounded-xl px-3 text-sm transition-colors",
                               isActive
                                 ? "bg-chart-3 text-white"
-                                : "text-text-auth-sub hover:bg-[#F6F6F6]",
+                                : "text-text-auth-sub hover:bg-bg-surface",
                             ].join(" ")
                           }
                         >
