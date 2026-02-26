@@ -32,7 +32,7 @@ export default function WorkspaceSetting() {
           워크스페이스 정보를 확인하고 관리하세요.
         </p>
       </header>
-      <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-sm">
+      <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
         <h2 className="font-heading4 text-text-main">기본 정보</h2>
         <p className="font-body2 text-text-sub mt-2">
           워크스페이스의 대표적인 정보를 설정합니다.

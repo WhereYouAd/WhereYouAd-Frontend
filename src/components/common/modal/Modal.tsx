@@ -117,7 +117,7 @@ function Modal({
         <div
           ref={modalRef}
           className={twMerge(
-            "relative bg-white rounded-component-md shadow-xl w-full max-h-[90vh] overflow-auto animate-modal-content",
+            "relative bg-white rounded-component-md shadow-Medium w-full max-h-[90vh] overflow-auto animate-modal-content",
             sizeClasses[size],
             paddingClasses[padding],
             className,

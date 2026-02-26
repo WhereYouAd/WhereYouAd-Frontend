@@ -87,7 +87,7 @@ export default function Login() {
           <div className="flex items-center gap-12">
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="카카오로 로그인"
               onClick={() => handleSocialLogin("kakao")}
             >
@@ -96,7 +96,7 @@ export default function Login() {
 
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="네이버로 로그인"
               onClick={() => handleSocialLogin("naver")}
             >
@@ -105,7 +105,7 @@ export default function Login() {
 
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="구글로 로그인"
               onClick={() => toast.error("준비중입니다.")}
             >

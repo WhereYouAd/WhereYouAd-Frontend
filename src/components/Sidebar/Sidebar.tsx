@@ -43,7 +43,7 @@ export default function Sidebar() {
   return (
     <div
       className={[
-        "relative flex h-full flex-col bg-white rounded-component-lg drop-shadow-md transition-all duration-300",
+        "relative flex h-full flex-col bg-white rounded-component-lg shadow-Soft transition-all duration-300",
         isCollapsed ? "w-25" : "w-64",
       ].join(" ")}
     >
@@ -193,7 +193,7 @@ export default function Sidebar() {
                   )}
                   {/* 축소 상태 */}
                   {isCollapsed && isOpen && (
-                    <div className="absolute left-full top-0 ml-3 w-52 rounded-component-md bg-white p-2 shadow-lg">
+                    <div className="absolute left-full top-0 ml-3 w-52 rounded-component-md bg-white p-2 shadow-Soft">
                       {item.children.map((child) => (
                         <NavLink
                           key={child.id}

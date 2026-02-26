@@ -58,7 +58,7 @@ export default function IntroAdManagement({ isActive }: { isActive: boolean }) {
               {CAROUSEL_ITEMS.map((platform, index) => (
                 <div
                   key={`${platform.id}-${index}`}
-                  className={`flex h-40 w-40 items-center justify-center rounded-full shadow-lg ${platform.bgColor}`}
+                  className={`flex h-40 w-40 items-center justify-center rounded-full shadow-Soft ${platform.bgColor}`}
                 >
                   <platform.icon
                     className={`${platform.className} ${platform.size}`}
