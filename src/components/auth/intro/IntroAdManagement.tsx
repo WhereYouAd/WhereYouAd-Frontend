@@ -41,7 +41,7 @@ export default function IntroAdManagement({ isActive }: { isActive: boolean }) {
             <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 text-sm font-bold text-logo-2">
               통합 관리
             </span>
-            <h2 className="font-heading1 text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
+            <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
               흩어진 광고 성과를{"\n"}
               한곳에서 관리하세요
             </h2>

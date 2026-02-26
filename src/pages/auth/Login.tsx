@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">
-        <h1 className="text-center font-heading1 text-3xl font-bold text-text-main mb-10">
+        <h1 className="text-center font-heading1 font-bold text-text-main mb-10">
           로그인
         </h1>
 
@@ -124,7 +124,7 @@ export default function Login() {
           <Link
             to="/signup"
             state={{ step: 1 }}
-            className="mt-6 font-body3 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+            className="mt-6 font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일로 회원가입
           </Link>

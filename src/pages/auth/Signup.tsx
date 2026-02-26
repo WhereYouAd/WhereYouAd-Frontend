@@ -88,7 +88,7 @@ export default function Signup() {
         </Button>
       </div>
 
-      <div className="font-body3 text-text-sub mt-15 flex gap-2">
+      <div className="font-body2 text-text-sub mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
         <Link
           to="/login"

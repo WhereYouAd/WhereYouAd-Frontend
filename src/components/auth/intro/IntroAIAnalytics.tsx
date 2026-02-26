@@ -40,7 +40,7 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
             <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 text-sm font-bold text-logo-2">
               AI 성과 분석
             </span>
-            <h2 className="font-heading1 text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
+            <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
               복잡한 데이터 분석,{"\n"}
               AI가 대신 해드릴게요
             </h2>
