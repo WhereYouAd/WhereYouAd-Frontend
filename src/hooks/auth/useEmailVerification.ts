@@ -66,11 +66,29 @@ export const useEmailVerification = ({
     stop();
   }, [stop]);
 
+  const PROVIDER_NAME: Record<string, string> = {
+    GOOGLE: "구글",
+    KAKAO: "카카오",
+    NAVER: "네이버",
+  };
+
   const sendVerificationEmail = (email: string, successMessage: string) => {
     activeSendCode.mutate(
       { email },
       {
         onSuccess: (data) => {
+          const { isProviderLinked, providerTypes } = data.data;
+
+          if (isProviderLinked) {
+            const providerNames = providerTypes
+              .map((type) => PROVIDER_NAME[type])
+              .join(", ");
+            toast.error("이미 소셜 로그인으로 가입된 이메일입니다.", {
+              description: `${providerNames}계정으로 로그인해주세요`,
+            });
+            return;
+          }
+
           setSendCode(true);
           toast.success(successMessage);
           restart(data.data.expireIn);

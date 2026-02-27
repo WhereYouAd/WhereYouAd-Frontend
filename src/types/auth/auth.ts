@@ -6,6 +6,8 @@ export interface IEmailSendResponse {
   message: string;
   email: string;
   expireIn: number;
+  isProviderLinked: boolean;
+  providerTypes: TLoginProvider[];
 }
 
 export interface IEmailVerifyRequest {
