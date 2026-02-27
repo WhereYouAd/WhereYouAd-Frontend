@@ -45,5 +45,11 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v2
         with:
-          message: "🚀 Storybook: ${{ steps.chromatic.outputs.storybookUrl }}"
+          message: |
+            ## 📚 Storybook 배포 완료
+
+            | 항목 | 링크 |
+            |------|------|
+            | 📖 Storybook | ${{ steps.chromatic.outputs.storybookUrl }} |
+            | 🔍 Chromatic | ${{ steps.chromatic.outputs.buildUrl }} |
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
