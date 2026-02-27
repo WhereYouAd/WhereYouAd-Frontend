@@ -4,10 +4,10 @@ export default function SignupPageSkeleton() {
   return (
     <div className="flex w-full flex-col items-center">
       <div className="flex w-full flex-col gap-10">
-        <Skeleton className="h-16 w-full rounded-2xl" />
-        <Skeleton className="h-16 w-full rounded-2xl" />
-        <Skeleton className="h-16 w-full rounded-2xl" />
-        <Skeleton className="h-16 w-full rounded-2xl" />
+        <Skeleton className="h-16 w-full rounded-component-md" />
+        <Skeleton className="h-16 w-full rounded-component-md" />
+        <Skeleton className="h-16 w-full rounded-component-md" />
+        <Skeleton className="h-16 w-full rounded-component-md" />
       </div>
 
       <div className="mt-15 flex justify-center gap-2">

@@ -15,7 +15,7 @@ type TProps = {
 
 export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
   return (
-    <li className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-sm border border-gray-100">
+    <li className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border border-gray-100">
       <div className="flex items-center gap-5 min-w-0">
         <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm">
           {/* TODO: 스타일 확인을 위해 bg-gray-100넣어둠. API연동할때 삭제예정 */}
@@ -27,14 +27,16 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <BuildingIcon className="w-12 h-12" />
+              <BuildingIcon className="w-8 h-8 text-text-placeholder" />
             </div>
           )}
         </div>
 
         <div className="min-w-0">
-          <div className="font-heading3 text-text-main truncate">{w.name}</div>
-          <div className="font-body1 text-text-main mt-1 truncate">
+          <div className="font-heading4 font-semibold! text-text-main truncate">
+            {w.name}
+          </div>
+          <div className="font-body2 text-text-main mt-1 truncate">
             {w.description ?? ""}
           </div>
           <div className="font-body1 text-text-sub mt-2">
@@ -47,7 +49,7 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
         <DropdownMenu
           trigger={<VectorIcon aria-hidden="true" />}
           aria-label={`${w.name} 워크스페이스 메뉴`}
-          className="h-10 w-10 cursor-pointer rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center"
+          className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
           items={menuItems}
         />
       </div>

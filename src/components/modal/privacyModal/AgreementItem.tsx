@@ -13,7 +13,7 @@ type TAgreementItemProps = {
 const markdownComponents: Components = {
   h2: ({ ...props }) => (
     <h2
-      className="font-heading3 text-text-main font-bold mb-2 mt-4 first:mt-0"
+      className="font-heading4 text-text-main font-bold mb-2 mt-4 first:mt-0"
       {...props}
     />
   ),
@@ -89,7 +89,7 @@ export default function AgreementItem({
       </div>
 
       {expanded && (
-        <div className="bg-brand-300 p-5 rounded-15 text-sm text-text-sub leading-relaxed max-h-50 overflow-y-auto">
+        <div className="bg-brand-300 p-5 rounded-component-md text-sm text-text-sub leading-relaxed max-h-50 overflow-y-auto">
           <ReactMarkdown components={markdownComponents}>
             {content}
           </ReactMarkdown>

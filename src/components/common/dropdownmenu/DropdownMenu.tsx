@@ -57,7 +57,7 @@ export function DropdownMenu({
         <div
           id={menuId}
           role="menu"
-          className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-40px)] rounding-15 bg-brand-200 py-3 px-1 shadow-Medium z-50"
+          className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-40px)] rounded-component-md bg-brand-200 py-3 px-1 shadow-Medium z-50"
         >
           <div className="space-y-1">
             {items.map((it, idx) => (
@@ -70,7 +70,7 @@ export function DropdownMenu({
                     setOpen(false);
                   }}
                   className={twMerge(
-                    "group flex w-full items-center gap-3 rounding-15 px-5 py-4 text-left font-body1 transition-fast",
+                    "group flex w-full items-center gap-3 rounded-component-md px-5 py-4 text-left font-body1 transition-fast",
                     it.active
                       ? "bg-brand-300 text-status-blue"
                       : "text-text-main hover:bg-brand-300 hover:text-status-blue",

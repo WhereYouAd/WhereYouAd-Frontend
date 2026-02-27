@@ -45,7 +45,7 @@ export default function InputActions({
       {validationState && (
         <span
           className={twMerge(
-            "flex items-center justify-center rounded-2xl font-body1 whitespace-nowrap py-1 px-3 h-full cursor-default",
+            "flex items-center justify-center rounded-component-md font-body1 whitespace-nowrap py-1 px-3 h-full cursor-default",
             validation ? "bg-brand-800 text-white" : "opacity-50",
           )}
         >
