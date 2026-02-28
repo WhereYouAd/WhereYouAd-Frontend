@@ -32,8 +32,8 @@ export default function WorkspaceSetting() {
           워크스페이스 정보를 확인하고 관리하세요.
         </p>
       </header>
-      <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-sm">
-        <h2 className="font-heading3 text-text-main">기본 정보</h2>
+      <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+        <h2 className="font-heading4 text-text-main">기본 정보</h2>
         <p className="font-body2 text-text-sub mt-2">
           워크스페이스의 대표적인 정보를 설정합니다.
         </p>
@@ -46,7 +46,7 @@ export default function WorkspaceSetting() {
             <div className="flex gap-3 mt-3 justify-center">
               <Button
                 variant="custom"
-                className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                 onClick={() => alert("TODO:추후 업로드")}
                 aria-label="로고 이미지 업로드 버튼"
               >
@@ -54,7 +54,7 @@ export default function WorkspaceSetting() {
               </Button>
               <Button
                 variant="custom"
-                className="!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                 onClick={() => alert("TODO:추후 초기화연결")}
                 aria-label="로고 이미지 초기화 버튼"
               >
@@ -78,7 +78,7 @@ export default function WorkspaceSetting() {
               </label>
               <textarea
                 id="workspace-setting-desc"
-                className="w-full min-h-[220px] rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
+                className="w-full min-h-55 rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
                 placeholder="워크스페이스에 대한 설명을 입력해주세요"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
@@ -103,7 +103,7 @@ export default function WorkspaceSetting() {
         <div className="flex gap-4 sm:gap-8 items-start sm:items-center">
           <WarningIcon />
           <div>
-            <div className="text-status-red font-heading3">
+            <div className="text-status-red font-heading4">
               워크스페이스 삭제
             </div>
             <p className="font-body1 text-text-auth-sub mt-2">

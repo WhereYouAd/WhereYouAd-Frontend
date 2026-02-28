@@ -14,19 +14,19 @@ import CollapseIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex items-center rounded-xl px-3 text-sm cursor-pointer transition-colors duration-200",
+    "flex items-center rounded-component-md px-3 text-sm cursor-pointer transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
     isActive
       ? "bg-chart-3 text-white"
-      : "text-text-auth-sub hover:bg-[#F6F6F6]",
+      : "text-text-auth-sub hover:bg-bg-surface",
   );
 }
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex w-full h-[55px] items-center rounded-xl px-3 text-sm cursor-pointer transition-all duration-200",
+    "flex w-full h-[55px] items-center rounded-component-md px-3 text-sm cursor-pointer transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
   );
@@ -45,11 +45,11 @@ export default function Sidebar() {
   return (
     <div
       className={twMerge(
-        "relative flex h-full flex-col bg-white rounded-3xl drop-shadow-md transition-all duration-200 ease-in-out",
+        "relative flex h-full flex-col bg-white rounded-component-lg shadow-Soft transition-all duration-200 ease-in-out",
         isCollapsed ? "w-25" : "w-64",
       )}
     >
-      <div className="mx-auto mt-10 flex w-full max-w-[232px] flex-1 flex-col">
+      <div className="mx-auto mt-10 flex w-full max-w-58 flex-1 flex-col">
         {/* Logo */}
         {/* <NavLink
           to="/"
@@ -74,7 +74,7 @@ export default function Sidebar() {
           type="button"
           aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
           onClick={toggleSidebar}
-          className="absolute -right-3 top-3 flex h-6 w-6 items-center justify-center rounded-md bg-white border border-[#F6F6F6] transition hover:bg-[#F6F6F6]"
+          className="absolute -right-3 top-3 flex h-6 w-6 items-center justify-center rounded-component-sm bg-white border border-bg-surface transition hover:bg-bg-surface"
         >
           <CollapseIcon
             className={twMerge(

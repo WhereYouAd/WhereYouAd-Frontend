@@ -47,7 +47,7 @@ export default function Login() {
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center">
       <div className="w-full max-w-130 px-6 pt-30 pb-12">
-        <h1 className="text-center font-heading1 text-3xl font-bold text-text-main mb-10">
+        <h1 className="text-center font-heading1 font-bold text-text-main mb-10">
           로그인
         </h1>
 
@@ -87,7 +87,7 @@ export default function Login() {
           <div className="flex items-center gap-12">
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="카카오로 로그인"
               onClick={() => handleSocialLogin("kakao")}
             >
@@ -96,7 +96,7 @@ export default function Login() {
 
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="네이버로 로그인"
               onClick={() => handleSocialLogin("naver")}
             >
@@ -105,7 +105,7 @@ export default function Login() {
 
             <button
               type="button"
-              className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-sm"
+              className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-Soft"
               aria-label="구글로 로그인"
               onClick={() => toast.error("준비중입니다.")}
             >
@@ -124,7 +124,7 @@ export default function Login() {
           <Link
             to="/signup"
             state={{ step: 1 }}
-            className="mt-6 font-body3 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+            className="mt-6 font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
           >
             이메일로 회원가입
           </Link>
