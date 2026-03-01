@@ -38,7 +38,7 @@ export default function WorkspacePage() {
     fileRef.current.value = "";
     fileRef.current.click();
   };
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -64,7 +64,6 @@ export default function WorkspacePage() {
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
-    setLogoFile(null);
     setLogoPreview(null);
     setCreateErrorMsg(null);
     setCreateOpen(true);
@@ -73,7 +72,6 @@ export default function WorkspacePage() {
   const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
   };
 
