@@ -42,14 +42,9 @@ export const updateWorkspace = async (
   orgId: number,
   body: TUpdateWorkspaceRequest,
 ): Promise<void> => {
-  const { data } = await axiosInstance.patch<TApiResult<string>>(
-    `/api/org/${orgId}`,
-    body,
-  );
+  await axiosInstance.patch<TApiResult<string>>(`/api/org/${orgId}`, body);
 };
 
 export const deleteWorkspace = async (orgId: number): Promise<void> => {
-  const { data } = await axiosInstance.delete<TApiResult<string>>(
-    `/api/org/${orgId}`,
-  );
+  await axiosInstance.delete<TApiResult<string>>(`/api/org/${orgId}`);
 };

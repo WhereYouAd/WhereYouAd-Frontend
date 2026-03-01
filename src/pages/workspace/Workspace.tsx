@@ -77,14 +77,12 @@ export default function WorkspacePage() {
     setLogoPreview(URL.createObjectURL(file));
   };
 
-  // TODO: 모달 닫힐때 preview URL 해제필요
   useEffect(() => {
     return () => {
       if (logoPreview) URL.revokeObjectURL(logoPreview);
     };
   }, [logoPreview]);
 
-  // 워크스페이스 목록 조회 함수 (길어지면, util함수로 빼기)
   const fetchWorkspaces = async () => {
     setLoading(true);
     setListErrorMsg(null);

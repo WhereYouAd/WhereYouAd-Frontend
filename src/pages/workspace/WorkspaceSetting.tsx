@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
@@ -15,6 +16,9 @@ import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-war
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
 
+const getAxiosMessage = (e: unknown, fallback: string) =>
+  axios.isAxiosError(e) ? (e.response?.data?.message ?? fallback) : fallback;
+
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
@@ -26,13 +30,11 @@ export default function WorkspaceSetting() {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [saving, setSaving] = useState(false);
-  const [saveErrorMsg, setSaveErrorMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [deleteErrorMsg, setDeleteErrorMsg] = useState<string | null>(null);
 
   const fetchWorkspaceDetail = async () => {
     if (orgId === null) {
@@ -40,17 +42,14 @@ export default function WorkspaceSetting() {
       return;
     }
     setLoading(true);
-    setErrorMsg(null);
     try {
       const detail = await getWorkspace(orgId);
       setName(detail.name);
       setDesc(detail.description ?? "");
     } catch (e) {
-      const message =
-        e instanceof Error
-          ? e.message
-          : "워크스페이스 정보를 불러오지 못했습니다.";
-      setErrorMsg(message);
+      toast.error(
+        getAxiosMessage(e, "워크스페이스 정보를 불러오지 못했습니다"),
+      );
     } finally {
       setLoading(false);
     }
@@ -61,7 +60,7 @@ export default function WorkspaceSetting() {
 
   const onSave = async () => {
     if (orgId === null) {
-      toast.error("잘못된 워크스페이스ID 입니다");
+      setErrorMsg("잘못된 워크스페이스ID 입니다");
       return;
     }
     const nextName = name.trim();
@@ -78,36 +77,30 @@ export default function WorkspaceSetting() {
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
-      const message =
-        e instanceof Error ? e.message : "변경사항 저장에 실패했습니다";
-      toast.error(message);
+      toast.error(getAxiosMessage(e, "변경사항 저장에 실패했습니다"));
     } finally {
       setSaving(false);
     }
   };
   const onDelete = async () => {
     if (orgId === null) {
-      setDeleteErrorMsg("잘못된 워크스페이스ID 입니다");
+      setErrorMsg("잘못된 워크스페이스ID 입니다");
       return;
     }
     setDeleting(true);
-    setDeleteErrorMsg(null);
     try {
       await deleteWorkspace(orgId);
       toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
     } catch (e) {
-      const message =
-        e instanceof Error ? e.message : "워크스페이스 삭제에 실패했습니다";
-      toast.error(message);
+      toast.error(getAxiosMessage(e, "워크스페이스 삭제에 실패했습니다"));
     } finally {
       setDeleting(false);
     }
   };
 
   const openDeleteModal = () => {
-    setDeleteErrorMsg(null);
     setDeleteOpen(true);
   };
 
@@ -195,9 +188,6 @@ export default function WorkspaceSetting() {
                     disabled={saving || deleting}
                   />
                 </div>
-                {saveErrorMsg && (
-                  <p className="font-body2 text-status-red">{saveErrorMsg}</p>
-                )}
               </div>
             </div>
           </div>
@@ -254,11 +244,6 @@ export default function WorkspaceSetting() {
                 삭제된 워크스페이스와 관련된 모든 데이터는 영구 삭제되며 <br />{" "}
                 절대 되돌릴 수 없습니다.
               </p>
-              {deleteErrorMsg && (
-                <p className="font-body2 text-status-red mb-5">
-                  {deleteErrorMsg}
-                </p>
-              )}
               <div className="flex justify-center">
                 <Button
                   variant="danger"
