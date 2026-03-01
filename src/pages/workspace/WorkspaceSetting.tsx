@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";
@@ -60,14 +61,13 @@ export default function WorkspaceSetting() {
 
   const onSave = async () => {
     if (orgId === null) {
-      setSaveErrorMsg("잘못된 워크스페이스ID 입니다");
+      toast.error("잘못된 워크스페이스ID 입니다");
       return;
     }
     const nextName = name.trim();
     const nextDesc = desc.trim();
     if (!nextName) return;
     setSaving(true);
-    setSaveErrorMsg(null);
 
     try {
       await updateWorkspace(orgId, {
@@ -75,14 +75,12 @@ export default function WorkspaceSetting() {
         description: nextDesc,
         logoUrl: null,
       });
+      toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
-      setSaveErrorMsg(null);
     } catch (e) {
       const message =
-        e instanceof Error
-          ? e.message
-          : "워크스페이스 수정 중 오류가 발생했습니다";
-      setSaveErrorMsg(message);
+        e instanceof Error ? e.message : "변경사항 저장에 실패했습니다";
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -96,14 +94,13 @@ export default function WorkspaceSetting() {
     setDeleteErrorMsg(null);
     try {
       await deleteWorkspace(orgId);
+      toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
     } catch (e) {
       const message =
-        e instanceof Error
-          ? e.message
-          : "워크스페이스 삭제 중 오류가 발생했습니다";
-      setDeleteErrorMsg(message);
+        e instanceof Error ? e.message : "워크스페이스 삭제에 실패했습니다";
+      toast.error(message);
     } finally {
       setDeleting(false);
     }
