@@ -31,6 +31,7 @@ export default function WorkspacePage() {
   const [listErrorMsg, setListErrorMsg] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [createErrorMsg, setCreateErrorMsg] = useState<string | null>(null);
+
   const fileRef = useRef<HTMLInputElement | null>(null);
   const openFile = () => {
     if (!fileRef.current) return;
@@ -66,7 +67,6 @@ export default function WorkspacePage() {
     setLogoFile(null);
     setLogoPreview(null);
     setCreateErrorMsg(null);
-    setListErrorMsg(null);
     setCreateOpen(true);
   };
 

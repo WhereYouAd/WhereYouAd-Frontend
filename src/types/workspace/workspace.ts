@@ -36,3 +36,25 @@ export type TCreateOrgResponse = {
   description: string;
   logoUrl: string | null;
 };
+
+export type TGetOrgResponse = {
+  orgId: number;
+  name: string;
+  description: string;
+  logoUrl: string | null;
+  createdAt: string;
+};
+
+export type TWorkspaceDetail = {
+  id: TWorkSpaceId;
+  name: string;
+  description: string;
+  logoUrl: string | null;
+  createdAt: string;
+};
+
+export type TUpdateWorkspaceRequest = {
+  name: string;
+  description: string;
+  logoUrl: string | null;
+};
