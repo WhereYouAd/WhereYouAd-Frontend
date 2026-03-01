@@ -1,10 +1,10 @@
 import type { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-import TrendDownIcon from "@/assets/icon/dashboard/trend-down.svg";
-import TrendUpIcon from "@/assets/icon/dashboard/trend-up.svg";
+import TrendDownIcon from "@/assets/icon/dashboard/trend-down.svg?react";
+import TrendUpIcon from "@/assets/icon/dashboard/trend-up.svg?react";
 
-interface ITrend {
+export interface ITrend {
   direction: "up" | "down";
   value: string;
 }
@@ -39,16 +39,17 @@ export default function StatCard({
       <p className="font-heading2 text-text-main">{value}</p>
       {trend && (
         <span
+          aria-label={`${trend.value} ${trend.direction === "up" ? "상승" : "하락"}`}
           className={twMerge(
             "inline-flex items-center gap-1 px-2 py-1 rounded-full font-caption w-fit",
             trendClasses[trend.direction],
           )}
         >
-          <img
-            src={trend.direction === "up" ? TrendUpIcon : TrendDownIcon}
-            alt={trend.direction}
-            className="w-4 h-4"
-          />
+          {trend.direction === "up" ? (
+            <TrendUpIcon aria-hidden className="w-4 h-4" />
+          ) : (
+            <TrendDownIcon aria-hidden className="w-4 h-4" />
+          )}
           {trend.value}
         </span>
       )}
