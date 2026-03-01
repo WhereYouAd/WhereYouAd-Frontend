@@ -1,6 +1,8 @@
 import type { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
+import Button from "../button/Button";
+
 interface IControlBoxProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   description: string;
@@ -30,16 +32,14 @@ export default function ControlBox({
           {description}
         </p>
       </div>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onButtonClick();
-        }}
-        className="px-8 py-4 bg-chart-3 text-white font-body1 rounded-component-md hover:bg-chart-3/90 overflow-hidden transition-all shrink-0 active:scale-95"
+      <Button
+        variant="primary"
+        size="small"
+        onClick={onButtonClick}
+        className="shrink-0 !h-button-big px-8 !rounded-component-md"
       >
         {buttonText}
-      </button>
+      </Button>
     </div>
   );
 }
