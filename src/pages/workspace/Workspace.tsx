@@ -10,6 +10,7 @@ import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 
+import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
@@ -24,6 +25,12 @@ export default function WorkspacePage() {
 
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
+
+  const [workspaces, setWorkspaces] = useState<TWorkspace[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [listErrorMsg, setListErrorMsg] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [createErrorMsg, setCreateErrorMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const openFile = () => {
     if (!fileRef.current) return;
@@ -32,29 +39,7 @@ export default function WorkspacePage() {
   };
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const workspaces: TWorkspace[] = useMemo(
-    () => [
-      {
-        id: "1",
-        name: "광고회사1",
-        description: "광고회사1입니다.",
-        myRole: "admin",
-      },
-      {
-        id: "2",
-        name: "광고회사2",
-        description: "광고회사2입니다.",
-        myRole: "admin",
-      },
-      {
-        id: "3",
-        name: "광고회사3",
-        description: "광고회사3입니다.",
-        myRole: "admin",
-      },
-    ],
-    [],
-  );
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return workspaces;
@@ -78,6 +63,10 @@ export default function WorkspacePage() {
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
+    setLogoFile(null);
+    setLogoPreview(null);
+    setCreateErrorMsg(null);
+    setListErrorMsg(null);
     setCreateOpen(true);
   };
 
@@ -95,19 +84,52 @@ export default function WorkspacePage() {
     };
   }, [logoPreview]);
 
-  // TODO: API 연동 후에 생성 동작 연결하기
-  const onSubmitCreate = () => {
-    const form = new FormData();
-    form.append("name", newName.trim());
-    form.append("description", newDesc.trim());
-    if (logoFile) form.append("logo", logoFile);
+  // 워크스페이스 목록 조회 함수 (길어지면, util함수로 빼기)
+  const fetchWorkspaces = async () => {
+    setLoading(true);
+    setListErrorMsg(null);
+    try {
+      const list = await getMyWorkspaces();
+      setWorkspaces(list);
+    } catch (e) {
+      const message =
+        e instanceof Error
+          ? e.message
+          : "워크스페이스 목록 조회중 오류가 발생했습니다";
+      setListErrorMsg(message);
+      setWorkspaces([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    console.log("create payload", {
-      name: newName.trim(),
-      description: newDesc.trim(),
-      logoFile,
-    });
-    alert("API 연동 후에 생성 기능 연결예정");
+  useEffect(() => {
+    void fetchWorkspaces();
+  }, []);
+
+  const onSubmitCreate = async () => {
+    const name = newName.trim();
+    const description = newDesc.trim();
+    if (!name) return;
+    setCreating(true);
+    setCreateErrorMsg(null);
+    try {
+      await createWorkspace({
+        name,
+        description,
+        logoUrl: null,
+      });
+      setCreateOpen(false);
+      await fetchWorkspaces();
+    } catch (e) {
+      let message = "워크스페이스 생성 중 오류가 발생했습니다";
+      if (e instanceof Error) {
+        message = e.message;
+      }
+      setCreateErrorMsg(message);
+    } finally {
+      setCreating(false);
+    }
   };
 
   return (
@@ -139,20 +161,39 @@ export default function WorkspacePage() {
           워크스페이스 생성하기
         </Button>
       </div>
-      <ul className="space-y-5">
-        {filtered.map((w) => (
-          <WorkspaceCard
-            key={String(w.id)}
-            workspace={w}
-            menuItems={menuItems(w.id)}
-          />
-        ))}
-        {filtered.length === 0 && (
-          <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
-            <p className="font-body2 text-text-sub">워크스페이스가 없습니다.</p>
-          </li>
-        )}
-      </ul>
+
+      {loading && (
+        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
+          <p className="font-body2 text-text-sub">불러오는중..</p>
+        </div>
+      )}
+      {!loading && listErrorMsg && (
+        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
+          <p className="font-body2 text-status-red">{listErrorMsg}</p>
+          <Button type="button" variant="primary" onClick={fetchWorkspaces}>
+            다시 시도
+          </Button>
+        </div>
+      )}
+      {!loading && !listErrorMsg && (
+        <ul className="space-y-5">
+          {filtered.map((w) => (
+            <WorkspaceCard
+              key={String(w.id)}
+              workspace={w}
+              menuItems={menuItems(w.id)}
+            />
+          ))}
+          {filtered.length === 0 && (
+            <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
+              <p className="font-body2 text-text-sub">
+                워크스페이스가 없습니다.
+              </p>
+            </li>
+          )}
+        </ul>
+      )}
+
       <Modal
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
@@ -212,15 +253,18 @@ export default function WorkspacePage() {
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
             />
+            {createErrorMsg && (
+              <p className="font-body2 text-status-red">{createErrorMsg}</p>
+            )}
             <Button
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
-              disabled={!newName.trim()}
+              disabled={!newName.trim() || creating}
               className="mx-auto px-10 mt-10"
               type="button"
             >
-              생성하기
+              {creating ? "생성 중.. " : "생성하기"}
             </Button>
           </div>
         </div>
