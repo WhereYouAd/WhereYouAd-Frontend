@@ -34,6 +34,8 @@ export default function WorkspaceSetting() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
   const fetchWorkspaceDetail = async () => {
     if (orgId === null) {
       setErrorMsg("잘못된 워크스페이스ID 입니다");
@@ -44,6 +46,7 @@ export default function WorkspaceSetting() {
       const detail = await getWorkspace(orgId);
       setName(detail.name);
       setDesc(detail.description ?? "");
+      setLogoUrl(detail.logoUrl ?? null);
     } catch (e) {
       toast.error(
         getAxiosMessage(e, "워크스페이스 정보를 불러오지 못했습니다"),
@@ -70,7 +73,7 @@ export default function WorkspaceSetting() {
       await updateWorkspace(orgId, {
         name: nextName,
         description: nextDesc,
-        logoUrl: null,
+        logoUrl,
       });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
@@ -154,7 +157,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                    onClick={() => alert("TODO:추후 초기화연결")}
+                    onClick={() => setLogoUrl(null)}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={saving || deleting}
                   >
