@@ -35,7 +35,7 @@ export default function StatCard({
       )}
       {...rest}
     >
-      <p className="font-caption text-text-sub">{title}</p>
+      <p className="font-body2 text-text-main">{title}</p>
       <p className="font-heading2 text-text-main">{value}</p>
       {trend && (
         <span
