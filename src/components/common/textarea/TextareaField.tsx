@@ -10,6 +10,7 @@ type TProps = {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   className?: string;
   minRows?: number;
+  disabled?: boolean;
 };
 
 export default function TextareaField({
@@ -19,6 +20,7 @@ export default function TextareaField({
   placeholder,
   onChange,
   className,
+  disabled = false,
   minRows = 4,
 }: TProps) {
   const ref = useRef<HTMLTextAreaElement | null>(null);
@@ -49,6 +51,7 @@ export default function TextareaField({
         placeholder={placeholder}
         onChange={onChange}
         onInput={resize}
+        disabled={disabled}
       />
     </div>
   );

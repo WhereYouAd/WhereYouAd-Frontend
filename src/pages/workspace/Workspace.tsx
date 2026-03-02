@@ -240,6 +240,7 @@ export default function WorkspacePage() {
               placeholder="조직의 이름을 입력하세요."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
+              disabled={creating}
             />
             <TextareaField
               id="workspace-desc"
@@ -247,6 +248,7 @@ export default function WorkspacePage() {
               placeholder="조직에 대한 간단한 설명을 입력하세요"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
+              disabled={creating}
             />
             {createErrorMsg && (
               <p className="font-body2 text-status-red">{createErrorMsg}</p>

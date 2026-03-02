@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import TextareaField from "@/components/common/textarea/TextareaField";
 
 import {
   deleteWorkspace,
@@ -169,22 +170,16 @@ export default function WorkspaceSetting() {
                   onChange={(e) => setName(e.target.value)}
                   disabled={saving || deleting}
                 />
-                <div className="flex flex-col">
-                  <label
-                    className="text-text-main select-none ml-1"
-                    htmlFor="workspace-setting-desc"
-                  >
-                    워크스페이스 설명
-                  </label>
-                  <textarea
-                    id="workspace-setting-desc"
-                    className="w-full min-h-55 rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder"
-                    placeholder="워크스페이스에 대한 설명을 입력해주세요"
-                    value={desc}
-                    onChange={(e) => setDesc(e.target.value)}
-                    disabled={saving || deleting}
-                  />
-                </div>
+                <TextareaField
+                  id="workspace-setting-desc"
+                  label="워크스페이스 설명"
+                  placeholder="워크스페이스에 대한 설명을 입력해주세요"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                  minRows={4}
+                  className="min-h-55"
+                  disabled={saving || deleting}
+                />
               </div>
             </div>
           </div>
