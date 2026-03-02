@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
 
@@ -27,11 +28,34 @@ export default function WorkspacePage() {
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
 
-  const [workspaces, setWorkspaces] = useState<TWorkspace[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [listErrorMsg, setListErrorMsg] = useState<string | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [createErrorMsg, setCreateErrorMsg] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const workspacesQuery = useQuery({
+    queryKey: ["my-workspaces"],
+    queryFn: getMyWorkspaces,
+  });
+
+  const createWorkspaceMutation = useMutation({
+    mutationFn: createWorkspace,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      setCreateOpen(false);
+    },
+  });
+  const listLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
+  const listErrorMsg = workspacesQuery.isError
+    ? getAxiosMessage(
+        workspacesQuery.error,
+        "워크스페이스 목록 조회중 오류가 발생했습니다",
+      )
+    : null;
+
+  const creating = createWorkspaceMutation.isPending;
+  const createErrorMsg = createWorkspaceMutation.isError
+    ? getAxiosMessage(
+        createWorkspaceMutation.error,
+        "워크스페이스 생성 중 오류가 발생했습니다",
+      )
+    : null;
 
   const fileRef = useRef<HTMLInputElement | null>(null);
   const openFile = () => {
@@ -41,6 +65,8 @@ export default function WorkspacePage() {
   };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
+  const workspaces = workspacesQuery.data ?? [];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -65,8 +91,9 @@ export default function WorkspacePage() {
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
     setLogoPreview(null);
-    setCreateErrorMsg(null);
+    createWorkspaceMutation.reset();
     setCreateOpen(true);
   };
 
@@ -82,49 +109,11 @@ export default function WorkspacePage() {
     };
   }, [logoPreview]);
 
-  const fetchWorkspaces = async () => {
-    setLoading(true);
-    setListErrorMsg(null);
-    try {
-      const list = await getMyWorkspaces();
-      setWorkspaces(list);
-    } catch (e) {
-      const message = getAxiosMessage(
-        e,
-        "워크스페이스 목록 조회중 오류가 발생했습니다",
-      );
-      setListErrorMsg(message);
-      setWorkspaces([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    void fetchWorkspaces();
-  }, []);
-
-  const onSubmitCreate = async () => {
+  const onSubmitCreate = () => {
     const name = newName.trim();
     const description = newDesc.trim();
     if (!name) return;
-    setCreating(true);
-    setCreateErrorMsg(null);
-    try {
-      await createWorkspace({
-        name,
-        description,
-        logoUrl: null,
-      });
-      setCreateOpen(false);
-      await fetchWorkspaces();
-    } catch (e) {
-      setCreateErrorMsg(
-        getAxiosMessage(e, "워크스페이스 생성 중 오류가 발생했습니다"),
-      );
-    } finally {
-      setCreating(false);
-    }
+    createWorkspaceMutation.mutate({ name, description, logoUrl: null });
   };
 
   return (
@@ -157,20 +146,24 @@ export default function WorkspacePage() {
         </Button>
       </div>
 
-      {loading && (
+      {listLoading && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
           <p className="font-body2 text-text-sub">불러오는중..</p>
         </div>
       )}
-      {!loading && listErrorMsg && (
+      {!listLoading && listErrorMsg && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
           <p className="font-body2 text-status-red">{listErrorMsg}</p>
-          <Button type="button" variant="primary" onClick={fetchWorkspaces}>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => workspacesQuery.refetch()}
+          >
             다시 시도
           </Button>
         </div>
       )}
-      {!loading && !listErrorMsg && (
+      {!listLoading && !listErrorMsg && (
         <ul className="space-y-5">
           {filtered.map((w) => (
             <WorkspaceCard
