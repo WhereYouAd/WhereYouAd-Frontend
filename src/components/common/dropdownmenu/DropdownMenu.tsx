@@ -35,10 +35,9 @@ export function DropdownMenu({
   }, []);
 
   return (
-    <div ref={ref} className={twMerge("relative inline-block", className)}>
+    <div ref={ref} className="relative inline-block">
       <div
         role="button"
-        tabIndex={0}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={menuId}
@@ -50,6 +49,7 @@ export function DropdownMenu({
             setOpen((v) => !v);
           }
         }}
+        className={twMerge(className)}
       >
         {trigger}
       </div>

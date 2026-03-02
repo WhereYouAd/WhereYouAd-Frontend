@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
 
@@ -10,11 +11,13 @@ import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 
+import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
+import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
@@ -24,44 +27,54 @@ export default function WorkspacePage() {
 
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
+
+  const queryClient = useQueryClient();
+  const workspacesQuery = useQuery({
+    queryKey: ["my-workspaces"],
+    queryFn: getMyWorkspaces,
+  });
+
+  const createWorkspaceMutation = useMutation({
+    mutationFn: createWorkspace,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      setCreateOpen(false);
+    },
+  });
+  const listLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
+  const listErrorMsg = workspacesQuery.isError
+    ? getAxiosMessage(
+        workspacesQuery.error,
+        "워크스페이스 목록 조회중 오류가 발생했습니다",
+      )
+    : null;
+
+  const creating = createWorkspaceMutation.isPending;
+  const createErrorMsg = createWorkspaceMutation.isError
+    ? getAxiosMessage(
+        createWorkspaceMutation.error,
+        "워크스페이스 생성 중 오류가 발생했습니다",
+      )
+    : null;
+
   const fileRef = useRef<HTMLInputElement | null>(null);
   const openFile = () => {
     if (!fileRef.current) return;
     fileRef.current.value = "";
     fileRef.current.click();
   };
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const workspaces: TWorkspace[] = useMemo(
-    () => [
-      {
-        id: "1",
-        name: "광고회사1",
-        description: "광고회사1입니다.",
-        myRole: "admin",
-      },
-      {
-        id: "2",
-        name: "광고회사2",
-        description: "광고회사2입니다.",
-        myRole: "admin",
-      },
-      {
-        id: "3",
-        name: "광고회사3",
-        description: "광고회사3입니다.",
-        myRole: "admin",
-      },
-    ],
-    [],
-  );
+
+  const workspaces = workspacesQuery.data ?? [];
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return workspaces;
     return workspaces.filter((w) => w.name.toLowerCase().includes(q));
   }, [query, workspaces]);
 
-  const menuItems = (id: TWorkspace["id"]): TMenuItem[] => [
+  const menuItems = (id: TWorkspace["orgId"]): TMenuItem[] => [
     {
       icon: <EditContainIcon className="h-5 w-5 fill-none stroke-current" />,
       label: "정보 수정하기",
@@ -75,39 +88,38 @@ export default function WorkspacePage() {
       onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
     },
   ];
+
+  const onCloseCreate = () => {
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    setLogoPreview(null);
+    setCreateOpen(false);
+  };
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    setLogoPreview(null);
+    createWorkspaceMutation.reset();
     setCreateOpen(true);
   };
 
   const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
   };
 
-  // TODO: 모달 닫힐때 preview URL 해제필요
   useEffect(() => {
     return () => {
       if (logoPreview) URL.revokeObjectURL(logoPreview);
     };
   }, [logoPreview]);
 
-  // TODO: API 연동 후에 생성 동작 연결하기
   const onSubmitCreate = () => {
-    const form = new FormData();
-    form.append("name", newName.trim());
-    form.append("description", newDesc.trim());
-    if (logoFile) form.append("logo", logoFile);
-
-    console.log("create payload", {
-      name: newName.trim(),
-      description: newDesc.trim(),
-      logoFile,
-    });
-    alert("API 연동 후에 생성 기능 연결예정");
+    const name = newName.trim();
+    const description = newDesc.trim();
+    if (!name) return;
+    createWorkspaceMutation.mutate({ name, description, logoUrl: null });
   };
 
   return (
@@ -139,26 +151,44 @@ export default function WorkspacePage() {
           워크스페이스 생성하기
         </Button>
       </div>
-      <ul className="space-y-5">
-        {filtered.map((w) => (
-          <WorkspaceCard
-            key={String(w.id)}
-            workspace={w}
-            menuItems={menuItems(w.id)}
-          />
-        ))}
-        {filtered.length === 0 && (
-          <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
-            <p className="font-body2 text-text-sub">워크스페이스가 없습니다.</p>
-          </li>
-        )}
-      </ul>
-      <Modal
-        isOpen={createOpen}
-        onClose={() => setCreateOpen(false)}
-        size="xl"
-        padding="lg"
-      >
+
+      {listLoading && (
+        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
+          <p className="font-body2 text-text-sub">불러오는중..</p>
+        </div>
+      )}
+      {!listLoading && listErrorMsg && (
+        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
+          <p className="font-body2 text-status-red">{listErrorMsg}</p>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={() => workspacesQuery.refetch()}
+          >
+            다시 시도
+          </Button>
+        </div>
+      )}
+      {!listLoading && !listErrorMsg && (
+        <ul className="space-y-5">
+          {filtered.map((w) => (
+            <WorkspaceCard
+              key={String(w.orgId)}
+              workspace={w}
+              menuItems={menuItems(w.orgId)}
+            />
+          ))}
+          {filtered.length === 0 && (
+            <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
+              <p className="font-body2 text-text-sub">
+                워크스페이스가 없습니다.
+              </p>
+            </li>
+          )}
+        </ul>
+      )}
+
+      <Modal isOpen={createOpen} onClose={onCloseCreate} size="xl" padding="lg">
         <div className="px-2">
           <h2 className="font-heading4 text-text-main mb-2">
             워크스페이스 생성
@@ -204,6 +234,7 @@ export default function WorkspacePage() {
               placeholder="조직의 이름을 입력하세요."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
+              disabled={creating}
             />
             <TextareaField
               id="workspace-desc"
@@ -211,16 +242,20 @@ export default function WorkspacePage() {
               placeholder="조직에 대한 간단한 설명을 입력하세요"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
+              disabled={creating}
             />
+            {createErrorMsg && (
+              <p className="font-body2 text-status-red">{createErrorMsg}</p>
+            )}
             <Button
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
-              disabled={!newName.trim()}
+              disabled={!newName.trim() || creating}
               className="mx-auto px-10 mt-10"
               type="button"
             >
-              생성하기
+              {creating ? "생성 중.. " : "생성하기"}
             </Button>
           </div>
         </div>
