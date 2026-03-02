@@ -88,6 +88,12 @@ export default function WorkspacePage() {
       onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
     },
   ];
+
+  const onCloseCreate = () => {
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    setLogoPreview(null);
+    setCreateOpen(false);
+  };
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
@@ -182,12 +188,7 @@ export default function WorkspacePage() {
         </ul>
       )}
 
-      <Modal
-        isOpen={createOpen}
-        onClose={() => setCreateOpen(false)}
-        size="xl"
-        padding="lg"
-      >
+      <Modal isOpen={createOpen} onClose={onCloseCreate} size="xl" padding="lg">
         <div className="px-2">
           <h2 className="font-heading4 text-text-main mb-2">
             워크스페이스 생성

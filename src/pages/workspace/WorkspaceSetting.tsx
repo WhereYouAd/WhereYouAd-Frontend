@@ -22,8 +22,9 @@ export default function WorkspaceSetting() {
   const { workspaceId } = useParams();
 
   const orgId = useMemo(() => {
+    if (workspaceId === null) return null;
     const n = Number(workspaceId);
-    return Number.isFinite(n) ? n : null;
+    return Number.isFinite(n) && n > 0 ? n : null;
   }, [workspaceId]);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
@@ -145,8 +146,16 @@ export default function WorkspaceSetting() {
             <div className="mt-7 grid grid-cols-1 lg:grid-cols-[minmax(320px,560px)_1fr] gap-8">
               <div>
                 <div className="text-text-main">로고 이미지</div>
-                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-56 sm:h-72 lg:h-80">
-                  <UpLoadImgIcon />
+                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-56 sm:h-72 lg:h-80 overflow-hidden">
+                  {logoUrl ? (
+                    <img
+                      src={logoUrl}
+                      alt={`${name || "워크스페이스"} 로고`}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UpLoadImgIcon aria-hidden="true" />
+                  )}
                 </div>
                 <div className="flex gap-3 mt-3 justify-center">
                   <Button
