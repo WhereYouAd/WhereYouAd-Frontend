@@ -1,4 +1,3 @@
-import { toWorkspace, toWorkspaceDetail } from "@/types/workspace/mapper";
 import type {
   TApiResult,
   TCreateOrgRequest,
@@ -15,7 +14,7 @@ import { axiosInstance } from "@/lib/axiosInstance";
 export const getMyWorkspaces = async (): Promise<TWorkspace[]> => {
   const { data } =
     await axiosInstance.get<TApiResult<TMyOrgsData>>("/api/org/my");
-  return data.data.organizations.map(toWorkspace);
+  return data.data.organizations;
 };
 
 export const createWorkspace = async (
@@ -35,7 +34,7 @@ export const getWorkspace = async (
     `/api/org/${orgId}`,
   );
 
-  return toWorkspaceDetail(data.data);
+  return data.data;
 };
 
 export const updateWorkspace = async (

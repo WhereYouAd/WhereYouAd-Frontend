@@ -48,7 +48,7 @@ export default function WorkspacePage() {
     return workspaces.filter((w) => w.name.toLowerCase().includes(q));
   }, [query, workspaces]);
 
-  const menuItems = (id: TWorkspace["id"]): TMenuItem[] => [
+  const menuItems = (id: TWorkspace["orgId"]): TMenuItem[] => [
     {
       icon: <EditContainIcon className="h-5 w-5 fill-none stroke-current" />,
       label: "정보 수정하기",
@@ -174,9 +174,9 @@ export default function WorkspacePage() {
         <ul className="space-y-5">
           {filtered.map((w) => (
             <WorkspaceCard
-              key={String(w.id)}
+              key={String(w.orgId)}
               workspace={w}
-              menuItems={menuItems(w.id)}
+              menuItems={menuItems(w.orgId)}
             />
           ))}
           {filtered.length === 0 && (
