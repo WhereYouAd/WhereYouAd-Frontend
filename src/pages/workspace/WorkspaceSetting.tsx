@@ -42,15 +42,19 @@ export default function WorkspaceSetting() {
       return;
     }
     setLoading(true);
+    setErrorMsg(null);
     try {
       const detail = await getWorkspace(orgId);
       setName(detail.name);
       setDesc(detail.description ?? "");
       setLogoUrl(detail.logoUrl ?? null);
     } catch (e) {
-      toast.error(
-        getAxiosMessage(e, "워크스페이스 정보를 불러오지 못했습니다"),
+      const message = getAxiosMessage(
+        e,
+        "워크스페이스 정보를 불러오지 못했습니다",
       );
+      setErrorMsg(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
