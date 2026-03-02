@@ -16,6 +16,7 @@ import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
+import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
@@ -88,10 +89,10 @@ export default function WorkspacePage() {
       const list = await getMyWorkspaces();
       setWorkspaces(list);
     } catch (e) {
-      const message =
-        e instanceof Error
-          ? e.message
-          : "워크스페이스 목록 조회중 오류가 발생했습니다";
+      const message = getAxiosMessage(
+        e,
+        "워크스페이스 목록 조회중 오류가 발생했습니다",
+      );
       setListErrorMsg(message);
       setWorkspaces([]);
     } finally {
@@ -118,11 +119,9 @@ export default function WorkspacePage() {
       setCreateOpen(false);
       await fetchWorkspaces();
     } catch (e) {
-      let message = "워크스페이스 생성 중 오류가 발생했습니다";
-      if (e instanceof Error) {
-        message = e.message;
-      }
-      setCreateErrorMsg(message);
+      setCreateErrorMsg(
+        getAxiosMessage(e, "워크스페이스 생성 중 오류가 발생했습니다"),
+      );
     } finally {
       setCreating(false);
     }

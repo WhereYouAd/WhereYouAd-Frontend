@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
@@ -15,9 +14,7 @@ import {
 import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
-
-const getAxiosMessage = (e: unknown, fallback: string) =>
-  axios.isAxiosError(e) ? (e.response?.data?.message ?? fallback) : fallback;
+import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
