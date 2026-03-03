@@ -1,47 +1,12 @@
-import type { ICampaign } from "@/types/ads/campaign";
-
 import CampaignRow from "./CampaignRow";
+
+import { MOCK_CAMPAIGNS } from "@/pages/ads/list/campaign.mock";
 
 interface ICampaignTableProps {
   onRowClick?: (id: number) => void;
 }
 
 export default function CampaignTable({ onRowClick }: ICampaignTableProps) {
-  const campaigns: ICampaign[] = [
-    {
-      id: 1,
-      platforms: ["kakao", "google", "naver"],
-      name: "봄 프로모션 캠페인",
-      status: "syncing",
-      statusText: "동기화 중",
-      progress: 65,
-    },
-    {
-      id: 2,
-      platforms: ["kakao", "naver"],
-      name: "폭염 대비 냉장 가전 얼리버드 특가 프로모션",
-      status: "syncing",
-      statusText: "동기화 중",
-      progress: 32,
-    },
-    {
-      id: 3,
-      platforms: ["kakao"],
-      name: "가을 감성 FW 시즌 신상 코트 선주문 캐시백 이벤트",
-      status: "inactive",
-      statusText: "미동기화",
-      progress: 0,
-    },
-    {
-      id: 4,
-      platforms: ["google", "naver"],
-      name: "크리스마스 홈파티 소품 대방출 및 연말 결산 세일",
-      status: "success",
-      statusText: "완료",
-      progress: 98,
-    },
-  ];
-
   return (
     <div className="w-full bg-white overflow-x-auto">
       <div className="min-w-180">
@@ -57,14 +22,10 @@ export default function CampaignTable({ onRowClick }: ICampaignTableProps) {
 
         {/* Row */}
         <ul className="divide-y divide-bg-disabled">
-          {campaigns.map((campaign) => (
+          {MOCK_CAMPAIGNS.map((campaign) => (
             <CampaignRow
               key={campaign.id}
-              platforms={campaign.platforms}
-              name={campaign.name}
-              status={campaign.status}
-              statusText={campaign.statusText}
-              progress={campaign.progress}
+              {...campaign}
               onClick={() => onRowClick?.(campaign.id)}
             />
           ))}

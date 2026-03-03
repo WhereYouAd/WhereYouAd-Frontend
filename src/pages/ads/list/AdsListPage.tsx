@@ -5,7 +5,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
-  const handleCampaignClick = (id: string | number) => {
+  const handleCampaignClick = (id: number) => {
     navigate(`/ads/${id}`);
   };
 
@@ -22,7 +22,7 @@ export default function AdsListPage() {
           </header>
           {/* 테이블 */}
           <div className="w-full flex flex-col">
-            <CampaignTable onRowClick={() => handleCampaignClick(1)} />
+            <CampaignTable onRowClick={(id) => handleCampaignClick(id)} />
           </div>
           {/* 하단 배너 */}
           <div className="w-full flex flex-col">
