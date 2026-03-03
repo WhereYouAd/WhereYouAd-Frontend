@@ -88,14 +88,38 @@ export default function Sidebar() {
         <nav className="flex flex-1 flex-col gap-1 px-2">
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
+
             const isChildActive =
-              item.children?.some((c) => c.path === location.pathname) ?? false;
+              item.children?.some((c) => {
+                if (!c.path) return false;
+
+                if (c.path === "/") {
+                  return location.pathname === "/";
+                }
+
+                return location.pathname.startsWith(c.path);
+              }) ?? false;
+
             const isParentActive =
-              (item.path && location.pathname === item.path) || isChildActive;
+              (item.path &&
+                item.path !== "/" &&
+                location.pathname.startsWith(item.path)) ||
+              (item.path === "/" && location.pathname === "/") ||
+              isChildActive;
+
             const showChevron =
               !isCollapsed &&
               !!item.children?.length &&
               (isOpen || isParentActive);
+
+            // const isChildActive =
+            //   item.children?.some((c) => c.path === location.pathname) ?? false;
+            // const isParentActive =
+            //   (item.path && location.pathname === item.path) || isChildActive;
+            // const showChevron =
+            //   !isCollapsed &&
+            //   !!item.children?.length &&
+            //   (isOpen || isParentActive);
 
             return (
               <div
