@@ -4,7 +4,6 @@ import { twMerge } from "tailwind-merge";
 interface IInfoCardProps {
   title: string;
   children: ReactNode;
-  isActive?: boolean;
   className?: string;
 }
 
