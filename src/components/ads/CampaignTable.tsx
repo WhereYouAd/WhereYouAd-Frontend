@@ -2,7 +2,11 @@ import type { ICampaign } from "@/types/ads/campaign";
 
 import CampaignRow from "./CampaignRow";
 
-export default function CampaignTable() {
+interface ICampaignTableProps {
+  onRowClick?: (id: number) => void;
+}
+
+export default function CampaignTable({ onRowClick }: ICampaignTableProps) {
   const campaigns: ICampaign[] = [
     {
       id: 1,
@@ -61,6 +65,7 @@ export default function CampaignTable() {
               status={campaign.status}
               statusText={campaign.statusText}
               progress={campaign.progress}
+              onClick={() => onRowClick?.(campaign.id)}
             />
           ))}
         </ul>

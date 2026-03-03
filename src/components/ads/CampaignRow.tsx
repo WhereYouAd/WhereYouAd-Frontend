@@ -15,6 +15,7 @@ interface ICampaignRowProps {
   status: TCampaignStatus;
   statusText: string;
   progress: number;
+  onClick?: () => void;
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
@@ -29,9 +30,13 @@ export default function CampaignRow({
   status,
   statusText,
   progress,
+  onClick,
 }: ICampaignRowProps) {
   return (
-    <li className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-gray-50 hover:cursor-pointer transition-colors list-none">
+    <li
+      className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-gray-50 hover:cursor-pointer transition-colors list-none"
+      onClick={onClick}
+    >
       {/* 플랫폼 */}
       <div className="flex w-[20%] shrink-0">
         {platforms.map((p, idx) => (
