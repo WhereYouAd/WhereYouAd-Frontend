@@ -36,6 +36,14 @@ export default function CampaignRow({
     <li
       className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-gray-50 hover:cursor-pointer transition-colors list-none"
       onClick={onClick}
+      role="button"
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       {/* 플랫폼 */}
       <div className="flex w-[20%] shrink-0">
