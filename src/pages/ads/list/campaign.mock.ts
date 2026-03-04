@@ -20,7 +20,7 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
         id: 101,
         name: "봄 맞이 20% 할인 배너 A",
         runStatus: "running",
-        runStatusText: "운영중",
+        runStatusText: "운영 중",
         platform: ["google"],
         description:
           "봄을 맞이하여 20%를 할인하는 배너입니다.\n봄을 맞이하여 20%를 할인하는 배너입니다.\n봄을 맞이하여 20%를 할인하는 배너입니다.",
@@ -62,7 +62,7 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
         id: 105,
         name: "10-20 호남권 타겟 봄 프로모션",
         runStatus: "running",
-        runStatusText: "중단",
+        runStatusText: "운영 중",
         platform: ["naver"],
         description:
           "해당 광고는 10-20대 전체 대상으로 호남지방에 집중적으로 진행하였습니다.\n그리고 광고는 어쩌고저쩌고 프로모션으로써 학생/대학생이 주로 클릭할것으로 예상됩니다.",
