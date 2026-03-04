@@ -7,6 +7,8 @@ export interface ICampaign {
   status: "syncing" | "success" | "inactive";
   statusText: string;
   progress: number;
+  runStatus: "running" | "stopped";
+  runStatusText: string;
   budget: string;
   startDate: string;
   description?: string;
@@ -20,6 +22,8 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
     status: "success",
     statusText: "완료",
     progress: 65,
+    runStatus: "running",
+    runStatusText: "운영 중",
     budget: "31,000,000",
     startDate: "2026.01.31",
     description:
@@ -32,6 +36,8 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
     status: "syncing",
     statusText: "동기화 중",
     progress: 32,
+    runStatus: "stopped",
+    runStatusText: "중단",
     budget: "31,000,000",
     startDate: "2026.01.31",
     description:
@@ -44,6 +50,8 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
     status: "inactive",
     statusText: "미동기화",
     progress: 0,
+    runStatus: "stopped",
+    runStatusText: "중단",
     budget: "31,000,000",
     startDate: "2026.01.31",
     description:
@@ -56,6 +64,8 @@ export const MOCK_CAMPAIGNS: ICampaign[] = [
     status: "success",
     statusText: "완료",
     progress: 98,
+    runStatus: "running",
+    runStatusText: "운영 중",
     budget: "31,000,000",
     startDate: "2026.01.31",
     description:

@@ -14,8 +14,8 @@ export default function CampaignDetail() {
           <header className="flex flex-col gap-5">
             <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden">
               <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
-              <Badge variant="running" size="sm">
-                {data.statusText}
+              <Badge variant={data.runStatus} size="sm">
+                {data.runStatusText}
               </Badge>
             </div>
             <div className="border-l-3 border-text-auth-sub pl-4 py-1">
