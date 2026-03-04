@@ -1,3 +1,4 @@
+import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
 import PlatformCard from "@/components/ads/PlatformCard";
 import Badge from "@/components/common/badge/Badge";
@@ -19,7 +20,7 @@ export default function CampaignDetail() {
               </Badge>
             </div>
             <div className="border-l-3 border-text-auth-sub pl-4 py-1">
-              <p className="text-text-auth-sub font-body1">
+              <p className="text-text-auth-sub font-body1 whitespace-pre-line leading-relaxed">
                 {data.description}
               </p>
             </div>
@@ -39,7 +40,10 @@ export default function CampaignDetail() {
           </div>
 
           {/* ads list */}
-          <div className="min-w-180" />
+          <div className="w-full overflow-x-auto">
+            <AdListTable ads={data.ads} />
+          </div>
+
           {/* control box */}
         </div>
       </div>
