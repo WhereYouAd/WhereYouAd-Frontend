@@ -15,6 +15,7 @@ interface IControlBoxProps extends HTMLAttributes<HTMLDivElement> {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
   buttonSize?: React.ComponentProps<typeof Button>["size"];
   buttonClassName?: string;
+  buttonDisabled?: boolean;
   buttonSlot?: ReactNode;
   leadingSlot?: ReactNode;
   contentClassName?: string;
@@ -32,6 +33,7 @@ export default function ControlBox({
   buttonVariant = "primary",
   buttonSize = "small",
   buttonClassName,
+  buttonDisabled,
   buttonSlot,
   leadingSlot,
   contentClassName,
@@ -74,8 +76,9 @@ export default function ControlBox({
           variant={buttonVariant}
           size={buttonSize}
           onClick={onButtonClick}
+          disabled={buttonDisabled}
           className={twMerge(
-            "shrink-0 !h-button-big px-8 !rounded-component-md",
+            "shrink-0 px-8 !rounded-component-md",
             buttonClassName,
           )}
         >

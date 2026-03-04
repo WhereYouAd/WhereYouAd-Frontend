@@ -225,6 +225,7 @@ export default function WorkspaceSetting() {
               buttonVariant="dangerSoft"
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
+              buttonDisabled={saving || deleting}
               leadingSlot={<WarningIcon />}
             />
           </div>
