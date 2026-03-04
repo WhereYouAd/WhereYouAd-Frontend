@@ -1,7 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 import CampaignTable from "@/components/ads/CampaignTable";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 
 export default function AdsListPage() {
+  const navigate = useNavigate();
+  const handleCampaignClick = (id: number) => {
+    navigate(`/ads/${id}`);
+  };
+
   return (
     <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
       <div className="flex-1 overflow-x-auto py-15 px-10 md:px-18 lg:px-25">
@@ -15,7 +22,7 @@ export default function AdsListPage() {
           </header>
           {/* 테이블 */}
           <div className="w-full flex flex-col">
-            <CampaignTable />
+            <CampaignTable onRowClick={(id) => handleCampaignClick(id)} />
           </div>
           {/* 하단 배너 */}
           <div className="w-full flex flex-col">
