@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
+import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
@@ -211,28 +212,22 @@ export default function WorkspaceSetting() {
               {saving ? "저장 중.." : "변경사항 저장하기"}
             </Button>
           </div>
-          <div className="bg-status-red/10 border border-status-red rounded-component-lg p-6 sm:p-8 mt-12 flex flex-col gap-6 md:flex-row md:justify-between md:items-center">
-            <div className="flex gap-4 sm:gap-8 items-start sm:items-center">
-              <WarningIcon />
-              <div>
-                <div className="text-status-red font-heading4">
-                  워크스페이스 삭제
-                </div>
-                <p className="font-body1 text-text-auth-sub mt-2">
-                  워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.
-                  <br />이 작업은 되돌릴 수 없습니다.
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="dangerSoft"
-              size="big"
-              aria-label="워크스페이스 삭제 버튼"
-              onClick={openDeleteModal}
-              disabled={saving || deleting}
-            >
-              워크스페이스 삭제
-            </Button>
+          <div className="w-full flex flex-col">
+            <ControlBox
+              title="워크스페이스 삭제"
+              description={`워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.\n 이 작업은 되돌릴 수 없습니다`}
+              buttonText="워크스페이스 삭제"
+              onButtonClick={openDeleteModal}
+              className="w-full mt-12"
+              containerClassName="bg-status-red/10 border-status-red"
+              titleClassName="text-status-red"
+              descriptionClassName="text-text-auth-sub"
+              buttonVariant="dangerSoft"
+              buttonSize="big"
+              buttonClassName="px-8 !rounded-component-md"
+              buttonDisabled={saving || deleting}
+              leadingSlot={<WarningIcon />}
+            />
           </div>
           <Modal
             isOpen={deleteOpen}
