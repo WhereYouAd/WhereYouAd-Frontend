@@ -36,7 +36,7 @@ export default function AdRow({
     <div
       onClick={onToggle}
       className={
-        "flex items-center px-5 py-5 cursor-pointer transition-all border-b border-bg-disabled hover:bg-bg-surface"
+        "flex items-center px-5 py-5 cursor-pointer transition-all border-t border-bg-disabled hover:bg-bg-surface"
       }
     >
       {/* status badge */}
