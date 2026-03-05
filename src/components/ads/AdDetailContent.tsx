@@ -15,7 +15,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
     try {
       await navigator.clipboard.writeText(text);
       toast.success("링크가 복사되었습니다.");
-    } catch (err) {
+    } catch {
       toast.error("복사에 실패했습니다.");
     }
   };
@@ -47,12 +47,9 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
           {/* link */}
           <div className="relative w-full max-w-150 group mt-2">
             <div className="flex items-center justify-between w-full h-10 px-4 py-2 bg-white border border-text-placeholder rounded-component-sm group-hover:border-primary-light transition-all">
-              {/* URL 텍스트: 길어지면 ... 처리 */}
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
                 {ad.link}
               </span>
-
-              {/* 복사 버튼 */}
               <button
                 onClick={() => handleCopy(ad.link)}
                 className="shrink-0 text-text-placeholder hover:text-primary-main transition-colors p-1"
