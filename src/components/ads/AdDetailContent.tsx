@@ -21,7 +21,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
     }
   };
   return (
-    <div className="px-5 pt-2 pb-6 flex flex-col gap-6 transition-all animate-fade-in overflow-hidde">
+    <div className="px-5 pt-2 pb-6 flex flex-col gap-6 transition-all animate-fade-in overflow-hidden">
       <div className="flex w-full">
         <div className="w-[15%] shrink-0 mr-2" />
 
