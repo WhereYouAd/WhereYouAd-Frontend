@@ -2,6 +2,7 @@ import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
 import PlatformCard from "@/components/ads/PlatformCard";
 import Badge from "@/components/common/badge/Badge";
+import ControlBox from "@/components/common/controlbox/ControlBox";
 
 import { MOCK_CAMPAIGNS } from "./campaign.mock";
 
@@ -42,6 +43,21 @@ export default function CampaignDetail() {
           {/* ads list */}
           <div className="w-full overflow-x-auto">
             <AdListTable ads={data.ads} />
+
+            <div className="mt-10">
+              <ControlBox
+                title="캠페인 운영 제어"
+                description={`전체 플랫폼의 광고 운영을 한번에 제어할 수 있습니다.\n클릭 시 해당 캠페인 내 속한 모든 광고 소재의 운영이 즉시 중단됩니다.`}
+                buttonText="중단하기"
+                onButtonClick={() => {}}
+                buttonDisabled={false}
+                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-140 shrink-0"
+                titleClassName="text-status-red font-heading3"
+                descriptionClassName="font-body2 text-text-sub leading-relaxed"
+                buttonSize="big"
+                buttonClassName="font-body1 bg-status-red"
+              />
+            </div>
           </div>
 
           {/* control box */}

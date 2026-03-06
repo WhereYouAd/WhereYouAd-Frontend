@@ -68,7 +68,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         <div className="flex-1 max-w-[85%] flex flex-col gap-6 pl-2 overflow-x-auto overflow-y-hidden">
           <ControlBox
             title="트래킹 활성화 시 실시간 성과 수집이 시작돼요"
-            description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다"
+            description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다."
             buttonText="트래킹 활성화"
             onButtonClick={() => {}}
             buttonDisabled={false}

@@ -16,7 +16,7 @@ export default function AdListTable({ ads }: IAdsListTableProps) {
     setOpenAdId((prev) => (prev === id ? null : id));
   };
   return (
-    <div className="w-full flex flex-col mt-10 min-w-130 border-b border-bg-disabled">
+    <div className="w-full flex flex-col mt-10 min-w-140 border-b border-bg-disabled">
       <h2 className="font-heading3 text-text-main mb-3">광고 모아보기</h2>
       <div>
         {ads.length > 0 ? (
