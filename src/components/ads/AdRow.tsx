@@ -33,10 +33,12 @@ export default function AdRow({
   onToggle,
 }: IAdRowProps) {
   return (
-    <div
+    <button
+      type="button"
       onClick={onToggle}
+      aria-expanded={isOpen}
       className={
-        "flex items-center px-5 py-5 cursor-pointer transition-all border-t border-bg-disabled hover:bg-bg-surface"
+        "flex w-full items-center px-5 py-5 text-left cursor-pointer transition-all border-t border-bg-disabled hover:bg-bg-surface"
       }
     >
       {/* status badge */}
@@ -74,6 +76,6 @@ export default function AdRow({
           }`}
         />
       </div>
-    </div>
+    </button>
   );
 }
