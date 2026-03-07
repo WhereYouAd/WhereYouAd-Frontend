@@ -106,7 +106,7 @@ export default function BudgetGaugeChart({
       </div>
 
       {/* 예산 상세 정보 */}
-      <div className="mt-13 flex flex-col gap-5 w-full">
+      <div className="mt-12 flex flex-col gap-5 w-full">
         <div className="flex justify-between">
           <span className="font-body1 text-text-sub">총 예산</span>
           <span className="font-body1 text-text-main">

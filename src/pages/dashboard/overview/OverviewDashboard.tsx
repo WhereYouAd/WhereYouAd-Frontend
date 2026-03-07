@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import Button from "@/components/common/button/Button";
@@ -6,10 +7,13 @@ import StatCard from "@/components/common/card/StatCard";
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
 import TrafficChart from "@/components/dashboard/charts/TrafficChart";
+import PlatformComparison from "@/components/dashboard/platform/PlatformComparison";
 
 import { overviewMockData } from "./overview.mock";
 
 export default function OverviewDashboard() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col gap-5 p-6">
       <div className="flex items-center justify-between">
@@ -80,9 +84,14 @@ export default function OverviewDashboard() {
 
       <Card
         title="플랫폼별 비교"
-        className="min-h-80"
-        RightElement={<Button size="small">플랫폼 대시보드 보기</Button>}
-      />
+        RightElement={
+          <Button size="small" onClick={() => navigate("/platform")}>
+            플랫폼 대시보드 보기
+          </Button>
+        }
+      >
+        <PlatformComparison />
+      </Card>
     </div>
   );
 }

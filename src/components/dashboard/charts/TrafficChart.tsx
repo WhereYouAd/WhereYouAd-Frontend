@@ -14,7 +14,7 @@ const options: ApexOptions = {
   chart: {
     type: "area",
     toolbar: { show: false }, // 우측 상단 툴바 표시 안함
-    zoom: { enabled: true }, // 드래그 줌 활성화
+    zoom: { enabled: false },
     fontFamily: "Pretendard",
     animations: { enabled: true }, // 초기 애니메이션
   },
