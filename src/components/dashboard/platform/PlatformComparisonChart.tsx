@@ -16,7 +16,7 @@ const PLATFORM_WORDMARKS = [
 const LEGEND_ITEMS = [
   { label: "클릭률", color: "#0084fe" },
   { label: "전환률", color: "#22c55e" },
-  { label: "노출수", color: "#4b5563" },
+  { label: "노출수", color: "#CBD5E1" },
 ];
 
 const options: ApexOptions = {
@@ -24,17 +24,22 @@ const options: ApexOptions = {
     type: "bar",
     toolbar: { show: false },
     fontFamily: "Pretendard",
-    animations: { enabled: true, dynamicAnimation: { enabled: false } },
+    animations: {
+      enabled: true,
+      speed: 800,
+      dynamicAnimation: { enabled: true, speed: 350 },
+    },
   },
   plotOptions: {
     bar: {
       horizontal: false,
-      columnWidth: "55%",
-      borderRadius: 3,
+      columnWidth: "75%",
+      borderRadius: 8,
+      borderRadiusApplication: "end",
     },
   },
   dataLabels: { enabled: false },
-  colors: ["#0084fe", "#22c55e", "#4b5563"],
+  colors: ["#0084fe", "#22c55e", "#CBD5E1"],
   stroke: { show: true, width: 2, colors: ["transparent"] },
   xaxis: {
     categories: platformComparisonMock.map((p) => p.name),
@@ -48,20 +53,29 @@ const options: ApexOptions = {
     tickAmount: 4,
     labels: {
       formatter: (val: number) => `${val}%`,
-      style: { colors: "#8b8b8f", fontSize: "12px" },
+      style: { colors: "#b0b8c1", fontSize: "11px", fontWeight: 500 },
     },
   },
   fill: { opacity: 1 },
   grid: {
-    borderColor: "#f2f4f6",
+    borderColor: "#F2F4F6",
+    strokeDashArray: 4,
     xaxis: { lines: { show: false } },
     yaxis: { lines: { show: true } },
-    padding: { left: 8, right: 8 },
+    padding: { left: 0, right: 0, top: -10 },
   },
   legend: { show: false },
   tooltip: {
+    shared: true,
+    intersect: false,
     y: { formatter: (val: number) => `${val}%` },
     style: { fontFamily: "Pretendard" },
+    theme: "light",
+  },
+  states: {
+    hover: {
+      filter: { type: "darken" },
+    },
   },
 };
 
@@ -73,35 +87,52 @@ const series = [
 
 export default function PlatformComparisonChart() {
   return (
-    <div>
-      <h4 className="font-body1 text-text-main">플랫폼 순위</h4>
-      <div className="flex items-center gap-4 mt-1.5">
-        {LEGEND_ITEMS.map(({ label, color }) => (
-          <div key={label} className="flex items-center gap-1.5">
-            <span
-              className="inline-block w-2.5 h-2.5 rounded-full"
-              style={{ background: color }}
-            />
-            <span className="font-caption text-text-sub">{label}</span>
-          </div>
-        ))}
+    <div className="flex flex-col h-full font-pretendard">
+      <div className="flex flex-col gap-1 mb-4">
+        <h4 className="font-heading4 text-text-main font-extrabold tracking-tight">
+          플랫폼 순위
+        </h4>
+        <div className="flex items-center gap-3">
+          {LEGEND_ITEMS.map(({ label, color }) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: color }}
+              />
+              <span className="font-caption font-bold text-text-sub">
+                {label}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-      <ReactApexChart
-        type="bar"
-        options={options}
-        series={series}
-        height={230}
-      />
+
+      <div className="flex-1 min-h-55">
+        <ReactApexChart
+          type="bar"
+          options={options}
+          series={series}
+          height="100%"
+        />
+      </div>
+
       <div
-        className="-mt-4 grid grid-cols-3"
-        style={{ paddingLeft: "48px", paddingRight: "8px" }}
+        className="grid grid-cols-3 pt-2"
+        style={{ paddingLeft: "42px", paddingRight: "0" }}
       >
         {PLATFORM_WORDMARKS.map(({ name, src, height }) => (
-          <div key={name} className="flex justify-center">
+          <div
+            key={name}
+            className="flex justify-center items-center opacity-80 group-hover:opacity-100 transition-opacity"
+          >
             <img
               src={src}
               alt={name}
-              style={{ height: `${height}px`, width: "auto" }}
+              style={{
+                height: `${height}px`,
+                width: "auto",
+                filter: "grayscale(0.2)",
+              }}
             />
           </div>
         ))}

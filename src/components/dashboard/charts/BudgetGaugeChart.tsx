@@ -1,5 +1,4 @@
-import ReactApexChart from "react-apexcharts";
-import type { ApexOptions } from "apexcharts";
+import { twMerge } from "tailwind-merge";
 
 interface IBudgetGaugeChartProps {
   percentage: number;
@@ -9,15 +8,16 @@ interface IBudgetGaugeChartProps {
   dangerThreshold: number;
 }
 
-// 상태 색상 반환
-const getStatusColor = (
-  value: number,
-  warning: number,
-  danger: number,
-): string => {
-  if (value >= danger) return "#ff2a4b"; // --color-status-red
-  if (value >= warning) return "#facc15"; // --color-status-yellow
-  return "#22c55e"; // --color-status-green
+const statusBadgeClasses: Record<string, string> = {
+  안정: "bg-status-green/[0.08] text-status-green",
+  주의: "bg-status-yellow/[0.08] text-status-yellow",
+  위험: "bg-status-red/[0.08] text-status-red",
+};
+
+const statusPointClasses: Record<string, string> = {
+  안정: "bg-status-green",
+  주의: "bg-status-yellow",
+  위험: "bg-status-red",
 };
 
 export default function BudgetGaugeChart({
@@ -29,105 +29,104 @@ export default function BudgetGaugeChart({
 }: IBudgetGaugeChartProps) {
   const remaining = totalBudget - spent;
 
-  const statusColor = getStatusColor(
-    percentage,
-    warningThreshold,
-    dangerThreshold,
-  );
-
-  const options: ApexOptions = {
-    chart: {
-      type: "radialBar",
-      fontFamily: "Pretendard",
-      offsetY: -20,
-      animations: { enabled: true, dynamicAnimation: { enabled: false } },
-    },
-    plotOptions: {
-      radialBar: {
-        // 반원 게이지
-        startAngle: -90,
-        endAngle: 90,
-        hollow: {
-          size: "60%",
-          background: "transparent",
-        },
-        track: {
-          background: "#f2f4f6",
-          strokeWidth: "100%",
-          margin: 0,
-        },
-        dataLabels: {
-          name: { show: false },
-          value: {
-            offsetY: -30,
-            fontSize: "28px",
-            fontWeight: "700",
-            color: statusColor,
-            formatter: (val: number) => `${val}%`,
-          },
-        },
-      },
-    },
-    // 소진률 임계값 기준으로 단색 적용
-    fill: { type: "solid", opacity: 1 },
-    colors: [statusColor],
-    legend: { show: false },
-    states: {
-      hover: { filter: { type: "none" } },
-      active: { filter: { type: "none" } },
-    },
-    // 차트 너비 기준 반응형 옵션
-    responsive: [
-      {
-        breakpoint: 260,
-        options: {
-          chart: { offsetY: -10 },
-          plotOptions: {
-            radialBar: {
-              dataLabels: {
-                value: { fontSize: "20px", offsetY: -20 },
-              },
-            },
-          },
-        },
-      },
-    ],
+  const getStatus = () => {
+    if (percentage >= dangerThreshold) return "위험";
+    if (percentage >= warningThreshold) return "주의";
+    return "안정";
   };
 
+  const status = getStatus();
+
   return (
-    <div className="flex flex-col items-center h-full">
-      <div className="relative overflow-hidden h-32 lg:h-36 w-full">
-        {/* 예산 소진 그래프 */}
-        <ReactApexChart
-          type="radialBar"
-          options={options}
-          series={[percentage]}
-          height={300}
-        />
+    <div className="flex flex-col w-full h-full justify-between font-pretendard">
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex items-baseline justify-between">
+          <div className="flex items-baseline gap-1">
+            <span className="font-heading1 text-text-main font-extrabold tracking-tight leading-none">
+              {percentage}%
+            </span>
+            <span className="font-caption text-text-sub font-semibold">
+              소진
+            </span>
+          </div>
+
+          <span
+            className={twMerge(
+              "inline-flex items-center px-2.5 py-1 rounded-full font-caption font-bold tracking-tight",
+              statusBadgeClasses[status],
+            )}
+          >
+            {status}
+          </span>
+        </div>
+
+        <div className="relative h-3 w-full bg-bg-disabled/50 rounded-full overflow-hidden">
+          <div
+            className={twMerge(
+              "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
+              status === "안정"
+                ? "bg-status-green"
+                : status === "주의"
+                  ? "bg-status-yellow"
+                  : "bg-status-red",
+            )}
+            style={{ width: `${Math.min(percentage, 100)}%` }}
+          />
+        </div>
       </div>
 
-      {/* 예산 상세 정보 */}
-      <div className="mt-12 flex flex-col gap-5 w-full">
-        <div className="flex justify-between">
-          <span className="font-body1 text-text-sub">총 예산</span>
-          <span className="font-body1 text-text-main">
+      <div className="flex flex-col gap-3 py-5 border-y border-bg-surface mb-6">
+        <div className="flex justify-between items-center">
+          <span className="font-body2 text-text-sub font-medium">
+            총 목표 예산
+          </span>
+          <span className="font-body2 text-text-main font-bold font-mono tracking-tight">
             ₩{totalBudget.toLocaleString()}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span className="font-body1 text-text-sub">현재 소진</span>
-          <span className="font-body1 text-text-main">
+        <div className="flex justify-between items-center">
+          <span className="font-body2 text-text-sub font-medium opacity-80">
+            현재 사용액
+          </span>
+          <span className="font-body2 text-text-main font-bold font-mono tracking-tight">
             ₩{spent.toLocaleString()}
           </span>
         </div>
-        <div className="h-px bg-bg-surface" />
-        <div className="flex justify-between">
-          <span className="font-heading3 text-text-auth-sub font-bold">
-            잔액
-          </span>
-          <span className="font-heading3 text-text-auth-sub font-bold">
+      </div>
+
+      <div className="bg-bg-surface/40 rounded-component-lg p-6 flex flex-col gap-4 border border-white/40 mt-auto">
+        <div className="flex flex-col gap-1">
+          <span className="font-caption text-text-sub">이번 달 잔액</span>
+          <span className="font-heading2 text-text-main font-extrabold tracking-tight leading-none pt-1">
             ₩{remaining.toLocaleString()}
           </span>
+        </div>
+
+        <div className="h-px bg-white/60 w-full mt-1" />
+
+        <div className="flex items-start gap-2 pt-1">
+          <div
+            className={twMerge(
+              "w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 animate-pulse",
+              statusPointClasses[status],
+            )}
+          />
+          <p className="font-caption text-text-sub leading-relaxed">
+            현재{" "}
+            <span
+              className={twMerge(
+                "font-bold",
+                status === "위험"
+                  ? "text-status-red"
+                  : status === "주의"
+                    ? "text-status-yellow"
+                    : "text-status-green",
+              )}
+            >
+              {status}
+            </span>{" "}
+            수준으로 운용되고 있습니다.
+          </p>
         </div>
       </div>
     </div>

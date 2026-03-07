@@ -12,44 +12,55 @@ const platformLogoMap = {
 
 export default function PlatformRoasTable() {
   return (
-    <div>
-      <h4 className="font-body1 text-text-main font-semibold">
-        성과 순위 (ROAS 기준)
-      </h4>
-      <p className="font-caption text-text-sub mt-0.5">
-        ROAS = 매출 / 광고비 × 100
-      </p>
+    <div className="flex flex-col h-full font-pretendard">
+      <div className="flex flex-col gap-1 mb-8">
+        <h4 className="font-heading4 text-text-main font-extrabold tracking-tight">
+          성과 순위
+        </h4>
+        <p className="font-caption text-text-placeholder font-medium">
+          ROAS 기준 = 매출 / 광고비 × 100
+        </p>
+      </div>
 
-      <div className="mt-4">
-        <div className="grid grid-cols-[2.5rem_3.5rem_6rem_1fr] gap-5 pb-3 font-caption text-text-sub">
+      <div className="flex flex-col">
+        <div className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 px-3 mb-3 font-caption font-bold text-text-placeholder uppercase tracking-wider">
           <span className="text-center">순위</span>
-          <span className="text-center">플랫폼</span>
-          <span className="text-center">ROAS</span>
-          <span>매출/광고비</span>
+          <span>플랫폼</span>
+          <span className="text-right">ROAS</span>
+          <span className="text-right whitespace-nowrap">매출 / 광고비</span>
         </div>
-        <div className="h-px bg-bg-surface" />
-        {platformRoasRanking.map((platform, index) => (
-          <div key={platform.name}>
-            <div className="grid grid-cols-[2.5rem_3.5rem_6rem_1fr] gap-5 py-4 items-center">
-              <span className="font-body2 text-text-sub text-center">
+
+        <div className="flex flex-col gap-1.5 overflow-visible">
+          {platformRoasRanking.map((platform, index) => (
+            <div
+              key={platform.name}
+              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white active:scale-[0.98] cursor-pointer"
+            >
+              <span className="text-center font-extrabold text-text-placeholder font-body1 group-hover:text-status-blue transition-colors">
                 {index + 1}
               </span>
-              <span className="flex justify-center">
-                {platformLogoMap[platform.name]}
-              </span>
-              <span className="font-body2 text-text-main text-center">
+              <div className="flex items-center gap-3">
+                <div className="shrink-0 transform group-hover:scale-110 transition-transform duration-300">
+                  {platformLogoMap[platform.name]}
+                </div>
+                <span className="font-bold text-text-main font-body1 tracking-tight">
+                  {platform.name}
+                </span>
+              </div>
+              <span className="text-right font-black text-text-main font-body1 tracking-tighter">
                 {platform.roas}%
               </span>
-              <span className="font-body2 text-text-sub">
-                {platform.revenue.toLocaleString()} /{" "}
-                {platform.adCost.toLocaleString()}
-              </span>
+              <div className="flex flex-col items-end text-right">
+                <span className="font-body2 font-extrabold text-text-main leading-tight">
+                  ₩{platform.revenue.toLocaleString()}
+                </span>
+                <span className="font-caption font-medium text-text-sub opacity-70 tracking-tight">
+                  ₩{platform.adCost.toLocaleString()}
+                </span>
+              </div>
             </div>
-            {index < platformRoasRanking.length - 1 && (
-              <div className="h-px bg-bg-surface" />
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
