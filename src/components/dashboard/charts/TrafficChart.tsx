@@ -16,7 +16,7 @@ const options: ApexOptions = {
     toolbar: { show: false }, // 우측 상단 툴바 표시 안함
     zoom: { enabled: false },
     fontFamily: "Pretendard",
-    animations: { enabled: true }, // 초기 애니메이션
+    animations: { enabled: true, dynamicAnimation: { enabled: false } },
   },
   dataLabels: { enabled: false }, // 각 포인트 위 숫자 레이블 숨김
   stroke: { curve: "monotoneCubic", width: 1.5 },

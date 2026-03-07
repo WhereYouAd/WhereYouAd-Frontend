@@ -40,6 +40,7 @@ export default function BudgetGaugeChart({
       type: "radialBar",
       fontFamily: "Pretendard",
       offsetY: -20,
+      animations: { enabled: true, dynamicAnimation: { enabled: false } },
     },
     plotOptions: {
       radialBar: {

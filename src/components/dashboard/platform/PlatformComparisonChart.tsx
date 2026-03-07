@@ -24,6 +24,7 @@ const options: ApexOptions = {
     type: "bar",
     toolbar: { show: false },
     fontFamily: "Pretendard",
+    animations: { enabled: true, dynamicAnimation: { enabled: false } },
   },
   plotOptions: {
     bar: {
