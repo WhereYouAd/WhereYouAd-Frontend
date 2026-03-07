@@ -13,8 +13,8 @@ export default function CampaignDetail() {
       <div className="flex-1 py-15 px-10 md:px-15 lg:px-25">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
-          <header className="flex flex-col gap-5">
-            <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden">
+          <header className="flex flex-col gap-5 w-full">
+            <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden w-full">
               <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
               <Badge variant={data.runStatus} size="sm">
                 {data.runStatusText}
@@ -32,11 +32,11 @@ export default function CampaignDetail() {
             <CampaignInfoCard
               budget={data.budget}
               date={data.startDate}
-              className="flex-1 min-w-[320px] max-w-110 w-full"
+              className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
               platforms={["kakao", "google", "naver"]}
-              className="flex-1 min-w-[320px] max-w-110 w-full"
+              className="flex-1 min-w-[320px] w-full"
             />
           </div>
 
