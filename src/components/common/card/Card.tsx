@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 export interface ICardProps extends HTMLAttributes<HTMLDivElement> {
   title?: string;
-  description?: string;
+  description?: ReactNode;
   RightElement?: ReactNode;
 }
 
@@ -30,7 +30,7 @@ export default function Card({
           <div className="flex flex-col gap-0.5">
             {title && <h3 className="font-body1 text-text-main">{title}</h3>}
             {description && (
-              <p className="font-caption text-text-sub">{description}</p>
+              <div className="font-caption text-text-sub">{description}</div>
             )}
           </div>
           {RightElement}
