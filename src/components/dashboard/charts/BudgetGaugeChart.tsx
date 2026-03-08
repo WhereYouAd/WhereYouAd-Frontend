@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface IBudgetGaugeChartProps {
@@ -38,6 +39,12 @@ export default function BudgetGaugeChart({
 
   const status = getStatus();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <div className="flex flex-col w-full h-full justify-between font-pretendard">
       <div className="flex flex-col gap-4 mb-6">
@@ -61,25 +68,31 @@ export default function BudgetGaugeChart({
           </span>
         </div>
 
-        <div
-          role="progressbar"
-          aria-valuenow={Math.min(percentage, 100)}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={`예산 소진율 ${Math.min(percentage, 100)}%`}
-          className="relative h-3 w-full bg-bg-disabled/50 rounded-full overflow-hidden"
-        >
+        <div className="relative py-1.5">
           <div
-            className={twMerge(
-              "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
-              status === "안정"
-                ? "bg-status-green"
-                : status === "주의"
-                  ? "bg-status-yellow"
-                  : "bg-status-red",
-            )}
-            style={{ width: `${Math.min(percentage, 100)}%` }}
-          />
+            role="progressbar"
+            aria-valuenow={Math.min(percentage, 100)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`예산 소진율 ${Math.min(percentage, 100)}%`}
+            className="relative h-3 w-full bg-bg-disabled/40 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.08)]"
+          >
+            <div
+              className={twMerge(
+                "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
+                status === "안정"
+                  ? "bg-linear-to-r from-status-green/50 to-status-green"
+                  : status === "주의"
+                    ? "bg-linear-to-r from-status-yellow/50 to-status-yellow"
+                    : "bg-linear-to-r from-status-red/50 to-status-red",
+              )}
+              style={{
+                width: mounted ? `${Math.min(percentage, 100)}%` : "0%",
+              }}
+            >
+              <div className="absolute inset-0 rounded-full bg-linear-to-b from-white/30 to-transparent" />
+            </div>
+          </div>
         </div>
       </div>
 
