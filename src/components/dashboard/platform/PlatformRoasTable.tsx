@@ -36,10 +36,10 @@ export default function PlatformRoasTable() {
 
         <div className="flex flex-col gap-1.5 overflow-visible">
           {platformRoasRanking.map((platform, index) => (
-            <div
+            <button
               key={platform.name}
               onClick={() => navigate("/platform")}
-              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white active:scale-[0.98] cursor-pointer"
+              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white active:scale-[0.98] cursor-pointer text-left w-full"
             >
               <span className="text-center font-extrabold text-text-placeholder font-body1 group-hover:text-status-blue transition-colors">
                 {index + 1}
@@ -63,7 +63,7 @@ export default function PlatformRoasTable() {
                   ₩{platform.adCost.toLocaleString()}
                 </span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
