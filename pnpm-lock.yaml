@@ -17,6 +17,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.17
         version: 5.90.21(react@19.2.4)
+      apexcharts:
+        specifier: ^5.7.0
+        version: 5.10.3
       axios:
         specifier: ^1.13.4
         version: 1.13.5
@@ -26,6 +29,9 @@ importers:
       react:
         specifier: ^19.2.0
         version: 19.2.4
+      react-apexcharts:
+        specifier: ^2.0.1
+        version: 2.1.0(apexcharts@5.10.3)(react@19.2.4)
       react-dom:
         specifier: ^19.2.0
         version: 19.2.4(react@19.2.4)
@@ -1275,6 +1281,9 @@ packages:
   '@vitest/utils@2.1.9':
     resolution: {integrity: sha512-v0psaMSkNJ3A2NMrUEHFRzJtDPFn+/VWZ5WxImB21T9fjucJRmS7xCS3ppEnARb9y11OAzaD+P2Ps+b+BGX5iQ==}
 
+  '@yr/monotone-cubic-spline@1.0.3':
+    resolution: {integrity: sha512-FQXkOta0XBSUPHndIKON2Y9JeQz5ZeMqLYZVVK93FliNBFm7LNMIZmY6FrMEB9XPcDbE2bekMbZD6kzDkxwYjA==}
+
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
@@ -1314,6 +1323,9 @@ packages:
   ansi-styles@6.2.3:
     resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
     engines: {node: '>=12'}
+
+  apexcharts@5.10.3:
+    resolution: {integrity: sha512-wwvkSLsodNOc/rHo5MJsn3GPM4Krc5Gs0zKX4Lfzq4LohcTbyKylYUGEqJFmXXxGR7yLbZQz31sB5RTqT5mv1g==}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -2840,6 +2852,12 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  react-apexcharts@2.1.0:
+    resolution: {integrity: sha512-xrmeTKRKHh3cvvLc8SasqFjlOgIqGpyHc81qjnRtcjUM0Fu7qEjgVRWGPokGFjqhwRZVgEym8zmuEyYr5LMYIg==}
+    peerDependencies:
+      apexcharts: '>=5.10.1'
+      react: '>=16.8.0'
 
   react-docgen-typescript@2.4.0:
     resolution: {integrity: sha512-ZtAp5XTO5HRzQctjPU0ybY0RRCQO19X/8fxn3w7y2VVTUbGHDKULPTL4ky3vB05euSgG5NpALhEhDPvQ56wvXg==}
@@ -4623,6 +4641,8 @@ snapshots:
       loupe: 3.2.1
       tinyrainbow: 1.2.0
 
+  '@yr/monotone-cubic-spline@1.0.3': {}
+
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
       acorn: 8.15.0
@@ -4658,6 +4678,10 @@ snapshots:
   ansi-styles@5.2.0: {}
 
   ansi-styles@6.2.3: {}
+
+  apexcharts@5.10.3:
+    dependencies:
+      '@yr/monotone-cubic-spline': 1.0.3
 
   argparse@2.0.1: {}
 
@@ -6414,6 +6438,12 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
+
+  react-apexcharts@2.1.0(apexcharts@5.10.3)(react@19.2.4):
+    dependencies:
+      apexcharts: 5.10.3
+      prop-types: 15.8.1
+      react: 19.2.4
 
   react-docgen-typescript@2.4.0(typescript@5.9.3):
     dependencies:
