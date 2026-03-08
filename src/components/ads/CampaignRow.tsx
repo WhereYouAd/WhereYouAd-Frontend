@@ -5,9 +5,9 @@ import type { TCampaignStatus, TPlatform } from "@/types/ads/campaign";
 import Badge from "../common/badge/Badge";
 import ProgressBar from "../common/progressbar/ProgressBar";
 
-import GoogleLogo from "@/assets/icon/ads/google-logo.svg?react";
-import KakaoLogo from "@/assets/icon/ads/kakao-logo.svg?react";
-import NaverLogo from "@/assets/icon/ads/naver-logo.svg?react";
+import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
+import KakaoLogo from "@/assets/icon/ads/kakao-circle.svg?react";
+import NaverLogo from "@/assets/icon/ads/naver-circle.svg?react";
 
 interface ICampaignRowProps {
   platforms: TPlatform[];
