@@ -40,10 +40,11 @@ export default function CampaignDetail() {
             />
           </div>
 
-          {/* ads list */}
           <div className="w-full overflow-x-auto">
+            {/* ads list */}
             <AdListTable ads={data.ads} />
 
+            {/* campaign controlbox */}
             <div className="mt-10">
               <ControlBox
                 title="캠페인 운영 제어"
@@ -59,8 +60,6 @@ export default function CampaignDetail() {
               />
             </div>
           </div>
-
-          {/* control box */}
         </div>
       </div>
     </section>
