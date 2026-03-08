@@ -76,10 +76,8 @@ export default function BudgetGaugeChart({
 
       <div className="flex flex-col gap-3 py-5 border-y border-bg-surface mb-6">
         <div className="flex justify-between items-center">
-          <span className="font-body2 text-text-sub font-medium">
-            총 목표 예산
-          </span>
-          <span className="font-body2 text-text-main font-bold font-mono tracking-tight">
+          <span className="font-body2 text-text-sub">총 목표 예산</span>
+          <span className="font-body2 text-text-main tracking-tight">
             ₩{totalBudget.toLocaleString()}
           </span>
         </div>
@@ -101,9 +99,9 @@ export default function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="h-px bg-white/60 w-full mt-1" />
+        <div className="h-px bg-white/60 w-full" />
 
-        <div className="flex items-start gap-2 pt-1">
+        <div className="flex items-start gap-1.5">
           <div
             className={twMerge(
               "w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 animate-pulse",

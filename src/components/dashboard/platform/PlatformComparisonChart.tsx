@@ -94,7 +94,7 @@ export default function PlatformComparisonChart() {
   return (
     <div className="flex flex-col h-full font-pretendard">
       <div className="flex flex-col gap-1 mb-4">
-        <h4 className="font-heading4 text-text-main font-extrabold tracking-tight">
+        <h4 className="font-body2 text-text-main font-extrabold tracking-tight">
           플랫폼 순위
         </h4>
         <div className="flex items-center gap-3">
