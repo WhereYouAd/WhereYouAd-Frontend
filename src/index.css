@@ -332,5 +332,49 @@ button {
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;
   }
+
+  /* AI 리포트 인쇄 — 드로어 패널 외 모든 요소 숨김 */
+  @media print {
+    body.ai-report-printing > *:not([data-drawer-portal]) {
+      display: none !important;
+    }
+
+    body.ai-report-printing [data-drawer-portal] {
+      position: static !important;
+      display: block !important;
+    }
+
+    body.ai-report-printing [data-print-hide] {
+      display: none !important;
+    }
+
+    body.ai-report-printing [data-drawer-portal] > div:last-child {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      max-width: 100% !important;
+      height: auto !important;
+      transform: none !important;
+    }
+
+    @page {
+      margin: 16mm;
+    }
+  }
+
+  /* 토스트 애니메이션 */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 12px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.2s var(--ease-out) both;
+  }
 }
 
