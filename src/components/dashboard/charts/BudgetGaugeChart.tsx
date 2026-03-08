@@ -25,7 +25,8 @@ export default function BudgetGaugeChart({
   warningThreshold,
   dangerThreshold,
 }: IBudgetGaugeChartProps) {
-  const percentage = Math.round((spent / totalBudget) * 100);
+  const percentage =
+    totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
   const remaining = totalBudget - spent;
 
   const getStatus = () => {
