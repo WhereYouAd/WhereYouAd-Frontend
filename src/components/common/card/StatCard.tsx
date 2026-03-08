@@ -16,8 +16,8 @@ export interface IStatCardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const trendClasses: Record<ITrend["direction"], string> = {
-  up: "bg-status-red/10 text-status-red",
-  down: "bg-status-blue/10 text-status-blue",
+  up: "bg-status-red/[0.08] text-status-red font-bold",
+  down: "bg-status-blue/[0.08] text-status-blue font-bold",
 };
 
 export default function StatCard({
@@ -30,13 +30,15 @@ export default function StatCard({
   return (
     <div
       className={twMerge(
-        "bg-white rounded-component-md border border-chart-inactive p-5 flex flex-col gap-2",
+        "bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(33,130,246,0.08)]",
         className,
       )}
       {...rest}
     >
-      <p className="font-body2 text-text-main">{title}</p>
-      <p className="font-heading2 text-text-main">{value}</p>
+      <p className="font-body2 text-text-sub font-medium">{title}</p>
+      <p className="font-heading1 text-text-main font-extrabold tracking-tight">
+        {value}
+      </p>
       {trend && (
         <span
           aria-label={`${trend.value} ${trend.direction === "up" ? "상승" : "하락"}`}

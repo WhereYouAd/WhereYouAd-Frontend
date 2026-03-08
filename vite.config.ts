@@ -26,6 +26,12 @@ export default defineConfig(({ mode }) => {
       alias: {
         "@": "/src",
       },
+      dedupe: ["react", "react-dom"],
+    },
+
+    // 사전 번들링 최적화
+    optimizeDeps: {
+      include: ["react-apexcharts", "apexcharts"],
     },
 
     // 배포 시 콘솔 로그 제거
