@@ -52,7 +52,7 @@ export const deleteWorkspace = async (orgId: number): Promise<void> => {
 export const uploadImage = async (file: File): Promise<string> => {
   const formData = new FormData();
   formData.append("image", file);
-  const { data } = await authInstance.post<TApiResult<TUploadImageResponse>>(
+  const { data } = await axiosInstance.post<TApiResult<TUploadImageResponse>>(
     `/api/images/upload`,
     formData,
     {
