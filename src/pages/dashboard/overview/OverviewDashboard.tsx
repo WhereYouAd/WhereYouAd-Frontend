@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
-import Toast from "@/components/common/toast/Toast";
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
 import TrafficChart from "@/components/dashboard/charts/TrafficChart";
@@ -23,17 +23,6 @@ import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
-  const [toast, setToast] = useState<{
-    message: string;
-    variant: "success" | "error";
-  } | null>(null);
-
-  const showToast = (
-    message: string,
-    variant: "success" | "error" = "success",
-  ) => {
-    setToast({ message, variant });
-  };
 
   return (
     <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
@@ -137,8 +126,8 @@ export default function OverviewDashboard() {
             onClick: () => {
               navigator.clipboard
                 .writeText(window.location.href)
-                .then(() => showToast("링크가 복사되었습니다."))
-                .catch(() => showToast("링크 복사에 실패했습니다.", "error"));
+                .then(() => toast.success("링크가 복사되었습니다."))
+                .catch(() => toast.error("링크 복사에 실패했습니다."));
             },
           },
           {
@@ -164,14 +153,6 @@ export default function OverviewDashboard() {
       >
         <OverviewAiReportPanel />
       </Drawer>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          variant={toast.variant}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }
