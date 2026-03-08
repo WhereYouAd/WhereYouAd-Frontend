@@ -27,7 +27,8 @@ export default function BudgetGaugeChart({
 }: IBudgetGaugeChartProps) {
   const percentage =
     totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
-  const remaining = totalBudget - spent;
+  const remaining = Math.max(0, totalBudget - spent);
+  const isOverBudget = spent > totalBudget;
 
   const getStatus = () => {
     if (percentage >= dangerThreshold) return "위험";
@@ -60,7 +61,14 @@ export default function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="relative h-3 w-full bg-bg-disabled/50 rounded-full overflow-hidden">
+        <div
+          role="progressbar"
+          aria-valuenow={Math.min(percentage, 100)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={`예산 소진율 ${Math.min(percentage, 100)}%`}
+          className="relative h-3 w-full bg-bg-disabled/50 rounded-full overflow-hidden"
+        >
           <div
             className={twMerge(
               "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
@@ -94,8 +102,15 @@ export default function BudgetGaugeChart({
 
       <div className="bg-bg-surface/40 rounded-component-lg p-6 flex flex-col gap-4 border border-white/40 mt-auto">
         <div className="flex flex-col gap-1">
-          <span className="font-caption text-text-sub">이번 달 잔액</span>
-          <span className="font-heading2 text-text-main font-extrabold tracking-tight leading-none pt-1">
+          <span className="font-caption text-text-sub">
+            {isOverBudget ? "초과 지출" : "이번 달 잔액"}
+          </span>
+          <span
+            className={twMerge(
+              "font-heading2 font-extrabold tracking-tight leading-none pt-1",
+              isOverBudget ? "text-status-red" : "text-text-main",
+            )}
+          >
             ₩{remaining.toLocaleString()}
           </span>
         </div>
@@ -105,7 +120,7 @@ export default function BudgetGaugeChart({
         <div className="flex items-start gap-1.5">
           <div
             className={twMerge(
-              "w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 animate-pulse",
+              "w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 motion-safe:animate-pulse",
               statusPointClasses[status],
             )}
           />

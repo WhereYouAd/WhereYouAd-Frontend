@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -23,6 +23,17 @@ import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+  const currentDate = useMemo(
+    () =>
+      new Date().toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    [],
+  );
 
   return (
     <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
@@ -32,14 +43,7 @@ export default function OverviewDashboard() {
             통합 대시보드
           </h1>
           <p className="font-body2 text-text-sub">
-            데이터 기준 ·{" "}
-            {new Date().toLocaleString("ko-KR", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            데이터 기준 · {currentDate}
           </p>
         </div>
         <button
