@@ -42,3 +42,7 @@ export type TApiResult<T> = {
   status: string;
   data: T;
 };
+
+export type TUploadImageResponse = {
+  url: string;
+};
