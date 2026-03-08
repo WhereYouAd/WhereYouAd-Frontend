@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 import { platformRoasRanking } from "./platformComparison.mock";
 
 import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
@@ -13,8 +11,6 @@ const platformLogoMap = {
 };
 
 export default function PlatformRoasTable() {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col h-full font-pretendard">
       <div className="flex flex-col gap-1 mb-8">
@@ -36,10 +32,9 @@ export default function PlatformRoasTable() {
 
         <div className="flex flex-col gap-1.5 overflow-visible">
           {platformRoasRanking.map((platform, index) => (
-            <button
+            <div
               key={platform.name}
-              onClick={() => navigate("/platform")}
-              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-blue cursor-pointer text-left w-full"
+              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white"
             >
               <span className="text-center font-extrabold text-text-placeholder font-body1 group-hover:text-status-blue transition-colors">
                 {index + 1}
@@ -63,7 +58,7 @@ export default function PlatformRoasTable() {
                   ₩{platform.adCost.toLocaleString()}
                 </span>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>
