@@ -28,8 +28,8 @@ export default function BudgetGaugeChart({
 }: IBudgetGaugeChartProps) {
   const percentage =
     totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
-  const remaining = Math.max(0, totalBudget - spent);
   const isOverBudget = spent > totalBudget;
+  const remaining = isOverBudget ? spent - totalBudget : totalBudget - spent;
 
   const getStatus = () => {
     if (percentage >= dangerThreshold) return "위험";
