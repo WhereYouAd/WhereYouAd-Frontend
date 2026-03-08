@@ -6,6 +6,7 @@ import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
+import Toast from "@/components/common/toast/Toast";
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
 import TrafficChart from "@/components/dashboard/charts/TrafficChart";
@@ -22,6 +23,17 @@ import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    variant: "success" | "error";
+  } | null>(null);
+
+  const showToast = (
+    message: string,
+    variant: "success" | "error" = "success",
+  ) => {
+    setToast({ message, variant });
+  };
 
   return (
     <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
@@ -50,7 +62,6 @@ export default function OverviewDashboard() {
         </button>
       </div>
 
-      {/* KPI Section */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {overviewMockData.kpis.map((kpi) => (
           <StatCard key={kpi.title} {...kpi} />
@@ -95,12 +106,12 @@ export default function OverviewDashboard() {
           <Button
             variant="tertiary"
             onClick={() => navigate("/platform")}
-            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-main transition-all rounded-full"
+            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-all rounded-full"
           >
             <span className="font-caption font-bold pt-0.5">
               플랫폼 대시보드 살펴보기
             </span>
-            <ChevronDoubleRightIcon className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronDoubleRightIcon className="w-2.5 h-auto" />
           </Button>
         }
       >
@@ -111,7 +122,7 @@ export default function OverviewDashboard() {
         isOpen={isAiPanelOpen}
         onClose={() => setIsAiPanelOpen(false)}
         hideHeader={false}
-        disableScroll={true}
+        disableScroll={false}
         className="w-full sm:max-w-160"
         dropdownItems={[
           {
@@ -124,7 +135,10 @@ export default function OverviewDashboard() {
               />
             ),
             onClick: () => {
-              alert("링크가 복사되었습니다.");
+              navigator.clipboard
+                .writeText(window.location.href)
+                .then(() => showToast("링크가 복사되었습니다."))
+                .catch(() => showToast("링크 복사에 실패했습니다.", "error"));
             },
           },
           {
@@ -137,13 +151,27 @@ export default function OverviewDashboard() {
               />
             ),
             onClick: () => {
-              alert("PDF 다운로드를 시작합니다.");
+              document.body.classList.add("ai-report-printing");
+              const cleanup = () => {
+                document.body.classList.remove("ai-report-printing");
+                window.removeEventListener("afterprint", cleanup);
+              };
+              window.addEventListener("afterprint", cleanup);
+              setTimeout(() => window.print(), 150);
             },
           },
         ]}
       >
         <OverviewAiReportPanel />
       </Drawer>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          variant={toast.variant}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

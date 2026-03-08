@@ -50,6 +50,7 @@ export default function Drawer({
 
   return createPortal(
     <div
+      data-drawer-portal
       className={twMerge(
         "fixed inset-0 z-50 flex justify-end transition-opacity duration-300",
         isOpen
@@ -58,6 +59,7 @@ export default function Drawer({
       )}
     >
       <div
+        data-print-hide
         className="absolute inset-0 bg-black/40 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
@@ -70,7 +72,10 @@ export default function Drawer({
         )}
       >
         {!hideHeader && (
-          <div className="flex items-center justify-between px-6 pt-4 pb-4 shrink-0">
+          <div
+            data-print-hide
+            className="flex items-center justify-between px-6 pt-4 pb-4 shrink-0"
+          >
             {title ? (
               <>
                 {typeof title === "string" ? (

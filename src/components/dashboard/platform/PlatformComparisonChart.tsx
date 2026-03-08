@@ -13,6 +13,9 @@ const PLATFORM_WORDMARKS = [
   { name: "kakao", src: kakaoWordmarkUrl, height: 16 },
 ];
 
+// Y축 레이블 영역 고정 너비 — wordmark 정렬의 단일 기준값
+const YAXIS_LABEL_WIDTH = 42;
+
 const LEGEND_ITEMS = [
   { label: "클릭률", color: "#0084fe" },
   { label: "전환률", color: "#22c55e" },
@@ -52,6 +55,8 @@ const options: ApexOptions = {
     max: 100,
     tickAmount: 4,
     labels: {
+      minWidth: YAXIS_LABEL_WIDTH,
+      maxWidth: YAXIS_LABEL_WIDTH,
       formatter: (val: number) => `${val}%`,
       style: { colors: "#b0b8c1", fontSize: "11px", fontWeight: 500 },
     },
@@ -118,7 +123,7 @@ export default function PlatformComparisonChart() {
 
       <div
         className="grid grid-cols-3 pt-2"
-        style={{ paddingLeft: "42px", paddingRight: "0" }}
+        style={{ paddingLeft: `${YAXIS_LABEL_WIDTH}px` }}
       >
         {PLATFORM_WORDMARKS.map(({ name, src, height }) => (
           <div

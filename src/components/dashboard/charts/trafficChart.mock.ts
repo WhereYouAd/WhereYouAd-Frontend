@@ -1,5 +1,5 @@
 export interface ITrafficChartData {
-  labels: string[]; // x축 시간 레이블 (예: "00:00" ~ "24:00")
+  labels: string[]; // x축 시간 레이블
   clicks: number[]; // 시간별 클릭수
 }
 

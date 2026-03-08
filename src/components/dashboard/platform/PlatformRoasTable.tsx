@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { platformRoasRanking } from "./platformComparison.mock";
 
 import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
@@ -11,6 +13,8 @@ const platformLogoMap = {
 };
 
 export default function PlatformRoasTable() {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col h-full font-pretendard">
       <div className="flex flex-col gap-1 mb-8">
@@ -18,7 +22,7 @@ export default function PlatformRoasTable() {
           성과 순위
         </h4>
         <p className="font-caption text-text-placeholder font-medium">
-          ROAS 기준 = 매출 / 광고비 × 100
+          ROAS(%) = 매출 ÷ 광고비 × 100
         </p>
       </div>
 
@@ -26,7 +30,7 @@ export default function PlatformRoasTable() {
         <div className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 px-3 mb-3 font-caption font-bold text-text-placeholder uppercase tracking-wider">
           <span className="text-center">순위</span>
           <span>플랫폼</span>
-          <span className="text-right">ROAS</span>
+          <span className="text-right">ROAS(%)</span>
           <span className="text-right whitespace-nowrap">매출 / 광고비</span>
         </div>
 
@@ -34,6 +38,7 @@ export default function PlatformRoasTable() {
           {platformRoasRanking.map((platform, index) => (
             <div
               key={platform.name}
+              onClick={() => navigate("/platform")}
               className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white active:scale-[0.98] cursor-pointer"
             >
               <span className="text-center font-extrabold text-text-placeholder font-body1 group-hover:text-status-blue transition-colors">

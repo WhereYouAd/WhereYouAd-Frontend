@@ -1,7 +1,6 @@
 import { twMerge } from "tailwind-merge";
 
 interface IBudgetGaugeChartProps {
-  percentage: number;
   totalBudget: number;
   spent: number;
   warningThreshold: number;
@@ -21,12 +20,12 @@ const statusPointClasses: Record<string, string> = {
 };
 
 export default function BudgetGaugeChart({
-  percentage,
   totalBudget,
   spent,
   warningThreshold,
   dangerThreshold,
 }: IBudgetGaugeChartProps) {
+  const percentage = Math.round((spent / totalBudget) * 100);
   const remaining = totalBudget - spent;
 
   const getStatus = () => {
