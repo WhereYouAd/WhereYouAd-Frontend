@@ -34,7 +34,7 @@ export default function CampaignRow({
 }: ICampaignRowProps) {
   return (
     <li
-      className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-gray-50 hover:cursor-pointer transition-colors list-none"
+      className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-bg-surface hover:cursor-pointer transition-colors list-none"
       onClick={onClick}
       role="button"
       tabIndex={onClick ? 0 : undefined}
