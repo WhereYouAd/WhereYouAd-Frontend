@@ -7,6 +7,7 @@ import {
 
 import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
 import VectorIcon from "@/assets/icon/workspace/Vector.svg?react";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 type TProps = {
   workspace: TWorkspace;
@@ -20,9 +21,12 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
         <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm">
           {w.logoUrl ? (
             <img
-              src={w.logoUrl}
+              src={getImageUrl(w.logoUrl) ?? ""}
               alt={`${w.name} 로고`}
               className="w-full h-full object-cover rounded-component-sm"
+              onError={(e) => {
+                console.log("카드 이미지 로드 실패: ", e.currentTarget.src);
+              }}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">

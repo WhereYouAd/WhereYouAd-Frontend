@@ -18,6 +18,7 @@ import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-war
 import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
@@ -214,9 +215,12 @@ export default function WorkspaceSetting() {
                     />
                   ) : serverLogoUrl ? (
                     <img
-                      src={serverLogoUrl}
+                      src={getImageUrl(serverLogoUrl) ?? ""}
                       alt={`${name || "워크스페이스"} 로고`}
                       className="w-full h-full object-contain"
+                      onError={(e) => {
+                        console.log("이미지 로드 실패:", e.currentTarget.src);
+                      }}
                     />
                   ) : (
                     <UpLoadImgIcon aria-hidden="true" />
