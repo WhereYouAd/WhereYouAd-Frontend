@@ -83,7 +83,11 @@ const series = [
 
 export default function TrafficChart() {
   return (
-    <div role="img" aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이">
+    <div
+      role="img"
+      aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
+      style={{ willChange: "transform" }}
+    >
       <ReactApexChart
         type="area"
         options={options}

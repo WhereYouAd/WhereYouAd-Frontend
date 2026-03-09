@@ -112,7 +112,7 @@ export default function PlatformComparisonChart() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-55">
+      <div className="flex-1 min-h-55" style={{ willChange: "transform" }}>
         <ReactApexChart
           type="bar"
           options={options}
