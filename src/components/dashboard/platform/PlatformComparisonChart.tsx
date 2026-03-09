@@ -79,7 +79,7 @@ const options: ApexOptions = {
   },
   states: {
     hover: {
-      filter: { type: "darken" },
+      filter: { type: "none" },
     },
   },
 };
