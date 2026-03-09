@@ -73,7 +73,7 @@ export function DropdownMenu({
                     "group flex w-full items-center gap-3 rounded-component-md px-5 py-4 text-left font-body2 transition-fast",
                     it.active
                       ? "bg-brand-300 text-status-blue"
-                      : "text-text-disabled hover:bg-brand-300 hover:text-status-blue",
+                      : "text-text-auth-sub hover:bg-brand-300 hover:text-status-blue",
                   )}
                 >
                   {it.icon ? (

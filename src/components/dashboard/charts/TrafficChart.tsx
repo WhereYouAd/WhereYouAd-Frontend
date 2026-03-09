@@ -2,19 +2,37 @@ import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
+import {
+  downloadChartCsv,
+  downloadChartPng,
+  downloadChartSvg,
+} from "@/utils/download";
+
+import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
+
 import { trafficChartMock } from "./trafficChart.mock";
+
+import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
+
+const CHART_ID = "traffic-chart";
+const TODAY = new Date().toISOString().slice(0, 10);
 
 // x축 시간대
 const LABEL_HOURS = new Set(["00:00", "06:00", "12:00", "18:00", "24:00"]);
 
 const BASE_OPTIONS: ApexOptions = {
   chart: {
+    id: CHART_ID,
     type: "area",
-    // 다운로드 버튼 활성화된 툴바
+    events: {
+      mounted: (chartContext: { el: Element }) => {
+        chartContext.el.querySelector("svg > title")?.remove();
+      },
+    },
     toolbar: {
       show: true,
       tools: {
-        download: true,
+        download: false,
         selection: false,
         zoom: false,
         zoomin: false,
@@ -24,13 +42,11 @@ const BASE_OPTIONS: ApexOptions = {
       },
       export: {
         csv: {
-          filename: "traffic-data",
+          filename: `overview-traffic-data-${TODAY}`,
           columnDelimiter: ",",
           headerCategory: "시간",
           headerValue: "클릭수",
         },
-        svg: { filename: "traffic-chart" },
-        png: { filename: "traffic-chart" },
       },
     },
     zoom: { enabled: false },
@@ -98,6 +114,46 @@ const series = [
   },
 ];
 
+const CHART_CONTAINER_ID = `${CHART_ID}-container`;
+const FILENAME = `overview-traffic-chart-${TODAY}`;
+const DOWNLOAD_ITEMS = [
+  {
+    label: "PNG 저장",
+    onClick: () => downloadChartPng(CHART_ID, FILENAME),
+  },
+  {
+    label: "SVG 저장",
+    onClick: () => downloadChartSvg(CHART_CONTAINER_ID, FILENAME),
+  },
+  {
+    label: "CSV 다운로드",
+    onClick: () => downloadChartCsv(CHART_ID),
+  },
+];
+
+export function TrafficChartDownload() {
+  return (
+    <DropdownMenu
+      aria-label="차트 다운로드"
+      trigger={
+        <button
+          type="button"
+          className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-fast"
+          aria-label="다운로드 메뉴 열기"
+        >
+          <MoreIcon
+            width={16}
+            height={16}
+            aria-hidden="true"
+            className="text-text-auth-sub"
+          />
+        </button>
+      }
+      items={DOWNLOAD_ITEMS}
+    />
+  );
+}
+
 export default function TrafficChart() {
   const options = useMemo<ApexOptions>(() => {
     const values =
@@ -111,7 +167,12 @@ export default function TrafficChart() {
   }, [series]);
 
   return (
-    <div role="img" aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이">
+    <div
+      id={CHART_CONTAINER_ID}
+      role="img"
+      aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
+      className="[&_.apexcharts-toolbar]:hidden"
+    >
       <ReactApexChart
         type="area"
         options={options}

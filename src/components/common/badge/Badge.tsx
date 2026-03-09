@@ -1,7 +1,12 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-type TBadgeVariant = "syncing" | "success" | "inactive" | "running" | "stopped";
+export type TBadgeVariant =
+  | "syncing"
+  | "success"
+  | "inactive"
+  | "running"
+  | "stopped";
 
 type TBadgeSize = "sm" | "md";
 
@@ -26,10 +31,10 @@ export default function Badge({
 
   const variantClasses: Record<TBadgeVariant, string> = {
     syncing:
-      "bg-status-yellow/30 text-status-yellow border border-status-yellow",
-    success: "bg-status-green/30 text-status-green border border-status-green",
-    inactive: "bg-status-red/30 text-status-red border border-status-red/40",
-    running: "bg-status-blue/30 text-status-blue border border-status-blue/40",
+      "bg-status-yellow/15 text-status-yellow border border-status-yellow",
+    success: "bg-status-green/15 text-status-green border border-status-green",
+    inactive: "bg-status-red/15 text-status-red border border-status-red/40",
+    running: "bg-status-blue/15 text-status-blue border border-status-blue/40",
     stopped: "bg-brand-300 text-text-sub border border-text-placeholder/40",
   };
 

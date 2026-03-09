@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
+
 interface IBudgetGaugeChartProps {
   totalBudget: number;
   spent: number;
@@ -8,10 +10,10 @@ interface IBudgetGaugeChartProps {
   dangerThreshold: number;
 }
 
-const statusBadgeClasses: Record<string, string> = {
-  안정: "bg-status-green/[0.08] text-status-green",
-  주의: "bg-status-yellow/[0.08] text-status-yellow",
-  위험: "bg-status-red/[0.08] text-status-red",
+const statusBadgeVariant: Record<string, TBadgeVariant> = {
+  안정: "success",
+  주의: "syncing",
+  위험: "inactive",
 };
 
 const statusPointClasses: Record<string, string> = {
@@ -69,14 +71,9 @@ export default function BudgetGaugeChart({
             </span>
           </div>
 
-          <span
-            className={twMerge(
-              "inline-flex items-center px-2.5 py-1 rounded-full font-caption font-bold tracking-tight",
-              statusBadgeClasses[status],
-            )}
-          >
+          <Badge variant={statusBadgeVariant[status]} size="sm">
             {status}
-          </span>
+          </Badge>
         </div>
 
         <div className="relative py-1.5">
@@ -140,7 +137,7 @@ export default function BudgetGaugeChart({
 
       <div className="bg-bg-surface/40 rounded-component-lg p-6 flex flex-col gap-4 border border-white/40 mt-auto">
         <div className="flex flex-col gap-1">
-          <span className="font-caption text-text-sub">
+          <span className="font-body2 text-text-sub">
             {isOverBudget ? "초과 지출" : "이번 달 잔액"}
           </span>
           <span

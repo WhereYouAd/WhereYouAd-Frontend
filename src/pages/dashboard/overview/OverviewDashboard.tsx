@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import { printAsPdf } from "@/utils/download";
+
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
@@ -9,7 +11,9 @@ import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
-import TrafficChart from "@/components/dashboard/charts/TrafficChart";
+import TrafficChart, {
+  TrafficChartDownload,
+} from "@/components/dashboard/charts/TrafficChart";
 import PlatformComparison from "@/components/dashboard/platform/PlatformComparison";
 
 import { overviewMockData } from "./overview.mock";
@@ -73,6 +77,7 @@ export default function OverviewDashboard() {
               ]}
             />
           }
+          RightElement={<TrafficChartDownload />}
         >
           <TrafficChart />
         </Card>
@@ -122,7 +127,7 @@ export default function OverviewDashboard() {
             label: "링크 공유하기",
             icon: (
               <LinkIcon
-                className="text-text-disabled group-hover:text-status-blue transition-colors"
+                className="text-text-auth-sub group-hover:text-status-blue transition-colors"
                 width={20}
                 height={20}
               />
@@ -138,20 +143,12 @@ export default function OverviewDashboard() {
             label: "PDF로 저장하기",
             icon: (
               <DownloadIcon
-                className="text-text-disabled group-hover:text-status-blue transition-colors"
+                className="text-text-auth-sub group-hover:text-status-blue transition-colors"
                 width={20}
                 height={20}
               />
             ),
-            onClick: () => {
-              document.body.classList.add("ai-report-printing");
-              const cleanup = () => {
-                document.body.classList.remove("ai-report-printing");
-                window.removeEventListener("afterprint", cleanup);
-              };
-              window.addEventListener("afterprint", cleanup);
-              setTimeout(() => window.print(), 150);
-            },
+            onClick: () => printAsPdf("ai-report-printing"),
           },
         ]}
       >

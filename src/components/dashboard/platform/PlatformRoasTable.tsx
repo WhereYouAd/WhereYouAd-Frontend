@@ -17,13 +17,13 @@ export default function PlatformRoasTable() {
         <h4 className="font-body2 text-text-main font-extrabold tracking-tight">
           성과 순위
         </h4>
-        <p className="font-caption text-text-placeholder font-medium">
+        <p className="font-body2 text-text-placeholder font-medium">
           ROAS(%) = 매출 ÷ 광고비 × 100
         </p>
       </div>
 
       <div className="flex flex-col">
-        <div className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 px-3 mb-3 font-caption font-bold text-text-placeholder uppercase tracking-wider">
+        <div className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 px-3 mb-3 font-body2 text-text-placeholder uppercase tracking-wider">
           <span className="text-center">순위</span>
           <span>플랫폼</span>
           <span className="text-right">ROAS(%)</span>
@@ -36,16 +36,16 @@ export default function PlatformRoasTable() {
               key={platform.name}
               className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg cursor-default hover:bg-bg-surface transition-colors duration-200"
             >
-              <span className="text-center font-extrabold text-text-placeholder font-body1">
+              <span className="text-center font-extrabold text-text-auth-sub font-body1">
                 {index + 1}
               </span>
               <div className="flex items-center gap-3">
                 <div className="shrink-0">{platformLogoMap[platform.name]}</div>
-                <span className="font-bold text-text-main font-body1 tracking-tight">
+                <span className="text-text-main font-body1 tracking-tight">
                   {platform.name}
                 </span>
               </div>
-              <span className="text-right font-black text-text-main font-body1 tracking-tighter">
+              <span className="text-right text-text-main font-body1 font-bold! tracking-tighter">
                 {platform.roas}%
               </span>
               <div className="flex flex-col items-end text-right">
