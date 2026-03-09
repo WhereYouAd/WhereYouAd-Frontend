@@ -60,8 +60,8 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
               {bars.map((bar, index) => (
                 <div
                   key={index}
-                  className={`relative w-12 sm:w-16 rounded-t-2xl transition-all duration-500 ${
-                    isActive ? "animate-graph-up" : "h-0"
+                  className={`relative w-12 sm:w-16 rounded-t-2xl ${
+                    isActive ? "animate-graph-up" : "origin-bottom scale-y-0"
                   } ${
                     bar.isBlue
                       ? "bg-linear-to-b from-logo-1 to-logo-2"
@@ -69,7 +69,7 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
                   }`}
                   style={
                     {
-                      "--target-height": bar.height,
+                      height: bar.height,
                       animationDelay: bar.delay,
                     } as React.CSSProperties
                   }

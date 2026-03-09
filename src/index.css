@@ -305,31 +305,41 @@ button {
   /* 그래프 상승 애니메이션 */
   @keyframes graph-up {
     from {
-      height: 0%;
+      transform: scaleY(0);
     }
     to {
-      height: var(--target-height);
+      transform: scaleY(1);
     }
   }
 
   .animate-graph-up {
     animation: graph-up 0.7s ease-out forwards;
-    height: 0%;
+    transform-origin: bottom;
   }
 
   /* 로딩 애니메이션 */
   @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
+    to {
+      transform: translateX(200%);
     }
   }
 
   .animate-shimmer {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+    );
     animation: shimmer 1.5s infinite linear;
   }
 
