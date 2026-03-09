@@ -13,7 +13,28 @@ const yAxisMax = Math.ceil(Math.max(...clicks) / 10000) * 10000;
 const options: ApexOptions = {
   chart: {
     type: "area",
-    toolbar: { show: false }, // 우측 상단 툴바 표시 안함
+    toolbar: {
+      show: true,
+      tools: {
+        download: true,
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        pan: false,
+        reset: false,
+      },
+      export: {
+        csv: {
+          filename: "traffic-data",
+          columnDelimiter: ",",
+          headerCategory: "시간",
+          headerValue: "클릭수",
+        },
+        svg: { filename: "traffic-chart" },
+        png: { filename: "traffic-chart" },
+      },
+    },
     zoom: { enabled: false },
     fontFamily: "Pretendard",
     animations: { enabled: true, dynamicAnimation: { enabled: false } },
