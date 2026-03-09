@@ -1,18 +1,16 @@
+import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
 import { trafficChartMock } from "./trafficChart.mock";
 
-const { labels, clicks } = trafficChartMock;
-
 // x축 시간대
 const LABEL_HOURS = new Set(["00:00", "06:00", "12:00", "18:00", "24:00"]);
 
-const yAxisMax = Math.ceil(Math.max(...clicks) / 10000) * 10000;
-
-const options: ApexOptions = {
+const BASE_OPTIONS: ApexOptions = {
   chart: {
     type: "area",
+    // 다운로드 버튼 활성화된 툴바
     toolbar: {
       show: true,
       tools: {
@@ -47,7 +45,6 @@ const options: ApexOptions = {
     gradient: {
       shadeIntensity: 1,
       opacityFrom: 0.5,
-      opacityTo: 0.5,
       stops: [0, 90, 100],
     },
   },
@@ -55,7 +52,7 @@ const options: ApexOptions = {
   markers: { size: 0 }, // 데이터 포인트 마커 숨김
   xaxis: {
     type: "category",
-    categories: labels, // 00:00 ~ 24:00
+    categories: trafficChartMock.labels, // 00:00 ~ 24:00
     tickAmount: 24, // 1시간 간격 tick 생성
     labels: {
       // LABEL_HOURS에 해당하는 시간대만 표시, 나머지는 빈 문자열
@@ -70,7 +67,6 @@ const options: ApexOptions = {
   },
   yaxis: {
     min: 0,
-    max: yAxisMax, // 데이터 기반 동적 최대값
     tickAmount: 6, // 1만 단위 눈금
     labels: {
       // 0은 숨기고, 나머지는 K 단위로 변환
@@ -87,28 +83,35 @@ const options: ApexOptions = {
   },
   tooltip: {
     x: { show: false }, // 상단 시간 헤더 숨김
-    y: {
-      title: { formatter: () => "클릭수: " }, // 시리즈 이름 대신 고정 텍스트
-      formatter: (val: number) => val.toLocaleString(), // 쉼표 포맷
-    },
-    style: { fontFamily: "Pretendard" }, // 폰트 통일
+    style: { fontFamily: "Pretendard" },
   },
 };
 
+// TODO: 실시간 연동 시 useState로 전환
 const series = [
   {
     name: "클릭수",
-    data: labels.map((label, i) => ({ x: label, y: clicks[i] })),
+    data: trafficChartMock.labels.map((label, i) => ({
+      x: label,
+      y: trafficChartMock.clicks[i],
+    })),
   },
 ];
 
 export default function TrafficChart() {
+  const options = useMemo<ApexOptions>(() => {
+    const values =
+      series[0]?.data.map((d: { x: string; y: number }) => d.y) ?? [];
+    const yAxisMax =
+      values.length > 0
+        ? Math.ceil(Math.max(...values) / 10000) * 10000
+        : 10000;
+
+    return { ...BASE_OPTIONS, yaxis: { ...BASE_OPTIONS.yaxis, max: yAxisMax } };
+  }, [series]);
+
   return (
-    <div
-      role="img"
-      aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      style={{ willChange: "transform" }}
-    >
+    <div role="img" aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이">
       <ReactApexChart
         type="area"
         options={options}
