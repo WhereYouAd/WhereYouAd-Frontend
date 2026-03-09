@@ -34,15 +34,13 @@ export default function PlatformRoasTable() {
           {platformRoasRanking.map((platform, index) => (
             <div
               key={platform.name}
-              className="group grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg transition-all duration-300 hover:bg-bg-surface hover:shadow-Medium border border-transparent hover:border-white"
+              className="grid grid-cols-[2.5rem_9rem_5rem_1fr] gap-4 items-center px-3 py-4 rounded-component-lg cursor-default hover:bg-bg-surface transition-colors duration-200"
             >
-              <span className="text-center font-extrabold text-text-placeholder font-body1 group-hover:text-status-blue transition-colors">
+              <span className="text-center font-extrabold text-text-placeholder font-body1">
                 {index + 1}
               </span>
               <div className="flex items-center gap-3">
-                <div className="shrink-0 transform group-hover:scale-110 transition-transform duration-300">
-                  {platformLogoMap[platform.name]}
-                </div>
+                <div className="shrink-0">{platformLogoMap[platform.name]}</div>
                 <span className="font-bold text-text-main font-body1 tracking-tight">
                   {platform.name}
                 </span>

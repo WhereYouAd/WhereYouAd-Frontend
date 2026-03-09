@@ -12,9 +12,11 @@ export default function OverviewAiReportPanel() {
       <div className="flex flex-col px-2 sm:px-4 gap-8 pb-8 pt-2">
         {/* 타이틀 */}
         <div className="flex flex-col gap-2.5 text-left px-2">
-          <div className="flex items-center gap-1.5 text-logo-1 font-label font-bold">
-            <SparkleCircleIcon className="w-4.5 h-4.5 text-logo-1 fill-current" />
-            <span>{data.label}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-logo-1 font-label font-bold">
+              <SparkleCircleIcon className="w-4.5 h-4.5 text-logo-1 fill-current" />
+              <span>{data.label}</span>
+            </div>
           </div>
           <h2 className="font-heading2 font-extrabold text-text-main tracking-[-0.02em] leading-tight break-keep">
             {data.title}

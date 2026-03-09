@@ -31,6 +31,17 @@ export default function BudgetGaugeChart({
   const isOverBudget = spent > totalBudget;
   const remaining = isOverBudget ? spent - totalBudget : totalBudget - spent;
 
+  const now = new Date();
+  const periodElapsedDays = now.getDate();
+  const periodTotalDays = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0,
+  ).getDate();
+  const periodElapsedRate = Math.round(
+    (periodElapsedDays / periodTotalDays) * 100,
+  );
+
   const getStatus = () => {
     if (percentage >= dangerThreshold) return "위험";
     if (percentage >= warningThreshold) return "주의";
@@ -116,6 +127,15 @@ export default function BudgetGaugeChart({
             ₩{spent.toLocaleString()}
           </span>
         </div>
+        <div className="flex justify-between items-center">
+          <span className="font-body2 text-text-sub">기간 진행률</span>
+          <span className="font-body2 text-text-main tracking-tight">
+            {periodElapsedDays}/{periodTotalDays}일{" "}
+            <span className="text-text-sub font-medium">
+              ({periodElapsedRate}%)
+            </span>
+          </span>
+        </div>
       </div>
 
       <div className="bg-bg-surface/40 rounded-component-lg p-6 flex flex-col gap-4 border border-white/40 mt-auto">
@@ -143,7 +163,7 @@ export default function BudgetGaugeChart({
             )}
           />
           <p className="font-caption text-text-sub leading-relaxed">
-            현재{" "}
+            기간의 {periodElapsedRate}%가 경과했으며, 예산은{" "}
             <span
               className={twMerge(
                 "font-bold",
