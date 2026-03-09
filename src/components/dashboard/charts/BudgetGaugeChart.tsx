@@ -71,10 +71,15 @@ export default function BudgetGaugeChart({
         <div className="relative py-1.5">
           <div
             role="progressbar"
-            aria-valuenow={Math.min(percentage, 100)}
+            aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-label={`예산 소진율 ${Math.min(percentage, 100)}%`}
+            aria-label="예산 소진율"
+            aria-valuetext={
+              percentage > 100
+                ? `예산 소진율 ${percentage}%, 예산을 초과했습니다`
+                : `예산 소진율 ${Math.max(percentage, 0)}%`
+            }
             className="relative h-3 w-full bg-bg-disabled/40 rounded-full overflow-hidden shadow-[inset_0_1px_3px_rgba(0,0,0,0.08)]"
           >
             <div
