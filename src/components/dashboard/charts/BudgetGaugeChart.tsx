@@ -84,7 +84,7 @@ export default function BudgetGaugeChart({
           >
             <div
               className={twMerge(
-                "absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out",
+                "absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-1000 ease-out origin-left",
                 status === "안정"
                   ? "bg-linear-to-r from-status-green/50 to-status-green"
                   : status === "주의"
@@ -92,7 +92,7 @@ export default function BudgetGaugeChart({
                     : "bg-linear-to-r from-status-red/50 to-status-red",
               )}
               style={{
-                width: mounted ? `${Math.min(percentage, 100)}%` : "0%",
+                transform: `scaleX(${mounted ? Math.min(percentage, 100) / 100 : 0})`,
               }}
             >
               <div className="absolute inset-0 rounded-full bg-linear-to-b from-white/30 to-transparent" />
