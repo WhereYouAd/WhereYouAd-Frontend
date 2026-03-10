@@ -52,10 +52,13 @@ export default function OverviewDashboard() {
         </div>
         <button
           onClick={() => setIsAiPanelOpen(true)}
-          className="p-3 rounded-full hover:bg-bg-surface-hover active:scale-95 transition-all outline-none"
+          className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
           aria-label="AI 요약하기"
         >
-          <AiButtonSvg />
+          <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
+          <div className="relative z-10 transition-all duration-200">
+            <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
+          </div>
         </button>
       </div>
 
@@ -82,7 +85,7 @@ export default function OverviewDashboard() {
           <TrafficChart />
         </Card>
         <Card
-          className="xl:col-span-2 flex flex-col min-h-120"
+          className="xl:col-span-2 flex flex-col xl:min-h-120"
           title="예산 소진 현황"
           description={
             <ChartLegend

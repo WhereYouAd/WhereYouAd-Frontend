@@ -1,5 +1,5 @@
 export interface IPlatformStats {
-  name: "Google" | "NAVER" | "kakao";
+  name: "Google" | "NAVER" | "Kakao";
   clickRate: number; // 클릭률 (%)
   conversionRate: number; // 전환률 (%)
   impressionRate: number; // 노출수 (%)
@@ -28,7 +28,7 @@ export const platformComparisonMock: IPlatformStats[] = [
     adCost: 4330000,
   },
   {
-    name: "kakao",
+    name: "Kakao",
     clickRate: 40,
     conversionRate: 48,
     impressionRate: 60,

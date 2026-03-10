@@ -63,7 +63,7 @@ export default function BudgetGaugeChart({
   return (
     <div className="flex flex-col w-full h-full font-pretendard">
       {/* Header Section */}
-      <div className="flex flex-col mb-10 mt-5">
+      <div className="flex flex-col mb-5 mt-3 xl:mb-10 xl:mt-5">
         <div className="flex items-start justify-between mb-5">
           <div className="flex flex-col gap-1.5">
             <span className="font-body2 text-text-auth-sub">현재 사용액</span>
@@ -131,14 +131,14 @@ export default function BudgetGaugeChart({
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-6 mb-8 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-4 gap-y-5 mb-6 mt-2 xl:gap-y-4 xl:mb-8">
         <div className="flex flex-col gap-1.5 border-l-2 border-bg-surface pl-4">
-          <span className="font-caption text-text-sub text-xs">
+          <span className="font-caption text-text-sub text-xs whitespace-nowrap">
             {isOverBudget ? "초과 지출" : "이번 달 잔액"}
           </span>
           <span
             className={twMerge(
-              "font-semibold text-xl tracking-tight leading-none",
+              "font-semibold text-xl tracking-tight leading-none whitespace-nowrap",
               isOverBudget ? "text-status-red" : "text-text-main",
             )}
           >
@@ -147,10 +147,10 @@ export default function BudgetGaugeChart({
         </div>
 
         <div className="flex flex-col gap-1.5 border-l-2 border-bg-surface pl-4">
-          <span className="font-caption text-text-sub text-xs">
+          <span className="font-caption text-text-sub text-xs whitespace-nowrap">
             기간 진행률 ({periodElapsedRate}%)
           </span>
-          <span className="font-semibold text-xl text-text-main tracking-tight leading-none">
+          <span className="font-semibold text-xl text-text-main tracking-tight leading-none whitespace-nowrap">
             {periodElapsedDays}일{" "}
             <span className="text-text-sub font-normal text-[15px]">
               / {periodTotalDays}일

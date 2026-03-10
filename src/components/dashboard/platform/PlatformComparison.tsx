@@ -3,7 +3,7 @@ import PlatformRoasTable from "./PlatformRoasTable";
 
 export default function PlatformComparison() {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[1.3fr_1fr] gap-x-12 2xl:gap-x-16 gap-y-12 items-stretch">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 2xl:gap-x-16 gap-y-12 items-stretch">
       <div className="flex flex-col w-full min-w-0">
         <PlatformComparisonChart />
       </div>

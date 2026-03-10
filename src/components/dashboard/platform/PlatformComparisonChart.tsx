@@ -5,7 +5,7 @@ import { platformComparisonMock } from "./platformComparison.mock";
 
 const YAXIS_LABEL_WIDTH = 42;
 
-const LEGEND_ITEMS = [
+export const PLATFORM_LEGEND_ITEMS = [
   { label: "클릭률", color: "#3B82F6" },
   { label: "전환률", color: "#10B981" },
   { label: "노출수", color: "#E2E8F0" },
@@ -45,9 +45,9 @@ const options: ApexOptions = {
     labels: {
       show: true,
       style: {
-        colors: "#9ca3af",
+        colors: "#546171",
         fontSize: "15px",
-        fontWeight: 600,
+        fontWeight: 500,
         fontFamily: "Pretendard",
       },
       offsetY: 6,
@@ -66,6 +66,10 @@ const options: ApexOptions = {
     },
   },
   fill: { opacity: 1 },
+  states: {
+    hover: { filter: { type: "none" } },
+    active: { filter: { type: "none" } },
+  },
   grid: {
     borderColor: "#f3f4f6",
     strokeDashArray: 4,
@@ -92,15 +96,15 @@ const series = [
 export default function PlatformComparisonChart() {
   return (
     <div className="flex flex-col h-full font-pretendard">
-      <div className="flex items-center justify-between mb-8">
-        <h4 className="font-body2 text-text-main font-extrabold tracking-tight">
+      <div className="flex flex-col gap-2 mb-8">
+        <h4 className="font-body1 text-text-main tracking-tight">
           플랫폼 순위
         </h4>
         <div className="flex items-center gap-4">
-          {LEGEND_ITEMS.map(({ label, color }) => (
+          {PLATFORM_LEGEND_ITEMS.map(({ label, color }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
-                className="w-2 h-2 rounded-full shadow-sm"
+                className="w-2 h-2 rounded-full shadow-sm shrink-0"
                 style={{ background: color }}
               />
               <span className="font-caption text-text-sub">{label}</span>
