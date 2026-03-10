@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import type { TWorkspace } from "@/types/workspace/workspace";
 
 import {
@@ -15,23 +17,31 @@ type TProps = {
 };
 
 export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [w.logoUrl]);
+
+  const imageSrc = w.logoUrl ? getImageUrl(w.logoUrl) : null;
+  const showPlaceholder = !imageSrc || imageError;
   return (
     <li className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border border-gray-100">
       <div className="flex items-center gap-5 min-w-0">
         <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm">
-          {w.logoUrl ? (
-            <img
-              src={getImageUrl(w.logoUrl) ?? ""}
-              alt={`${w.name} 로고`}
-              className="w-full h-full object-cover rounded-component-sm"
-              onError={(e) => {
-                console.log("카드 이미지 로드 실패: ", e.currentTarget.src);
-              }}
-            />
-          ) : (
+          {showPlaceholder ? (
             <div className="w-full h-full flex items-center justify-center">
               <BuildingIcon className="w-8 h-8 text-text-placeholder" />
             </div>
+          ) : (
+            <img
+              src={imageSrc}
+              alt={`${w.name} 로고`}
+              className="w-full h-full object-cover rounded-component-sm"
+              onError={() => {
+                setImageError(true);
+              }}
+            />
           )}
         </div>
 
