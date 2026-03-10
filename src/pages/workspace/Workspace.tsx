@@ -44,7 +44,7 @@ export default function WorkspacePage() {
       setCreateOpen(false);
     },
   });
-  const isListLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
+  const isListLoading = workspacesQuery.isLoading;
   const listErrorMsg = workspacesQuery.isError
     ? getAxiosMessage(
         workspacesQuery.error,
