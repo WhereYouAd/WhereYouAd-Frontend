@@ -3,22 +3,12 @@ import type { ApexOptions } from "apexcharts";
 
 import { platformComparisonMock } from "./platformComparison.mock";
 
-import googleWordmarkUrl from "@/assets/icon/ads/google-wordmark.svg?url";
-import kakaoWordmarkUrl from "@/assets/icon/ads/kakao-wordmark.svg?url";
-import naverWordmarkUrl from "@/assets/icon/ads/naver-wordmark.svg?url";
-
-const PLATFORM_WORDMARKS = [
-  { name: "Google", src: googleWordmarkUrl, height: 20 },
-  { name: "NAVER", src: naverWordmarkUrl, height: 13 },
-  { name: "kakao", src: kakaoWordmarkUrl, height: 16 },
-];
-
 const YAXIS_LABEL_WIDTH = 42;
 
 const LEGEND_ITEMS = [
-  { label: "클릭률", color: "#0084fe" },
-  { label: "전환률", color: "#22c55e" },
-  { label: "노출수", color: "#CBD5E1" },
+  { label: "클릭률", color: "#3B82F6" },
+  { label: "전환률", color: "#10B981" },
+  { label: "노출수", color: "#E2E8F0" },
 ];
 
 const options: ApexOptions = {
@@ -33,26 +23,35 @@ const options: ApexOptions = {
     fontFamily: "Pretendard",
     animations: {
       enabled: true,
-      speed: 800,
-      dynamicAnimation: { enabled: true, speed: 350 },
+      speed: 600,
+      dynamicAnimation: { enabled: true, speed: 300 },
     },
   },
   plotOptions: {
     bar: {
       horizontal: false,
-      columnWidth: "75%",
-      borderRadius: 8,
+      columnWidth: "55%",
+      borderRadius: 6,
       borderRadiusApplication: "end",
     },
   },
   dataLabels: { enabled: false },
-  colors: ["#0084fe", "#22c55e", "#CBD5E1"],
-  stroke: { show: true, width: 2, colors: ["transparent"] },
+  colors: ["#3B82F6", "#10B981", "#E2E8F0"],
+  stroke: { show: true, width: 3, colors: ["transparent"] },
   xaxis: {
     categories: platformComparisonMock.map((p) => p.name),
     axisBorder: { show: false },
     axisTicks: { show: false },
-    labels: { show: false },
+    labels: {
+      show: true,
+      style: {
+        colors: "#9ca3af",
+        fontSize: "15px",
+        fontWeight: 600,
+        fontFamily: "Pretendard",
+      },
+      offsetY: 6,
+    },
   },
   yaxis: {
     min: 0,
@@ -62,16 +61,17 @@ const options: ApexOptions = {
       minWidth: YAXIS_LABEL_WIDTH,
       maxWidth: YAXIS_LABEL_WIDTH,
       formatter: (val: number) => `${val}%`,
-      style: { colors: "#b0b8c1", fontSize: "11px", fontWeight: 500 },
+      style: { colors: "#9ca3af", fontSize: "12px", fontWeight: 500 },
+      offsetX: -5,
     },
   },
   fill: { opacity: 1 },
   grid: {
-    borderColor: "#F2F4F6",
+    borderColor: "#f3f4f6",
     strokeDashArray: 4,
     xaxis: { lines: { show: false } },
     yaxis: { lines: { show: true } },
-    padding: { left: 0, right: 0, top: -10 },
+    padding: { left: 0, right: 0, top: -10, bottom: 0 },
   },
   legend: { show: false },
   tooltip: {
@@ -80,11 +80,6 @@ const options: ApexOptions = {
     y: { formatter: (val: number) => `${val}%` },
     style: { fontFamily: "Pretendard" },
     theme: "light",
-  },
-  states: {
-    hover: {
-      filter: { type: "none" },
-    },
   },
 };
 
@@ -97,54 +92,30 @@ const series = [
 export default function PlatformComparisonChart() {
   return (
     <div className="flex flex-col h-full font-pretendard">
-      <div className="flex flex-col gap-1 mb-4">
+      <div className="flex items-center justify-between mb-8">
         <h4 className="font-body2 text-text-main font-extrabold tracking-tight">
           플랫폼 순위
         </h4>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {LEGEND_ITEMS.map(({ label, color }) => (
             <div key={label} className="flex items-center gap-1.5">
               <span
-                className="w-1.5 h-1.5 rounded-full"
+                className="w-2 h-2 rounded-full shadow-sm"
                 style={{ background: color }}
               />
-              <span className="font-caption font-bold text-text-sub">
-                {label}
-              </span>
+              <span className="font-caption text-text-sub">{label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="flex-1 min-h-55" style={{ willChange: "transform" }}>
+      <div className="flex-1 min-h-65" style={{ willChange: "transform" }}>
         <ReactApexChart
           type="bar"
           options={options}
           series={series}
           height="100%"
         />
-      </div>
-
-      <div
-        className="grid grid-cols-3 pt-2"
-        style={{ paddingLeft: `${YAXIS_LABEL_WIDTH}px` }}
-      >
-        {PLATFORM_WORDMARKS.map(({ name, src, height }) => (
-          <div
-            key={name}
-            className="flex justify-center items-center opacity-80 hover:opacity-100 transition-opacity"
-          >
-            <img
-              src={src}
-              alt={name}
-              style={{
-                height: `${height}px`,
-                width: "auto",
-                filter: "grayscale(0.2)",
-              }}
-            />
-          </div>
-        ))}
       </div>
     </div>
   );

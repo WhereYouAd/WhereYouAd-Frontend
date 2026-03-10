@@ -20,7 +20,7 @@ export default function Card({
   return (
     <div
       className={twMerge(
-        "bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 border border-white/40 transition-all duration-300 hover:shadow-[0_12px_45px_rgba(0,0,0,0.06)]",
+        "bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 border border-white/40 transition-all duration-300 hover:shadow-[0_12px_45px_rgba(0,0,0,0.06)] relative",
         className,
       )}
       {...rest}
