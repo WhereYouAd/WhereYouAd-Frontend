@@ -9,6 +9,10 @@ export default function AdsListPage() {
     navigate(`/ads/${id}`);
   };
 
+  const handleCampaignGroupClick = () => {
+    navigate("/ads/campaignGroup");
+  };
+
   return (
     <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
       <div className="flex-1 overflow-x-auto py-15 px-10 md:px-18 lg:px-25">
@@ -30,7 +34,7 @@ export default function AdsListPage() {
               title="캠페인 통합 운영 제어"
               description={`여러 광고 플랫폼의 캠페인을 하나로 묶어 성과와 운영 상태를 통합 관리합니다.\n광고 플랫폼 로그인 후 캠페인을 불러와 연결합니다.`}
               buttonText="캠페인 통합 연동하기"
-              onButtonClick={() => console.log("페이지 이동")}
+              onButtonClick={handleCampaignGroupClick}
               buttonDisabled={false}
               containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 min-w-[650px] shrink-0"
               titleClassName="text-chart-3 font-heading3"
