@@ -1,5 +1,5 @@
 export const aiReportMockData = {
-  label: "오늘의 데이터 분석 중",
+  label: "오늘의 데이터 요약",
   title: "AI가 오늘의 데이터를 중심으로 요약했어요",
   strategySuggestion: {
     title: "전략 제안",
