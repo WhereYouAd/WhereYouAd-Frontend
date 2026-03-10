@@ -10,7 +10,7 @@ import {
   type TWorkspaceDetail,
 } from "@/types/workspace/workspace";
 
-import { authInstance, axiosInstance } from "@/lib/axiosInstance";
+import { axiosInstance } from "@/lib/axiosInstance";
 
 export const getMyWorkspaces = async (): Promise<TWorkspace[]> => {
   const { data } =
@@ -55,11 +55,6 @@ export const uploadImage = async (file: File): Promise<string> => {
   const { data } = await axiosInstance.post<TApiResult<TUploadImageResponse>>(
     `/api/images/upload`,
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
   );
   return data.data.url;
 };

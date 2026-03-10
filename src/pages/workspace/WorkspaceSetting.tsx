@@ -217,7 +217,7 @@ export default function WorkspaceSetting() {
                     <img
                       src={getImageUrl(serverLogoUrl) ?? ""}
                       alt={`${name || "워크스페이스"} 로고`}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-cover"
                       onError={(e) => {
                         console.log("이미지 로드 실패:", e.currentTarget.src);
                       }}
