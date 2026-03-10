@@ -28,7 +28,11 @@ export default function Card({
       {hasHeader && (
         <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
           <div className="flex flex-col gap-0.5">
-            {title && <h3 className="font-body1 text-text-main">{title}</h3>}
+            {title && (
+              <h3 className="font-heading4 font-semibold! text-text-main">
+                {title}
+              </h3>
+            )}
             {description && (
               <div className="font-caption text-text-sub">{description}</div>
             )}

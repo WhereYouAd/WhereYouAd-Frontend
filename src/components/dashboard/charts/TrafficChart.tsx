@@ -1,19 +1,54 @@
+import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
+import {
+  downloadChartCsv,
+  downloadChartPng,
+  downloadChartSvg,
+} from "@/utils/download";
+
+import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
+
 import { trafficChartMock } from "./trafficChart.mock";
 
-const { labels, clicks } = trafficChartMock;
+import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
+
+const CHART_ID = "traffic-chart";
+const TODAY = new Date().toISOString().slice(0, 10);
 
 // x축 시간대
 const LABEL_HOURS = new Set(["00:00", "06:00", "12:00", "18:00", "24:00"]);
 
-const yAxisMax = Math.ceil(Math.max(...clicks) / 10000) * 10000;
-
-const options: ApexOptions = {
+const BASE_OPTIONS: ApexOptions = {
   chart: {
+    id: CHART_ID,
     type: "area",
-    toolbar: { show: false }, // 우측 상단 툴바 표시 안함
+    events: {
+      mounted: (chartContext: { el: Element }) => {
+        chartContext.el.querySelector("svg > title")?.remove();
+      },
+    },
+    toolbar: {
+      show: true,
+      tools: {
+        download: false,
+        selection: false,
+        zoom: false,
+        zoomin: false,
+        zoomout: false,
+        pan: false,
+        reset: false,
+      },
+      export: {
+        csv: {
+          filename: `overview-traffic-data-${TODAY}`,
+          columnDelimiter: ",",
+          headerCategory: "시간",
+          headerValue: "클릭수",
+        },
+      },
+    },
     zoom: { enabled: false },
     fontFamily: "Pretendard",
     animations: { enabled: true, dynamicAnimation: { enabled: false } },
@@ -26,7 +61,6 @@ const options: ApexOptions = {
     gradient: {
       shadeIntensity: 1,
       opacityFrom: 0.5,
-      opacityTo: 0.5,
       stops: [0, 90, 100],
     },
   },
@@ -34,7 +68,7 @@ const options: ApexOptions = {
   markers: { size: 0 }, // 데이터 포인트 마커 숨김
   xaxis: {
     type: "category",
-    categories: labels, // 00:00 ~ 24:00
+    categories: trafficChartMock.labels, // 00:00 ~ 24:00
     tickAmount: 24, // 1시간 간격 tick 생성
     labels: {
       // LABEL_HOURS에 해당하는 시간대만 표시, 나머지는 빈 문자열
@@ -49,7 +83,6 @@ const options: ApexOptions = {
   },
   yaxis: {
     min: 0,
-    max: yAxisMax, // 데이터 기반 동적 최대값
     tickAmount: 6, // 1만 단위 눈금
     labels: {
       // 0은 숨기고, 나머지는 K 단위로 변환
@@ -66,28 +99,86 @@ const options: ApexOptions = {
   },
   tooltip: {
     x: { show: false }, // 상단 시간 헤더 숨김
-    y: {
-      title: { formatter: () => "클릭수: " }, // 시리즈 이름 대신 고정 텍스트
-      formatter: (val: number) => val.toLocaleString(), // 쉼표 포맷
-    },
-    style: { fontFamily: "Pretendard" }, // 폰트 통일
+    style: { fontFamily: "Pretendard" },
   },
 };
 
+// TODO: 실시간 연동 시 useState로 전환
 const series = [
   {
     name: "클릭수",
-    data: labels.map((label, i) => ({ x: label, y: clicks[i] })),
+    data: trafficChartMock.labels.map((label, i) => ({
+      x: label,
+      y: trafficChartMock.clicks[i],
+    })),
   },
 ];
 
-export default function TrafficChart() {
+const CHART_CONTAINER_ID = `${CHART_ID}-container`;
+const FILENAME = `overview-traffic-chart-${TODAY}`;
+const DOWNLOAD_ITEMS = [
+  {
+    label: "PNG 저장",
+    onClick: () => downloadChartPng(CHART_ID, FILENAME),
+  },
+  {
+    label: "SVG 저장",
+    onClick: () => downloadChartSvg(CHART_CONTAINER_ID, FILENAME),
+  },
+  {
+    label: "CSV 다운로드",
+    onClick: () => downloadChartCsv(CHART_ID),
+  },
+];
+
+export function TrafficChartDownload() {
   return (
-    <ReactApexChart
-      type="area"
-      options={options}
-      series={series}
-      height={360}
+    <DropdownMenu
+      aria-label="차트 다운로드"
+      trigger={
+        <button
+          type="button"
+          className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-fast"
+          aria-label="다운로드 메뉴 열기"
+        >
+          <MoreIcon
+            width={16}
+            height={16}
+            aria-hidden="true"
+            className="text-text-auth-sub"
+          />
+        </button>
+      }
+      items={DOWNLOAD_ITEMS}
     />
+  );
+}
+
+export default function TrafficChart() {
+  const options = useMemo<ApexOptions>(() => {
+    const values =
+      series[0]?.data.map((d: { x: string; y: number }) => d.y) ?? [];
+    const yAxisMax =
+      values.length > 0
+        ? Math.ceil(Math.max(...values) / 10000) * 10000
+        : 10000;
+
+    return { ...BASE_OPTIONS, yaxis: { ...BASE_OPTIONS.yaxis, max: yAxisMax } };
+  }, [series]);
+
+  return (
+    <div
+      id={CHART_CONTAINER_ID}
+      role="img"
+      aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
+      className="[&_.apexcharts-toolbar]:hidden"
+    >
+      <ReactApexChart
+        type="area"
+        options={options}
+        series={series}
+        height={360}
+      />
+    </div>
   );
 }

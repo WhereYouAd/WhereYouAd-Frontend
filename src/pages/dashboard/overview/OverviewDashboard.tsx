@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import { printAsPdf } from "@/utils/download";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
-import Toast from "@/components/common/toast/Toast";
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
-import TrafficChart from "@/components/dashboard/charts/TrafficChart";
+import TrafficChart, {
+  TrafficChartDownload,
+} from "@/components/dashboard/charts/TrafficChart";
 import PlatformComparison from "@/components/dashboard/platform/PlatformComparison";
 
 import { overviewMockData } from "./overview.mock";
@@ -23,17 +27,17 @@ import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
-  const [toast, setToast] = useState<{
-    message: string;
-    variant: "success" | "error";
-  } | null>(null);
-
-  const showToast = (
-    message: string,
-    variant: "success" | "error" = "success",
-  ) => {
-    setToast({ message, variant });
-  };
+  const currentDate = useMemo(
+    () =>
+      new Date().toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    [],
+  );
 
   return (
     <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
@@ -43,14 +47,7 @@ export default function OverviewDashboard() {
             통합 대시보드
           </h1>
           <p className="font-body2 text-text-sub">
-            데이터 기준 ·{" "}
-            {new Date().toLocaleString("ko-KR", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            데이터 기준 · {currentDate}
           </p>
         </div>
         <button
@@ -80,6 +77,7 @@ export default function OverviewDashboard() {
               ]}
             />
           }
+          RightElement={<TrafficChartDownload />}
         >
           <TrafficChart />
         </Card>
@@ -129,7 +127,7 @@ export default function OverviewDashboard() {
             label: "링크 공유하기",
             icon: (
               <LinkIcon
-                className="text-text-disabled group-hover:text-status-blue transition-colors"
+                className="text-text-auth-sub group-hover:text-status-blue transition-colors"
                 width={20}
                 height={20}
               />
@@ -137,41 +135,25 @@ export default function OverviewDashboard() {
             onClick: () => {
               navigator.clipboard
                 .writeText(window.location.href)
-                .then(() => showToast("링크가 복사되었습니다."))
-                .catch(() => showToast("링크 복사에 실패했습니다.", "error"));
+                .then(() => toast.success("링크가 복사되었습니다."))
+                .catch(() => toast.error("링크 복사에 실패했습니다."));
             },
           },
           {
             label: "PDF로 저장하기",
             icon: (
               <DownloadIcon
-                className="text-text-disabled group-hover:text-status-blue transition-colors"
+                className="text-text-auth-sub group-hover:text-status-blue transition-colors"
                 width={20}
                 height={20}
               />
             ),
-            onClick: () => {
-              document.body.classList.add("ai-report-printing");
-              const cleanup = () => {
-                document.body.classList.remove("ai-report-printing");
-                window.removeEventListener("afterprint", cleanup);
-              };
-              window.addEventListener("afterprint", cleanup);
-              setTimeout(() => window.print(), 150);
-            },
+            onClick: () => printAsPdf("ai-report-printing"),
           },
         ]}
       >
         <OverviewAiReportPanel />
       </Drawer>
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          variant={toast.variant}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }
