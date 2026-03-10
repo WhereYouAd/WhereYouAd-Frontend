@@ -9,10 +9,10 @@ import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
-import WorkspaceListLoading from "@/components/workspace/WorkpspaceListLoading";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
 import WorkspaceListError from "@/components/workspace/WorkspaceListError";
+import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
 
 import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
@@ -44,7 +44,7 @@ export default function WorkspacePage() {
       setCreateOpen(false);
     },
   });
-  const listLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
+  const isListLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
   const listErrorMsg = workspacesQuery.isError
     ? getAxiosMessage(
         workspacesQuery.error,
@@ -52,7 +52,7 @@ export default function WorkspacePage() {
       )
     : null;
 
-  const creating = createWorkspaceMutation.isPending;
+  const isCreating = createWorkspaceMutation.isPending;
   const createErrorMsg = createWorkspaceMutation.isError
     ? getAxiosMessage(
         createWorkspaceMutation.error,
@@ -126,7 +126,7 @@ export default function WorkspacePage() {
   };
 
   const renderWorkspaceContent = () => {
-    if (listLoading) {
+    if (isListLoading) {
       return <WorkspaceListLoading />;
     }
     if (listErrorMsg) {
@@ -235,7 +235,7 @@ export default function WorkspacePage() {
               placeholder="조직의 이름을 입력하세요."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              disabled={creating}
+              disabled={isCreating}
             />
             <TextareaField
               id="workspace-desc"
@@ -243,7 +243,7 @@ export default function WorkspacePage() {
               placeholder="조직에 대한 간단한 설명을 입력하세요"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
-              disabled={creating}
+              disabled={isCreating}
             />
             {createErrorMsg && (
               <p className="font-body2 text-status-red">{createErrorMsg}</p>
@@ -252,11 +252,11 @@ export default function WorkspacePage() {
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
-              disabled={!newName.trim() || creating}
+              disabled={!newName.trim() || isCreating}
               className="mx-auto px-10 mt-10"
               type="button"
             >
-              {creating ? "생성 중.. " : "생성하기"}
+              {isCreating ? "생성 중.. " : "생성하기"}
             </Button>
           </div>
         </div>
