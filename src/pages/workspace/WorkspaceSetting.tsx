@@ -14,8 +14,8 @@ import {
   updateWorkspace,
   uploadImage,
 } from "@/api/workspace/org";
+import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
 import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
-import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
@@ -223,7 +223,10 @@ export default function WorkspaceSetting() {
                       }}
                     />
                   ) : (
-                    <UpLoadImgIcon aria-hidden="true" />
+                    <BuildingIcon
+                      aria-hidden="true"
+                      className="w-12 h-12 text-text-placeholder"
+                    />
                   )}
                 </div>
                 <div className="flex gap-3 mt-3 justify-center">

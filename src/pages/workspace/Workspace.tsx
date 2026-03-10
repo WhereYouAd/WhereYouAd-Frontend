@@ -11,7 +11,11 @@ import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 
-import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
+import {
+  createWorkspace,
+  getMyWorkspaces,
+  uploadImage,
+} from "@/api/workspace/org";
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
 import SearchIcon from "@/assets/icon/workspace/search.svg?react";
@@ -28,6 +32,9 @@ export default function WorkspacePage() {
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
 
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
   const queryClient = useQueryClient();
   const workspacesQuery = useQuery({
     queryKey: ["my-workspaces"],
@@ -35,7 +42,17 @@ export default function WorkspacePage() {
   });
 
   const createWorkspaceMutation = useMutation({
-    mutationFn: createWorkspace,
+    mutationFn: async () => {
+      const name = newName.trim();
+      const description = newDesc.trim();
+      let logoUrl: string | null = null;
+
+      if (logoFile) {
+        logoUrl = await uploadImage(logoFile);
+      }
+      return createWorkspace({ name, description, logoUrl });
+    },
+
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
       setCreateOpen(false);
@@ -64,8 +81,6 @@ export default function WorkspacePage() {
     fileRef.current.click();
   };
 
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
-
   const workspaces = workspacesQuery.data ?? [];
 
   const filtered = useMemo(() => {
@@ -90,23 +105,34 @@ export default function WorkspacePage() {
   ];
 
   const onCloseCreate = () => {
-    if (logoPreview) URL.revokeObjectURL(logoPreview);
     setLogoPreview(null);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     setCreateOpen(false);
   };
   const onOpenCreate = () => {
     setNewName("");
     setNewDesc("");
-    if (logoPreview) URL.revokeObjectURL(logoPreview);
-    setLogoPreview(null);
+    setLogoFile(null);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
     createWorkspaceMutation.reset();
     setCreateOpen(true);
   };
 
-  const onPickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onPickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setLogoPreview(URL.createObjectURL(file));
+    setLogoFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return previewUrl;
+    });
   };
 
   useEffect(() => {
@@ -115,11 +141,9 @@ export default function WorkspacePage() {
     };
   }, [logoPreview]);
 
-  const onSubmitCreate = () => {
-    const name = newName.trim();
-    const description = newDesc.trim();
-    if (!name) return;
-    createWorkspaceMutation.mutate({ name, description, logoUrl: null });
+  const onSubmitCreate = async () => {
+    if (!newName.trim()) return;
+    createWorkspaceMutation.mutate();
   };
 
   return (
@@ -202,9 +226,9 @@ export default function WorkspacePage() {
               <input
                 ref={fileRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
                 className="hidden"
-                onChange={onPickFile}
+                onChange={onPickLogo}
               />
               <div className="flex items-center justify-between mb-2">
                 <div className="font-label text-text-sub">로고 이미지</div>
@@ -217,15 +241,24 @@ export default function WorkspacePage() {
                   업로드
                 </Button>
               </div>
+
               <button
                 type="button"
                 aria-label="로고 이미지 업로드"
                 onClick={openFile}
-                className="w-full rounded-component-lg border border-gray-100 bg-gray-50 h-65 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                className="mx-auto aspect-square w-full max-w-65 overflow-hidden rounded-component-lg border border-gray-100 bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors"
               >
-                <span className="text-text-sub">
-                  <UpLoadImgIcon />
-                </span>
+                {logoPreview ? (
+                  <img
+                    src={logoPreview}
+                    alt="새 로고 미리 보기"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span className="text-text-sub">
+                    <UpLoadImgIcon />
+                  </span>
+                )}
               </button>
             </div>
 
