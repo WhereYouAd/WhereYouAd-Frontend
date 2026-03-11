@@ -126,8 +126,6 @@ export default function AdsListPage() {
           variant="primary"
         />
       </Modal>
-
-      <div />
     </section>
   );
 }
