@@ -1,13 +1,47 @@
+import { useState } from "react";
+import { toast } from "sonner";
+
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
 import PlatformCard from "@/components/ads/PlatformCard";
 import Badge from "@/components/common/badge/Badge";
 import ControlBox from "@/components/common/controlbox/ControlBox";
+import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 
 import { MOCK_CAMPAIGNS } from "./campaign.mock";
 
+import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+
 export default function CampaignDetail() {
   const data = MOCK_CAMPAIGNS[0];
+
+  const [stopOpen, setStopOpen] = useState(false);
+  const [isStopping, setIsStopping] = useState(false);
+
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+
+  const onStopConfirm = () => {
+    setIsStopping(true);
+    try {
+      toast.success("해당 캠페인 내 모든 광고 운영이 중단되었습니다.");
+      setStopOpen(false);
+    } finally {
+      setIsStopping(false);
+    }
+  };
+
+  const onResumeConfirm = () => {
+    setIsResuming(true);
+    try {
+      toast.success("해당 캠페인 운영이 재개되었습니다.");
+      setResumeOpen(false);
+    } finally {
+      setIsResuming(false);
+    }
+  };
+
   return (
     <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
       <div className="flex-1 py-15 px-10 md:px-15 lg:px-25">
@@ -40,16 +74,19 @@ export default function CampaignDetail() {
             />
           </div>
 
-          {/* ads list */}
           <div className="w-full overflow-x-auto">
+            {/* ads list */}
             <AdListTable ads={data.ads} />
 
+            {/* campaign controlbox */}
             <div className="mt-10">
               <ControlBox
                 title="캠페인 운영 제어"
                 description={`전체 플랫폼의 광고 운영을 한번에 제어할 수 있습니다.\n클릭 시 해당 캠페인 내 속한 모든 광고 소재의 운영이 즉시 중단됩니다.`}
                 buttonText="중단하기"
-                onButtonClick={() => {}}
+                onButtonClick={() => {
+                  setStopOpen(true);
+                }}
                 buttonDisabled={false}
                 containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-140 shrink-0"
                 titleClassName="text-status-red font-heading3"
@@ -59,10 +96,42 @@ export default function CampaignDetail() {
               />
             </div>
           </div>
-
-          {/* control box */}
         </div>
       </div>
+
+      {/* 해당 캠페인 중단 */}
+      <Modal
+        isOpen={stopOpen}
+        onClose={() => setStopOpen(false)}
+        title="캠페인 운영 중단"
+      >
+        <ModalContent
+          icon={<WarningIcon className="text-status-red" />}
+          title="캠페인 운영을 중단하시겠습니까?"
+          description="해당 캠페인의 모든 광고 노출이 중단됩니다."
+          buttonText="중단하기"
+          onConfirm={onStopConfirm}
+          isLoading={isStopping}
+          variant="danger"
+        />
+      </Modal>
+
+      {/* 해당 캠페인 재개 */}
+      <Modal
+        isOpen={resumeOpen}
+        onClose={() => setResumeOpen(false)}
+        title="캠페인 운영 재개"
+      >
+        <ModalContent
+          icon={<WarningIcon className="text-status-blue" />}
+          title="캠페인 운영을 재개하시겠습니까?"
+          description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
+          buttonText="시작하기"
+          onConfirm={onResumeConfirm}
+          isLoading={isResuming}
+          variant="primary"
+        />
+      </Modal>
     </section>
   );
 }

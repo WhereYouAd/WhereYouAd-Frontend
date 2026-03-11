@@ -18,8 +18,8 @@ const AdsListPage = loadable(
 const CampaignDetail = loadable(
   lazy(() => import("@/pages/ads/list/CampaignDetail")),
 );
-const AdsCampaignGroup = loadable(
-  lazy(() => import("@/pages/ads/new/AdsCreatePage")),
+const CampaignGroup = loadable(
+  lazy(() => import("@/pages/ads/new/CampaignGroup")),
 );
 const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
 const WorkspaceSetting = loadable(
@@ -45,13 +45,14 @@ const MainRoutes: RouteObject[] = [
     element: <AdsListPage />,
   },
   {
+    path: "ads/campaignGroup",
+    element: <CampaignGroup />,
+  },
+  {
     path: "ads/:id",
     element: <CampaignDetail />,
   },
-  {
-    path: "ads/campaign-group",
-    element: <AdsCampaignGroup />,
-  },
+
   {
     path: "workspace/:workspaceId/settings",
     element: <WorkspaceSetting />,
