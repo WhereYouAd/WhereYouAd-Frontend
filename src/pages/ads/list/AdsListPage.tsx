@@ -1,16 +1,38 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import CampaignTable from "@/components/ads/CampaignTable";
 import ControlBox from "@/components/common/controlbox/ControlBox";
+import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
+
+import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
+
+  const [stopAllOpen, setStopAllOpen] = useState(false);
+  const [isStopping, setIsStopping] = useState(false);
+
   const handleCampaignClick = (id: number) => {
     navigate(`/ads/${id}`);
   };
 
   const handleCampaignGroupClick = () => {
     navigate("/ads/campaignGroup");
+  };
+
+  const onStopAll = () => {
+    setIsStopping(true);
+
+    try {
+      console.log("모든 캠페인 중단 시작");
+      toast.success("모든 플랫폼의 광고 노출이 중단되었습니다.");
+      setStopAllOpen(false);
+    } finally {
+      setIsStopping(false);
+    }
   };
 
   return (
@@ -46,8 +68,8 @@ export default function AdsListPage() {
               title="전체 캠페인을 완전히 중단할 수 있어요"
               description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
               buttonText="중단하기"
-              onButtonClick={() => {}}
-              buttonDisabled={false}
+              onButtonClick={() => setStopAllOpen(true)}
+              buttonDisabled={isStopping}
               containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
               titleClassName="text-status-red font-heading3"
               descriptionClassName="font-body2 text-text-sub"
@@ -57,6 +79,24 @@ export default function AdsListPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={stopAllOpen}
+        onClose={() => setStopAllOpen(false)}
+        size="lg"
+        padding="lg"
+        title="전체 캠페인 중단"
+      >
+        <ModalContent
+          icon={<WarningIcon />}
+          title="전체 캠페인을 중단하시겠습니까?"
+          description="모든 플랫폼의 광고 노출이 즉시 중단됩니다."
+          buttonText="중단하기"
+          onConfirm={onStopAll}
+          isLoading={isStopping}
+          variant="danger"
+        />
+      </Modal>
 
       <div />
     </section>
