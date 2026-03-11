@@ -10,6 +10,9 @@ import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
+import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
+import WorkspaceListError from "@/components/workspace/WorkspaceListError";
+import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
 
 import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
@@ -41,7 +44,7 @@ export default function WorkspacePage() {
       setCreateOpen(false);
     },
   });
-  const listLoading = workspacesQuery.isLoading || workspacesQuery.isFetching;
+  const isListLoading = workspacesQuery.isLoading;
   const listErrorMsg = workspacesQuery.isError
     ? getAxiosMessage(
         workspacesQuery.error,
@@ -49,7 +52,7 @@ export default function WorkspacePage() {
       )
     : null;
 
-  const creating = createWorkspaceMutation.isPending;
+  const isCreating = createWorkspaceMutation.isPending;
   const createErrorMsg = createWorkspaceMutation.isError
     ? getAxiosMessage(
         createWorkspaceMutation.error,
@@ -122,6 +125,38 @@ export default function WorkspacePage() {
     createWorkspaceMutation.mutate({ name, description, logoUrl: null });
   };
 
+  const renderWorkspaceContent = () => {
+    if (isListLoading) {
+      return <WorkspaceListLoading />;
+    }
+    if (listErrorMsg) {
+      return (
+        <WorkspaceListError
+          message={listErrorMsg}
+          onRetry={() => workspacesQuery.refetch()}
+        />
+      );
+    }
+    if (filtered.length === 0) {
+      return (
+        <ul className="space-y-5">
+          <WorkspaceEmptyState message="워크스페이스가 없습니다" />
+        </ul>
+      );
+    }
+    return (
+      <ul className="space-y-5">
+        {filtered.map((w) => (
+          <WorkspaceCard
+            key={String(w.orgId)}
+            workspace={w}
+            menuItems={menuItems(w.orgId)}
+          />
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <section className="w-full">
       <header className="mb-7">
@@ -152,41 +187,7 @@ export default function WorkspacePage() {
         </Button>
       </div>
 
-      {listLoading && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
-          <p className="font-body2 text-text-sub">불러오는중..</p>
-        </div>
-      )}
-      {!listLoading && listErrorMsg && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
-          <p className="font-body2 text-status-red">{listErrorMsg}</p>
-          <Button
-            type="button"
-            variant="primary"
-            onClick={() => workspacesQuery.refetch()}
-          >
-            다시 시도
-          </Button>
-        </div>
-      )}
-      {!listLoading && !listErrorMsg && (
-        <ul className="space-y-5">
-          {filtered.map((w) => (
-            <WorkspaceCard
-              key={String(w.orgId)}
-              workspace={w}
-              menuItems={menuItems(w.orgId)}
-            />
-          ))}
-          {filtered.length === 0 && (
-            <li className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
-              <p className="font-body2 text-text-sub">
-                워크스페이스가 없습니다.
-              </p>
-            </li>
-          )}
-        </ul>
-      )}
+      {renderWorkspaceContent()}
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="xl" padding="lg">
         <div className="px-2">
@@ -234,7 +235,7 @@ export default function WorkspacePage() {
               placeholder="조직의 이름을 입력하세요."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              disabled={creating}
+              disabled={isCreating}
             />
             <TextareaField
               id="workspace-desc"
@@ -242,7 +243,7 @@ export default function WorkspacePage() {
               placeholder="조직에 대한 간단한 설명을 입력하세요"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
-              disabled={creating}
+              disabled={isCreating}
             />
             {createErrorMsg && (
               <p className="font-body2 text-status-red">{createErrorMsg}</p>
@@ -251,11 +252,11 @@ export default function WorkspacePage() {
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
-              disabled={!newName.trim() || creating}
+              disabled={!newName.trim() || isCreating}
               className="mx-auto px-10 mt-10"
               type="button"
             >
-              {creating ? "생성 중.. " : "생성하기"}
+              {isCreating ? "생성 중.. " : "생성하기"}
             </Button>
           </div>
         </div>
