@@ -15,6 +15,9 @@ export default function AdsListPage() {
   const [stopAllOpen, setStopAllOpen] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
 
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const [isResuming, setIsResuming] = useState(false);
+
   const handleCampaignClick = (id: number) => {
     navigate(`/ads/${id}`);
   };
@@ -27,11 +30,23 @@ export default function AdsListPage() {
     setIsStopping(true);
 
     try {
-      console.log("모든 캠페인 중단 시작");
-      toast.success("모든 플랫폼의 광고 노출이 중단되었습니다.");
+      console.log("전체 캠페인 중단 시작");
+      toast.success("전체 캠페인의 모든 광고 노출이 중단되었습니다.");
       setStopAllOpen(false);
     } finally {
       setIsStopping(false);
+    }
+  };
+
+  const onResumeAll = () => {
+    setIsResuming(true);
+
+    try {
+      console.log("전체 캠페인 재개 시작");
+      toast.success("전체 캠페인의 광고 노출이 재개되었습니다.");
+      setResumeOpen(false);
+    } finally {
+      setIsResuming(false);
     }
   };
 
@@ -80,6 +95,7 @@ export default function AdsListPage() {
         </div>
       </div>
 
+      {/* 전체 캠페인 중단 모달 */}
       <Modal
         isOpen={stopAllOpen}
         onClose={() => setStopAllOpen(false)}
@@ -88,13 +104,32 @@ export default function AdsListPage() {
         title="전체 캠페인 중단"
       >
         <ModalContent
-          icon={<WarningIcon />}
+          icon={<WarningIcon className="text-status-red" />}
           title="전체 캠페인을 중단하시겠습니까?"
-          description="모든 플랫폼의 광고 노출이 즉시 중단됩니다."
+          description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
           onConfirm={onStopAll}
           isLoading={isStopping}
           variant="danger"
+        />
+      </Modal>
+
+      {/* 전체 캠페인 재개 모달 */}
+      <Modal
+        isOpen={resumeOpen}
+        onClose={() => setResumeOpen(false)}
+        size="lg"
+        padding="lg"
+        title="전체 캠페인 재개"
+      >
+        <ModalContent
+          icon={<WarningIcon className="text-status-blue" />}
+          title="전체 캠페인을 재개하시겠습니까?"
+          description="모든 캠페인의 광고 노출이 즉시 재개됩니다."
+          buttonText="시작하기"
+          onConfirm={onResumeAll}
+          isLoading={isResuming}
+          variant="primary"
         />
       </Modal>
 
