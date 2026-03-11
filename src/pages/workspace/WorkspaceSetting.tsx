@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -12,18 +12,20 @@ import {
   deleteWorkspace,
   getWorkspace,
   updateWorkspace,
+  uploadImage,
 } from "@/api/workspace/org";
+import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
 import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
-import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
 import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
 
   const orgId = useMemo(() => {
-    if (workspaceId === null) return null;
+    if (!workspaceId) return null;
     const n = Number(workspaceId);
     return Number.isFinite(n) && n > 0 ? n : null;
   }, [workspaceId]);
@@ -36,7 +38,12 @@ export default function WorkspaceSetting() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const fetchWorkspaceDetail = async () => {
     if (orgId === null) {
@@ -45,11 +52,17 @@ export default function WorkspaceSetting() {
     }
     setLoading(true);
     setErrorMsg(null);
+    setImageError(false);
     try {
       const detail = await getWorkspace(orgId);
       setName(detail.name);
       setDesc(detail.description ?? "");
-      setLogoUrl(detail.logoUrl ?? null);
+      setServerLogoUrl(detail.logoUrl ?? null);
+      setLogoFile(null);
+      setLogoPreview((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return null;
+      });
     } catch (e) {
       const message = getAxiosMessage(
         e,
@@ -76,10 +89,17 @@ export default function WorkspaceSetting() {
     setSaving(true);
 
     try {
+      let nextLogoUrl = serverLogoUrl ?? null;
+
+      if (logoFile) {
+        setUploading(true);
+        nextLogoUrl = await uploadImage(logoFile);
+        setUploading(false);
+      }
       await updateWorkspace(orgId, {
         name: nextName,
         description: nextDesc,
-        logoUrl,
+        logoUrl: nextLogoUrl,
       });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
@@ -87,6 +107,7 @@ export default function WorkspaceSetting() {
       toast.error(getAxiosMessage(e, "변경사항 저장에 실패했습니다"));
     } finally {
       setSaving(false);
+      setUploading(false);
     }
   };
   const onDelete = async () => {
@@ -110,6 +131,44 @@ export default function WorkspaceSetting() {
   const openDeleteModal = () => {
     setDeleteOpen(true);
   };
+
+  const openFilePicker = () => {
+    if (!fileRef.current) return;
+    fileRef.current.value = "";
+    fileRef.current.click();
+  };
+
+  const onPickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return previewUrl;
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
+
+  const onResetLogo = () => {
+    setLogoFile(null);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setServerLogoUrl(null);
+  };
+
+  const resolvedLogoUrl =
+    !logoPreview && !imageError && serverLogoUrl
+      ? getImageUrl(serverLogoUrl)
+      : null;
 
   return (
     <section className="w-full">
@@ -144,36 +203,60 @@ export default function WorkspaceSetting() {
             <p className="font-body2 text-text-sub mt-2">
               워크스페이스의 대표적인 정보를 설정합니다.
             </p>
-            <div className="mt-7 grid grid-cols-1 lg:grid-cols-[minmax(320px,560px)_1fr] gap-8">
-              <div>
-                <div className="text-text-main">로고 이미지</div>
-                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-56 sm:h-72 lg:h-80 overflow-hidden">
-                  {logoUrl ? (
+            <div className="mt-7 grid grid-cols-1 xl:grid-cols-[480px_minmax(0,1fr)] gap-8">
+              <div className="flex flex-col items-center xl:items-center">
+                <div className="text-text-main mb-2 self-start">
+                  로고 이미지
+                </div>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  className="hidden"
+                  onChange={onPickLogo}
+                />
+                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-40 w-40 sm:h-57 sm:w-57 lg:h-90 lg:w-90 xl:h-120 xl:w-120 overflow-hidden">
+                  {logoPreview ? (
                     <img
-                      src={logoUrl}
-                      alt={`${name || "워크스페이스"} 로고`}
+                      src={logoPreview}
+                      alt={"새 로고 미리보기"}
                       className="h-full w-full object-cover"
                     />
+                  ) : resolvedLogoUrl ? (
+                    <img
+                      src={resolvedLogoUrl}
+                      alt={`${name || "워크스페이스"} 로고`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.log("이미지 로드 실패:", e.currentTarget.src);
+                        setImageError(true);
+                      }}
+                    />
                   ) : (
-                    <UpLoadImgIcon aria-hidden="true" />
+                    <BuildingIcon
+                      aria-hidden="true"
+                      className="w-12 h-12 text-text-placeholder"
+                    />
                   )}
                 </div>
                 <div className="flex gap-3 mt-3 justify-center">
                   <Button
                     variant="custom"
+                    type="button"
                     className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                    onClick={() => alert("TODO:추후 업로드")}
+                    onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
-                    disabled={saving || deleting}
+                    disabled={saving || deleting || uploading}
                   >
                     업로드
                   </Button>
                   <Button
                     variant="custom"
+                    type="button"
                     className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                    onClick={() => setLogoUrl(null)}
+                    onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
-                    disabled={saving || deleting}
+                    disabled={saving || deleting || uploading}
                   >
                     초기화
                   </Button>
@@ -185,7 +268,7 @@ export default function WorkspaceSetting() {
                   value={name}
                   placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
                   onChange={(e) => setName(e.target.value)}
-                  disabled={saving || deleting}
+                  disabled={saving || deleting || uploading}
                 />
                 <TextareaField
                   id="workspace-setting-desc"
@@ -194,8 +277,8 @@ export default function WorkspaceSetting() {
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
-                  className="min-h-55"
-                  disabled={saving || deleting}
+                  className="min-h-55 xl:min-h-93"
+                  disabled={saving || deleting || uploading}
                 />
               </div>
             </div>
@@ -205,7 +288,7 @@ export default function WorkspaceSetting() {
               size="big"
               variant="primary"
               onClick={onSave}
-              disabled={!name.trim() || saving || deleting}
+              disabled={!name.trim() || saving || deleting || uploading}
               aria-label="변경사항 저장하기"
               className="w-full sm:w-auto"
             >
@@ -225,7 +308,7 @@ export default function WorkspaceSetting() {
               buttonVariant="dangerSoft"
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
-              buttonDisabled={saving || deleting}
+              buttonDisabled={saving || deleting || uploading}
               leadingSlot={<WarningIcon />}
             />
           </div>

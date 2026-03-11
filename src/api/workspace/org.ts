@@ -1,12 +1,13 @@
-import type {
-  TApiResult,
-  TCreateOrgRequest,
-  TCreateOrgResponse,
-  TGetOrgResponse,
-  TMyOrgsData,
-  TUpdateWorkspaceRequest,
-  TWorkspace,
-  TWorkspaceDetail,
+import {
+  type TApiResult,
+  type TCreateOrgRequest,
+  type TCreateOrgResponse,
+  type TGetOrgResponse,
+  type TMyOrgsData,
+  type TUpdateWorkspaceRequest,
+  type TUploadImageResponse,
+  type TWorkspace,
+  type TWorkspaceDetail,
 } from "@/types/workspace/workspace";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -46,4 +47,14 @@ export const updateWorkspace = async (
 
 export const deleteWorkspace = async (orgId: number): Promise<void> => {
   await axiosInstance.delete<TApiResult<string>>(`/api/org/${orgId}`);
+};
+
+export const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const { data } = await axiosInstance.post<TApiResult<TUploadImageResponse>>(
+    `/api/images/upload`,
+    formData,
+  );
+  return data.data.url;
 };

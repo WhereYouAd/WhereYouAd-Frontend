@@ -11,9 +11,6 @@ if (!BASE_URL) {
 const axiosConfig: AxiosRequestConfig = {
   baseURL: BASE_URL,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 };
 
 export const axiosInstance = axios.create(axiosConfig);
