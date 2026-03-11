@@ -138,18 +138,34 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             buttonClassName="font-body1"
           />
           <ControlBox
-            title="해당 광고를 중단할 수 있어요"
+            title={
+              ad.runStatus === "stopped"
+                ? "광고 소재를 다시 켤 수 있어요"
+                : "해당 광고를 중단할 수 있어요"
+            }
             description="선택한 광고의 노출과 클릭이 즉시 중단되며, 다른 광고에는 영향을 주지 않습니다."
-            buttonText="중단하기"
+            buttonText={ad.runStatus === "stopped" ? "재개하기" : "중단하기"}
             onButtonClick={() => {
-              setStopOpen(true);
+              ad.runStatus === "stopped"
+                ? setResumeOpen(true)
+                : setStopOpen(true);
             }}
             buttonDisabled={false}
-            containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
-            titleClassName="text-status-red font-heading3"
+            containerClassName={`px-6 py-4 min-w-[650px] shrink-0 ${
+              ad.runStatus === "stopped"
+                ? "bg-status-blue/7 border-status-blue"
+                : "bg-status-red/7 border-status-red"
+            }`}
+            titleClassName={`font-heading3 ${
+              ad.runStatus === "stopped"
+                ? "text-status-blue"
+                : "text-status-red"
+            }`}
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName="font-body1 bg-status-red"
+            buttonClassName={`font-body1 ${
+              ad.runStatus === "stopped" ? "bg-status-blue" : "bg-status-red"
+            }`}
           />
         </div>
       </div>
