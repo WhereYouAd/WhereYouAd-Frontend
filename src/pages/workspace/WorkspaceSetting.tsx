@@ -238,7 +238,10 @@ export default function WorkspaceSetting() {
           >
             <div className="text-center px-2 py-6 ">
               <div className="flex justify-center mb-6">
-                <MessageCircleWarningIcon className="text-status-red" />
+                <MessageCircleWarningIcon
+                  className="text-status-red"
+                  aria-hidden="true"
+                />
               </div>
               <h3 className="font-heading2 text-text-main mb-3">
                 정말 삭제하시겠습니까?
