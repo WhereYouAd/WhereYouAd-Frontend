@@ -99,8 +99,6 @@ export default function AdsListPage() {
       <Modal
         isOpen={stopAllOpen}
         onClose={() => setStopAllOpen(false)}
-        size="lg"
-        padding="lg"
         title="전체 캠페인 중단"
       >
         <ModalContent
@@ -118,8 +116,6 @@ export default function AdsListPage() {
       <Modal
         isOpen={resumeOpen}
         onClose={() => setResumeOpen(false)}
-        size="lg"
-        padding="lg"
         title="전체 캠페인 재개"
       >
         <ModalContent
