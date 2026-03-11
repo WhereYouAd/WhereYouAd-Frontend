@@ -165,6 +165,11 @@ export default function WorkspaceSetting() {
     setServerLogoUrl(null);
   };
 
+  const resolvedLogoUrl =
+    !logoPreview && !imageError && serverLogoUrl
+      ? getImageUrl(serverLogoUrl)
+      : null;
+
   return (
     <section className="w-full">
       <header className="mb-7">
@@ -217,9 +222,9 @@ export default function WorkspaceSetting() {
                       alt={"새 로고 미리보기"}
                       className="h-full w-full object-cover"
                     />
-                  ) : serverLogoUrl && !imageError ? (
+                  ) : resolvedLogoUrl ? (
                     <img
-                      src={getImageUrl(serverLogoUrl) ?? ""}
+                      src={resolvedLogoUrl}
                       alt={`${name || "워크스페이스"} 로고`}
                       className="w-full h-full object-cover"
                       onError={(e) => {
