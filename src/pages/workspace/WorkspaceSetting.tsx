@@ -196,9 +196,11 @@ export default function WorkspaceSetting() {
             <p className="font-body2 text-text-sub mt-2">
               워크스페이스의 대표적인 정보를 설정합니다.
             </p>
-            <div className="mt-7 grid grid-cols-1 lg:grid-cols-[minmax(320px,560px)_1fr] gap-8">
-              <div>
-                <div className="text-text-main">로고 이미지</div>
+            <div className="mt-7 grid grid-cols-1 xl:grid-cols-[480px_minmax(0,1fr)] gap-8">
+              <div className="flex flex-col items-center xl:items-center">
+                <div className="text-text-main mb-2 self-start">
+                  로고 이미지
+                </div>
                 <input
                   ref={fileRef}
                   type="file"
@@ -206,7 +208,7 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-56 sm:h-72 lg:h-80 overflow-hidden">
+                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-40 w-40 sm:h-57 sm:w-57 lg:h-90 lg:w-90 xl:h-120 xl:w-120 overflow-hidden">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
@@ -267,7 +269,7 @@ export default function WorkspaceSetting() {
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
-                  className="min-h-55"
+                  className="min-h-55 xl:min-h-93"
                   disabled={saving || deleting}
                 />
               </div>

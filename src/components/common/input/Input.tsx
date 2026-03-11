@@ -45,7 +45,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-text-main select-none ml-1 mb-1"
+            className="text-text-main select-none ml-1 mb-2"
           >
             {label}
           </label>
