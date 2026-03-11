@@ -30,7 +30,6 @@ export default function AdsListPage() {
     setIsStopping(true);
 
     try {
-      console.log("전체 캠페인 중단 시작");
       toast.success("전체 캠페인의 모든 광고 노출이 중단되었습니다.");
       setStopAllOpen(false);
     } finally {
@@ -42,7 +41,6 @@ export default function AdsListPage() {
     setIsResuming(true);
 
     try {
-      console.log("전체 캠페인 재개 시작");
       toast.success("전체 캠페인의 광고 노출이 재개되었습니다.");
       setResumeOpen(false);
     } finally {
