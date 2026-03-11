@@ -42,6 +42,7 @@ export default function WorkspaceSetting() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const fetchWorkspaceDetail = async () => {
@@ -51,6 +52,7 @@ export default function WorkspaceSetting() {
     }
     setLoading(true);
     setErrorMsg(null);
+    setImageError(false);
     try {
       const detail = await getWorkspace(orgId);
       setName(detail.name);
@@ -215,13 +217,14 @@ export default function WorkspaceSetting() {
                       alt={"새 로고 미리보기"}
                       className="h-full w-full object-cover"
                     />
-                  ) : serverLogoUrl ? (
+                  ) : serverLogoUrl && !imageError ? (
                     <img
                       src={getImageUrl(serverLogoUrl) ?? ""}
                       alt={`${name || "워크스페이스"} 로고`}
                       className="w-full h-full object-cover"
                       onError={(e) => {
                         console.log("이미지 로드 실패:", e.currentTarget.src);
+                        setImageError(true);
                       }}
                     />
                   ) : (
@@ -270,7 +273,7 @@ export default function WorkspaceSetting() {
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
                   className="min-h-55 xl:min-h-93"
-                  disabled={saving || deleting}
+                  disabled={saving || deleting || uploading}
                 />
               </div>
             </div>
