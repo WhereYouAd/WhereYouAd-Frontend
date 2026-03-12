@@ -13,7 +13,7 @@ interface IBudgetGaugeChartProps {
 const statusBadgeVariant: Record<string, TBadgeVariant> = {
   안정: "success",
   주의: "syncing",
-  위험: "inactive", // or warning/error if defined, but staying with original "inactive"
+  위험: "inactive",
 };
 
 const statusPointClasses: Record<string, string> = {
@@ -62,7 +62,6 @@ export default function BudgetGaugeChart({
 
   return (
     <div className="flex flex-col w-full h-full font-pretendard">
-      {/* Header Section */}
       <div className="flex flex-col mb-5 mt-3 xl:mb-10 xl:mt-5">
         <div className="flex items-start justify-between mb-5">
           <div className="flex flex-col gap-1.5">
@@ -85,13 +84,11 @@ export default function BudgetGaugeChart({
           </Badge>
         </div>
 
-        {/* Progress Bar with Tooltip */}
         <div
           className="relative pt-6 pb-2 cursor-pointer"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Tooltip */}
           <div
             className={twMerge(
               "absolute top-0 left-0 transform -translate-x-1/2 bg-neutral-800 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-semibold py-1.5 px-3 rounded-md shadow-md transition-all duration-300 z-10 whitespace-nowrap pointer-events-none",
@@ -130,7 +127,6 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-4 gap-y-5 mb-6 mt-2 xl:gap-y-4 xl:mb-8">
         <div className="flex flex-col gap-1.5 border-l-2 border-bg-surface pl-4">
           <span className="font-caption text-text-sub text-xs whitespace-nowrap">
@@ -159,7 +155,6 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      {/* Footer Message */}
       <div className="mt-auto bg-bg-surface/30 hover:bg-bg-surface/50 transition-colors rounded-xl p-4.5 flex items-start gap-3 border border-transparent hover:border-bg-surface/60">
         <div
           className={twMerge(
