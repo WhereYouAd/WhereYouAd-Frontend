@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
@@ -53,7 +52,22 @@ const BASE_OPTIONS: ApexOptions = {
     fontFamily: "Pretendard",
     animations: { enabled: true, dynamicAnimation: { enabled: false } },
   },
-  dataLabels: { enabled: false }, // 각 포인트 위 숫자 레이블 숨김
+  // 이상 징후 포인트(index 11)에만 라벨 표시, 나머지는 숨김
+  dataLabels: {
+    enabled: true,
+    formatter: (_: number, opts: { dataPointIndex: number }) =>
+      opts.dataPointIndex === 11 ? "클릭 이상 징후" : "",
+    background: {
+      enabled: true,
+      foreColor: "#ff4560",
+      borderColor: "#ff4560",
+      borderRadius: 8,
+      padding: 15,
+      opacity: 1,
+    },
+    style: { fontSize: "11px", colors: ["#fff"] },
+    offsetY: -8,
+  },
   stroke: { curve: "monotoneCubic", width: 1.5 },
   // 라인 아래 그라데이션
   fill: {
@@ -65,7 +79,19 @@ const BASE_OPTIONS: ApexOptions = {
     },
   },
   colors: ["#0084fe"], // --color-status-blue
-  markers: { size: 0 }, // 데이터 포인트 마커 숨김
+  // 이상 징후 - discrete 마커로 점 표시, xaxis annotation으로 레이블 표시
+  markers: {
+    size: 0,
+    discrete: [
+      {
+        seriesIndex: 0,
+        dataPointIndex: 11, // "11:00"
+        fillColor: "#ff4560",
+        strokeColor: "#fff",
+        size: 5,
+      },
+    ],
+  },
   xaxis: {
     type: "category",
     categories: trafficChartMock.labels, // 00:00 ~ 24:00
@@ -83,6 +109,7 @@ const BASE_OPTIONS: ApexOptions = {
   },
   yaxis: {
     min: 0,
+    max: Math.ceil(Math.max(...trafficChartMock.clicks) / 10000) * 10000,
     tickAmount: 6, // 1만 단위 눈금
     labels: {
       // 0은 숨기고, 나머지는 K 단위로 변환
@@ -102,17 +129,6 @@ const BASE_OPTIONS: ApexOptions = {
     style: { fontFamily: "Pretendard" },
   },
 };
-
-// TODO: 실시간 연동 시 useState로 전환
-const series = [
-  {
-    name: "클릭수",
-    data: trafficChartMock.labels.map((label, i) => ({
-      x: label,
-      y: trafficChartMock.clicks[i],
-    })),
-  },
-];
 
 const CHART_CONTAINER_ID = `${CHART_ID}-container`;
 const FILENAME = `overview-traffic-chart-${TODAY}`;
@@ -155,17 +171,6 @@ export function TrafficChartDownload() {
 }
 
 export default function TrafficChart() {
-  const options = useMemo<ApexOptions>(() => {
-    const values =
-      series[0]?.data.map((d: { x: string; y: number }) => d.y) ?? [];
-    const yAxisMax =
-      values.length > 0
-        ? Math.ceil(Math.max(...values) / 10000) * 10000
-        : 10000;
-
-    return { ...BASE_OPTIONS, yaxis: { ...BASE_OPTIONS.yaxis, max: yAxisMax } };
-  }, [series]);
-
   return (
     <div
       id={CHART_CONTAINER_ID}
@@ -175,8 +180,8 @@ export default function TrafficChart() {
     >
       <ReactApexChart
         type="area"
-        options={options}
-        series={series}
+        options={BASE_OPTIONS}
+        series={[{ name: "클릭수", data: trafficChartMock.clicks }]}
         height={360}
       />
     </div>
