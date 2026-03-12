@@ -1,15 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+
+import type { ICampaign } from "@/types/ads/campaign";
 
 import CampaignTable from "@/components/ads/CampaignTable";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
+import { getCampaignList } from "@/api/ads/ads";
+import { getMyWorkspaces } from "@/api/workspace/org";
 import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
 
 export default function AdsListPage() {
+  const [campaigns, setCampaigns] = useState<ICampaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const initData = async () => {
+      try {
+        setIsLoading(true);
+        const workspaces = await getMyWorkspaces();
+
+        if (workspaces && workspaces.length > 0) {
+          // 워크스페이스 ID 임시 지정 -> 추후 선택한 워크스페이스 api 연결 예정
+          const TemporaryOrg = workspaces[2] || workspaces[0];
+          const orgId = TemporaryOrg.orgId;
+
+          console.log("orgId: ", orgId);
+
+          // 캠페인 목록 API 호출
+          const campaignData = await getCampaignList(orgId);
+          console.log("campaign data: ", campaignData);
+
+          setCampaigns(campaignData);
+        } else {
+          toast.error("조직이 없습니다.");
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("데이터를 불러오는 중 오류가 발생하였습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    initData();
+  }, []);
+
   const navigate = useNavigate();
 
   const [stopAllOpen, setStopAllOpen] = useState(false);
