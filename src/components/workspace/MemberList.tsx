@@ -1,6 +1,36 @@
+import type { TWorkspaceMember } from "@/types/workspace/workspace";
+
+import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
 
 import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
+
+const mockMembers: TWorkspaceMember[] = [
+  {
+    name: "김택연",
+    email: "himnaera@naver.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+  },
+  {
+    name: "문보경",
+    email: "parkbogum@naver.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+  },
+  {
+    name: "노경은",
+    email: "grandpapa@naver.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+  },
+  {
+    name: "조병현",
+    email: "niceguy@naver.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+  },
+];
 
 export default function MemberList() {
   return (
@@ -19,7 +49,7 @@ export default function MemberList() {
           variant="primary"
           size="small"
           aria-label="업로드"
-          onClick={() => alert("TODO:버튼")}
+          onClick={() => alert("TODO:팀원초대모달버튼")}
           // disabled={}
           className="p-5 py-6 rounded-component-md"
         >
@@ -28,7 +58,11 @@ export default function MemberList() {
         </Button>
       </header>
 
-      <div>컨텐츠section</div>
+      <ul className="divide-y divide-gray-100">
+        {mockMembers.map((member) => (
+          <MemberItem key={member.email} member={member} />
+        ))}
+      </ul>
     </div>
   );
 }
