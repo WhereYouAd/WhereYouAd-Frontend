@@ -16,8 +16,8 @@ import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
 const CHART_ID = "traffic-chart";
 const TODAY = new Date().toISOString().slice(0, 10);
 
-// x축 시간대
-const LABEL_HOURS = new Set(["00:00", "06:00", "12:00", "18:00", "24:00"]);
+// x축 표시할 시간 (0~24 숫자)
+const LABEL_HOURS = new Set([0, 6, 12, 18, 24]);
 
 const BASE_OPTIONS: ApexOptions = {
   chart: {
@@ -52,22 +52,7 @@ const BASE_OPTIONS: ApexOptions = {
     fontFamily: "Pretendard",
     animations: { enabled: true, dynamicAnimation: { enabled: false } },
   },
-  // 이상 징후 포인트(index 11)에만 라벨 표시, 나머지는 숨김
-  dataLabels: {
-    enabled: true,
-    formatter: (_: number, opts: { dataPointIndex: number }) =>
-      opts.dataPointIndex === 11 ? "클릭 이상 징후" : "",
-    background: {
-      enabled: true,
-      foreColor: "#ff4560",
-      borderColor: "#ff4560",
-      borderRadius: 8,
-      padding: 15,
-      opacity: 1,
-    },
-    style: { fontSize: "11px", colors: ["#fff"] },
-    offsetY: -8,
-  },
+  dataLabels: { enabled: false }, // 각 포인트 위 숫자 레이블 숨김
   stroke: { curve: "monotoneCubic", width: 1.5 },
   // 라인 아래 그라데이션
   fill: {
@@ -79,26 +64,44 @@ const BASE_OPTIONS: ApexOptions = {
     },
   },
   colors: ["#0084fe"], // --color-status-blue
-  // 이상 징후 - discrete 마커로 점 표시, xaxis annotation으로 레이블 표시
-  markers: {
-    size: 0,
-    discrete: [
+  markers: { size: 0 }, // 데이터 포인트 마커 숨김
+  // 이상 징후 표시 (tickAmount 제거해야 x 문자열 매칭 동작)
+  annotations: {
+    points: [
       {
-        seriesIndex: 0,
-        dataPointIndex: 11, // "11:00"
-        fillColor: "#ff4560",
-        strokeColor: "#fff",
-        size: 5,
+        x: 11,
+        y: 53000,
+        marker: {
+          size: 5,
+          fillColor: "#ff4560",
+          strokeColor: "#ff4560",
+          strokeWidth: 1,
+        },
+        label: {
+          borderColor: "#ff4560",
+          style: {
+            color: "#ff4560",
+            background: "#fff",
+            fontSize: "12px",
+            fontFamily: "Pretendard",
+          },
+          text: "이상 클릭 탐지",
+          offsetY: -4,
+        },
       },
     ],
   },
   xaxis: {
-    type: "category",
-    categories: trafficChartMock.labels, // 00:00 ~ 24:00
-    tickAmount: 24, // 1시간 간격 tick 생성
+    type: "numeric",
+    min: 0,
+    max: 24,
+    tickAmount: 24,
     labels: {
       // LABEL_HOURS에 해당하는 시간대만 표시, 나머지는 빈 문자열
-      formatter: (val: string) => (LABEL_HOURS.has(val) ? val : ""),
+      formatter: (val: string) => {
+        const n = Number(val);
+        return LABEL_HOURS.has(n) ? `${String(n).padStart(2, "0")}:00` : "";
+      },
       style: { colors: "#8b8b8f", fontSize: "12px" }, // --color-text-sub
       rotate: 0, // 레이블 수평 고정
       rotateAlways: false, // 자동 회전 방지
@@ -181,7 +184,12 @@ export default function TrafficChart() {
       <ReactApexChart
         type="area"
         options={BASE_OPTIONS}
-        series={[{ name: "클릭수", data: trafficChartMock.clicks }]}
+        series={[
+          {
+            name: "클릭수",
+            data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
+          },
+        ]}
         height={360}
       />
     </div>
