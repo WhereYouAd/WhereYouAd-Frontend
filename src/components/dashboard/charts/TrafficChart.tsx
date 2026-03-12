@@ -36,7 +36,7 @@ export function TrafficChartDownload() {
 }
 
 function AnomalyBubble({ x, y }: { x: number; y: number }) {
-  const GAP = 10;
+  const GAP = 16;
   return (
     <div
       className="absolute pointer-events-none"
@@ -69,15 +69,26 @@ export default function TrafficChart() {
 
   const updateMarkerPos = useCallback(() => {
     if (!containerRef.current) return;
-    const marker = containerRef.current.querySelector<SVGElement>(
+    const marker = containerRef.current.querySelector<SVGCircleElement>(
       ".apexcharts-point-annotation-marker",
     );
     if (!marker) return;
-    const markerRect = marker.getBoundingClientRect();
+
+    // SVG 좌표 행렬(getScreenCTM)로 마커 중심의 화면 좌표를 직접 구함
+    const svg = containerRef.current.querySelector<SVGSVGElement>("svg");
+    if (!svg) return;
+    const ctm = marker.getScreenCTM();
+    if (!ctm) return;
+
+    const pt = svg.createSVGPoint();
+    pt.x = parseFloat(marker.getAttribute("cx") ?? "0");
+    pt.y = parseFloat(marker.getAttribute("cy") ?? "0");
+    const screenPt = pt.matrixTransform(ctm);
+
     const containerRect = containerRef.current.getBoundingClientRect();
     setMarkerPos({
-      x: markerRect.left - containerRect.left + markerRect.width / 2,
-      y: markerRect.top - containerRect.top,
+      x: screenPt.x - containerRect.left,
+      y: screenPt.y - containerRect.top,
     });
   }, []);
 
