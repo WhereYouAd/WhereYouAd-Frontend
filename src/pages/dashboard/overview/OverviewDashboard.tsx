@@ -115,6 +115,43 @@ export default function OverviewDashboard() {
             <ChevronDoubleRightIcon className="w-2.5 h-auto" />
           </Button>
         }
+        description={
+          <div className="relative inline-flex items-center gap-1 group/roas">
+            <span className="font-caption text-text-placeholder">
+              ROAS 산출 기준
+            </span>
+            <span className="text-text-placeholder cursor-help select-none leading-none">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="8"
+                  cy="8"
+                  r="7"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                />
+                <path
+                  d="M8 7v5"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                />
+                <circle cx="8" cy="4.5" r="0.75" fill="currentColor" />
+              </svg>
+            </span>
+            {/* 호버 시 노출되는 툴팁 */}
+            <div className="pointer-events-none absolute left-0 top-5 z-50 hidden group-hover/roas:block bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] px-3 py-2 border border-gray-100 whitespace-nowrap">
+              <span className="font-caption text-text-auth-sub">
+                ROAS(%) = 매출 ÷ 광고비 × 100
+              </span>
+            </div>
+          </div>
+        }
       >
         <PlatformComparison />
       </Card>
