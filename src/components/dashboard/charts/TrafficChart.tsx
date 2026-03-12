@@ -1,154 +1,16 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import type { ApexOptions } from "apexcharts";
-
-import {
-  downloadChartCsv,
-  downloadChartPng,
-  downloadChartSvg,
-} from "@/utils/download";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
+import {
+  BASE_OPTIONS,
+  CHART_CONTAINER_ID,
+  DOWNLOAD_ITEMS,
+} from "./trafficChart.config";
 import { trafficChartMock } from "./trafficChart.mock";
 
 import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
-
-const CHART_ID = "traffic-chart";
-const TODAY = new Date().toISOString().slice(0, 10);
-
-// x축 표시할 시간 (0~24 숫자)
-const LABEL_HOURS = new Set([0, 6, 12, 18, 24]);
-
-const BASE_OPTIONS: ApexOptions = {
-  chart: {
-    id: CHART_ID,
-    type: "area",
-    events: {
-      mounted: (chartContext: { el: Element }) => {
-        chartContext.el.querySelector("svg > title")?.remove();
-      },
-    },
-    toolbar: {
-      show: true,
-      tools: {
-        download: false,
-        selection: false,
-        zoom: false,
-        zoomin: false,
-        zoomout: false,
-        pan: false,
-        reset: false,
-      },
-      export: {
-        csv: {
-          filename: `overview-traffic-data-${TODAY}`,
-          columnDelimiter: ",",
-          headerCategory: "시간",
-          headerValue: "클릭수",
-        },
-      },
-    },
-    zoom: { enabled: false },
-    fontFamily: "Pretendard",
-    animations: { enabled: true, dynamicAnimation: { enabled: false } },
-  },
-  dataLabels: { enabled: false }, // 각 포인트 위 숫자 레이블 숨김
-  stroke: { curve: "monotoneCubic", width: 1.5 },
-  // 라인 아래 그라데이션
-  fill: {
-    type: "gradient",
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.5,
-      stops: [0, 90, 100],
-    },
-  },
-  colors: ["#0084fe"], // --color-status-blue
-  markers: { size: 0 }, // 데이터 포인트 마커 숨김
-  // 이상 징후 표시 (tickAmount 제거해야 x 문자열 매칭 동작)
-  annotations: {
-    points: [
-      {
-        x: 11,
-        y: 53000,
-        marker: {
-          size: 5,
-          fillColor: "#ff4560",
-          strokeColor: "#ff4560",
-          strokeWidth: 1,
-        },
-        label: {
-          borderColor: "#ff4560",
-          style: {
-            color: "#ff4560",
-            background: "#fff",
-            fontSize: "12px",
-            fontFamily: "Pretendard",
-          },
-          text: "이상 클릭 탐지",
-          offsetY: -4,
-        },
-      },
-    ],
-  },
-  xaxis: {
-    type: "numeric",
-    min: 0,
-    max: 24,
-    tickAmount: 24,
-    labels: {
-      // LABEL_HOURS에 해당하는 시간대만 표시, 나머지는 빈 문자열
-      formatter: (val: string) => {
-        const n = Number(val);
-        return LABEL_HOURS.has(n) ? `${String(n).padStart(2, "0")}:00` : "";
-      },
-      style: { colors: "#8b8b8f", fontSize: "12px" }, // --color-text-sub
-      rotate: 0, // 레이블 수평 고정
-      rotateAlways: false, // 자동 회전 방지
-    },
-    axisBorder: { show: false }, // x축 하단 경계선 숨김
-    axisTicks: { show: false }, // tick 눈금 숨김
-    tooltip: { enabled: false }, // 호버 시 x축 tooltip 숨김
-  },
-  yaxis: {
-    min: 0,
-    max: Math.ceil(Math.max(...trafficChartMock.clicks) / 10000) * 10000,
-    tickAmount: 6, // 1만 단위 눈금
-    labels: {
-      // 0은 숨기고, 나머지는 K 단위로 변환
-      formatter: (val: number) =>
-        val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,
-      style: { colors: "#8b8b8f", fontSize: "12px" }, // --color-text-sub
-    },
-  },
-  grid: {
-    borderColor: "#f2f4f6", // --color-chart-inactive
-    xaxis: { lines: { show: false } }, // 세로 그리드선 숨김
-    yaxis: { lines: { show: true } }, // 가로 그리드선 표시
-    padding: { left: 16, right: 8 }, // y축 레이블와 차트 사이 여백 줌
-  },
-  tooltip: {
-    x: { show: false }, // 상단 시간 헤더 숨김
-    style: { fontFamily: "Pretendard" },
-  },
-};
-
-const CHART_CONTAINER_ID = `${CHART_ID}-container`;
-const FILENAME = `overview-traffic-chart-${TODAY}`;
-const DOWNLOAD_ITEMS = [
-  {
-    label: "PNG 저장",
-    onClick: () => downloadChartPng(CHART_ID, FILENAME),
-  },
-  {
-    label: "SVG 저장",
-    onClick: () => downloadChartSvg(CHART_CONTAINER_ID, FILENAME),
-  },
-  {
-    label: "CSV 다운로드",
-    onClick: () => downloadChartCsv(CHART_ID),
-  },
-];
 
 export function TrafficChartDownload() {
   return (
@@ -173,13 +35,69 @@ export function TrafficChartDownload() {
   );
 }
 
+function AnomalyBubble({ x, y }: { x: number; y: number }) {
+  const GAP = 10;
+  return (
+    <div
+      className="absolute pointer-events-none"
+      style={{
+        left: x,
+        top: y - GAP,
+        transform: "translateX(-50%) translateY(-100%)",
+      }}
+    >
+      <div className="relative bg-white border-2 border-[#ff4560] rounded-2xl px-5 py-3 text-center min-w-37">
+        <p className="text-[#ff4560] font-bold text-sm leading-snug">
+          클릭 이상 징후 감지
+        </p>
+        <p className="text-[#555] text-xs mt-1 leading-relaxed">
+          구글-캠페인 A-광고 1
+          <br />
+          부정 클릭 의심
+        </p>
+        <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.75 w-3 h-3 bg-white border-r-2 border-b-2 border-[#ff4560] rotate-45" />
+      </div>
+    </div>
+  );
+}
+
 export default function TrafficChart() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [markerPos, setMarkerPos] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+
+  const updateMarkerPos = useCallback(() => {
+    if (!containerRef.current) return;
+    const marker = containerRef.current.querySelector<SVGElement>(
+      ".apexcharts-point-annotation-marker",
+    );
+    if (!marker) return;
+    const markerRect = marker.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    setMarkerPos({
+      x: markerRect.left - containerRect.left + markerRect.width / 2,
+      y: markerRect.top - containerRect.top,
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(updateMarkerPos, 300);
+    const observer = new ResizeObserver(updateMarkerPos);
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [updateMarkerPos]);
+
   return (
     <div
       id={CHART_CONTAINER_ID}
+      ref={containerRef}
       role="img"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      className="[&_.apexcharts-toolbar]:hidden"
+      className="relative [&_.apexcharts-toolbar]:hidden"
     >
       <ReactApexChart
         type="area"
@@ -192,6 +110,7 @@ export default function TrafficChart() {
         ]}
         height={360}
       />
+      {markerPos && <AnomalyBubble x={markerPos.x} y={markerPos.y} />}
     </div>
   );
 }
