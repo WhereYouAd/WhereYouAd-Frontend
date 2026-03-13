@@ -60,6 +60,8 @@ export default function MemberRoleSelect({
         <button
           type="button"
           disabled={disabled}
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
           onClick={() => setIsOpen((prev) => !prev)}
           className={`flex h-10 min-w-[98px] items-center justify-between gap-4 px-4 font-body2 transition-all ${
             triggerStyleMap[role]
@@ -70,20 +72,22 @@ export default function MemberRoleSelect({
             className={`h-4 w-4 shrink-0  transition-transform ${isOpen ? "rotate-90" : "-rotate-90"}`}
           />
         </button>
-        <div
-          className={`overflow-hidden bg-gray-100 transition-all duration-200 ease-out ${isOpen && !disabled ? "max-h-10 opacity-100" : "max-h-0 opacity-0"}`}
-        >
-          {restOptions.map((option) => (
-            <button
-              type="button"
-              key={option}
-              onClick={() => handleSelect(option)}
-              className={`flex h-10 w-full items-center justify-start px-7 font-body2 text-text-auth-sub transition-all hover:bg-gray-200`}
-            >
-              {roleLabelMap[option]}
-            </button>
-          ))}
-        </div>
+        {isOpen && !disabled && (
+          <div
+            className={`overflow-hidden bg-gray-100 transition-all duration-200 ease-out ${isOpen && !disabled ? "max-h-10 opacity-100" : "max-h-0 opacity-0"}`}
+          >
+            {restOptions.map((option) => (
+              <button
+                type="button"
+                key={option}
+                onClick={() => handleSelect(option)}
+                className={`flex h-10 w-full items-center justify-start px-7 font-body2 text-text-auth-sub transition-all hover:bg-gray-200`}
+              >
+                {roleLabelMap[option]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

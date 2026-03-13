@@ -22,6 +22,7 @@ export default function Toggle({
       type="button"
       role="switch"
       aria-label={ariaLabel}
+      aria-checked={checked}
       disabled={disabled}
       onClick={onToggle}
       className={twMerge(

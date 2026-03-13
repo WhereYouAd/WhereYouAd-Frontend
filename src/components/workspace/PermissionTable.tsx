@@ -71,6 +71,7 @@ function AdminCheckBadge() {
   return (
     <div className="inline-flex w-8 h-8 bg-chart-5/15 justify-center items-center rounded-component-lg">
       <CheckIcon className="w-5 h-5 text-chart-3 stroke-2" />
+      <span className="sr-only">가능</span>
     </div>
   );
 }

@@ -1,4 +1,9 @@
-import type { TWorkspaceMember } from "@/types/workspace/workspace";
+import { useState } from "react";
+
+import type {
+  TMemberRole,
+  TWorkspaceMember,
+} from "@/types/workspace/workspace";
 
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
@@ -30,9 +35,24 @@ const mockMembers: TWorkspaceMember[] = [
     profileImageUrl: null,
     role: "MEMBER",
   },
+  {
+    name: "곽빈",
+    email: "whathappen@naver.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+  },
 ];
 
 export default function MemberList() {
+  const [memberList, setMemberList] = useState<TWorkspaceMember[]>(mockMembers);
+
+  const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
+    setMemberList((prev) =>
+      prev.map((member) =>
+        member.email === targetEmail ? { ...member, role: newRole } : member,
+      ),
+    );
+  };
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex justify-between">
@@ -41,14 +61,14 @@ export default function MemberList() {
             팀 구성원
           </h2>
           <p className="font-body2 text-text-sub mt-2">
-            현재 4명의 구성원이 활동 중입니다
+            현재 {mockMembers.length}명의 구성원이 활동 중입니다
           </p>
         </div>
         <Button
           type="button"
           variant="primary"
           size="small"
-          aria-label="업로드"
+          aria-label="팀원 초대 버튼"
           onClick={() => alert("TODO:팀원초대모달버튼")}
           // disabled={}
           className="p-5 py-6 rounded-component-md"
@@ -59,8 +79,12 @@ export default function MemberList() {
       </header>
 
       <ul className="divide-y divide-gray-100">
-        {mockMembers.map((member) => (
-          <MemberItem key={member.email} member={member} />
+        {memberList.map((member) => (
+          <MemberItem
+            key={member.email}
+            member={member}
+            onRoleChange={(newRole) => handleRoleChange(member.email, newRole)}
+          />
         ))}
       </ul>
     </div>
