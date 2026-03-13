@@ -99,7 +99,8 @@ export default function TrafficChart() {
       ref={containerRef}
       role="img"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      className={`relative [&_.apexcharts-toolbar]:hidden${isAnomalyHovered ? " [&_.apexcharts-tooltip]:hidden!" : ""}`}
+      data-hide-tooltip={isAnomalyHovered || undefined}
+      className="relative [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:hidden!"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

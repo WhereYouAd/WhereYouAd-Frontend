@@ -25,9 +25,11 @@ export const BASE_OPTIONS: ApexOptions = {
     id: CHART_ID,
     type: "area",
     events: {
-      // SVG에 자동 삽입되는 <title> 제거 (접근성 중복 방지)
+      // SVG <title> 및 canvas 폴백 텍스트 제거
       mounted: (chartContext: { el: Element }) => {
         chartContext.el.querySelector("svg > title")?.remove();
+        const canvas = chartContext.el.querySelector("canvas");
+        if (canvas) canvas.textContent = "";
       },
     },
     toolbar: {

@@ -15,20 +15,11 @@ export function useAnomalyMarkerPos(
     );
     if (!marker) return;
 
-    const svg = containerRef.current.querySelector<SVGSVGElement>("svg");
-    if (!svg) return;
-    const ctm = marker.getScreenCTM();
-    if (!ctm) return;
-
-    const pt = svg.createSVGPoint();
-    pt.x = parseFloat(marker.getAttribute("cx") ?? "0");
-    pt.y = parseFloat(marker.getAttribute("cy") ?? "0");
-    const screenPt = pt.matrixTransform(ctm);
-
+    const markerRect = marker.getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
     setMarkerPos({
-      x: screenPt.x - containerRect.left,
-      y: screenPt.y - containerRect.top,
+      x: markerRect.left + markerRect.width / 2 - containerRect.left,
+      y: markerRect.top + markerRect.height / 2 - containerRect.top,
     });
   }, [containerRef]);
 
