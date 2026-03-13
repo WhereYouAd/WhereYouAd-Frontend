@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
+import { type TBadgeVariant } from "@/components/common/badge/Badge";
 
 import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
 
@@ -12,7 +12,7 @@ interface IBudgetGaugeChartProps {
   dangerThreshold: number;
 }
 
-const statusBadgeVariant: Record<string, TBadgeVariant> = {
+export const statusBadgeVariant: Record<string, TBadgeVariant> = {
   안정: "success",
   주의: "syncing",
   위험: "inactive",
@@ -85,24 +85,17 @@ export default function BudgetGaugeChart({
   return (
     <div className="flex flex-col w-full h-full font-pretendard pt-6">
       <div className="flex flex-col mb-8">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="font-body1 font-semibold text-text-auth-sub">
+        <div className="flex items-center mb-3">
+          <span className="font-body2 font-semibold text-text-auth-sub">
             이번 달 사용 예산
           </span>
-          <Badge
-            variant={statusBadgeVariant[status]}
-            size="sm"
-            className="px-2"
-          >
-            {status}
-          </Badge>
         </div>
 
         <div className="flex items-baseline gap-2">
-          <span className="font-hero font-extrabold text-text-main tracking-tight leading-none tabular-nums">
+          <span className="font-heading1 font-extrabold text-text-main tracking-tight leading-none tabular-nums">
             {percentage}%
           </span>
-          <span className="font-heading3 font-bold text-text-sub tracking-tight tabular-nums">
+          <span className="font-body2 font-bold text-text-sub tracking-tight tabular-nums">
             소진
           </span>
         </div>
@@ -142,7 +135,7 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
           <span className="font-caption font-medium text-text-auth-sub">
             남은 예산

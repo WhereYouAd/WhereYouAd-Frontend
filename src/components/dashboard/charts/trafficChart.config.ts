@@ -11,6 +11,9 @@ import { trafficChartMock } from "./trafficChart.mock";
 // 차트 인스턴스를 식별하는 고유 ID
 export const CHART_ID = "traffic-chart";
 
+// 이상 징후 데이터 포인트 인덱스 (x: 11)
+export const ANOMALY_INDEX = 11;
+
 // 파일 저장 시 날짜를 자동으로 포함시키기 위해 상수로 관리
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -174,9 +177,7 @@ export const BASE_OPTIONS: ApexOptions = {
   },
 
   tooltip: {
-    // 툴팁 상단 x축 시간 헤더를 숨김
-    x: { show: false },
-    style: { fontFamily: "Pretendard" },
+    enabled: false,
   },
 };
 

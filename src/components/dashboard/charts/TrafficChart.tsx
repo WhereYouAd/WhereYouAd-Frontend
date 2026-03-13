@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ReactApexChart from "react-apexcharts";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
@@ -61,11 +67,31 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
   );
 }
 
+const HOVER_RADIUS = 24;
+
 export default function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [markerPos, setMarkerPos] = useState<{ x: number; y: number } | null>(
     null,
   );
+  const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
+  const markerPosRef = useRef(markerPos);
+
+  useEffect(() => {
+    markerPosRef.current = markerPos;
+  }, [markerPos]);
+
+  const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    const pos = markerPosRef.current;
+    if (!pos || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const dist = Math.sqrt((mx - pos.x) ** 2 + (my - pos.y) ** 2);
+    setIsAnomalyHovered(dist <= HOVER_RADIUS);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
   const updateMarkerPos = useCallback(() => {
     if (!containerRef.current) return;
@@ -109,6 +135,8 @@ export default function TrafficChart() {
       role="img"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
       className="relative [&_.apexcharts-toolbar]:hidden"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <ReactApexChart
         type="area"
@@ -121,7 +149,9 @@ export default function TrafficChart() {
         ]}
         height={360}
       />
-      {markerPos && <AnomalyBubble x={markerPos.x} y={markerPos.y} />}
+      {markerPos && isAnomalyHovered && (
+        <AnomalyBubble x={markerPos.x} y={markerPos.y} />
+      )}
     </div>
   );
 }

@@ -4,12 +4,15 @@ import { toast } from "sonner";
 
 import { printAsPdf } from "@/utils/download";
 
+import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
-import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
+import BudgetGaugeChart, {
+  statusBadgeVariant,
+} from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
 import TrafficChart, {
   TrafficChartDownload,
@@ -63,7 +66,7 @@ export default function OverviewDashboard() {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {overviewMockData.kpis.map((kpi) => (
           <StatCard key={kpi.title} {...kpi} />
         ))}
@@ -97,6 +100,27 @@ export default function OverviewDashboard() {
               ]}
             />
           }
+          RightElement={(() => {
+            const { totalBudget, spent, warningThreshold, dangerThreshold } =
+              budgetGaugeChartMock;
+            const pct =
+              totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+            const status =
+              pct >= dangerThreshold
+                ? "위험"
+                : pct >= warningThreshold
+                  ? "주의"
+                  : "안정";
+            return (
+              <Badge
+                variant={statusBadgeVariant[status]}
+                size="sm"
+                className="px-2"
+              >
+                {status}
+              </Badge>
+            );
+          })()}
         >
           <BudgetGaugeChart {...budgetGaugeChartMock} />
         </Card>
