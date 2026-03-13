@@ -43,9 +43,7 @@ export default function MemberItem({ member }: TProps) {
         <button
           type="button"
           aria-label="멤버 삭제버튼"
-          onClick={() => {
-            console.log("TODO:멤버삭제모달연동");
-          }}
+          onClick={() => alert("TODO:팀원삭제확인모달버튼")}
           className="text-text-sub hover:text-text-main transition-all"
         >
           <TrashIcon className="w-5 h-5" />

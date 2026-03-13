@@ -18,10 +18,10 @@ export default function MemberManagement() {
         <PermissionTable />
         <ControlBox
           title="관리자 변경"
-          description={`이 조직의 소유권을 다른 멤버에게 양도합니다.\n이 작업은 되돌릴 수 없습니다.`}
+          description={`이 조직의 소유권을 다른 멤버에게 양도합니다. 이 작업은 되돌릴 수 없습니다.`}
           buttonText="소유권 이전"
-          onButtonClick={() => console.log("소유권이전버튼클릭")}
-          className="w-full mt-12"
+          onButtonClick={() => alert("TODO:소유권이전버튼클릭")}
+          className="w-full"
           containerClassName="bg-status-red/10 border-status-red"
           titleClassName="text-status-red"
           descriptionClassName="text-text-auth-sub"

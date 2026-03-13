@@ -73,3 +73,20 @@ export type TWorkspaceMemberCount = {
 };
 
 export type TDeleteWorkspaceMemberResponse = string;
+
+export type TPermissionValue = "가능" | "불가능";
+
+export type TPermissionRow = {
+  key:
+    | "campaignView"
+    | "billingManage"
+    | "workspaceView"
+    | "memberInvite"
+    | "memberRoleEdit"
+    | "workspaceEdit"
+    | "projectDelete";
+  label: string;
+  description: string;
+  admin: TPermissionValue;
+  member: TPermissionValue;
+};
