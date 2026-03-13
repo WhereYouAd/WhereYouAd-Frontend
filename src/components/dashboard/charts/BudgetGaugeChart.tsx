@@ -144,7 +144,7 @@ export default function BudgetGaugeChart({
           </span>
           <span
             className={twMerge(
-              "font-heading3 font-bold tracking-tight tabular-nums",
+              "font-body1 font-bold tracking-tight tabular-nums",
               isOverBudget ? "text-status-red" : "text-text-main",
             )}
           >

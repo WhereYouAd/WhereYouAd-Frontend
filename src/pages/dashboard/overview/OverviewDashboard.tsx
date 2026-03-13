@@ -84,9 +84,9 @@ export default function OverviewDashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-7 gap-6">
+      <div className="grid grid-cols-1 2xl:grid-cols-7 gap-6">
         <Card
-          className="xl:col-span-5 flex flex-col min-h-120"
+          className="2xl:col-span-5 flex flex-col min-h-120"
           title="실시간 트래픽 변화"
           description={
             <ChartLegend
@@ -101,7 +101,7 @@ export default function OverviewDashboard() {
           <TrafficChart />
         </Card>
         <Card
-          className="xl:col-span-2 flex flex-col xl:min-h-120"
+          className="2xl:col-span-2 flex flex-col 2xl:min-h-120"
           title="예산 소진 현황"
           description={
             <ChartLegend
