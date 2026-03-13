@@ -27,7 +27,7 @@ export const BASE_OPTIONS: ApexOptions = {
     events: {
       // SVG <title> 및 canvas 폴백 텍스트 제거
       mounted: (chartContext: { el: Element }) => {
-        chartContext.el.querySelector("svg > title")?.remove();
+        chartContext.el.querySelectorAll("title").forEach((el) => el.remove());
         const canvas = chartContext.el.querySelector("canvas");
         if (canvas) canvas.textContent = "";
       },
