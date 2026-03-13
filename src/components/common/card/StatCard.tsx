@@ -20,6 +20,25 @@ const trendClasses: Record<ITrend["direction"], string> = {
   down: "bg-status-blue/[0.08] text-status-blue font-bold",
 };
 
+export function TrendBadge({ direction, value }: ITrend) {
+  return (
+    <span
+      aria-label={`${value} ${direction === "up" ? "상승" : "하락"}`}
+      className={twMerge(
+        "inline-flex items-center gap-1 px-2 py-1 rounded-full font-caption w-fit",
+        trendClasses[direction],
+      )}
+    >
+      {direction === "up" ? (
+        <TrendUpIcon aria-hidden className="w-4 h-4" />
+      ) : (
+        <TrendDownIcon aria-hidden className="w-4 h-4" />
+      )}
+      {value}
+    </span>
+  );
+}
+
 export default function StatCard({
   title,
   value,
@@ -39,22 +58,7 @@ export default function StatCard({
       <p className="font-heading1 text-text-main font-extrabold tracking-tight">
         {value}
       </p>
-      {trend && (
-        <span
-          aria-label={`${trend.value} ${trend.direction === "up" ? "상승" : "하락"}`}
-          className={twMerge(
-            "inline-flex items-center gap-1 px-2 py-1 rounded-full font-caption w-fit",
-            trendClasses[trend.direction],
-          )}
-        >
-          {trend.direction === "up" ? (
-            <TrendUpIcon aria-hidden className="w-4 h-4" />
-          ) : (
-            <TrendDownIcon aria-hidden className="w-4 h-4" />
-          )}
-          {trend.value}
-        </span>
-      )}
+      {trend && <TrendBadge {...trend} />}
     </div>
   );
 }

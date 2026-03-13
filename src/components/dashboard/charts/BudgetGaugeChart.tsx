@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 
 import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
 
+import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
+
 interface IBudgetGaugeChartProps {
   totalBudget: number;
   spent: number;
@@ -29,7 +31,6 @@ export default function BudgetGaugeChart({
   dangerThreshold,
 }: IBudgetGaugeChartProps) {
   const [mounted, setMounted] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setMounted(true));
@@ -60,81 +61,95 @@ export default function BudgetGaugeChart({
 
   const status = getStatus();
 
+  // 데이터 인사이트 메시지
+  let insightDesc = "";
+
+  if (isOverBudget) {
+    insightDesc = "예산을 초과했습니다. 캠페인 조정이 필요해요.";
+  } else if (
+    percentage >= dangerThreshold ||
+    percentage > periodElapsedRate + 15
+  ) {
+    insightDesc = "예산 소진이 빨라요. 일일 한도 점검을 추천해요.";
+  } else if (
+    percentage >= warningThreshold ||
+    percentage > periodElapsedRate + 5
+  ) {
+    insightDesc = "예산 소진 속도가 다소 높아요. 매체 효율을 확인해 보세요.";
+  } else if (percentage < periodElapsedRate - 5) {
+    insightDesc = "예산이 여유로워요. 효율이 좋은 매체에 더 투자해 보세요.";
+  } else {
+    insightDesc = "계획된 일정에 맞게 예산이 잘 사용되고 있어요.";
+  }
+
   return (
-    <div className="flex flex-col w-full h-full font-pretendard">
-      <div className="flex flex-col mb-5 mt-3 xl:mb-10 xl:mt-5">
-        <div className="flex items-start justify-between mb-5">
-          <div className="flex flex-col gap-1.5">
-            <span className="font-body2 text-text-auth-sub">현재 사용액</span>
-            <div className="flex flex-wrap items-end gap-x-2 gap-y-1">
-              <span className="font-heading1 text-text-main tracking-tight leading-none">
-                ₩{spent.toLocaleString()}
-              </span>
-              <span className="font-body2 text-text-sub whitespace-nowrap pb-0.5">
-                / ₩{totalBudget.toLocaleString()}
-              </span>
-            </div>
-          </div>
+    <div className="flex flex-col w-full h-full font-pretendard pt-6">
+      <div className="flex flex-col mb-8">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="font-body1 font-semibold text-text-auth-sub">
+            이번 달 사용 예산
+          </span>
           <Badge
             variant={statusBadgeVariant[status]}
             size="sm"
-            className="absolute top-7 right-7"
+            className="px-2"
           >
             {status}
           </Badge>
         </div>
 
-        <div
-          className="relative pt-6 pb-2 cursor-pointer"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div
-            className={twMerge(
-              "absolute top-0 left-0 transform -translate-x-1/2 bg-neutral-800 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-semibold py-1.5 px-3 rounded-md shadow-md transition-all duration-300 z-10 whitespace-nowrap pointer-events-none",
-              isHovered
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-1",
-            )}
-            style={{ left: `${Math.min(Math.max(percentage, 5), 95)}%` }}
-          >
-            {percentage}% 소진
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-[5px] border-transparent border-t-neutral-800 dark:border-t-neutral-100" />
-          </div>
-
-          <div
-            role="progressbar"
-            aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="예산 소진율"
-            className="relative h-2.5 w-full bg-bg-surface/60 rounded-full overflow-hidden"
-          >
-            <div
-              className={twMerge(
-                "absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-1000 ease-out origin-left",
-                status === "안정"
-                  ? "bg-linear-to-r from-status-green/70 to-status-green"
-                  : status === "주의"
-                    ? "bg-linear-to-r from-status-yellow/70 to-status-yellow"
-                    : "bg-linear-to-r from-status-red/70 to-status-red",
-              )}
-              style={{
-                transform: `scaleX(${mounted ? Math.min(percentage, 100) / 100 : 0})`,
-              }}
-            />
-          </div>
+        <div className="flex items-baseline gap-2">
+          <span className="font-hero font-extrabold text-text-main tracking-tight leading-none tabular-nums">
+            {percentage}%
+          </span>
+          <span className="font-heading3 font-bold text-text-sub tracking-tight tabular-nums">
+            소진
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-x-4 gap-y-5 mb-6 mt-2 xl:gap-y-4 xl:mb-8">
-        <div className="flex flex-col gap-1.5 border-l-2 border-bg-surface pl-4">
-          <span className="font-caption text-text-sub text-xs whitespace-nowrap">
-            {isOverBudget ? "초과 지출" : "이번 달 잔액"}
+      <div className="relative mb-10 w-full">
+        <div
+          role="progressbar"
+          aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          className="relative h-3 w-full bg-bg-surface rounded-full overflow-hidden"
+        >
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-white/60 z-10"
+            style={{ left: `${warningThreshold}%` }}
+          />
+          <div
+            className="absolute top-0 bottom-0 w-0.5 bg-white/60 z-10"
+            style={{ left: `${dangerThreshold}%` }}
+          />
+
+          <div
+            className={twMerge(
+              "absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-1000 ease-smooth origin-left",
+              statusPointClasses[status],
+            )}
+            style={{
+              transform: `scaleX(${mounted ? Math.min(percentage, 100) / 100 : 0})`,
+            }}
+          />
+        </div>
+
+        <div className="flex justify-between items-center mt-3 font-body2 text-text-sub">
+          <span className="tabular-nums">₩{spent.toLocaleString()}</span>
+          <span className="tabular-nums">₩{totalBudget.toLocaleString()}</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-4 mb-8">
+        <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
+          <span className="font-caption font-medium text-text-auth-sub">
+            남은 예산
           </span>
           <span
             className={twMerge(
-              "font-semibold text-xl tracking-tight leading-none whitespace-nowrap",
+              "font-heading3 font-bold tracking-tight tabular-nums",
               isOverBudget ? "text-status-red" : "text-text-main",
             )}
           >
@@ -142,46 +157,36 @@ export default function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5 border-l-2 border-bg-surface pl-4">
-          <span className="font-caption text-text-sub text-xs whitespace-nowrap">
-            기간 진행률 ({periodElapsedRate}%)
-          </span>
-          <span className="font-semibold text-xl text-text-main tracking-tight leading-none whitespace-nowrap">
-            {periodElapsedDays}일{" "}
-            <span className="text-text-sub font-normal text-[15px]">
-              / {periodTotalDays}일
+        <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
+          <div className="flex items-center gap-1.5">
+            <span className="font-caption font-medium text-text-auth-sub">
+              기간 진행률
             </span>
-          </span>
+            <span className="font-caption font-bold text-text-main tabular-nums ml-auto">
+              {periodElapsedRate}%
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mt-auto">
+            <div className="h-1.5 flex-1 bg-bg-disabled/40 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-text-disabled rounded-full"
+                style={{ width: `${periodElapsedRate}%` }}
+              />
+            </div>
+            <span className="font-caption font-semibold text-text-sub tabular-nums">
+              {periodElapsedDays}일/{periodTotalDays}일
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="mt-auto bg-bg-surface/30 hover:bg-bg-surface/50 transition-colors rounded-xl p-4.5 flex items-start gap-3 border border-transparent hover:border-bg-surface/60">
-        <div
-          className={twMerge(
-            "w-2 h-2 rounded-full mt-1.25 shrink-0 shadow-[0_0_8px_rgba(0,0,0,0.15)]",
-            statusPointClasses[status],
-            "motion-safe:animate-pulse",
-          )}
+      <div className="mt-auto px-5 py-4 flex items-center gap-3 rounded-[16px] bg-[#F2F4F6]">
+        <AlertCircleIcon
+          className="w-5 h-5 text-[#8B95A1] shrink-0"
+          aria-hidden="true"
         />
-        <p className="font-caption text-sm text-text-sub leading-relaxed tracking-tight">
-          기간의{" "}
-          <span className="font-semibold text-text-main">
-            {periodElapsedRate}%
-          </span>
-          가 경과했으며, 예산은{" "}
-          <span
-            className={twMerge(
-              "font-semibold",
-              status === "위험"
-                ? "text-status-red"
-                : status === "주의"
-                  ? "text-status-yellow"
-                  : "text-status-green",
-            )}
-          >
-            {status}
-          </span>{" "}
-          수준으로 운용되고 있습니다.
+        <p className="font-body2 text-[#4E5968] font-medium leading-snug break-keep">
+          {insightDesc}
         </p>
       </div>
     </div>

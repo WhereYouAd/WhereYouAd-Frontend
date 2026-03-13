@@ -14,13 +14,14 @@ import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeC
 import TrafficChart, {
   TrafficChartDownload,
 } from "@/components/dashboard/charts/TrafficChart";
-import PlatformComparison from "@/components/dashboard/platform/PlatformComparison";
+import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
 
 import { overviewMockData } from "./overview.mock";
 import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
 import DownloadIcon from "@/assets/icon/ai-report/download.svg?react";
 import LinkIcon from "@/assets/icon/ai-report/link.svg?react";
+import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
 import ChevronDoubleRightIcon from "@/assets/icon/common/chevron-double-right.svg?react";
 import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 
@@ -116,44 +117,16 @@ export default function OverviewDashboard() {
           </Button>
         }
         description={
-          <div className="relative inline-flex items-center gap-1 group/roas">
-            <span className="font-caption text-text-placeholder">
-              ROAS 산출 기준
-            </span>
-            <span className="text-text-placeholder cursor-help select-none leading-none">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <circle
-                  cx="8"
-                  cy="8"
-                  r="7"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                />
-                <path
-                  d="M8 7v5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                />
-                <circle cx="8" cy="4.5" r="0.75" fill="currentColor" />
-              </svg>
-            </span>
-            {/* 호버 시 노출되는 툴팁 */}
-            <div className="pointer-events-none absolute left-0 top-5 z-50 hidden group-hover/roas:block bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] px-3 py-2 border border-gray-100 whitespace-nowrap">
-              <span className="font-caption text-text-auth-sub">
-                ROAS(%) = 매출 ÷ 광고비 × 100
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5 font-caption text-text-placeholder select-none">
+            <AlertCircleIcon
+              className="w-3.5 h-3.5 mt-px shrink-0"
+              aria-hidden="true"
+            />
+            <span>ROAS 산출: 매출 ÷ 광고비 × 100</span>
           </div>
         }
       >
-        <PlatformComparison />
+        <PlatformRoasTable />
       </Card>
 
       <Drawer
