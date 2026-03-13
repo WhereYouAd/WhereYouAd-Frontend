@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import type { TMemberRole } from "@/types/workspace/workspace";
 
@@ -29,6 +29,7 @@ export default function MemberRoleSelect({
 }: TProps) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -42,6 +43,12 @@ export default function MemberRoleSelect({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (disabled) {
+      setIsOpen(false);
+    }
+  }, [disabled]);
 
   const restOptions = useMemo(
     () => roleOptions.filter((option) => option !== role),
@@ -62,6 +69,7 @@ export default function MemberRoleSelect({
           disabled={disabled}
           aria-expanded={isOpen}
           aria-haspopup="menu"
+          aria-controls={isOpen && !disabled ? menuId : undefined}
           onClick={() => setIsOpen((prev) => !prev)}
           className={`flex h-10 min-w-[98px] items-center justify-between gap-4 px-4 font-body2 transition-all ${
             triggerStyleMap[role]
@@ -74,12 +82,15 @@ export default function MemberRoleSelect({
         </button>
         {isOpen && !disabled && (
           <div
+            id={menuId}
+            role="menu"
             className={`overflow-hidden bg-gray-100 transition-all duration-200 ease-out ${isOpen && !disabled ? "max-h-10 opacity-100" : "max-h-0 opacity-0"}`}
           >
             {restOptions.map((option) => (
               <button
                 type="button"
                 key={option}
+                role="menuitem"
                 onClick={() => handleSelect(option)}
                 className={`flex h-10 w-full items-center justify-start px-7 font-body2 text-text-auth-sub transition-all hover:bg-gray-200`}
               >
