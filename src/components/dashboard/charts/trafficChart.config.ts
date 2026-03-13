@@ -177,7 +177,18 @@ export const BASE_OPTIONS: ApexOptions = {
   },
 
   tooltip: {
-    enabled: false,
+    custom: ({
+      series,
+      dataPointIndex,
+    }: {
+      series: number[][];
+      dataPointIndex: number;
+    }) => {
+      if (dataPointIndex === ANOMALY_INDEX) return "";
+      const val = series[0][dataPointIndex];
+      if (val === undefined) return "";
+      return `<div style="padding:8px 12px;font-family:Pretendard;font-size:13px;background:#1f2937;color:white;border-radius:8px;display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#0084fe;flex-shrink:0"></span>클릭수:&nbsp;<strong>${(val / 1000).toFixed(0)}K</strong></div>`;
+    },
   },
 };
 
