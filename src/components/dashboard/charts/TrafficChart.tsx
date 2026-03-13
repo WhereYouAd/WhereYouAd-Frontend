@@ -18,6 +18,7 @@ import { trafficChartMock } from "./trafficChart.mock";
 
 import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
 
+// 차트 우측 상단 다운로드 버튼
 export function TrafficChartDownload() {
   return (
     <DropdownMenu
@@ -41,6 +42,7 @@ export function TrafficChartDownload() {
   );
 }
 
+// 이상 징후 커스텀 말풍선 툴팁
 function AnomalyBubble({ x, y }: { x: number; y: number }) {
   const GAP = 16;
   return (
@@ -67,20 +69,26 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
   );
 }
 
+// 이상 징후 빨간 점 근접 판정 반경 (px)
 const HOVER_RADIUS = 24;
 
 export default function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // 빨간 점의 컨테이너 기준 좌표
   const [markerPos, setMarkerPos] = useState<{ x: number; y: number } | null>(
     null,
   );
+  // 마우스가 빨간 점 근처에 있는지 여부
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
-  const markerPosRef = useRef(markerPos);
 
+  // 이벤트 핸들러에서 최신 markerPos를 참조하기 위한 ref
+  const markerPosRef = useRef(markerPos);
   useEffect(() => {
     markerPosRef.current = markerPos;
   }, [markerPos]);
 
+  // 마우스 위치와 빨간 점의 거리로 호버 여부 판정
   const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
     const pos = markerPosRef.current;
     if (!pos || !containerRef.current) return;
@@ -93,6 +101,7 @@ export default function TrafficChart() {
 
   const handleMouseLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
+  // SVG annotation 마커의 화면 좌표를 컨테이너 기준으로 변환해 저장
   const updateMarkerPos = useCallback(() => {
     if (!containerRef.current) return;
     const marker = containerRef.current.querySelector<SVGCircleElement>(
@@ -100,7 +109,6 @@ export default function TrafficChart() {
     );
     if (!marker) return;
 
-    // SVG 좌표 행렬(getScreenCTM)로 마커 중심의 화면 좌표를 직접 구함
     const svg = containerRef.current.querySelector<SVGSVGElement>("svg");
     if (!svg) return;
     const ctm = marker.getScreenCTM();
@@ -118,6 +126,7 @@ export default function TrafficChart() {
     });
   }, []);
 
+  // 마운트 후 및 리사이즈 시 마커 좌표 갱신
   useEffect(() => {
     const timer = setTimeout(updateMarkerPos, 300);
     const observer = new ResizeObserver(updateMarkerPos);
@@ -134,7 +143,7 @@ export default function TrafficChart() {
       ref={containerRef}
       role="img"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      className="relative [&_.apexcharts-toolbar]:hidden"
+      className={`relative [&_.apexcharts-toolbar]:hidden${isAnomalyHovered ? " [&_.apexcharts-tooltip]:hidden!" : ""}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
