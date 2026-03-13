@@ -11,6 +11,7 @@ import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
 import BudgetGaugeChart, {
+  getBudgetStatus,
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
 import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
@@ -31,17 +32,27 @@ import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
-  const currentDate = useMemo(
-    () =>
-      new Date().toLocaleString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    [],
+  const [currentDate] = useState(() =>
+    new Date().toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
   );
+
+  const budgetStatusBadge = useMemo(() => {
+    const { totalBudget, spent, warningThreshold, dangerThreshold } =
+      budgetGaugeChartMock;
+    const pct = totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+    const status = getBudgetStatus(pct, warningThreshold, dangerThreshold);
+    return (
+      <Badge variant={statusBadgeVariant[status]} size="sm" className="px-2">
+        {status}
+      </Badge>
+    );
+  }, []);
 
   return (
     <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
@@ -55,6 +66,7 @@ export default function OverviewDashboard() {
           </p>
         </div>
         <button
+          type="button"
           onClick={() => setIsAiPanelOpen(true)}
           className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
           aria-label="AI 요약하기"
@@ -100,27 +112,7 @@ export default function OverviewDashboard() {
               ]}
             />
           }
-          RightElement={(() => {
-            const { totalBudget, spent, warningThreshold, dangerThreshold } =
-              budgetGaugeChartMock;
-            const pct =
-              totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
-            const status =
-              pct >= dangerThreshold
-                ? "위험"
-                : pct >= warningThreshold
-                  ? "주의"
-                  : "안정";
-            return (
-              <Badge
-                variant={statusBadgeVariant[status]}
-                size="sm"
-                className="px-2"
-              >
-                {status}
-              </Badge>
-            );
-          })()}
+          RightElement={budgetStatusBadge}
         >
           <BudgetGaugeChart {...budgetGaugeChartMock} />
         </Card>

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
+
+import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { type TBadgeVariant } from "@/components/common/badge/Badge";
 
@@ -12,13 +13,25 @@ interface IBudgetGaugeChartProps {
   dangerThreshold: number;
 }
 
-export const statusBadgeVariant: Record<string, TBadgeVariant> = {
+export type TBudgetStatus = "안정" | "주의" | "위험";
+
+export function getBudgetStatus(
+  percentage: number,
+  warningThreshold: number,
+  dangerThreshold: number,
+): TBudgetStatus {
+  if (percentage >= dangerThreshold) return "위험";
+  if (percentage >= warningThreshold) return "주의";
+  return "안정";
+}
+
+export const statusBadgeVariant: Record<TBudgetStatus, TBadgeVariant> = {
   안정: "success",
   주의: "syncing",
   위험: "inactive",
 };
 
-const statusPointClasses: Record<string, string> = {
+const statusPointClasses: Record<TBudgetStatus, string> = {
   안정: "bg-status-green",
   주의: "bg-status-yellow",
   위험: "bg-status-red",
@@ -30,12 +43,7 @@ export default function BudgetGaugeChart({
   warningThreshold,
   dangerThreshold,
 }: IBudgetGaugeChartProps) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  const mounted = useIsMounted();
 
   const percentage =
     totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
@@ -53,13 +61,7 @@ export default function BudgetGaugeChart({
     (periodElapsedDays / periodTotalDays) * 100,
   );
 
-  const getStatus = () => {
-    if (percentage >= dangerThreshold) return "위험";
-    if (percentage >= warningThreshold) return "주의";
-    return "안정";
-  };
-
-  const status = getStatus();
+  const status = getBudgetStatus(percentage, warningThreshold, dangerThreshold);
 
   // 데이터 인사이트 메시지
   let insightDesc = "";

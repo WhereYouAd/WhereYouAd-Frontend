@@ -1,11 +1,7 @@
-import {
-  type MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type MouseEvent, useCallback, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+
+import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
@@ -15,6 +11,7 @@ import {
   DOWNLOAD_ITEMS,
 } from "./trafficChart.config";
 import { trafficChartMock } from "./trafficChart.mock";
+import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
 import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
 
@@ -73,73 +70,28 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
 const HOVER_RADIUS = 24;
 
 export default function TrafficChart() {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useIsMounted();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 빨간 점의 컨테이너 기준 좌표
-  const [markerPos, setMarkerPos] = useState<{ x: number; y: number } | null>(
-    null,
-  );
+  const markerPos = useAnomalyMarkerPos(containerRef);
   // 마우스가 빨간 점 근처에 있는지 여부
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
 
-  // 이벤트 핸들러에서 최신 markerPos를 참조하기 위한 ref
-  const markerPosRef = useRef(markerPos);
-  useEffect(() => {
-    markerPosRef.current = markerPos;
-  }, [markerPos]);
-
   // 마우스 위치와 빨간 점의 거리로 호버 여부 판정
-  const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    const pos = markerPosRef.current;
-    if (!pos || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    const dist = Math.sqrt((mx - pos.x) ** 2 + (my - pos.y) ** 2);
-    setIsAnomalyHovered(dist <= HOVER_RADIUS);
-  }, []);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      if (!markerPos || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const dist = Math.sqrt((mx - markerPos.x) ** 2 + (my - markerPos.y) ** 2);
+      setIsAnomalyHovered(dist <= HOVER_RADIUS);
+    },
+    [markerPos, containerRef],
+  );
 
   const handleMouseLeave = useCallback(() => setIsAnomalyHovered(false), []);
-
-  // SVG annotation 마커의 화면 좌표를 컨테이너 기준으로 변환해 저장
-  const updateMarkerPos = useCallback(() => {
-    if (!containerRef.current) return;
-    const marker = containerRef.current.querySelector<SVGCircleElement>(
-      ".apexcharts-point-annotation-marker",
-    );
-    if (!marker) return;
-
-    const svg = containerRef.current.querySelector<SVGSVGElement>("svg");
-    if (!svg) return;
-    const ctm = marker.getScreenCTM();
-    if (!ctm) return;
-
-    const pt = svg.createSVGPoint();
-    pt.x = parseFloat(marker.getAttribute("cx") ?? "0");
-    pt.y = parseFloat(marker.getAttribute("cy") ?? "0");
-    const screenPt = pt.matrixTransform(ctm);
-
-    const containerRect = containerRef.current.getBoundingClientRect();
-    setMarkerPos({
-      x: screenPt.x - containerRect.left,
-      y: screenPt.y - containerRect.top,
-    });
-  }, []);
-
-  // 마운트 후 및 리사이즈 시 마커 좌표 갱신
-  useEffect(() => {
-    const timer = setTimeout(updateMarkerPos, 300);
-    const observer = new ResizeObserver(updateMarkerPos);
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => {
-      clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, [updateMarkerPos]);
 
   return (
     <div

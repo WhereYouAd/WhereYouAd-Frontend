@@ -67,11 +67,7 @@ export default function PlatformRoasTable() {
               {/* 플랫폼 이름 */}
               <div className="flex items-center gap-3">
                 <div className="shrink-0 p-1.5 rounded-full bg-white ring-1 ring-bg-disabled/40 shadow-sm group-hover:scale-105 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
-                  {
-                    platformLogoMap[
-                      platform.name as keyof typeof platformLogoMap
-                    ]
-                  }
+                  {platformLogoMap[platform.name]}
                 </div>
                 <span className="font-body1 font-bold text-text-main tracking-tight">
                   {platform.name}
