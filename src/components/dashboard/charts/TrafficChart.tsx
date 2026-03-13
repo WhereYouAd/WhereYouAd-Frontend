@@ -73,6 +73,10 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
 const HOVER_RADIUS = 24;
 
 export default function TrafficChart() {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 빨간 점의 컨테이너 기준 좌표
@@ -147,17 +151,19 @@ export default function TrafficChart() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <ReactApexChart
-        type="area"
-        options={BASE_OPTIONS}
-        series={[
-          {
-            name: "클릭수",
-            data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
-          },
-        ]}
-        height={360}
-      />
+      {isMounted && (
+        <ReactApexChart
+          type="area"
+          options={BASE_OPTIONS}
+          series={[
+            {
+              name: "클릭수",
+              data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
+            },
+          ]}
+          height={400}
+        />
+      )}
       {markerPos && isAnomalyHovered && (
         <AnomalyBubble x={markerPos.x} y={markerPos.y} />
       )}
