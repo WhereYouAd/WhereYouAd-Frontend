@@ -51,8 +51,8 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
         transform: "translateX(-50%) translateY(-100%)",
       }}
     >
-      <div className="relative bg-white border-2 border-[#ff4560] rounded-2xl px-5 py-3 text-center min-w-37">
-        <p className="text-[#ff4560] font-bold text-sm leading-snug">
+      <div className="relative bg-white border-2 border-status-red rounded-2xl px-5 py-3 text-center min-w-37">
+        <p className="text-status-red font-bold text-sm leading-snug">
           클릭 이상 징후 감지
         </p>
         <p className="text-[#555] text-xs mt-1 leading-relaxed">

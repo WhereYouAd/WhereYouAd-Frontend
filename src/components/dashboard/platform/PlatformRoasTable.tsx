@@ -34,23 +34,24 @@ function Delta({ value }: { value: number }) {
   );
 }
 
-// 테이블 그리드 컬럼 레이아웃
-const COL = "grid-cols-[32px_1.5fr_2.5fr_1fr_1fr_1.5fr]";
+// 테이블 그리드 컬럼 레이아웃 (full: 6열, compact: CTR/CVR 숨김 4열)
+const COL =
+  "grid-cols-[32px_1.5fr_2.5fr_1.5fr] @2xl:grid-cols-[32px_1.5fr_2.5fr_1fr_1fr_1.5fr]";
 
 export default function PlatformRoasTable() {
   return (
-    <div className="flex flex-col h-full font-pretendard w-full">
+    <div className="@container flex flex-col h-full font-pretendard w-full">
       <div className="flex flex-col flex-1 min-w-0">
         {/* 헤더 */}
         <div
           className={`grid ${COL} gap-x-4 px-4 pt-2 pb-4 font-caption text-[#8B95A1] font-medium tracking-wider uppercase border-b border-[#F2F4F6]`}
         >
-          <span className="text-center">#</span>
-          <span className="text-left">Platform</span>
+          <span className="text-center">순위</span>
+          <span className="text-left">플랫폼</span>
           <span className="text-left">ROAS(%)</span>
-          <span className="text-center">CTR</span>
-          <span className="text-center">CVR</span>
-          <span className="text-right whitespace-nowrap">Revenue / Cost</span>
+          <span className="hidden @2xl:block text-center">CTR(클릭률)</span>
+          <span className="hidden @2xl:block text-center">CVR(전환율)</span>
+          <span className="text-right whitespace-nowrap">매출 / 광고비</span>
         </div>
 
         <div className="flex flex-col pb-2 divide-y divide-[#F2F4F6]">
@@ -66,7 +67,7 @@ export default function PlatformRoasTable() {
 
               {/* 플랫폼 이름 */}
               <div className="flex items-center gap-3">
-                <div className="shrink-0 p-1.5 rounded-full bg-white ring-1 ring-bg-disabled/40 shadow-sm group-hover:scale-105 group-hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-300">
+                <div className="shrink-0 p-1.5 group-hover:scale-105">
                   {platformLogoMap[platform.name]}
                 </div>
                 <span className="font-body1 font-bold text-text-main tracking-tight">
@@ -90,7 +91,7 @@ export default function PlatformRoasTable() {
               </div>
 
               {/* CTR + 전기 대비 증감 */}
-              <div className="flex flex-col items-center justify-center gap-1.5 w-full">
+              <div className="hidden @2xl:flex flex-col items-center justify-center gap-1.5 w-full">
                 <span className="font-body1 font-bold text-text-main tracking-tight leading-none tabular-nums">
                   {platform.clickRate.toLocaleString()}%
                 </span>
@@ -100,7 +101,7 @@ export default function PlatformRoasTable() {
               </div>
 
               {/* 전환율 + 전기 대비 증감 */}
-              <div className="flex flex-col items-center justify-center gap-1.5 w-full">
+              <div className="hidden @2xl:flex flex-col items-center justify-center gap-1.5 w-full">
                 <span className="font-body1 font-bold text-text-main tracking-tight leading-none tabular-nums">
                   {platform.conversionRate.toLocaleString()}%
                 </span>

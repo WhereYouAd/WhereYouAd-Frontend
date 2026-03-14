@@ -137,7 +137,7 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
         <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
           <span className="font-caption font-medium text-text-auth-sub">
             남은 예산
@@ -152,26 +152,22 @@ export default function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
-          <div className="flex items-center gap-1.5">
+        <div className="flex flex-col gap-1 p-4 rounded-2xl bg-bg-surface/50">
+          <div className="flex items-center justify-between">
             <span className="font-caption font-medium text-text-auth-sub">
               기간 진행률
             </span>
-            <span className="font-caption font-bold text-text-main tabular-nums ml-auto">
+            <span className="font-caption font-semibold text-text-sub tabular-nums">
               {periodElapsedRate}%
             </span>
           </div>
-          <div className="flex items-center gap-2 mt-auto">
-            <div className="h-1.5 flex-1 bg-bg-disabled/40 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-text-disabled rounded-full"
-                style={{ width: `${periodElapsedRate}%` }}
-              />
-            </div>
-            <span className="font-caption font-semibold text-text-sub tabular-nums">
-              {periodElapsedDays}일/{periodTotalDays}일
+          <span className="font-body1 font-bold text-text-main tabular-nums text-right mt-0.5">
+            {periodElapsedDays}일
+            <span className="font-caption font-medium text-text-auth-sub">
+              {" "}
+              / {periodTotalDays}일
             </span>
-          </div>
+          </span>
         </div>
       </div>
 
