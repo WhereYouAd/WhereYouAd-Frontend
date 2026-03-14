@@ -1,4 +1,4 @@
-import { type MouseEvent, useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
@@ -66,32 +66,14 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
   );
 }
 
-// 이상 징후 빨간 점 근접 판정 반경 (px)
-const HOVER_RADIUS = 24;
-
 export default function TrafficChart() {
   const isMounted = useIsMounted();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 빨간 점의 컨테이너 기준 좌표
   const markerPos = useAnomalyMarkerPos(containerRef);
-  // 마우스가 빨간 점 근처에 있는지 여부
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
-
-  // 마우스 위치와 빨간 점의 거리로 호버 여부 판정
-  const handleMouseMove = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      if (!markerPos || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      const dist = Math.sqrt((mx - markerPos.x) ** 2 + (my - markerPos.y) ** 2);
-      setIsAnomalyHovered(dist <= HOVER_RADIUS);
-    },
-    [markerPos, containerRef],
-  );
-
-  const handleMouseLeave = useCallback(() => setIsAnomalyHovered(false), []);
+  const [isAnomalyFocused, setIsAnomalyFocused] = useState(false);
 
   return (
     <div
@@ -99,10 +81,8 @@ export default function TrafficChart() {
       ref={containerRef}
       role="img"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      data-hide-tooltip={isAnomalyHovered || undefined}
+      data-hide-tooltip={isAnomalyHovered || isAnomalyFocused || undefined}
       className="relative [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
     >
       {isMounted && (
         <ReactApexChart
@@ -117,8 +97,22 @@ export default function TrafficChart() {
           height={400}
         />
       )}
-      {markerPos && isAnomalyHovered && (
-        <AnomalyBubble x={markerPos.x} y={markerPos.y} />
+      {markerPos && (
+        <>
+          <button
+            type="button"
+            className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
+            style={{ left: markerPos.x, top: markerPos.y }}
+            aria-label="클릭 이상 징후 상세 보기"
+            onFocus={() => setIsAnomalyFocused(true)}
+            onBlur={() => setIsAnomalyFocused(false)}
+            onPointerEnter={() => setIsAnomalyHovered(true)}
+            onPointerLeave={() => setIsAnomalyHovered(false)}
+          />
+          {(isAnomalyHovered || isAnomalyFocused) && (
+            <AnomalyBubble x={markerPos.x} y={markerPos.y} />
+          )}
+        </>
       )}
     </div>
   );

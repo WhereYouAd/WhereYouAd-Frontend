@@ -13,6 +13,7 @@ export const CHART_ID = "traffic-chart";
 
 // 이상 징후 포인트 인덱스 (11시)
 export const ANOMALY_INDEX = 11;
+const ANOMALY_Y = trafficChartMock.clicks[ANOMALY_INDEX];
 
 // 파일 저장 시 이름에 포함
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -84,18 +85,21 @@ export const BASE_OPTIONS: ApexOptions = {
 
   // 이상 징후 위치에 빨간 점 표시
   annotations: {
-    points: [
-      {
-        x: 11,
-        y: 53000,
-        marker: {
-          size: 5,
-          fillColor: "#ff4560",
-          strokeColor: "#ff4560",
-          strokeWidth: 1,
-        },
-      },
-    ],
+    points:
+      ANOMALY_Y === undefined
+        ? []
+        : [
+            {
+              x: ANOMALY_INDEX,
+              y: ANOMALY_Y,
+              marker: {
+                size: 5,
+                fillColor: "#ff4560",
+                strokeColor: "#ff4560",
+                strokeWidth: 1,
+              },
+            },
+          ],
   },
 
   xaxis: {
