@@ -106,6 +106,7 @@ export default function BudgetGaugeChart({
       <div className="relative mb-10 w-full">
         <div
           role="progressbar"
+          aria-label="이번 달 사용 예산 소진율"
           aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
           aria-valuemin={0}
           aria-valuemax={100}

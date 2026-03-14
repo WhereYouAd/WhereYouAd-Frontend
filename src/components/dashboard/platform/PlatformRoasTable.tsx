@@ -13,6 +13,19 @@ const platformLogoMap = {
   Kakao: <KakaoLogo className="h-7 w-auto" />,
 };
 
+type TPlatformName = keyof typeof platformLogoMap;
+
+function getPlatformLogo(name: string) {
+  if (name in platformLogoMap) {
+    return platformLogoMap[name as TPlatformName];
+  }
+  return (
+    <span className="h-7 w-7 rounded-full bg-bg-disabled flex items-center justify-center text-xs font-bold">
+      {name[0]}
+    </span>
+  );
+}
+
 // 바 차트 비율 계산용 최대 ROAS
 const maxRoas = Math.max(...platformRoasRanking.map((p) => p.roas));
 
@@ -68,7 +81,7 @@ export default function PlatformRoasTable() {
               {/* 플랫폼 이름 */}
               <div className="flex items-center gap-3">
                 <div className="shrink-0 p-1.5 group-hover:scale-105">
-                  {platformLogoMap[platform.name]}
+                  {getPlatformLogo(platform.name)}
                 </div>
                 <span className="font-body1 font-bold text-text-main tracking-tight">
                   {platform.name}
