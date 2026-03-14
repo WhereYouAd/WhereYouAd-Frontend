@@ -7,6 +7,7 @@
 html,
 body {
   height: 100dvh;
+  overflow: hidden;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0;
@@ -387,4 +388,3 @@ button {
     animation: fade-in-up 0.2s var(--ease-out) both;
   }
 }
-
