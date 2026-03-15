@@ -24,7 +24,6 @@ const LogoMap: Record<TPlatform, ReactNode> = {
 };
 
 export default function CampaignRow({
-  projectId,
   name,
   providers,
   status,
