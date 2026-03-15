@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import type { ICampaignDetail } from "@/types/ads/campaign";
+
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
 import PlatformCard from "@/components/ads/PlatformCard";
@@ -14,7 +16,10 @@ import { MOCK_CAMPAIGNS } from "./campaign.mock";
 import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
 
 export default function CampaignDetail() {
-  const data = MOCK_CAMPAIGNS[0];
+  const data = MOCK_CAMPAIGNS[0] as ICampaignDetail;
+
+  // const isPaused = data.status === "PAUSED";
+  // const isOngoing = data.status === "ON_GOING";
 
   const [stopOpen, setStopOpen] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
@@ -50,8 +55,15 @@ export default function CampaignDetail() {
           <header className="flex flex-col gap-5 w-full">
             <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden w-full">
               <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
-              <Badge variant={data.runStatus} size="sm">
-                {data.runStatusText}
+              <Badge
+                variant={data.status === "ON_GOING" ? "running" : "stopped"}
+                size="sm"
+              >
+                {data.status === "ON_GOING"
+                  ? "운영 중"
+                  : data.status === "PAUSED"
+                    ? "중단"
+                    : "종료"}
               </Badge>
             </div>
             <div className="border-l-3 border-text-auth-sub pl-4 py-1">
@@ -64,8 +76,8 @@ export default function CampaignDetail() {
           {/* card section */}
           <div className="flex flex-wrap gap-7 w-full">
             <CampaignInfoCard
-              budget={data.budget}
-              date={data.startDate}
+              budget={data.budget.toLocaleString()}
+              date={data.createdAt}
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard

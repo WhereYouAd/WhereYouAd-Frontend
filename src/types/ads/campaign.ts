@@ -14,7 +14,7 @@ export interface ICampaign {
 // Campaign Detail
 export interface ICampaignDetail extends ICampaign {
   budget: number;
-  createAt: string;
+  createdAt: string;
   ads: IAd[];
 }
 
