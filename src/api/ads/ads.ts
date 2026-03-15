@@ -11,9 +11,11 @@ export const getCampaignList = async (orgId: number): Promise<ICampaign[]> => {
   return data.data.projects;
 };
 
-// export const getCampaignDetail = async (projectId: number): Promise<ICampaignDetail> => {
-//   const { data } = await axiosInstance.get<IApiResult<ICampaignDetail>>(
-//     `/api/project/detail/${projectId}`
-//   );
-//   return data.data;
-// };
+export const updateAllCampaignStatus = async (
+  orgId: number,
+  status: "ON_GOING" | "PAUSED",
+): Promise<void> => {
+  await axiosInstance.patch(`/api/project/${orgId}/status`, null, {
+    params: { status },
+  });
+};

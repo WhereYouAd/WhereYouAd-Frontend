@@ -9,7 +9,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { getCampaignList } from "@/api/ads/ads";
+import { getCampaignList, updateAllCampaignStatus } from "@/api/ads/ads";
 import { getMyWorkspaces } from "@/api/workspace/org";
 import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
 
@@ -33,14 +33,12 @@ export default function AdsListPage() {
 
           // 캠페인 목록 API 호출
           const campaignData = await getCampaignList(orgId);
-          console.log(campaignData);
 
           setCampaigns(campaignData);
         } else {
           toast.error("조직이 없습니다.");
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
         toast.error("데이터를 불러오는 중 오류가 발생하였습니다.");
       } finally {
         setIsLoading(false);
@@ -65,27 +63,48 @@ export default function AdsListPage() {
     navigate("/ads/campaignGroup");
   };
 
-  const onStopAll = () => {
+  const onStopAll = async () => {
+    if (!currentOrgId) return;
     setIsStopping(true);
 
     try {
+      await updateAllCampaignStatus(currentOrgId, "PAUSED");
+
+      setCampaigns((prev) =>
+        prev.map((c) =>
+          c.status === "ON_GOING" ? { ...c, status: "PAUSED" } : c,
+        ),
+      );
       toast.success("전체 캠페인의 모든 광고 노출이 중단되었습니다.");
       setStopAllOpen(false);
+    } catch {
+      toast.error("중단 처리에 실패하였습니다.");
     } finally {
       setIsStopping(false);
     }
   };
 
-  const onResumeAll = () => {
+  const onResumeAll = async () => {
+    if (!currentOrgId) return;
     setIsResuming(true);
 
     try {
+      await updateAllCampaignStatus(currentOrgId, "ON_GOING");
+      setCampaigns((prev) =>
+        prev.map((c) =>
+          c.status === "PAUSED" ? { ...c, status: "ON_GOING" } : c,
+        ),
+      );
       toast.success("전체 캠페인의 광고 노출이 재개되었습니다.");
       setResumeOpen(false);
+    } catch {
+      toast.error("재개 처리에 실패하였습니다.");
     } finally {
       setIsResuming(false);
     }
   };
+
+  const hasActiveCampaign = campaigns.some((c) => c.status === "ON_GOING");
 
   return (
     <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
@@ -119,18 +138,33 @@ export default function AdsListPage() {
               buttonSize="big"
               buttonClassName="font-body1"
             />
-            <ControlBox
-              title="전체 캠페인을 완전히 중단할 수 있어요"
-              description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
-              buttonText="중단하기"
-              onButtonClick={() => setStopAllOpen(true)}
-              buttonDisabled={isStopping}
-              containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
-              titleClassName="text-status-red font-heading3"
-              descriptionClassName="font-body2 text-text-sub"
-              buttonSize="big"
-              buttonClassName="font-body1 bg-status-red"
-            />
+            {hasActiveCampaign ? (
+              <ControlBox
+                title="전체 캠페인을 완전히 중단할 수 있어요"
+                description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
+                buttonText="중단하기"
+                onButtonClick={() => setStopAllOpen(true)}
+                buttonDisabled={isStopping}
+                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
+                titleClassName="text-status-red font-heading3"
+                descriptionClassName="font-body2 text-text-sub"
+                buttonSize="big"
+                buttonClassName="font-body1 bg-status-red"
+              />
+            ) : (
+              <ControlBox
+                title="중단된 캠페인을 다시 시작할 수 있어요"
+                description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
+                buttonText="시작하기"
+                onButtonClick={() => setResumeOpen(true)}
+                buttonDisabled={isResuming}
+                containerClassName="bg-status-blue/7 border-status-blue px-6 py-4 min-w-[650px] shrink-0"
+                titleClassName="text-status-blue font-heading3"
+                descriptionClassName="font-body2 text-text-sub"
+                buttonSize="big"
+                buttonClassName="font-body1 bg-status-blue"
+              />
+            )}
           </div>
         </div>
       </div>
