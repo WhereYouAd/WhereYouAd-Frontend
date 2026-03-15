@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 import type { TCampaignStatus, TPlatform } from "@/types/ads/campaign";
 
-import Badge from "../common/badge/Badge";
 import ProgressBar from "../common/progressbar/ProgressBar";
 
 import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
@@ -62,7 +61,7 @@ export default function CampaignRow({
       </div>
 
       {/* 캠페인 명 */}
-      <div className="w-[35%] min-w-0 pr-10 shrink-0">
+      <div className="w-[50%] min-w-0 pr-10 shrink-0">
         <div className="font-body1 text-text-main truncate">{name}</div>
       </div>
 
