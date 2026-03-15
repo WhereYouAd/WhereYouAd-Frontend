@@ -46,3 +46,47 @@ export type TApiResult<T> = {
 export type TUploadImageResponse = {
   url: string;
 };
+
+export type TMemberRole = "ADMIN" | "MEMBER";
+
+export type TWorkspaceMember = {
+  name: string;
+  email: string;
+  profileImageUrl: string | null;
+  role: TMemberRole;
+};
+
+export type TUpdateMemberRoleRequest = {
+  orgRole: TMemberRole;
+};
+
+export type TUpdateMemberRoleResponse = TWorkspaceMember;
+
+export type TGetWorkspaceMembersData = {
+  hasNext: boolean;
+  nextCursor: string | null;
+  members: TWorkspaceMember[];
+};
+
+export type TWorkspaceMemberCount = {
+  totalCount: number;
+};
+
+export type TDeleteWorkspaceMemberResponse = string;
+
+export type TPermissionValue = "가능" | "불가능";
+
+export type TPermissionRow = {
+  key:
+    | "campaignView"
+    | "billingManage"
+    | "workspaceView"
+    | "memberInvite"
+    | "memberRoleEdit"
+    | "workspaceEdit"
+    | "projectDelete";
+  label: string;
+  description: string;
+  admin: TPermissionValue;
+  member: TPermissionValue;
+};

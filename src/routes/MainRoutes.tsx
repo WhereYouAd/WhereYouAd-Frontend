@@ -25,6 +25,10 @@ const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
 const WorkspaceSetting = loadable(
   lazy(() => import("@/pages/workspace/WorkspaceSetting")),
 );
+
+const MemberManagement = loadable(
+  lazy(() => import("@/pages/workspace/MemberManagement")),
+);
 const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const MainRoutes: RouteObject[] = [
@@ -60,6 +64,10 @@ const MainRoutes: RouteObject[] = [
   {
     path: "workspace",
     element: <Workspace />,
+  },
+  {
+    path: "workspace/:workspaceId/members",
+    element: <MemberManagement />,
   },
   {
     path: "workspace/billing",
