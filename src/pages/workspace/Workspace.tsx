@@ -103,7 +103,9 @@ export default function WorkspacePage() {
     {
       icon: <UserProfileIcon className="h-5 w-5 fill-none stroke-current" />,
       label: "멤버 관리",
-      onClick: () => alert("멤버 관리 기능은 추후 연결 예정"),
+      onClick: () => {
+        void navigate(`/workspace/${id}/members`);
+      },
     },
   ];
 
