@@ -16,6 +16,7 @@ import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?reac
 export default function AdsListPage() {
   const [campaigns, setCampaigns] = useState<ICampaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentOrgId, setCurrentOrgId] = useState<number | null>(null); //orgId
 
   useEffect(() => {
     const initData = async () => {
@@ -25,14 +26,14 @@ export default function AdsListPage() {
 
         if (workspaces && workspaces.length > 0) {
           // 워크스페이스 ID 임시 지정 -> 추후 선택한 워크스페이스 api 연결 예정
-          const TemporaryOrg = workspaces[2] || workspaces[0];
+          const TemporaryOrg = workspaces[0];
           const orgId = TemporaryOrg.orgId;
 
-          console.log("orgId: ", orgId);
+          setCurrentOrgId(orgId);
 
           // 캠페인 목록 API 호출
           const campaignData = await getCampaignList(orgId);
-          console.log("campaign data: ", campaignData);
+          console.log(campaignData);
 
           setCampaigns(campaignData);
         } else {
@@ -99,7 +100,10 @@ export default function AdsListPage() {
           </header>
           {/* 테이블 */}
           <div className="w-full flex flex-col mb-10">
-            <CampaignTable onRowClick={(id) => handleCampaignClick(id)} />
+            <CampaignTable
+              campaigns={campaigns}
+              onRowClick={(id) => handleCampaignClick(id)}
+            />
           </div>
           {/* 하단 배너 */}
           <div className="w-full flex flex-col gap-7">

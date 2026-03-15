@@ -10,11 +10,11 @@ import KakaoLogo from "@/assets/icon/ads/kakao-circle.svg?react";
 import NaverLogo from "@/assets/icon/ads/naver-circle.svg?react";
 
 interface ICampaignRowProps {
-  platforms: TPlatform[];
+  projectId: number;
   name: string;
+  providers: TPlatform[];
   status: TCampaignStatus;
-  statusText: string;
-  progress: number;
+  budgetUsageRate: number;
   onClick?: () => void;
 }
 
@@ -25,11 +25,11 @@ const LogoMap: Record<TPlatform, ReactNode> = {
 };
 
 export default function CampaignRow({
-  platforms,
+  projectId,
   name,
+  providers,
   status,
-  statusText,
-  progress,
+  budgetUsageRate,
   onClick,
 }: ICampaignRowProps) {
   return (
@@ -47,14 +47,18 @@ export default function CampaignRow({
     >
       {/* 플랫폼 */}
       <div className="flex w-[20%] shrink-0">
-        {platforms.map((p, idx) => (
-          <div
-            key={idx}
-            className="flex h-8 w-8 mr-3 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
-          >
-            {LogoMap[p]}
-          </div>
-        ))}
+        {providers && providers.length > 0 ? (
+          providers.map((p, idx) => (
+            <div
+              key={idx}
+              className="flex h-8 w-8 mr-3 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
+            >
+              {LogoMap[p]}
+            </div>
+          ))
+        ) : (
+          <div className="text-text-placeholder font-body2">미연결</div>
+        )}
       </div>
 
       {/* 캠페인 명 */}
@@ -63,15 +67,15 @@ export default function CampaignRow({
       </div>
 
       {/* 동기화 상태 */}
-      <div className="w-[15%] shrink-0 pr-10">
+      {/* <div className="w-[15%] shrink-0 pr-10">
         <Badge variant={status} size="sm">
           {statusText}
         </Badge>
-      </div>
+      </div> */}
 
       {/* 예산 소진 현황 */}
       <div className="w-[30%] shrink-0">
-        <ProgressBar value={progress} />
+        <ProgressBar value={budgetUsageRate} />
       </div>
     </li>
   );
