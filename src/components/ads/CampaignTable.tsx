@@ -29,13 +29,15 @@ export default function CampaignTable({
         {/* Row */}
         <ul className="divide-y divide-bg-disabled">
           {campaigns && campaigns.length > 0 ? (
-            campaigns.map((project) => (
-              <CampaignRow
-                key={project.projectId}
-                {...project}
-                onClick={() => onRowClick?.(project.projectId)}
-              />
-            ))
+            campaigns
+              .filter((project) => project.status !== "OVER")
+              .map((project) => (
+                <CampaignRow
+                  key={project.projectId}
+                  {...project}
+                  onClick={() => onRowClick?.(project.projectId)}
+                />
+              ))
           ) : (
             <div className="py-20 text-center font-body2 text-text-placeholder">
               현재 캠페인이 없습니다.

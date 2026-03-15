@@ -31,9 +31,13 @@ export default function CampaignRow({
   budgetUsageRate,
   onClick,
 }: ICampaignRowProps) {
+  const isPaused = status == "PAUSED";
   return (
     <li
-      className="flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-bg-surface hover:cursor-pointer transition-colors list-none"
+      className={`flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-bg-surface hover:cursor-pointer transition-colors list-none ${
+        isPaused ? "bg-bg-surface" : "bg-white"
+      }
+       `}
       onClick={onClick}
       role="button"
       tabIndex={onClick ? 0 : undefined}
@@ -62,7 +66,11 @@ export default function CampaignRow({
 
       {/* 캠페인 명 */}
       <div className="w-[50%] min-w-0 pr-10 shrink-0">
-        <div className="font-body1 text-text-main truncate">{name}</div>
+        <div
+          className={`font-body1 truncate ${isPaused ? "text-text-sub" : "text-text-main"}`}
+        >
+          {name}
+        </div>
       </div>
 
       {/* 동기화 상태 */}
@@ -73,7 +81,7 @@ export default function CampaignRow({
       </div> */}
 
       {/* 예산 소진 현황 */}
-      <div className="w-[30%] shrink-0">
+      <div className={`w-[30%] shrink-0 ${isPaused ? "opacity-80" : ""}`}>
         <ProgressBar value={budgetUsageRate} />
       </div>
     </li>
