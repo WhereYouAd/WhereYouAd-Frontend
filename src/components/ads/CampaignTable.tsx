@@ -13,6 +13,10 @@ export default function CampaignTable({
   campaigns,
   onRowClick,
 }: ICampaignTableProps) {
+  const visibleCampaigns = campaigns.filter(
+    (project) => project.status !== "OVER",
+  );
+
   return (
     <div className="w-full bg-white overflow-x-auto">
       <div className="min-w-180">
@@ -28,20 +32,18 @@ export default function CampaignTable({
 
         {/* Row */}
         <ul className="divide-y divide-bg-disabled">
-          {campaigns && campaigns.length > 0 ? (
-            campaigns
-              .filter((project) => project.status !== "OVER")
-              .map((project) => (
-                <CampaignRow
-                  key={project.projectId}
-                  {...project}
-                  onClick={() => onRowClick?.(project.projectId)}
-                />
-              ))
+          {visibleCampaigns.length > 0 ? (
+            visibleCampaigns.map((project) => (
+              <CampaignRow
+                key={project.projectId}
+                {...project}
+                onClick={() => onRowClick?.(project.projectId)}
+              />
+            ))
           ) : (
-            <div className="py-20 text-center font-body2 text-text-placeholder">
-              현재 캠페인이 없습니다.
-            </div>
+            <li className="py-20 text-center font-body2 text-text-placeholder">
+              현재 표시할 캠페인이 없습니다.
+            </li>
           )}
         </ul>
       </div>
