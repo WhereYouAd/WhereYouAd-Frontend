@@ -45,11 +45,11 @@ export default function Sidebar() {
   return (
     <div
       className={twMerge(
-        "relative flex h-full flex-col bg-white rounded-component-lg shadow-Soft transition-all duration-200 ease-in-out",
+        "relative flex h-full flex-col overflow-hidden bg-white rounded-component-lg shadow-Soft transition-all duration-200 ease-in-out",
         isCollapsed ? "w-25" : "w-64",
       )}
     >
-      <div className="mx-auto mt-10 flex w-full max-w-58 flex-1 flex-col">
+      <div className="mx-auto mt-10 flex w-full max-w-58 flex-1 flex-col overflow-hidden">
         {/* Logo */}
         {/* <NavLink
           to="/"
