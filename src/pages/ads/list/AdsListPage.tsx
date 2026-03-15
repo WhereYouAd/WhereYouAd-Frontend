@@ -106,6 +106,16 @@ export default function AdsListPage() {
 
   const hasActiveCampaign = campaigns.some((c) => c.status === "ON_GOING");
 
+  if (isLoading) {
+    return (
+      <div className="flex h-[90vh] items-center justify-center">
+        <p className="font-body1 text-text-placeholder">
+          데이터를 불러오는 중입니다...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
       <div className="flex-1 overflow-x-auto py-15 px-10 md:px-18 lg:px-25">
