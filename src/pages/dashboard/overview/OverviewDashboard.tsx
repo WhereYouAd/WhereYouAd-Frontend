@@ -23,10 +23,10 @@ import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable
 import { overviewMockData } from "./overview.mock";
 import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
-import AlertCircleIcon from "@/assets/icon/alert/warn-circle.svg?react";
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 export default function OverviewDashboard() {
@@ -134,7 +134,7 @@ export default function OverviewDashboard() {
         }
         description={
           <div className="flex items-center gap-1.5 font-caption text-text-placeholder select-none">
-            <AlertCircleIcon
+            <WarnCircleIcon
               className="w-3.5 h-3.5 mt-px shrink-0"
               aria-hidden="true"
             />

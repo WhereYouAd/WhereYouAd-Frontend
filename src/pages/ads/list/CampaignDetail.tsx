@@ -11,7 +11,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import { MOCK_CAMPAIGNS } from "./campaign.mock";
 
-import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
   const data = MOCK_CAMPAIGNS[0];
@@ -106,7 +106,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="캠페인 운영을 중단하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 중단됩니다."
           buttonText="중단하기"
@@ -123,7 +123,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="캠페인 운영을 재개하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
           buttonText="시작하기"

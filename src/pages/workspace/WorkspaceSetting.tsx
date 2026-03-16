@@ -14,9 +14,8 @@ import {
   updateWorkspace,
   uploadImage,
 } from "@/api/workspace/org";
-import MessageCircleWarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
-import WarningIcon from "@/assets/icon/alert/warn-stroke.svg?react";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
 
@@ -309,7 +308,7 @@ export default function WorkspaceSetting() {
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
               buttonDisabled={saving || deleting || uploading}
-              leadingSlot={<WarningIcon />}
+              leadingSlot={<WarnCircleIcon />}
             />
           </div>
           <Modal
@@ -321,7 +320,7 @@ export default function WorkspaceSetting() {
           >
             <div className="text-center px-2 py-6 ">
               <div className="flex justify-center mb-6">
-                <MessageCircleWarningIcon
+                <WarnCircleIcon
                   className="text-status-red"
                   aria-hidden="true"
                 />

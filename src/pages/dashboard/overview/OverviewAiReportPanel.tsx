@@ -2,7 +2,7 @@ import { aiReportMockData } from "./aiReport.mock";
 
 import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
-import WarningIcon from "@/assets/icon/alert/warn-stroke.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function OverviewAiReportPanel() {
   const data = aiReportMockData;
@@ -50,7 +50,7 @@ export default function OverviewAiReportPanel() {
 
         <div className="rounded-[24px] bg-status-red/6 p-7 text-left mx-1">
           <h3 className="flex items-center gap-2 text-status-red font-heading4 font-semibold! mb-3 tracking-tight">
-            <WarningIcon className="w-5 h-auto text-status-red" />
+            <WarnCircleIcon className="w-5 h-auto text-status-red" />
             {data.warning.title}
           </h3>
           <p className="text-text-auth-sub font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">

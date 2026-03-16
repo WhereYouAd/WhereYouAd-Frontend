@@ -7,7 +7,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ export default function AdsListPage() {
         title="전체 캠페인 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="전체 캠페인을 중단하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -117,7 +117,7 @@ export default function AdsListPage() {
         title="전체 캠페인 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="전체 캠페인을 재개하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 재개됩니다."
           buttonText="시작하기"

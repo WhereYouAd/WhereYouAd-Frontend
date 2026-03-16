@@ -8,8 +8,8 @@ import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 interface IAdDetailContentProps {
   ad: IAd;
@@ -177,7 +177,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="트래킹 활성화"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="트래킹을 활성화하시겠습니까?"
           description={
             <>
@@ -200,7 +200,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="트래킹 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="트래킹을 중단하시겠습니까?"
           description="데이터 수집이 중단되어 분석 리포트에 공백이 생길 수 있습니다."
           buttonText="중단하기"
@@ -217,7 +217,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="광고 소재 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="광고 소재를 중단하시겠습니까?"
           description="해당 광고의 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -234,7 +234,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="광고 소재 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="광고 소재의 운영을 재개하시겠습니까?"
           description="중단되었던 광고 소재가 다시 플랫폼에 노출되기 시작합니다."
           buttonText="시작하기"
