@@ -6,6 +6,7 @@ import CampaignTable from "@/components/ads/CampaignTable";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
+import PageHeader from "@/components/common/PageHeader";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
@@ -49,20 +50,15 @@ export default function AdsListPage() {
   };
 
   return (
-    <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
-      <div className="flex-1 overflow-x-auto py-15 px-10 md:px-18 lg:px-25">
-        <div className="flex flex-col min-w-180">
-          <header className="w-full flex flex-col mb-10">
-            <h1 className="font-heading2 text-text-main">광고 운영 관리</h1>
-            <p className="font-body2 text-text-placeholder mt-3">
-              연결된 캠페인 및 광고 소재의 상세 운영 설정을 확인하고 제어할 수
-              있습니다.
-            </p>
-          </header>
+    <section className="w-full flex flex-col gap-6">
+      <PageHeader
+        title="광고 운영 관리"
+        description="연결된 캠페인 및 광고 소재의 상세 운영 설정을 확인하고 제어할 수 있습니다."
+      />
+      <div className="overflow-x-auto">
+        <div className="flex flex-col min-w-180 gap-10">
           {/* 테이블 */}
-          <div className="w-full flex flex-col mb-10">
-            <CampaignTable onRowClick={(id) => handleCampaignClick(id)} />
-          </div>
+          <CampaignTable onRowClick={(id) => handleCampaignClick(id)} />
           {/* 하단 배너 */}
           <div className="w-full flex flex-col gap-7">
             <ControlBox

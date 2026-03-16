@@ -8,6 +8,7 @@ import Button from "@/components/common/button/Button";
 import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
@@ -185,12 +186,11 @@ export default function WorkspacePage() {
 
   return (
     <section className="w-full">
-      <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
-        <p className="font-body1 text-text-sub">
-          워크스페이스 정보를 확인하고 관리하세요.
-        </p>
-      </header>
+      <PageHeader
+        title="워크스페이스 관리"
+        description="워크스페이스 정보를 확인하고 관리하세요."
+        className="mb-7"
+      />
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <Input

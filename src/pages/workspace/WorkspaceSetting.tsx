@@ -6,6 +6,7 @@ import Button from "@/components/common/button/Button";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
 import {
@@ -171,12 +172,11 @@ export default function WorkspaceSetting() {
 
   return (
     <section className="w-full">
-      <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
-        <p className="font-body1 text-text-sub">
-          워크스페이스 정보를 확인하고 관리하세요.
-        </p>
-      </header>
+      <PageHeader
+        title="워크스페이스 관리"
+        description="워크스페이스 정보를 확인하고 관리하세요."
+        className="mb-7"
+      />
 
       {loading && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">

@@ -10,6 +10,7 @@ import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
+import PageHeader from "@/components/common/PageHeader";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
@@ -55,28 +56,24 @@ export default function OverviewDashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-heading2 text-text-main font-bold tracking-tight">
-            통합 대시보드
-          </h1>
-          <p className="font-body2 text-text-sub">
-            데이터 기준 · {currentDate}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setIsAiPanelOpen(true)}
-          className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
-          aria-label="AI 요약하기"
-        >
-          <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
-          <div className="relative z-10 transition-all duration-200">
-            <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
-          </div>
-        </button>
-      </div>
+    <section className="flex flex-col gap-8 w-full min-w-0">
+      <PageHeader
+        title="통합 대시보드"
+        description={`데이터 기준 · ${currentDate}`}
+        actions={
+          <button
+            type="button"
+            onClick={() => setIsAiPanelOpen(true)}
+            className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
+            aria-label="AI 요약하기"
+          >
+            <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
+            <div className="relative z-10 transition-all duration-200">
+              <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
+            </div>
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {overviewMockData.kpis.map((kpi) => (
@@ -183,6 +180,6 @@ export default function OverviewDashboard() {
       >
         <OverviewAiReportPanel />
       </Drawer>
-    </div>
+    </section>
   );
 }
