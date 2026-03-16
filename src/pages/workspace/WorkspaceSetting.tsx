@@ -171,11 +171,10 @@ export default function WorkspaceSetting() {
       : null;
 
   return (
-    <section className="w-full">
+    <section className="w-full flex flex-col gap-8">
       <PageHeader
         title="워크스페이스 관리"
         description="워크스페이스 정보를 확인하고 관리하세요."
-        className="mb-7"
       />
 
       {loading && (

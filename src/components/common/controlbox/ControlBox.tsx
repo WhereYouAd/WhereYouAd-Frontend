@@ -78,7 +78,7 @@ export default function ControlBox({
           onClick={onButtonClick}
           disabled={buttonDisabled}
           className={twMerge(
-            "shrink-0 px-8 !rounded-component-md",
+            "shrink-0 px-8 rounded-component-md!",
             buttonClassName,
           )}
         >
