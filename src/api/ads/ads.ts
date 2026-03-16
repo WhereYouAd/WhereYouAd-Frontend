@@ -1,12 +1,11 @@
 import type { ICampaign } from "@/types/ads/campaign";
-
-import type { IApiResult } from "../common/common";
+import type { ICommonResponse } from "@/types/common/common";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 
 export const getCampaignList = async (orgId: number): Promise<ICampaign[]> => {
   const { data } = await axiosInstance.get<
-    IApiResult<{ projects: ICampaign[] }>
+    ICommonResponse<{ projects: ICampaign[] }>
   >(`/api/project/${orgId}`);
   return data.data.projects;
 };
