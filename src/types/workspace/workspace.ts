@@ -90,3 +90,22 @@ export type TPermissionRow = {
   admin: TPermissionValue;
   member: TPermissionValue;
 };
+
+export type TInviteMemberRequest = {
+  email: string;
+};
+
+export type TInviteMemberResponse = {
+  orgId: number;
+  message: string;
+  email: string;
+};
+
+export type TInviteMemberItem = {
+  email: string;
+  name?: string;
+  profileImageUrl?: string | null;
+  role?: TMemberRole;
+  inviteStatus: "PENDING" | "ACTIVE";
+  isMe?: boolean;
+};

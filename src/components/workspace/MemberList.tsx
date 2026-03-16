@@ -1,10 +1,12 @@
 import { useState } from "react";
 
 import type {
+  TInviteMemberItem,
   TMemberRole,
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
+import InviteMemberModal from "./InviteMemberModal";
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
 
@@ -43,8 +45,84 @@ const mockMembers: TWorkspaceMember[] = [
   },
 ];
 
-export default function MemberList() {
+const mockInviteItems: TInviteMemberItem[] = [
+  {
+    email: "aaa111@wya.com",
+    inviteStatus: "PENDING",
+  },
+  {
+    name: "이유찬",
+    email: "uuuchan@wya.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+    inviteStatus: "ACTIVE",
+    isMe: true,
+  },
+  {
+    name: "박치국",
+    email: "peach@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "강승호",
+    email: "kang@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "플렉센",
+    email: "flex@wya.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "잭로그",
+    email: "jackjack@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "양의지",
+    email: "yang@wya.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "최민석",
+    email: "kkokko@wya.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+  {
+    name: "양재훈",
+    email: "yanghun@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    inviteStatus: "ACTIVE",
+    isMe: false,
+  },
+];
+
+type TMemberListProps = {
+  orgId: number;
+};
+
+export default function MemberList({ orgId }: TMemberListProps) {
   const [memberList, setMemberList] = useState<TWorkspaceMember[]>(mockMembers);
+  const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
   const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
     setMemberList((prev) =>
@@ -53,15 +131,21 @@ export default function MemberList() {
       ),
     );
   };
+  const openInviteMember = () => {
+    setInviteMemberOpen(true);
+  };
+  const closeInviteMember = () => {
+    setInviteMemberOpen(false);
+  };
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex justify-between">
         <div>
-          <h2 className="font-heading4 text-text-main !font-semibold">
+          <h2 className="font-heading4 text-text-main font-semibold!">
             팀 구성원
           </h2>
           <p className="font-body2 text-text-sub mt-2">
-            현재 {mockMembers.length}명의 구성원이 활동 중입니다
+            현재 {memberList.length}명의 구성원이 활동 중입니다
           </p>
         </div>
         <Button
@@ -69,7 +153,7 @@ export default function MemberList() {
           variant="primary"
           size="small"
           aria-label="팀원 초대 버튼"
-          onClick={() => alert("TODO:팀원초대모달버튼")}
+          onClick={openInviteMember}
           // disabled={}
           className="p-5 py-6 rounded-component-md"
         >
@@ -87,6 +171,12 @@ export default function MemberList() {
           />
         ))}
       </ul>
+      <InviteMemberModal
+        isOpen={inviteMemberOpen}
+        onClose={closeInviteMember}
+        orgId={orgId}
+        inviteItems={mockInviteItems}
+      />
     </div>
   );
 }
