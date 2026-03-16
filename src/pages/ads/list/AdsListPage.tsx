@@ -104,6 +104,8 @@ export default function AdsListPage() {
     }
   };
 
+  const hasCampaigns = campaigns.length > 0;
+
   const hasActiveCampaign = campaigns.some((c) => c.status === "ON_GOING");
 
   if (isLoading) {
@@ -148,33 +150,34 @@ export default function AdsListPage() {
               buttonSize="big"
               buttonClassName="font-body1"
             />
-            {hasActiveCampaign ? (
-              <ControlBox
-                title="전체 캠페인을 완전히 중단할 수 있어요"
-                description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
-                buttonText="중단하기"
-                onButtonClick={() => setStopAllOpen(true)}
-                buttonDisabled={isStopping}
-                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
-                titleClassName="text-status-red font-heading3"
-                descriptionClassName="font-body2 text-text-sub"
-                buttonSize="big"
-                buttonClassName="font-body1 bg-status-red"
-              />
-            ) : (
-              <ControlBox
-                title="중단된 캠페인을 다시 시작할 수 있어요"
-                description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
-                buttonText="시작하기"
-                onButtonClick={() => setResumeOpen(true)}
-                buttonDisabled={isResuming}
-                containerClassName="bg-status-blue/7 border-status-blue px-6 py-4 min-w-[650px] shrink-0"
-                titleClassName="text-status-blue font-heading3"
-                descriptionClassName="font-body2 text-text-sub"
-                buttonSize="big"
-                buttonClassName="font-body1 bg-status-blue"
-              />
-            )}
+            {hasCampaigns &&
+              (hasActiveCampaign ? (
+                <ControlBox
+                  title="전체 캠페인을 완전히 중단할 수 있어요"
+                  description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
+                  buttonText="중단하기"
+                  onButtonClick={() => setStopAllOpen(true)}
+                  buttonDisabled={isStopping}
+                  containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
+                  titleClassName="text-status-red font-heading3"
+                  descriptionClassName="font-body2 text-text-sub"
+                  buttonSize="big"
+                  buttonClassName="font-body1 bg-status-red"
+                />
+              ) : (
+                <ControlBox
+                  title="중단된 캠페인을 다시 시작할 수 있어요"
+                  description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
+                  buttonText="시작하기"
+                  onButtonClick={() => setResumeOpen(true)}
+                  buttonDisabled={isResuming}
+                  containerClassName="bg-status-blue/7 border-status-blue px-6 py-4 min-w-[650px] shrink-0"
+                  titleClassName="text-status-blue font-heading3"
+                  descriptionClassName="font-body2 text-text-sub"
+                  buttonSize="big"
+                  buttonClassName="font-body1 bg-status-blue"
+                />
+              ))}
           </div>
         </div>
       </div>
