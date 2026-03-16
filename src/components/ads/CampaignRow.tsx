@@ -30,6 +30,8 @@ export default function CampaignRow({
   budgetUsageRate,
   onClick,
 }: ICampaignRowProps) {
+  console.log({ providers });
+
   const isPaused = status == "PAUSED";
   return (
     <li
@@ -55,7 +57,7 @@ export default function CampaignRow({
               key={idx}
               className="flex h-8 w-8 mr-3 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
             >
-              {LogoMap[p]}
+              {LogoMap[p.toLowerCase() as TPlatform]}
             </div>
           ))
         ) : (
