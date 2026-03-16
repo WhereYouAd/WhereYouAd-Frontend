@@ -8,8 +8,8 @@ import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import LinkIcon from "@/assets/icon/common/copy.svg?react";
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
+import LinkIcon from "@/assets/icon/common/link.svg?react";
 
 interface IAdDetailContentProps {
   ad: IAd;

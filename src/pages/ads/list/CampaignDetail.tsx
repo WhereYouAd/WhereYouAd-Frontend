@@ -11,7 +11,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import { MOCK_CAMPAIGNS } from "./campaign.mock";
 
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
 
 export default function CampaignDetail() {
   const data = MOCK_CAMPAIGNS[0];

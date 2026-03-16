@@ -23,11 +23,11 @@ import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable
 import { overviewMockData } from "./overview.mock";
 import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
-import DownloadIcon from "@/assets/icon/ai-report/download.svg?react";
-import LinkIcon from "@/assets/icon/ai-report/link.svg?react";
-import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
-import ChevronDoubleRightIcon from "@/assets/icon/common/chevron-double-right.svg?react";
-import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
+import AlertCircleIcon from "@/assets/icon/alert/warn-circle.svg?react";
+import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
+import DownloadIcon from "@/assets/icon/common/download.svg?react";
+import LinkIcon from "@/assets/icon/common/link.svg?react";
+import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 export default function OverviewDashboard() {
   const navigate = useNavigate();

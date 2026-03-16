@@ -13,9 +13,9 @@ import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
-import GoogleIcon from "@/assets/auth/social/google.svg?react";
-import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
-import NaverIcon from "@/assets/auth/social/naver.svg?react";
+import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
+import NaverIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 

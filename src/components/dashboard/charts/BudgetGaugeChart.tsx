@@ -4,7 +4,7 @@ import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { type TBadgeVariant } from "@/components/common/badge/Badge";
 
-import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
+import AlertCircleIcon from "@/assets/icon/alert/warn-circle.svg?react";
 
 interface IBudgetGaugeChartProps {
   totalBudget: number;

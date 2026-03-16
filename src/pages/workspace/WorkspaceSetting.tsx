@@ -14,9 +14,9 @@ import {
   updateWorkspace,
   uploadImage,
 } from "@/api/workspace/org";
-import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
-import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
-import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
+import MessageCircleWarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
+import WarningIcon from "@/assets/icon/alert/warn-stroke.svg?react";
+import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
 

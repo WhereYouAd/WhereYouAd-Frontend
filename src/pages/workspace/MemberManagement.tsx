@@ -2,7 +2,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import MemberList from "@/components/workspace/MemberList";
 import PermissionTable from "@/components/workspace/PermissionTable";
 
-import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
+import WarningIcon from "@/assets/icon/alert/warn-stroke.svg?react";
 
 export default function MemberManagement() {
   return (

@@ -1,8 +1,8 @@
 import type { HTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-import TrendDownIcon from "@/assets/icon/dashboard/trend-down.svg?react";
-import TrendUpIcon from "@/assets/icon/dashboard/trend-up.svg?react";
+import TrendDownIcon from "@/assets/icon/chevron/trend-down.svg?react";
+import TrendUpIcon from "@/assets/icon/chevron/trend-up.svg?react";
 
 export interface ITrend {
   direction: "up" | "down";

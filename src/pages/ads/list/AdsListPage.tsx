@@ -7,7 +7,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import WarningIcon from "@/assets/icon/alert/warn-message-circle.svg?react";
 
 export default function AdsListPage() {
   const navigate = useNavigate();

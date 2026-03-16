@@ -19,11 +19,11 @@ import {
   getMyWorkspaces,
   uploadImage,
 } from "@/api/workspace/org";
-import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
-import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
-import SearchIcon from "@/assets/icon/workspace/search.svg?react";
-import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
-import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
+import EditContainIcon from "@/assets/icon/common/edit.svg?react";
+import PlusIcon from "@/assets/icon/common/plus.svg?react";
+import SearchIcon from "@/assets/icon/common/search.svg?react";
+import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
+import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 export default function WorkspacePage() {
