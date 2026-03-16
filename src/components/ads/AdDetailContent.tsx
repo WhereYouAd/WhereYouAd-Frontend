@@ -120,9 +120,9 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         </div>
       </div>
 
-      <div className="flex w-full overflow-x-auto">
+      <div className="flex w-full">
         <div className="w-[15%] shrink-0 mr-2" />
-        <div className="flex-1 max-w-[85%] flex flex-col gap-6 pl-2 overflow-x-auto overflow-y-hidden">
+        <div className="flex-1 min-w-0 flex flex-col gap-6 pl-2">
           <ControlBox
             title="트래킹 활성화 시 실시간 성과 수집이 시작돼요"
             description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다."
@@ -131,11 +131,11 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
               setTrackOpen(true);
             }}
             buttonDisabled={false}
-            containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 min-w-[650px] shrink-0"
+            containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4"
             titleClassName="text-chart-3 font-heading3"
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName="font-body1"
+            buttonClassName="font-body1 tablet:w-full"
           />
           <ControlBox
             title={
@@ -151,7 +151,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
                 : setStopOpen(true);
             }}
             buttonDisabled={false}
-            containerClassName={`px-6 py-4 min-w-[650px] shrink-0 ${
+            containerClassName={`px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4 ${
               ad.runStatus === "stopped"
                 ? "bg-status-blue/7 border-status-blue"
                 : "bg-status-red/7 border-status-red"
@@ -163,7 +163,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             }`}
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName={`font-body1 ${
+            buttonClassName={`font-body1 tablet:w-full ${
               ad.runStatus === "stopped" ? "bg-status-blue" : "bg-status-red"
             }`}
           />
