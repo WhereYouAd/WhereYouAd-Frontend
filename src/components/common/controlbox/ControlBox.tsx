@@ -51,7 +51,7 @@ export default function ControlBox({
     >
       <div
         className={twMerge(
-          "flex min-w-0 items-center gap-4 sm:gap-8",
+          "flex min-w-0 items-center gap-8 tablet:gap-4",
           contentClassName,
         )}
       >

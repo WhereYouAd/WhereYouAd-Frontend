@@ -190,7 +190,7 @@ export default function WorkspacePage() {
         title="워크스페이스 관리"
         description="워크스페이스 정보를 확인하고 관리하세요."
       />
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="mb-6 flex flex-row items-center gap-4">
         <div className="flex-1">
           <Input
             aria-label="조직 검색"
@@ -205,10 +205,11 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex w-full shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto"
+          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
-          워크스페이스 생성하기
+          <span className="tablet:hidden">워크스페이스 생성하기</span>
+          <span className="hidden tablet:inline">생성하기</span>
         </Button>
       </div>
 

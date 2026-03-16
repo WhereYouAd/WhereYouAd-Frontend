@@ -138,7 +138,7 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-2 tablet:grid-cols-1 gap-4 mb-5">
         <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
           <span className="font-caption font-medium text-text-auth-sub">
             남은 예산

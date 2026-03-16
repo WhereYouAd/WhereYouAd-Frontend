@@ -46,11 +46,11 @@ export default function CampaignRow({
       }}
     >
       {/* 플랫폼 */}
-      <div className="flex w-[20%] shrink-0">
+      <div className="flex w-[20%] tablet:w-[22%] shrink-0">
         {platforms.map((p, idx) => (
           <div
             key={idx}
-            className="flex h-8 w-8 mr-3 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
+            className="flex h-8 w-8 tablet:h-6 tablet:w-6 mr-3 tablet:mr-1 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
           >
             {LogoMap[p]}
           </div>
@@ -58,19 +58,19 @@ export default function CampaignRow({
       </div>
 
       {/* 캠페인 명 */}
-      <div className="w-[35%] min-w-0 pr-10 shrink-0">
+      <div className="w-[35%] tablet:w-[28%] min-w-0 pr-10 tablet:pr-3 shrink-0">
         <div className="font-body1 text-text-main truncate">{name}</div>
       </div>
 
       {/* 동기화 상태 */}
-      <div className="w-[15%] shrink-0 pr-10">
+      <div className="w-[15%] tablet:w-[18%] shrink-0 pr-10 tablet:pr-2">
         <Badge variant={status} size="sm">
           {statusText}
         </Badge>
       </div>
 
       {/* 예산 소진 현황 */}
-      <div className="w-[30%] shrink-0">
+      <div className="w-[30%] tablet:w-[32%] shrink-0">
         <ProgressBar value={progress} />
       </div>
     </li>

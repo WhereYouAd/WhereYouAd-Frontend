@@ -44,7 +44,7 @@ export default function CampaignDetail() {
 
   return (
     <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
-      <div className="flex-1 py-15 px-10 md:px-15 lg:px-25">
+      <div className="flex-1 py-15 px-25 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
@@ -74,7 +74,7 @@ export default function CampaignDetail() {
             />
           </div>
 
-          <div className="w-full overflow-x-auto">
+          <div className="w-full">
             {/* ads list */}
             <AdListTable ads={data.ads} />
 
@@ -88,7 +88,7 @@ export default function CampaignDetail() {
                   setStopOpen(true);
                 }}
                 buttonDisabled={false}
-                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-140 shrink-0"
+                containerClassName="bg-status-red/7 border-status-red px-6 py-4"
                 titleClassName="text-status-red font-heading3"
                 descriptionClassName="font-body2 text-text-sub leading-relaxed"
                 buttonSize="big"

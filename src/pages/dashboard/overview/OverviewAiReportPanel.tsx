@@ -9,7 +9,7 @@ export default function OverviewAiReportPanel() {
 
   return (
     <div className="flex flex-col bg-white relative">
-      <div className="flex flex-col px-2 sm:px-4 gap-8 pb-8 pt-2">
+      <div className="flex flex-col px-4 tablet:px-2 gap-8 pb-8 pt-2">
         <div className="flex flex-col gap-2.5 text-left px-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5 text-logo-1 font-label font-bold">

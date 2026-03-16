@@ -37,7 +37,7 @@ export default function ModalContent({
           variant={variant}
           size="big"
           onClick={onConfirm}
-          className="w-full md:w-auto px-12"
+          className="w-auto px-12 tablet:w-full"
           disabled={isLoading}
         >
           {isLoading ? "처리 중.." : buttonText}

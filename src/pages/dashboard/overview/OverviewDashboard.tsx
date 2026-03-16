@@ -75,15 +75,15 @@ export default function OverviewDashboard() {
         }
       />
 
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
         {overviewMockData.kpis.map((kpi) => (
           <StatCard key={kpi.title} {...kpi} />
         ))}
       </div>
 
-      <div className="grid grid-cols-1 2xl:grid-cols-7 gap-6">
+      <div className="grid grid-cols-7 tablet:grid-cols-1 gap-6">
         <Card
-          className="2xl:col-span-5 flex flex-col min-h-120"
+          className="col-span-5 tablet:col-span-1 flex flex-col min-h-120"
           title="실시간 트래픽 변화"
           description={
             <ChartLegend
@@ -98,7 +98,7 @@ export default function OverviewDashboard() {
           <TrafficChart />
         </Card>
         <Card
-          className="2xl:col-span-2 flex flex-col 2xl:min-h-120"
+          className="col-span-2 tablet:col-span-1 flex flex-col min-h-120"
           title="예산 소진 현황"
           description={
             <ChartLegend
@@ -147,7 +147,7 @@ export default function OverviewDashboard() {
         onClose={() => setIsAiPanelOpen(false)}
         hideHeader={false}
         disableScroll={false}
-        className="w-full sm:max-w-160"
+        className="w-full max-w-160 tablet:max-w-full"
         dropdownItems={[
           {
             label: "링크 공유하기",
