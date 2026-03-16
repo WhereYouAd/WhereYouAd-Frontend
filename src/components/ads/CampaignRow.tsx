@@ -30,8 +30,6 @@ export default function CampaignRow({
   budgetUsageRate,
   onClick,
 }: ICampaignRowProps) {
-  console.log({ providers });
-
   const isPaused = status == "PAUSED";
   return (
     <li
@@ -50,7 +48,7 @@ export default function CampaignRow({
       }}
     >
       {/* 플랫폼 */}
-      <div className="flex w-[20%] shrink-0">
+      <div className="flex w-[25%] shrink-0">
         {providers && providers.length > 0 ? (
           providers.map((p, idx) => (
             <div
@@ -82,7 +80,7 @@ export default function CampaignRow({
       </div> */}
 
       {/* 예산 소진 현황 */}
-      <div className={`w-[30%] shrink-0 ${isPaused ? "opacity-80" : ""}`}>
+      <div className={`w-[25%] shrink-0 ${isPaused ? "opacity-80" : ""}`}>
         <ProgressBar value={budgetUsageRate} />
       </div>
     </li>
