@@ -1,136 +1,21 @@
-import { useMemo } from "react";
+import { useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import type { ApexOptions } from "apexcharts";
 
-import {
-  downloadChartCsv,
-  downloadChartPng,
-  downloadChartSvg,
-} from "@/utils/download";
+import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
+import {
+  BASE_OPTIONS,
+  CHART_CONTAINER_ID,
+  DOWNLOAD_ITEMS,
+} from "./trafficChart.config";
 import { trafficChartMock } from "./trafficChart.mock";
+import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
 import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
 
-const CHART_ID = "traffic-chart";
-const TODAY = new Date().toISOString().slice(0, 10);
-
-// x축 시간대
-const LABEL_HOURS = new Set(["00:00", "06:00", "12:00", "18:00", "24:00"]);
-
-const BASE_OPTIONS: ApexOptions = {
-  chart: {
-    id: CHART_ID,
-    type: "area",
-    events: {
-      mounted: (chartContext: { el: Element }) => {
-        chartContext.el.querySelector("svg > title")?.remove();
-      },
-    },
-    toolbar: {
-      show: true,
-      tools: {
-        download: false,
-        selection: false,
-        zoom: false,
-        zoomin: false,
-        zoomout: false,
-        pan: false,
-        reset: false,
-      },
-      export: {
-        csv: {
-          filename: `overview-traffic-data-${TODAY}`,
-          columnDelimiter: ",",
-          headerCategory: "시간",
-          headerValue: "클릭수",
-        },
-      },
-    },
-    zoom: { enabled: false },
-    fontFamily: "Pretendard",
-    animations: { enabled: true, dynamicAnimation: { enabled: false } },
-  },
-  dataLabels: { enabled: false }, // 각 포인트 위 숫자 레이블 숨김
-  stroke: { curve: "monotoneCubic", width: 1.5 },
-  // 라인 아래 그라데이션
-  fill: {
-    type: "gradient",
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.5,
-      stops: [0, 90, 100],
-    },
-  },
-  colors: ["#0084fe"], // --color-status-blue
-  markers: { size: 0 }, // 데이터 포인트 마커 숨김
-  xaxis: {
-    type: "category",
-    categories: trafficChartMock.labels, // 00:00 ~ 24:00
-    tickAmount: 24, // 1시간 간격 tick 생성
-    labels: {
-      // LABEL_HOURS에 해당하는 시간대만 표시, 나머지는 빈 문자열
-      formatter: (val: string) => (LABEL_HOURS.has(val) ? val : ""),
-      style: { colors: "#8b8b8f", fontSize: "12px" }, // --color-text-sub
-      rotate: 0, // 레이블 수평 고정
-      rotateAlways: false, // 자동 회전 방지
-    },
-    axisBorder: { show: false }, // x축 하단 경계선 숨김
-    axisTicks: { show: false }, // tick 눈금 숨김
-    tooltip: { enabled: false }, // 호버 시 x축 tooltip 숨김
-  },
-  yaxis: {
-    min: 0,
-    tickAmount: 6, // 1만 단위 눈금
-    labels: {
-      // 0은 숨기고, 나머지는 K 단위로 변환
-      formatter: (val: number) =>
-        val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,
-      style: { colors: "#8b8b8f", fontSize: "12px" }, // --color-text-sub
-    },
-  },
-  grid: {
-    borderColor: "#f2f4f6", // --color-chart-inactive
-    xaxis: { lines: { show: false } }, // 세로 그리드선 숨김
-    yaxis: { lines: { show: true } }, // 가로 그리드선 표시
-    padding: { left: 16, right: 8 }, // y축 레이블와 차트 사이 여백 줌
-  },
-  tooltip: {
-    x: { show: false }, // 상단 시간 헤더 숨김
-    style: { fontFamily: "Pretendard" },
-  },
-};
-
-// TODO: 실시간 연동 시 useState로 전환
-const series = [
-  {
-    name: "클릭수",
-    data: trafficChartMock.labels.map((label, i) => ({
-      x: label,
-      y: trafficChartMock.clicks[i],
-    })),
-  },
-];
-
-const CHART_CONTAINER_ID = `${CHART_ID}-container`;
-const FILENAME = `overview-traffic-chart-${TODAY}`;
-const DOWNLOAD_ITEMS = [
-  {
-    label: "PNG 저장",
-    onClick: () => downloadChartPng(CHART_ID, FILENAME),
-  },
-  {
-    label: "SVG 저장",
-    onClick: () => downloadChartSvg(CHART_CONTAINER_ID, FILENAME),
-  },
-  {
-    label: "CSV 다운로드",
-    onClick: () => downloadChartCsv(CHART_ID),
-  },
-];
-
+// 차트 우측 상단 다운로드 버튼
 export function TrafficChartDownload() {
   return (
     <DropdownMenu
@@ -154,31 +39,81 @@ export function TrafficChartDownload() {
   );
 }
 
-export default function TrafficChart() {
-  const options = useMemo<ApexOptions>(() => {
-    const values =
-      series[0]?.data.map((d: { x: string; y: number }) => d.y) ?? [];
-    const yAxisMax =
-      values.length > 0
-        ? Math.ceil(Math.max(...values) / 10000) * 10000
-        : 10000;
+// 이상 징후 커스텀 말풍선 툴팁
+function AnomalyBubble({ x, y }: { x: number; y: number }) {
+  const GAP = 16;
+  return (
+    <div
+      className="absolute pointer-events-none"
+      style={{
+        left: x,
+        top: y - GAP,
+        transform: "translateX(-50%) translateY(-100%)",
+      }}
+    >
+      <div className="relative bg-white border-2 border-status-red rounded-2xl px-5 py-3 text-center min-w-37">
+        <p className="text-status-red font-bold text-sm leading-snug">
+          클릭 이상 징후 감지
+        </p>
+        <p className="text-[#555] text-xs mt-1 leading-relaxed">
+          구글-캠페인 A-광고 1
+          <br />
+          부정 클릭 의심
+        </p>
+        <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.75 w-3 h-3 bg-white border-r-2 border-b-2 border-[#ff4560] rotate-45" />
+      </div>
+    </div>
+  );
+}
 
-    return { ...BASE_OPTIONS, yaxis: { ...BASE_OPTIONS.yaxis, max: yAxisMax } };
-  }, [series]);
+export default function TrafficChart() {
+  const isMounted = useIsMounted();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // 빨간 점의 컨테이너 기준 좌표
+  const markerPos = useAnomalyMarkerPos(containerRef);
+  const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
+  const [isAnomalyFocused, setIsAnomalyFocused] = useState(false);
 
   return (
     <div
       id={CHART_CONTAINER_ID}
-      role="img"
+      ref={containerRef}
+      role="group"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      className="[&_.apexcharts-toolbar]:hidden"
+      data-hide-tooltip={isAnomalyHovered || isAnomalyFocused || undefined}
+      className="relative [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
     >
-      <ReactApexChart
-        type="area"
-        options={options}
-        series={series}
-        height={360}
-      />
+      {isMounted && (
+        <ReactApexChart
+          type="area"
+          options={BASE_OPTIONS}
+          series={[
+            {
+              name: "클릭수",
+              data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
+            },
+          ]}
+          height={400}
+        />
+      )}
+      {markerPos && (
+        <>
+          <button
+            type="button"
+            className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
+            style={{ left: markerPos.x, top: markerPos.y }}
+            aria-label="클릭 이상 징후 상세 보기"
+            onFocus={() => setIsAnomalyFocused(true)}
+            onBlur={() => setIsAnomalyFocused(false)}
+            onPointerEnter={() => setIsAnomalyHovered(true)}
+            onPointerLeave={() => setIsAnomalyHovered(false)}
+          />
+          {(isAnomalyHovered || isAnomalyFocused) && (
+            <AnomalyBubble x={markerPos.x} y={markerPos.y} />
+          )}
+        </>
+      )}
     </div>
   );
 }
