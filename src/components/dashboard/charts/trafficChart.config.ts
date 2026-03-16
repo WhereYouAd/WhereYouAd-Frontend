@@ -11,7 +11,7 @@ import { trafficChartMock } from "./trafficChart.mock";
 // 차트 고유 ID
 export const CHART_ID = "traffic-chart";
 
-// 이상 징후 포인트 인덱스 (11시)
+// 이상 징후 포인트 인덱스 (ex.11시)
 export const ANOMALY_INDEX = 11;
 const ANOMALY_Y = trafficChartMock.clicks[ANOMALY_INDEX];
 
@@ -28,7 +28,9 @@ export const BASE_OPTIONS: ApexOptions = {
     events: {
       // SVG <title> 및 canvas 폴백 텍스트 제거
       mounted: (chartContext: { el: Element }) => {
-        chartContext.el.querySelectorAll("title").forEach((el) => el.remove());
+        chartContext.el.querySelectorAll("title").forEach((el) => {
+          el.remove();
+        });
         const canvas = chartContext.el.querySelector("canvas");
         if (canvas) canvas.textContent = "";
       },
