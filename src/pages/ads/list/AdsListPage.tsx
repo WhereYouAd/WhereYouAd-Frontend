@@ -100,7 +100,7 @@ export default function AdsListPage() {
         title="전체 캠페인 중단"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="w-7 h-auto text-status-red" />}
           title="전체 캠페인을 중단하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
