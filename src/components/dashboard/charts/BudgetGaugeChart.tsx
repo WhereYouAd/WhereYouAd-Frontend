@@ -4,7 +4,7 @@ import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { type TBadgeVariant } from "@/components/common/badge/Badge";
 
-import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 interface IBudgetGaugeChartProps {
   totalBudget: number;
@@ -138,7 +138,7 @@ export default function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-2 tablet:grid-cols-1 gap-4 mb-5">
         <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
           <span className="font-caption font-medium text-text-auth-sub">
             남은 예산
@@ -173,7 +173,7 @@ export default function BudgetGaugeChart({
       </div>
 
       <div className="mt-auto px-5 py-4 flex items-center gap-3 rounded-[16px] bg-[#F2F4F6]">
-        <AlertCircleIcon
+        <WarnCircleIcon
           className="w-5 h-5 text-[#8B95A1] shrink-0"
           aria-hidden="true"
         />

@@ -4,7 +4,7 @@ import type { TPermissionRow } from "@/types/workspace/workspace";
 
 import Toggle from "../common/toggle/Toggle";
 
-import CheckIcon from "@/assets/icon/workspace/check.svg?react";
+import CheckIcon from "@/assets/icon/common/check.svg?react";
 
 const permissionRows: TPermissionRow[] = [
   {
@@ -89,7 +89,7 @@ export default function PermissionTable() {
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7">
-        <h2 className="font-heading4 text-text-main !font-semibold">
+        <h2 className="font-heading4 text-text-main font-semibold!">
           권한 설정
         </h2>
         <p className="font-body2 text-text-sub mt-2">

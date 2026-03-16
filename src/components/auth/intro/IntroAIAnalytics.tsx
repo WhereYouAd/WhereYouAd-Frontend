@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import AiTalk from "@/assets/auth/introSlide/ai_talk.svg?react";
+import AiTalkBubble from "./AiTalkBubble";
 
 export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
   const [showBubble, setShowBubble] = useState(false);
@@ -82,8 +82,8 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
                           : "opacity-0 translate-y-8 scale-50"
                       }`}
                     >
-                      <div className="relative drop-shadow-xl hover:scale-105 transition-transform duration-300">
-                        <AiTalk className="w-auto h-auto min-w-45" />
+                      <div className="hover:scale-105 transition-transform duration-300">
+                        <AiTalkBubble text="토요일 성과가 +18% 상승!" />
                       </div>
                     </div>
                   )}

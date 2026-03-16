@@ -2,7 +2,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import MemberList from "@/components/workspace/MemberList";
 import PermissionTable from "@/components/workspace/PermissionTable";
 
-import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function MemberManagement() {
   return (
@@ -29,7 +29,7 @@ export default function MemberManagement() {
           buttonSize="big"
           buttonClassName="px-8 !rounded-component-md"
           // buttonDisabled={}
-          leadingSlot={<WarningIcon />}
+          leadingSlot={<WarnCircleIcon />}
         />
       </div>
     </section>

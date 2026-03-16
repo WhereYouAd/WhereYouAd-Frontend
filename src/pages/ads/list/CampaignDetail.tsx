@@ -11,7 +11,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import { MOCK_CAMPAIGNS } from "./campaign.mock";
 
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
   const data = MOCK_CAMPAIGNS[0];
@@ -44,7 +44,7 @@ export default function CampaignDetail() {
 
   return (
     <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
-      <div className="flex-1 py-15 px-10 md:px-15 lg:px-25">
+      <div className="flex-1 py-15 px-25 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
@@ -74,7 +74,7 @@ export default function CampaignDetail() {
             />
           </div>
 
-          <div className="w-full overflow-x-auto">
+          <div className="w-full">
             {/* ads list */}
             <AdListTable ads={data.ads} />
 
@@ -88,7 +88,7 @@ export default function CampaignDetail() {
                   setStopOpen(true);
                 }}
                 buttonDisabled={false}
-                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-140 shrink-0"
+                containerClassName="bg-status-red/7 border-status-red px-6 py-4"
                 titleClassName="text-status-red font-heading3"
                 descriptionClassName="font-body2 text-text-sub leading-relaxed"
                 buttonSize="big"
@@ -106,7 +106,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="캠페인 운영을 중단하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 중단됩니다."
           buttonText="중단하기"
@@ -123,7 +123,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="캠페인 운영을 재개하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
           buttonText="시작하기"

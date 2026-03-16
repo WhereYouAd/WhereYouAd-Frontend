@@ -5,9 +5,9 @@ import type {
 
 import MemberRoleSelect from "./MemberRoleSelect";
 
-import MailIcon from "@/assets/icon/workspace/mail.svg?react";
-import TrashIcon from "@/assets/icon/workspace/trash.svg?react";
-import UserIcon from "@/assets/icon/workspace/user.svg?react";
+import MailIcon from "@/assets/icon/common/mail.svg?react";
+import TrashIcon from "@/assets/icon/common/trash.svg?react";
+import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TProps = {
   member: TWorkspaceMember;

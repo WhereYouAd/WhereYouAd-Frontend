@@ -13,7 +13,7 @@ import {
 import { trafficChartMock } from "./trafficChart.mock";
 import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
-import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
+import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 // 차트 우측 상단 다운로드 버튼
 export function TrafficChartDownload() {

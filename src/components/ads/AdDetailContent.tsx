@@ -8,8 +8,8 @@ import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import LinkIcon from "@/assets/icon/common/copy.svg?react";
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import LinkIcon from "@/assets/icon/common/link.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 interface IAdDetailContentProps {
   ad: IAd;
@@ -120,9 +120,9 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         </div>
       </div>
 
-      <div className="flex w-full overflow-x-auto">
+      <div className="flex w-full">
         <div className="w-[15%] shrink-0 mr-2" />
-        <div className="flex-1 max-w-[85%] flex flex-col gap-6 pl-2 overflow-x-auto overflow-y-hidden">
+        <div className="flex-1 min-w-0 flex flex-col gap-6 pl-2">
           <ControlBox
             title="트래킹 활성화 시 실시간 성과 수집이 시작돼요"
             description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다."
@@ -131,11 +131,11 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
               setTrackOpen(true);
             }}
             buttonDisabled={false}
-            containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 min-w-[650px] shrink-0"
+            containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4"
             titleClassName="text-chart-3 font-heading3"
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName="font-body1"
+            buttonClassName="font-body1 tablet:w-full"
           />
           <ControlBox
             title={
@@ -151,7 +151,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
                 : setStopOpen(true);
             }}
             buttonDisabled={false}
-            containerClassName={`px-6 py-4 min-w-[650px] shrink-0 ${
+            containerClassName={`px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4 ${
               ad.runStatus === "stopped"
                 ? "bg-status-blue/7 border-status-blue"
                 : "bg-status-red/7 border-status-red"
@@ -163,7 +163,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             }`}
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName={`font-body1 ${
+            buttonClassName={`font-body1 tablet:w-full ${
               ad.runStatus === "stopped" ? "bg-status-blue" : "bg-status-red"
             }`}
           />
@@ -177,7 +177,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="트래킹 활성화"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="트래킹을 활성화하시겠습니까?"
           description={
             <>
@@ -200,7 +200,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="트래킹 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="트래킹을 중단하시겠습니까?"
           description="데이터 수집이 중단되어 분석 리포트에 공백이 생길 수 있습니다."
           buttonText="중단하기"
@@ -217,7 +217,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="광고 소재 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="광고 소재를 중단하시겠습니까?"
           description="해당 광고의 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -234,7 +234,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
         title="광고 소재 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="광고 소재의 운영을 재개하시겠습니까?"
           description="중단되었던 광고 소재가 다시 플랫폼에 노출되기 시작합니다."
           buttonText="시작하기"

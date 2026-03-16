@@ -10,6 +10,7 @@ import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
+import PageHeader from "@/components/common/PageHeader";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
@@ -23,11 +24,11 @@ import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable
 import { overviewMockData } from "./overview.mock";
 import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
-import DownloadIcon from "@/assets/icon/ai-report/download.svg?react";
-import LinkIcon from "@/assets/icon/ai-report/link.svg?react";
-import AlertCircleIcon from "@/assets/icon/common/alert-circle.svg?react";
-import ChevronDoubleRightIcon from "@/assets/icon/common/chevron-double-right.svg?react";
-import AiButtonSvg from "@/assets/logo/ai-요약버튼.svg?react";
+import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
+import DownloadIcon from "@/assets/icon/common/download.svg?react";
+import LinkIcon from "@/assets/icon/common/link.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 export default function OverviewDashboard() {
   const navigate = useNavigate();
@@ -55,38 +56,34 @@ export default function OverviewDashboard() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 p-6 lg:p-8 w-full min-w-0">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-heading2 text-text-main font-bold tracking-tight">
-            통합 대시보드
-          </h1>
-          <p className="font-body2 text-text-sub">
-            데이터 기준 · {currentDate}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => setIsAiPanelOpen(true)}
-          className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
-          aria-label="AI 요약하기"
-        >
-          <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
-          <div className="relative z-10 transition-all duration-200">
-            <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
-          </div>
-        </button>
-      </div>
+    <section className="flex flex-col gap-8 w-full min-w-0">
+      <PageHeader
+        title="통합 대시보드"
+        description={`데이터 기준 · ${currentDate}`}
+        actions={
+          <button
+            type="button"
+            onClick={() => setIsAiPanelOpen(true)}
+            className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
+            aria-label="AI 요약하기"
+          >
+            <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
+            <div className="relative z-10 transition-all duration-200">
+              <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
+            </div>
+          </button>
+        }
+      />
 
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
         {overviewMockData.kpis.map((kpi) => (
           <StatCard key={kpi.title} {...kpi} />
         ))}
       </div>
 
-      <div className="grid grid-cols-1 2xl:grid-cols-7 gap-6">
+      <div className="grid grid-cols-7 tablet:grid-cols-1 gap-6">
         <Card
-          className="2xl:col-span-5 flex flex-col min-h-120"
+          className="col-span-5 tablet:col-span-1 flex flex-col min-h-120"
           title="실시간 트래픽 변화"
           description={
             <ChartLegend
@@ -101,7 +98,7 @@ export default function OverviewDashboard() {
           <TrafficChart />
         </Card>
         <Card
-          className="2xl:col-span-2 flex flex-col 2xl:min-h-120"
+          className="col-span-2 tablet:col-span-1 flex flex-col min-h-120"
           title="예산 소진 현황"
           description={
             <ChartLegend
@@ -134,7 +131,7 @@ export default function OverviewDashboard() {
         }
         description={
           <div className="flex items-center gap-1.5 font-caption text-text-placeholder select-none">
-            <AlertCircleIcon
+            <WarnCircleIcon
               className="w-3.5 h-3.5 mt-px shrink-0"
               aria-hidden="true"
             />
@@ -150,7 +147,7 @@ export default function OverviewDashboard() {
         onClose={() => setIsAiPanelOpen(false)}
         hideHeader={false}
         disableScroll={false}
-        className="w-full sm:max-w-160"
+        className="w-full max-w-160 tablet:max-w-full"
         dropdownItems={[
           {
             label: "링크 공유하기",
@@ -183,6 +180,6 @@ export default function OverviewDashboard() {
       >
         <OverviewAiReportPanel />
       </Drawer>
-    </div>
+    </section>
   );
 }
