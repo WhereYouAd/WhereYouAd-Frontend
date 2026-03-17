@@ -4,9 +4,9 @@ import type { TCampaignStatus, TPlatform } from "@/types/ads/campaign";
 
 import ProgressBar from "../common/progressbar/ProgressBar";
 
-import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
-import KakaoLogo from "@/assets/icon/ads/kakao-circle.svg?react";
-import NaverLogo from "@/assets/icon/ads/naver-circle.svg?react";
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 interface ICampaignRowProps {
   projectId: number;
@@ -48,12 +48,12 @@ export default function CampaignRow({
       }}
     >
       {/* 플랫폼 */}
-      <div className="flex w-[25%] shrink-0">
+      <div className="flex w-[25%] tablet:w-[28%] shrink-0">
         {providers && providers.length > 0 ? (
           providers.map((p, idx) => (
             <div
               key={idx}
-              className="flex h-8 w-8 mr-3 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
+              className="flex h-8 w-8 tablet:h-6 tablet:w-6 mr-3 tablet:mr-1 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
             >
               {LogoMap[p.toLowerCase() as TPlatform]}
             </div>
@@ -64,7 +64,7 @@ export default function CampaignRow({
       </div>
 
       {/* 캠페인 명 */}
-      <div className="w-[50%] min-w-0 pr-10 shrink-0">
+      <div className="w-[40%] tablet:w-[34%] min-w-0 pr-10 tablet:pr-3 shrink-0">
         <div
           className={`font-body1 truncate ${isPaused ? "text-text-sub" : "text-text-main"}`}
         >
@@ -73,14 +73,16 @@ export default function CampaignRow({
       </div>
 
       {/* 동기화 상태 */}
-      {/* <div className="w-[15%] shrink-0 pr-10">
+      {/* <div className="w-[15%] tablet:w-[18%] shrink-0 pr-10 tablet:pr-2">
         <Badge variant={status} size="sm">
           {statusText}
         </Badge>
       </div> */}
 
       {/* 예산 소진 현황 */}
-      <div className={`w-[25%] shrink-0 ${isPaused ? "opacity-80" : ""}`}>
+      <div
+        className={`w-[35%] tablet:w-[38%] shrink-0 ${isPaused ? "opacity-80" : ""}`}
+      >
         <ProgressBar value={budgetUsageRate} />
       </div>
     </li>

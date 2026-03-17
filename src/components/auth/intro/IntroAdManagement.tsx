@@ -1,6 +1,6 @@
-import LogoGoogle from "@/assets/auth/introSlide/logo_goole.svg?react";
-import LogoKakao from "@/assets/auth/introSlide/logo_kakao.svg?react";
-import LogoNaver from "@/assets/auth/introSlide/logo_naver.svg?react";
+import LogoGoogleAds from "@/assets/logo/social-logo/circle/googleAds-circle.svg?react";
+import LogoKakao from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import LogoNaver from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 const PLATFORMS = [
   {
@@ -12,7 +12,7 @@ const PLATFORMS = [
   },
   {
     id: "google",
-    icon: LogoGoogle,
+    icon: LogoGoogleAds,
     bgColor: "bg-social-google",
     className: "",
     size: "w-32 h-32",

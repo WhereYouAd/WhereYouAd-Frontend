@@ -5,13 +5,15 @@ import { toast } from "sonner";
 import type { ICampaign } from "@/types/ads/campaign";
 
 import CampaignTable from "@/components/ads/CampaignTable";
+import Card from "@/components/common/card/Card";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
+import PageHeader from "@/components/common/PageHeader";
 
 import { getCampaignList, updateAllCampaignStatus } from "@/api/ads/ads";
 import { getMyWorkspaces } from "@/api/workspace/org";
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function AdsListPage() {
   const [campaigns, setCampaigns] = useState<ICampaign[]>([]);
@@ -119,67 +121,60 @@ export default function AdsListPage() {
   }
 
   return (
-    <section className="flex flex-col overflow-hidden bg-white rounded-component-lg min-h-[90vh]">
-      <div className="flex-1 overflow-x-auto py-15 px-10 md:px-18 lg:px-25">
-        <div className="flex flex-col min-w-180">
-          <header className="w-full flex flex-col mb-10">
-            <h1 className="font-heading2 text-text-main">광고 운영 관리</h1>
-            <p className="font-body2 text-text-placeholder mt-3">
-              연결된 캠페인 및 광고 소재의 상세 운영 설정을 확인하고 제어할 수
-              있습니다.
-            </p>
-          </header>
-          {/* 테이블 */}
-          <div className="w-full flex flex-col mb-10">
-            <CampaignTable
-              campaigns={campaigns}
-              onRowClick={(id) => handleCampaignClick(id)}
-            />
-          </div>
-          {/* 하단 배너 */}
-          <div className="w-full flex flex-col gap-7">
+    <section className="w-full flex flex-col gap-8">
+      <PageHeader
+        title="광고 운영 관리"
+        description="연결된 캠페인 및 광고 소재의 상세 운영 설정을 확인하고 제어할 수 있습니다."
+      />
+      {/* 테이블 */}
+      <Card>
+        <CampaignTable
+          campaigns={campaigns}
+          onRowClick={(id) => handleCampaignClick(id)}
+        />
+      </Card>
+      {/* 하단 배너 */}
+      <div className="flex flex-col gap-7">
+        <ControlBox
+          title="캠페인 통합 운영 제어"
+          description={`여러 광고 플랫폼의 캠페인을 하나로 묶어 성과와 운영 상태를 통합 관리합니다.\n광고 플랫폼 로그인 후 캠페인을 불러와 연결합니다.`}
+          buttonText="캠페인 통합 연동하기"
+          onButtonClick={handleCampaignGroupClick}
+          buttonDisabled={false}
+          containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4"
+          titleClassName="text-chart-3 font-heading3"
+          descriptionClassName="font-body2 text-text-sub"
+          buttonSize="big"
+          buttonClassName="font-body1"
+        />
+        {hasCampaigns &&
+          (hasActiveCampaign ? (
             <ControlBox
-              title="캠페인 통합 운영 제어"
-              description={`여러 광고 플랫폼의 캠페인을 하나로 묶어 성과와 운영 상태를 통합 관리합니다.\n광고 플랫폼 로그인 후 캠페인을 불러와 연결합니다.`}
-              buttonText="캠페인 통합 연동하기"
-              onButtonClick={handleCampaignGroupClick}
-              buttonDisabled={false}
-              containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 min-w-[650px] shrink-0"
-              titleClassName="text-chart-3 font-heading3"
+              title="전체 캠페인을 완전히 중단할 수 있어요"
+              description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
+              buttonText="중단하기"
+              onButtonClick={() => setStopAllOpen(true)}
+              buttonDisabled={isStopping}
+              containerClassName="bg-status-red/7 border-status-red px-6 py-4"
+              titleClassName="text-status-red font-heading3"
               descriptionClassName="font-body2 text-text-sub"
               buttonSize="big"
-              buttonClassName="font-body1"
+              buttonClassName="font-body1 bg-status-red"
             />
-            {hasCampaigns &&
-              (hasActiveCampaign ? (
-                <ControlBox
-                  title="전체 캠페인을 완전히 중단할 수 있어요"
-                  description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
-                  buttonText="중단하기"
-                  onButtonClick={() => setStopAllOpen(true)}
-                  buttonDisabled={isStopping}
-                  containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-[650px] shrink-0"
-                  titleClassName="text-status-red font-heading3"
-                  descriptionClassName="font-body2 text-text-sub"
-                  buttonSize="big"
-                  buttonClassName="font-body1 bg-status-red"
-                />
-              ) : (
-                <ControlBox
-                  title="중단된 캠페인을 다시 시작할 수 있어요"
-                  description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
-                  buttonText="시작하기"
-                  onButtonClick={() => setResumeOpen(true)}
-                  buttonDisabled={isResuming}
-                  containerClassName="bg-status-blue/7 border-status-blue px-6 py-4 min-w-[650px] shrink-0"
-                  titleClassName="text-status-blue font-heading3"
-                  descriptionClassName="font-body2 text-text-sub"
-                  buttonSize="big"
-                  buttonClassName="font-body1 bg-status-blue"
-                />
-              ))}
-          </div>
-        </div>
+          ) : (
+            <ControlBox
+              title="중단된 캠페인을 다시 시작할 수 있어요"
+              description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
+              buttonText="시작하기"
+              onButtonClick={() => setResumeOpen(true)}
+              buttonDisabled={isResuming}
+              containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
+              titleClassName="text-status-blue font-heading3"
+              descriptionClassName="font-body2 text-text-sub"
+              buttonSize="big"
+              buttonClassName="font-body1 bg-status-blue"
+            />
+          ))}
       </div>
 
       {/* 전체 캠페인 중단 모달 */}
@@ -189,7 +184,7 @@ export default function AdsListPage() {
         title="전체 캠페인 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="w-7 h-auto text-status-red" />}
           title="전체 캠페인을 중단하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -206,7 +201,7 @@ export default function AdsListPage() {
         title="전체 캠페인 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="전체 캠페인을 재개하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 재개됩니다."
           buttonText="시작하기"

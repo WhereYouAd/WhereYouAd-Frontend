@@ -8,7 +8,7 @@ import type {
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
 
-import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
+import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
 const mockMembers: TWorkspaceMember[] = [
   {
@@ -57,7 +57,7 @@ export default function MemberList() {
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex justify-between">
         <div>
-          <h2 className="font-heading4 text-text-main !font-semibold">
+          <h2 className="font-heading4 text-text-main font-semibold!">
             팀 구성원
           </h2>
           <p className="font-body2 text-text-sub mt-2">

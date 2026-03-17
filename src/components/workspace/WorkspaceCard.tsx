@@ -7,8 +7,8 @@ import {
   type TMenuItem,
 } from "@/components/common/dropdownmenu/DropdownMenu";
 
-import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
-import VectorIcon from "@/assets/icon/workspace/Vector.svg?react";
+import BuildingIcon from "@/assets/icon/common/building.svg?react";
+import VectorIcon from "@/assets/icon/common/more.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 type TProps = {

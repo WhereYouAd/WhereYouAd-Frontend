@@ -2,9 +2,9 @@ import { TrendBadge } from "@/components/common/card/StatCard";
 
 import { platformRoasRanking } from "./platformComparison.mock";
 
-import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
-import KakaoLogo from "@/assets/icon/ads/kakao-circle.svg?react";
-import NaverLogo from "@/assets/icon/ads/naver-circle.svg?react";
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 // 플랫폼 로고 컴포넌트 매핑
 const platformLogoMap = {

@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
-import CloseIcon from "@/assets/icon/ai-report/close.svg?react";
-import MoreIcon from "@/assets/icon/ai-report/more.svg?react";
+import CloseIcon from "@/assets/icon/common/close.svg?react";
+import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 export interface IDrawerProps {
   isOpen: boolean;

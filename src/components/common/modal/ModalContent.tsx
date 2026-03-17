@@ -22,10 +22,11 @@ export default function ModalContent({
   variant = "danger",
 }: IModalContentProps) {
   return (
-    <div className="text-center px-2 py-6">
-      {icon && <div className="flex justify-center mb-6">{icon}</div>}
-
-      <h3 className="font-heading2 text-text-main mb-3">{title}</h3>
+    <div className="text-center px-2 pt-10 pb-6">
+      <div className="flex justify-center items-center gap-2 mb-3">
+        {icon && <div className="shrink-0">{icon}</div>}
+        <h3 className="font-heading2 text-text-main leading-none">{title}</h3>
+      </div>
       <div className="font-body1 text-text-auth-sub mb-7 leading-relaxed">
         {description}
       </div>
@@ -36,7 +37,7 @@ export default function ModalContent({
           variant={variant}
           size="big"
           onClick={onConfirm}
-          className="w-full md:w-auto px-12"
+          className="w-auto px-12 tablet:w-full"
           disabled={isLoading}
         >
           {isLoading ? "처리 중.." : buttonText}

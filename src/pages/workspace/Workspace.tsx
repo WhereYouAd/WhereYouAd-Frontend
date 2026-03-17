@@ -8,6 +8,7 @@ import Button from "@/components/common/button/Button";
 import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
@@ -19,11 +20,11 @@ import {
   getMyWorkspaces,
   uploadImage,
 } from "@/api/workspace/org";
-import EditContainIcon from "@/assets/icon/workspace/edit-contained.svg?react";
-import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
-import SearchIcon from "@/assets/icon/workspace/search.svg?react";
-import UpLoadImgIcon from "@/assets/icon/workspace/uploadImg.svg?react";
-import UserProfileIcon from "@/assets/icon/workspace/userProfile.svg?react";
+import EditContainIcon from "@/assets/icon/common/edit.svg?react";
+import PlusIcon from "@/assets/icon/common/plus.svg?react";
+import SearchIcon from "@/assets/icon/common/search.svg?react";
+import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
+import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 export default function WorkspacePage() {
@@ -184,14 +185,12 @@ export default function WorkspacePage() {
   };
 
   return (
-    <section className="w-full">
-      <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
-        <p className="font-body1 text-text-sub">
-          워크스페이스 정보를 확인하고 관리하세요.
-        </p>
-      </header>
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+    <section className="w-full flex flex-col gap-8">
+      <PageHeader
+        title="워크스페이스 관리"
+        description="워크스페이스 정보를 확인하고 관리하세요."
+      />
+      <div className="mb-6 flex flex-row items-center gap-4">
         <div className="flex-1">
           <Input
             aria-label="조직 검색"
@@ -206,10 +205,11 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex w-full shrink-0 whitespace-nowrap items-center justify-center gap-2 sm:w-auto"
+          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
-          워크스페이스 생성하기
+          <span className="tablet:hidden">워크스페이스 생성하기</span>
+          <span className="hidden tablet:inline">생성하기</span>
         </Button>
       </div>
 

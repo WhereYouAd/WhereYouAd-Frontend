@@ -51,7 +51,7 @@ export default function ControlBox({
     >
       <div
         className={twMerge(
-          "flex min-w-0 items-center gap-4 sm:gap-8",
+          "flex min-w-0 items-center gap-8 tablet:gap-4",
           contentClassName,
         )}
       >
@@ -78,7 +78,7 @@ export default function ControlBox({
           onClick={onButtonClick}
           disabled={buttonDisabled}
           className={twMerge(
-            "shrink-0 px-8 !rounded-component-md",
+            "shrink-0 px-8 rounded-component-md!",
             buttonClassName,
           )}
         >
