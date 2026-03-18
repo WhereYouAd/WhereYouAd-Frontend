@@ -56,7 +56,7 @@ const mockInviteItems: TInviteMemberItem[] = [
     profileImageUrl: null,
     role: "ADMIN",
     inviteStatus: "ACTIVE",
-    isMe: true,
+    isMe: false,
   },
   {
     name: "박치국",

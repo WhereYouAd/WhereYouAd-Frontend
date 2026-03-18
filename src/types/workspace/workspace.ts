@@ -109,3 +109,12 @@ export type TInviteMemberItem = {
   inviteStatus: "PENDING" | "ACTIVE";
   isMe?: boolean;
 };
+
+export type TTransferCandidate = {
+  memberId: number;
+  name: string;
+  email: string;
+  profileImageUrl?: string | null;
+  role: TMemberRole;
+  isMe?: boolean;
+};
