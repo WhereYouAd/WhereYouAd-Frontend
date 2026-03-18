@@ -124,10 +124,15 @@ export default function Drawer({
         onTouchEnd={handleTouchEnd}
       >
         {/* 태블릿 드래그 핸들 */}
-        <div className="hidden tablet:flex justify-center pt-3 pb-1 shrink-0 cursor-grab active:cursor-grabbing">
+        <div
+          className="hidden tablet:flex justify-center pt-3 pb-1 shrink-0 cursor-grab active:cursor-grabbing"
+          role="slider"
+          aria-label="아래로 드래그하여 닫기"
+          aria-orientation="vertical"
+          tabIndex={0}
+        >
           <div className="w-20 h-1 rounded-full bg-bg-disabled" />
         </div>
-
         {!hideHeader && (
           <div
             data-print-hide
