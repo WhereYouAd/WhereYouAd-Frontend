@@ -30,10 +30,16 @@ export function useAnomalyMarkerPos(
     };
 
     const timer = setTimeout(updateMarkerPos, 300);
-    const observer = new ResizeObserver(updateMarkerPos);
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    const observer = new ResizeObserver(() => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(updateMarkerPos, 300);
+    });
     observer.observe(container);
     return () => {
       clearTimeout(timer);
+      clearTimeout(debounceTimer);
       observer.disconnect();
     };
   }, [containerRef]);

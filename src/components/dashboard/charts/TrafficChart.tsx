@@ -143,6 +143,14 @@ const TrafficChart = memo(function TrafficChart() {
       </Suspense>
       {markerPos && (
         <>
+          <span
+            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] pointer-events-none"
+            style={{ left: markerPos.x, top: markerPos.y }}
+          />
+          <span
+            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] pointer-events-none"
+            style={{ left: markerPos.x, top: markerPos.y }}
+          />
           <button
             type="button"
             className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
