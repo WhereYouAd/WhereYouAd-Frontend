@@ -58,7 +58,9 @@ export default function AdsListPage() {
   const [isResuming, setIsResuming] = useState(false);
 
   const handleCampaignClick = (id: number) => {
-    navigate(`/ads/${id}`);
+    navigate(`/ads/${id}`, {
+      state: { orgId: currentOrgId },
+    });
   };
 
   const handleCampaignGroupClick = () => {

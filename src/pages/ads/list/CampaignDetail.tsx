@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
-import type { ICampaignDetail } from "@/types/ads/campaign";
+import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
@@ -11,21 +12,42 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { MOCK_CAMPAIGNS } from "./campaign.mock";
-
+//import { MOCK_CAMPAIGNS } from "./campaign.mock";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
-  const data = MOCK_CAMPAIGNS[0] as ICampaignDetail;
+  // const data = MOCK_CAMPAIGNS[0] as ICampaignDetail;
 
-  // const isPaused = data.status === "PAUSED";
-  // const isOngoing = data.status === "ON_GOING";
+  const location = useLocation();
+  const currentOrgId = location.state?.orgId;
+
+  const { data, isLoading } = useCampaignDetail(currentOrgId);
 
   const [stopOpen, setStopOpen] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
-
   const [resumeOpen, setResumeOpen] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[90vh] items-center justify-center">
+        <p className="font-body1 text-text-placeholder">
+          데이터를 불러오는 중입니다...
+        </p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="p-10 text-center text-text-placeholder">
+        정보를 불러올 수 없습니다.
+      </div>
+    );
+  }
+
+  // const isPaused = data.status === "PAUSED";
+  // const isOngoing = data.status === "ON_GOING";
 
   const onStopConfirm = () => {
     setIsStopping(true);
@@ -77,7 +99,7 @@ export default function CampaignDetail() {
           <div className="flex flex-wrap gap-7 w-full">
             <CampaignInfoCard
               budget={data.budget.toLocaleString()}
-              date={data.createdAt}
+              date={data.createdAt.replaceAll("-", ".")}
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
@@ -88,7 +110,7 @@ export default function CampaignDetail() {
 
           <div className="w-full">
             {/* ads list */}
-            <AdListTable ads={data.ads} />
+            <AdListTable ads={data.ads || []} />
 
             {/* campaign controlbox */}
             <div className="mt-10">
