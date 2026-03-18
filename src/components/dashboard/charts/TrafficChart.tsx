@@ -54,7 +54,7 @@ export function TrafficChartDownload() {
   );
 }
 
-// 이상 징후 커스텀 말풍선 툴팁
+// 이상 징후 커스텀 툴팁
 const AnomalyBubble = memo(function AnomalyBubble({
   x,
   y,
@@ -65,7 +65,7 @@ const AnomalyBubble = memo(function AnomalyBubble({
   const GAP = 12;
   return (
     <div
-      className="absolute pointer-events-none transition-all duration-200 ease-out"
+      className="absolute pointer-events-none transition-transform duration-200 ease-out"
       style={{
         left: x,
         top: y - GAP,
@@ -75,12 +75,12 @@ const AnomalyBubble = memo(function AnomalyBubble({
       <div className="relative bg-white border border-bg-disabled rounded-component-sm px-5 py-4 min-w-40">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <span className="inline-block w-2 h-2 rounded-full bg-status-red shrink-0" />
-          <p className="text-text-main font-semibold! text-[13px] tracking-tight">
+          <p className="font-body2 text-text-main font-semibold! tracking-tight">
             클릭 이상 징후 감지
           </p>
         </div>
         <div className="text-center">
-          <p className="text-[#4E5968] text-[12px] font-medium leading-5">
+          <p className="text-text-sub font-caption leading-5">
             구글 · 캠페인 A · 광고 1
           </p>
         </div>
@@ -105,9 +105,11 @@ const TrafficChart = memo(function TrafficChart() {
     let timer: ReturnType<typeof setTimeout>;
     const handleScroll = () => {
       container.style.pointerEvents = "none";
+      container.classList.add("is-scrolling");
       clearTimeout(timer);
       timer = setTimeout(() => {
         container.style.pointerEvents = "";
+        container.classList.remove("is-scrolling");
       }, 150);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -144,11 +146,11 @@ const TrafficChart = memo(function TrafficChart() {
       {markerPos && (
         <>
           <span
-            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] pointer-events-none"
+            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
             style={{ left: markerPos.x, top: markerPos.y }}
           />
           <span
-            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] pointer-events-none"
+            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
             style={{ left: markerPos.x, top: markerPos.y }}
           />
           <button

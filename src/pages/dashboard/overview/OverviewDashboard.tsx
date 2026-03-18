@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -22,13 +22,14 @@ import TrafficChart, {
 import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
 
 import { overviewMockData } from "./overview.mock";
-import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
+
+const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
 
 export default function OverviewDashboard() {
   const navigate = useNavigate();
@@ -129,10 +130,10 @@ export default function OverviewDashboard() {
             onClick={() => navigate("/platform")}
             className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-all rounded-full"
           >
-            <span className="font-caption font-bold pt-0.5">
+            <span className="font-caption font-bold leading-none">
               플랫폼 대시보드 살펴보기
             </span>
-            <ChevronDoubleRightIcon className="w-2.5 h-auto" />
+            <ChevronDoubleRightIcon className="w-4.5 h-4.5" />
           </Button>
         }
         description={
@@ -184,7 +185,11 @@ export default function OverviewDashboard() {
           },
         ]}
       >
-        {isAiPanelOpen && <OverviewAiReportPanel />}
+        {isAiPanelOpen && (
+          <Suspense fallback={null}>
+            <OverviewAiReportPanel />
+          </Suspense>
+        )}
       </Drawer>
     </section>
   );

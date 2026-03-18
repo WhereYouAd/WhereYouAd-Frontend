@@ -82,7 +82,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable() {
 
               {/* 플랫폼 이름 */}
               <div className="flex items-center gap-3">
-                <div className="shrink-0 p-1.5 will-change-transform group-hover:scale-105">
+                <div className="shrink-0 p-1.5 hover:will-change-transform group-hover:scale-105">
                   {getPlatformLogo(platform.name)}
                 </div>
                 <span className="font-body1 font-bold text-text-main tracking-tight">
