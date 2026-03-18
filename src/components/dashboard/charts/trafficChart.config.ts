@@ -59,26 +59,22 @@ export const BASE_OPTIONS: ApexOptions = {
     zoom: { enabled: false },
     fontFamily: "Pretendard",
     animations: {
-      enabled: true,
-      dynamicAnimation: { enabled: false }, // 데이터 업데이트 시 애니메이션 비활성화
+      enabled: false, // SVG 초기 렌더링 비용 제거
     },
+    redrawOnWindowResize: false, // 윈도우 리사이즈 시 불필요한 재렌더 방지
   },
 
   dataLabels: { enabled: false },
 
   stroke: {
-    curve: "monotoneCubic", // 부드러운 곡선
+    curve: "smooth",
     width: 1.5,
   },
 
-  // 라인 아래 그라데이션 채우기
+  // 라인 아래 단색 채우기
   fill: {
-    type: "gradient",
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.5,
-      stops: [0, 90, 100],
-    },
+    type: "solid",
+    opacity: 0.1,
   },
 
   colors: ["#0084fe"],
@@ -95,7 +91,7 @@ export const BASE_OPTIONS: ApexOptions = {
               x: ANOMALY_INDEX,
               y: ANOMALY_Y,
               marker: {
-                size: 5,
+                size: 3,
                 fillColor: "#ff4560",
                 strokeColor: "#ff4560",
                 strokeWidth: 1,

@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from "react";
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import TrendDownIcon from "@/assets/icon/chevron/trend-down.svg?react";
@@ -20,7 +21,10 @@ const trendClasses: Record<ITrend["direction"], string> = {
   down: "bg-status-blue/[0.08] text-status-blue font-bold",
 };
 
-export function TrendBadge({ direction, value }: ITrend) {
+export const TrendBadge = memo(function TrendBadge({
+  direction,
+  value,
+}: ITrend) {
   return (
     <span
       aria-label={`${value} ${direction === "up" ? "상승" : "하락"}`}
@@ -37,9 +41,9 @@ export function TrendBadge({ direction, value }: ITrend) {
       {value}
     </span>
   );
-}
+});
 
-export default function StatCard({
+const StatCard = memo(function StatCard({
   title,
   value,
   trend,
@@ -49,7 +53,7 @@ export default function StatCard({
   return (
     <div
       className={twMerge(
-        "bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(33,130,246,0.08)]",
+        "bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40 transition-shadow duration-300 hover:shadow-[0_12px_40px_rgba(33,130,246,0.08)]",
         className,
       )}
       {...rest}
@@ -61,4 +65,6 @@ export default function StatCard({
       {trend && <TrendBadge {...trend} />}
     </div>
   );
-}
+});
+
+export default StatCard;

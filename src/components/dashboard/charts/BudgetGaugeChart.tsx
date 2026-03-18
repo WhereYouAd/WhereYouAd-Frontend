@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
@@ -37,7 +38,7 @@ const statusPointClasses: Record<TBudgetStatus, string> = {
   위험: "bg-status-red",
 };
 
-export default function BudgetGaugeChart({
+const BudgetGaugeChart = memo(function BudgetGaugeChart({
   totalBudget,
   spent,
   warningThreshold,
@@ -50,16 +51,21 @@ export default function BudgetGaugeChart({
   const isOverBudget = spent > totalBudget;
   const remaining = isOverBudget ? spent - totalBudget : totalBudget - spent;
 
-  const now = new Date();
-  const periodElapsedDays = now.getDate();
-  const periodTotalDays = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    0,
-  ).getDate();
-  const periodElapsedRate = Math.round(
-    (periodElapsedDays / periodTotalDays) * 100,
-  );
+  const { periodElapsedDays, periodTotalDays, periodElapsedRate } =
+    useMemo(() => {
+      const now = new Date();
+      const elapsed = now.getDate();
+      const total = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+      ).getDate();
+      return {
+        periodElapsedDays: elapsed,
+        periodTotalDays: total,
+        periodElapsedRate: Math.round((elapsed / total) * 100),
+      };
+    }, []);
 
   const status = getBudgetStatus(percentage, warningThreshold, dangerThreshold);
 
@@ -183,4 +189,6 @@ export default function BudgetGaugeChart({
       </div>
     </div>
   );
-}
+});
+
+export default BudgetGaugeChart;

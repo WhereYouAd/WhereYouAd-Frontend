@@ -5,8 +5,7 @@ export function useIsMounted() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsMounted(true));
-    return () => cancelAnimationFrame(raf);
+    setIsMounted(true);
   }, []);
 
   return isMounted;
