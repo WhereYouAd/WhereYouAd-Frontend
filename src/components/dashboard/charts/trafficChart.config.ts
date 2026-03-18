@@ -71,14 +71,10 @@ export const BASE_OPTIONS: ApexOptions = {
     width: 1.5,
   },
 
-  // 라인 아래 그라데이션 채우기
+  // 라인 아래 단색 채우기
   fill: {
-    type: "gradient",
-    gradient: {
-      shadeIntensity: 1,
-      opacityFrom: 0.5,
-      stops: [0, 90, 100],
-    },
+    type: "solid",
+    opacity: 0.1,
   },
 
   colors: ["#0084fe"],
