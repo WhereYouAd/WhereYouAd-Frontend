@@ -133,7 +133,7 @@ const TrafficChart = memo(function TrafficChart() {
       data-hide-tooltip={showBubble || undefined}
       className="relative will-change-transform [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
     >
-      <Suspense fallback={<div style={{ height: 400 }} />}>
+      <Suspense fallback={<div className="h-100" />}>
         <ReactApexChart
           type="area"
           options={BASE_OPTIONS}
