@@ -154,7 +154,7 @@ export default function OverviewDashboard() {
         onClose={() => setIsAiPanelOpen(false)}
         hideHeader={false}
         disableScroll={false}
-        className="w-full max-w-160 tablet:max-w-full"
+        className="w-full max-w-160"
         dropdownItems={[
           {
             label: "링크 공유하기",
