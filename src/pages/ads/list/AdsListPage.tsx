@@ -4,6 +4,8 @@ import { toast } from "sonner";
 
 import type { ICampaign } from "@/types/ads/campaign";
 
+import { useControlModal } from "@/hooks/ads/useControlModal";
+
 import CampaignTable from "@/components/ads/CampaignTable";
 import Card from "@/components/common/card/Card";
 import ControlBox from "@/components/common/controlbox/ControlBox";
@@ -51,11 +53,29 @@ export default function AdsListPage() {
 
   const navigate = useNavigate();
 
-  const [stopAllOpen, setStopAllOpen] = useState(false);
-  const [isStopping, setIsStopping] = useState(false);
+  const stopAll = useControlModal({
+    successMessage: "전체 캠페인의 모든 광고 노출이 중단되었습니다.",
+    errorMessage: "중단 처리에 실패하였습니다.",
+    onSuccess: () => {
+      setCampaigns((prev) =>
+        prev.map((c) =>
+          c.status === "ON_GOING" ? { ...c, status: "PAUSED" } : c,
+        ),
+      );
+    },
+  });
 
-  const [resumeOpen, setResumeOpen] = useState(false);
-  const [isResuming, setIsResuming] = useState(false);
+  const resumeAll = useControlModal({
+    successMessage: "전체 캠페인의 광고 노출이 재개되었습니다.",
+    errorMessage: "재개 처리에 실패하였습니다.",
+    onSuccess: () => {
+      setCampaigns((prev) =>
+        prev.map((c) =>
+          c.status === "PAUSED" ? { ...c, status: "ON_GOING" } : c,
+        ),
+      );
+    },
+  });
 
   const handleCampaignClick = (id: number) => {
     navigate(`/ads/${id}`, {
@@ -65,47 +85,6 @@ export default function AdsListPage() {
 
   const handleCampaignGroupClick = () => {
     navigate("/ads/campaignGroup");
-  };
-
-  const onStopAll = async () => {
-    if (!currentOrgId) return;
-    setIsStopping(true);
-
-    try {
-      await updateAllCampaignStatus(currentOrgId, "PAUSED");
-
-      setCampaigns((prev) =>
-        prev.map((c) =>
-          c.status === "ON_GOING" ? { ...c, status: "PAUSED" } : c,
-        ),
-      );
-      toast.success("전체 캠페인의 모든 광고 노출이 중단되었습니다.");
-      setStopAllOpen(false);
-    } catch {
-      toast.error("중단 처리에 실패하였습니다.");
-    } finally {
-      setIsStopping(false);
-    }
-  };
-
-  const onResumeAll = async () => {
-    if (!currentOrgId) return;
-    setIsResuming(true);
-
-    try {
-      await updateAllCampaignStatus(currentOrgId, "ON_GOING");
-      setCampaigns((prev) =>
-        prev.map((c) =>
-          c.status === "PAUSED" ? { ...c, status: "ON_GOING" } : c,
-        ),
-      );
-      toast.success("전체 캠페인의 광고 노출이 재개되었습니다.");
-      setResumeOpen(false);
-    } catch {
-      toast.error("재개 처리에 실패하였습니다.");
-    } finally {
-      setIsResuming(false);
-    }
   };
 
   const hasCampaigns = campaigns.length > 0;
@@ -155,8 +134,8 @@ export default function AdsListPage() {
               title="전체 캠페인을 완전히 중단할 수 있어요"
               description="모든 광고 노출이 즉시 멈추고, 연결된 플랫폼에서도 더 이상 광고가 집행되지 않아요."
               buttonText="중단하기"
-              onButtonClick={() => setStopAllOpen(true)}
-              buttonDisabled={isStopping}
+              onButtonClick={stopAll.openModal}
+              buttonDisabled={stopAll.isLoading}
               containerClassName="bg-status-red/7 border-status-red px-6 py-4"
               titleClassName="text-status-red font-heading3"
               descriptionClassName="font-body2 text-text-sub"
@@ -168,8 +147,8 @@ export default function AdsListPage() {
               title="중단된 캠페인을 다시 시작할 수 있어요"
               description="중단되었던 모든 캠페인의 광고 노출이 즉시 재개되며, 다시 활성화됩니다."
               buttonText="시작하기"
-              onButtonClick={() => setResumeOpen(true)}
-              buttonDisabled={isResuming}
+              onButtonClick={resumeAll.openModal}
+              buttonDisabled={resumeAll.isLoading}
               containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
               titleClassName="text-status-blue font-heading3"
               descriptionClassName="font-body2 text-text-sub"
@@ -181,8 +160,8 @@ export default function AdsListPage() {
 
       {/* 전체 캠페인 중단 모달 */}
       <Modal
-        isOpen={stopAllOpen}
-        onClose={() => setStopAllOpen(false)}
+        isOpen={stopAll.isOpen}
+        onClose={stopAll.closeModal}
         title="전체 캠페인 중단"
       >
         <ModalContent
@@ -190,16 +169,20 @@ export default function AdsListPage() {
           title="전체 캠페인을 중단하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
-          onConfirm={onStopAll}
-          isLoading={isStopping}
+          onConfirm={() =>
+            stopAll.handleConfirm(() =>
+              updateAllCampaignStatus(currentOrgId!, "PAUSED"),
+            )
+          }
+          isLoading={stopAll.isLoading}
           variant="danger"
         />
       </Modal>
 
       {/* 전체 캠페인 재개 모달 */}
       <Modal
-        isOpen={resumeOpen}
-        onClose={() => setResumeOpen(false)}
+        isOpen={resumeAll.isOpen}
+        onClose={resumeAll.closeModal}
         title="전체 캠페인 재개"
       >
         <ModalContent
@@ -207,8 +190,12 @@ export default function AdsListPage() {
           title="전체 캠페인을 재개하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 재개됩니다."
           buttonText="시작하기"
-          onConfirm={onResumeAll}
-          isLoading={isResuming}
+          onConfirm={() =>
+            resumeAll.handleConfirm(() =>
+              updateAllCampaignStatus(currentOrgId!, "ON_GOING"),
+            )
+          }
+          isLoading={resumeAll.isLoading}
           variant="primary"
         />
       </Modal>
