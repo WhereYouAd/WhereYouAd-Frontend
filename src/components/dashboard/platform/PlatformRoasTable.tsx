@@ -73,7 +73,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable() {
           {platformRoasRanking.map((platform, index) => (
             <div
               key={platform.name}
-              className={`group grid ${COL} gap-x-4 items-center px-4 py-4 min-h-20 cursor-default rounded-component-sm transition-all duration-300 hover:bg-[#F2F4F6]`}
+              className={`group grid ${COL} gap-x-4 items-center px-4 py-4 min-h-20 cursor-default rounded-component-sm transition-colors duration-300 hover:bg-[#F2F4F6]`}
             >
               {/* 순위 */}
               <span className="text-center font-caption font-bold text-text-disabled group-hover:text-text-sub transition-colors tabular-nums">
@@ -82,7 +82,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable() {
 
               {/* 플랫폼 이름 */}
               <div className="flex items-center gap-3">
-                <div className="shrink-0 p-1.5 group-hover:scale-105">
+                <div className="shrink-0 p-1.5 will-change-transform group-hover:scale-105">
                   {getPlatformLogo(platform.name)}
                 </div>
                 <span className="font-body1 font-bold text-text-main tracking-tight">
@@ -97,7 +97,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable() {
                 </span>
                 <div className="w-full h-1.5 rounded-full overflow-hidden bg-bg-disabled/40 group-hover:bg-[#E5E8EB] transition-colors duration-300">
                   <div
-                    className={`h-full rounded-full transition-all duration-700 ease-out ${roasStatusClass(platform.roas)}`}
+                    className={`h-full rounded-full transition-colors duration-700 ease-out ${roasStatusClass(platform.roas)}`}
                     style={{
                       width: `${Math.min((platform.roas / maxRoas) * 100, 100)}%`,
                     }}
