@@ -28,3 +28,17 @@ export const getCampaignDetail = async (
   );
   return data.data;
 };
+
+export const updateCampaignStatus = async (
+  orgId: number,
+  projectId: number,
+  status: "ON_GOING" | "PAUSED",
+): Promise<void> => {
+  await axiosInstance.patch(
+    `/api/advertisement/${orgId}/projects/${projectId}/status`,
+    null,
+    {
+      params: { status },
+    },
+  );
+};
