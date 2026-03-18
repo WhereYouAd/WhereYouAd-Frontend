@@ -52,7 +52,6 @@ export default function Drawer({
     };
   }, [isOpen]);
 
-  // isOpen 변경 시 인라인 transform 초기화 (스와이프 후 닫힐 때 CSS transition이 올바르게 동작하도록)
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;

@@ -67,7 +67,7 @@ export default function OverviewDashboard() {
             aria-label="AI 요약하기"
           >
             <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full group-hover:animate-[shimmer_1.2s_ease-out] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
-            <div className="relative z-10 transition-all duration-200">
+            <div className="relative z-10">
               <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
             </div>
           </button>
@@ -128,7 +128,7 @@ export default function OverviewDashboard() {
           <Button
             variant="tertiary"
             onClick={() => navigate("/platform")}
-            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-all rounded-full"
+            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-colors rounded-full"
           >
             <span className="font-caption font-bold leading-none">
               플랫폼 대시보드 살펴보기
