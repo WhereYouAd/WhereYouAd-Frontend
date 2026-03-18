@@ -59,15 +59,15 @@ export const BASE_OPTIONS: ApexOptions = {
     zoom: { enabled: false },
     fontFamily: "Pretendard",
     animations: {
-      enabled: true,
-      dynamicAnimation: { enabled: false }, // 데이터 업데이트 시 애니메이션 비활성화
+      enabled: false, // SVG 초기 렌더링 비용 제거
     },
+    redrawOnWindowResize: false, // 윈도우 리사이즈 시 불필요한 재렌더 방지
   },
 
   dataLabels: { enabled: false },
 
   stroke: {
-    curve: "monotoneCubic", // 부드러운 곡선
+    curve: "smooth",
     width: 1.5,
   },
 
