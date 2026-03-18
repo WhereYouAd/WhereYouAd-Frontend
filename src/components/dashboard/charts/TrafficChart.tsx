@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-
-import { useIsMounted } from "@/hooks/common/useIsMounted";
+import {
+  lazy,
+  memo,
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
@@ -14,6 +19,16 @@ import { trafficChartMock } from "./trafficChart.mock";
 import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
 import MoreIcon from "@/assets/icon/common/more.svg?react";
+
+const ReactApexChart = lazy(() => import("react-apexcharts"));
+
+// 모듈 수준 상수 - 렌더마다 재생성 방지
+const series = [
+  {
+    name: "클릭수",
+    data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
+  },
+];
 
 // 차트 우측 상단 다운로드 버튼
 export function TrafficChartDownload() {
@@ -40,7 +55,13 @@ export function TrafficChartDownload() {
 }
 
 // 이상 징후 커스텀 말풍선 툴팁
-function AnomalyBubble({ x, y }: { x: number; y: number }) {
+const AnomalyBubble = memo(function AnomalyBubble({
+  x,
+  y,
+}: {
+  x: number;
+  y: number;
+}) {
   const GAP = 16;
   return (
     <div
@@ -64,24 +85,28 @@ function AnomalyBubble({ x, y }: { x: number; y: number }) {
       </div>
     </div>
   );
-}
+});
 
-export default function TrafficChart() {
-  const isMounted = useIsMounted();
+const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 빨간 점의 컨테이너 기준 좌표
   const markerPos = useAnomalyMarkerPos(containerRef);
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
   const [isAnomalyFocused, setIsAnomalyFocused] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
 
+  // 스크롤 중 pointer-events 제거 - setState 대신 DOM 직접 조작으로 리렌더 방지
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     let timer: ReturnType<typeof setTimeout>;
     const handleScroll = () => {
-      setIsScrolling(true);
+      container.style.pointerEvents = "none";
       clearTimeout(timer);
-      timer = setTimeout(() => setIsScrolling(false), 150);
+      timer = setTimeout(() => {
+        container.style.pointerEvents = "";
+      }, 150);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -90,28 +115,30 @@ export default function TrafficChart() {
     };
   }, []);
 
+  const handleFocus = useCallback(() => setIsAnomalyFocused(true), []);
+  const handleBlur = useCallback(() => setIsAnomalyFocused(false), []);
+  const handlePointerEnter = useCallback(() => setIsAnomalyHovered(true), []);
+  const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
+
+  const showBubble = isAnomalyHovered || isAnomalyFocused;
+
   return (
     <div
       id={CHART_CONTAINER_ID}
       ref={containerRef}
       role="group"
       aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      data-hide-tooltip={isAnomalyHovered || isAnomalyFocused || undefined}
-      className={`relative [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none${isScrolling ? " pointer-events-none" : ""}`}
+      data-hide-tooltip={showBubble || undefined}
+      className="relative [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
     >
-      {isMounted && (
+      <Suspense fallback={<div style={{ height: 400 }} />}>
         <ReactApexChart
           type="area"
           options={BASE_OPTIONS}
-          series={[
-            {
-              name: "클릭수",
-              data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
-            },
-          ]}
+          series={series}
           height={400}
         />
-      )}
+      </Suspense>
       {markerPos && (
         <>
           <button
@@ -119,16 +146,16 @@ export default function TrafficChart() {
             className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
             style={{ left: markerPos.x, top: markerPos.y }}
             aria-label="클릭 이상 징후 상세 보기"
-            onFocus={() => setIsAnomalyFocused(true)}
-            onBlur={() => setIsAnomalyFocused(false)}
-            onPointerEnter={() => setIsAnomalyHovered(true)}
-            onPointerLeave={() => setIsAnomalyHovered(false)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
           />
-          {(isAnomalyHovered || isAnomalyFocused) && (
-            <AnomalyBubble x={markerPos.x} y={markerPos.y} />
-          )}
+          {showBubble && <AnomalyBubble x={markerPos.x} y={markerPos.y} />}
         </>
       )}
     </div>
   );
-}
+});
+
+export default TrafficChart;

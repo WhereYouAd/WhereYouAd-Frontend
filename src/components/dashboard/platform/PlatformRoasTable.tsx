@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 import { platformRoasRanking } from "./platformComparison.mock";
@@ -37,7 +39,7 @@ function roasStatusClass(roas: number) {
 }
 
 // 증감률 뱃지 컴포넌트
-function Delta({ value }: { value: number }) {
+const Delta = memo(function Delta({ value }: { value: number }) {
   const isPos = value >= 0;
   return (
     <TrendBadge
@@ -45,13 +47,13 @@ function Delta({ value }: { value: number }) {
       value={`${Math.abs(value).toFixed(1)}%`}
     />
   );
-}
+});
 
 // 테이블 그리드 컬럼 레이아웃 (full: 6열, compact: CTR/CVR 숨김 4열)
 const COL =
   "grid-cols-[32px_1.5fr_2.5fr_1.5fr] @2xl:grid-cols-[32px_1.5fr_2.5fr_1fr_1fr_1.5fr]";
 
-export default function PlatformRoasTable() {
+const PlatformRoasTable = memo(function PlatformRoasTable() {
   return (
     <div className="@container flex flex-col h-full font-pretendard w-full">
       <div className="flex flex-col flex-1 min-w-0">
@@ -141,4 +143,6 @@ export default function PlatformRoasTable() {
       </div>
     </div>
   );
-}
+});
+
+export default PlatformRoasTable;

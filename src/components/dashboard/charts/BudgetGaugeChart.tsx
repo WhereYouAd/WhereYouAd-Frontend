@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
@@ -37,7 +38,7 @@ const statusPointClasses: Record<TBudgetStatus, string> = {
   위험: "bg-status-red",
 };
 
-export default function BudgetGaugeChart({
+const BudgetGaugeChart = memo(function BudgetGaugeChart({
   totalBudget,
   spent,
   warningThreshold,
@@ -183,4 +184,6 @@ export default function BudgetGaugeChart({
       </div>
     </div>
   );
-}
+});
+
+export default BudgetGaugeChart;
