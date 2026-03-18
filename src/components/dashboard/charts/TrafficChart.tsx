@@ -62,26 +62,28 @@ const AnomalyBubble = memo(function AnomalyBubble({
   x: number;
   y: number;
 }) {
-  const GAP = 16;
+  const GAP = 12;
   return (
     <div
-      className="absolute pointer-events-none"
+      className="absolute pointer-events-none transition-all duration-200 ease-out"
       style={{
         left: x,
         top: y - GAP,
         transform: "translateX(-50%) translateY(-100%)",
       }}
     >
-      <div className="relative bg-white border-2 border-status-red rounded-2xl px-5 py-3 text-center min-w-37">
-        <p className="text-status-red font-bold text-sm leading-snug">
-          클릭 이상 징후 감지
-        </p>
-        <p className="text-[#555] text-xs mt-1 leading-relaxed">
-          구글-캠페인 A-광고 1
-          <br />
-          부정 클릭 의심
-        </p>
-        <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.75 w-3 h-3 bg-white border-r-2 border-b-2 border-[#ff4560] rotate-45" />
+      <div className="relative bg-white border border-bg-disabled rounded-component-sm px-5 py-4 min-w-40">
+        <div className="flex items-center justify-center gap-1.5 mb-1.5">
+          <span className="inline-block w-2 h-2 rounded-full bg-status-red shrink-0" />
+          <p className="text-text-main font-semibold! text-[13px] tracking-tight">
+            클릭 이상 징후 감지
+          </p>
+        </div>
+        <div className="text-center">
+          <p className="text-[#4E5968] text-[12px] font-medium leading-5">
+            구글 · 캠페인 A · 광고 1
+          </p>
+        </div>
       </div>
     </div>
   );

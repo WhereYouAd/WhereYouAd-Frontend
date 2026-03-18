@@ -91,7 +91,7 @@ export const BASE_OPTIONS: ApexOptions = {
               x: ANOMALY_INDEX,
               y: ANOMALY_Y,
               marker: {
-                size: 5,
+                size: 3,
                 fillColor: "#ff4560",
                 strokeColor: "#ff4560",
                 strokeWidth: 1,
