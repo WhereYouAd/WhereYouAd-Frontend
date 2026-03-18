@@ -78,9 +78,7 @@ export default function AdsListPage() {
   });
 
   const handleCampaignClick = (id: number) => {
-    navigate(`/ads/${id}`, {
-      state: { orgId: currentOrgId },
-    });
+    navigate(`/ads/${currentOrgId}/${id}`);
   };
 
   const handleCampaignGroupClick = () => {

@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
@@ -15,10 +15,11 @@ import { updateCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
-  const location = useLocation();
-  const currentOrgId = location.state?.orgId;
-
-  const { data, isLoading, refetch } = useCampaignDetail(currentOrgId);
+  const { orgId, projectId } = useParams<{
+    orgId: string;
+    projectId: string;
+  }>();
+  const { data, isLoading, refetch } = useCampaignDetail(Number(orgId));
 
   const stopControl = useControlModal({
     successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
@@ -144,7 +145,7 @@ export default function CampaignDetail() {
           buttonText="중단하기"
           onConfirm={() =>
             stopControl.handleConfirm(() =>
-              updateCampaignStatus(currentOrgId, data.projectId, "PAUSED"),
+              updateCampaignStatus(Number(orgId), Number(projectId), "PAUSED"),
             )
           }
           isLoading={stopControl.isLoading}
@@ -165,7 +166,11 @@ export default function CampaignDetail() {
           buttonText="시작하기"
           onConfirm={() =>
             resumeControl.handleConfirm(() =>
-              updateCampaignStatus(currentOrgId, data.projectId, "ON_GOING"),
+              updateCampaignStatus(
+                Number(orgId),
+                Number(projectId),
+                "ON_GOING",
+              ),
             )
           }
           isLoading={resumeControl.isLoading}
