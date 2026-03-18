@@ -113,7 +113,7 @@ export default function CampaignDetail() {
                   buttonSize="big"
                   buttonClassName="font-body1 bg-status-red"
                 />
-              ) : (
+              ) : data.status === "PAUSED" ? (
                 <ControlBox
                   title="캠페인 운영 제어"
                   description={`중단된 캠페인을 다시 활성화하여 광고 노출을 시작합니다.`}
@@ -126,7 +126,7 @@ export default function CampaignDetail() {
                   buttonSize="big"
                   buttonClassName="font-body1 bg-status-blue"
                 />
-              )}
+              ) : null}
             </div>
           </div>
         </div>
