@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 interface IPageHeaderProps {
@@ -8,7 +9,7 @@ interface IPageHeaderProps {
   className?: string;
 }
 
-export default function PageHeader({
+const PageHeader = memo(function PageHeader({
   title,
   description,
   actions,
@@ -25,4 +26,6 @@ export default function PageHeader({
       {actions && <div>{actions}</div>}
     </header>
   );
-}
+});
+
+export default PageHeader;

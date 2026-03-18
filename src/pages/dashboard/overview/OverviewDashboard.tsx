@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -22,13 +22,14 @@ import TrafficChart, {
 import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
 
 import { overviewMockData } from "./overview.mock";
-import OverviewAiReportPanel from "./OverviewAiReportPanel";
 
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
+
+const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
 
 export default function OverviewDashboard() {
   const navigate = useNavigate();
@@ -43,17 +44,15 @@ export default function OverviewDashboard() {
     }),
   );
 
-  const budgetStatusBadge = useMemo(() => {
-    const { totalBudget, spent, warningThreshold, dangerThreshold } =
-      budgetGaugeChartMock;
-    const pct = totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
-    const status = getBudgetStatus(pct, warningThreshold, dangerThreshold);
-    return (
-      <Badge variant={statusBadgeVariant[status]} size="sm" className="px-2">
-        {status}
-      </Badge>
-    );
-  }, []);
+  const { totalBudget, spent, warningThreshold, dangerThreshold } =
+    budgetGaugeChartMock;
+  const budgetPct =
+    totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+  const budgetStatus = getBudgetStatus(
+    budgetPct,
+    warningThreshold,
+    dangerThreshold,
+  );
 
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
@@ -67,8 +66,8 @@ export default function OverviewDashboard() {
             className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
             aria-label="AI 요약하기"
           >
-            <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full animate-[shimmer_2.5s_infinite_linear] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
-            <div className="relative z-10 transition-all duration-200">
+            <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full group-hover:animate-[shimmer_1.2s_ease-out] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
+            <div className="relative z-10">
               <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
             </div>
           </button>
@@ -109,7 +108,15 @@ export default function OverviewDashboard() {
               ]}
             />
           }
-          RightElement={budgetStatusBadge}
+          RightElement={
+            <Badge
+              variant={statusBadgeVariant[budgetStatus]}
+              size="sm"
+              className="px-2"
+            >
+              {budgetStatus}
+            </Badge>
+          }
         >
           <BudgetGaugeChart {...budgetGaugeChartMock} />
         </Card>
@@ -121,12 +128,12 @@ export default function OverviewDashboard() {
           <Button
             variant="tertiary"
             onClick={() => navigate("/platform")}
-            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-all rounded-full"
+            className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-colors rounded-full"
           >
-            <span className="font-caption font-bold pt-0.5">
+            <span className="font-caption font-bold leading-none">
               플랫폼 대시보드 살펴보기
             </span>
-            <ChevronDoubleRightIcon className="w-2.5 h-auto" />
+            <ChevronDoubleRightIcon className="w-4.5 h-4.5" />
           </Button>
         }
         description={
@@ -147,7 +154,7 @@ export default function OverviewDashboard() {
         onClose={() => setIsAiPanelOpen(false)}
         hideHeader={false}
         disableScroll={false}
-        className="w-full max-w-160 tablet:max-w-full"
+        className="w-full max-w-160"
         dropdownItems={[
           {
             label: "링크 공유하기",
@@ -178,7 +185,11 @@ export default function OverviewDashboard() {
           },
         ]}
       >
-        <OverviewAiReportPanel />
+        {isAiPanelOpen && (
+          <Suspense fallback={null}>
+            <OverviewAiReportPanel />
+          </Suspense>
+        )}
       </Drawer>
     </section>
   );
