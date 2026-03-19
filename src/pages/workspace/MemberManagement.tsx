@@ -10,7 +10,7 @@ import PermissionTable from "@/components/workspace/PermissionTable";
 import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwnershipBlockedModal";
 import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModal";
 
-import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 const mockTransferCandidates: TTransferCandidate[] = [
   {
@@ -132,7 +132,7 @@ export default function MemberManagement() {
           buttonSize="big"
           buttonClassName="px-8 !rounded-component-md"
           // buttonDisabled={}
-          leadingSlot={<WarnCircleIcon />}
+          leadingSlot={<WarnIcon className="text-status-red w-15 h-15" />}
         />
         <TransferOwnershipModal
           isOpen={isTransferModalOpen}
