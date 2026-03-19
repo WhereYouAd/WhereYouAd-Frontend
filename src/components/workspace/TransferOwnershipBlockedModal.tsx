@@ -1,7 +1,7 @@
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import MessageCircleWarningIcon from "@/assets/icon/common/warn-circle.svg";
 
 type TTransferOwnershipBlockedModal = {
   isOpen: boolean;
@@ -20,7 +20,7 @@ export default function TransferOwnershipBlockedModal({
       title="관리자 변경 불가"
     >
       <ModalContent
-        icon={<MessageCircleWarningIcon className="text-status-red" />}
+        icon={<MessageCircleWarningIcon /*className="text-status-red" */ />}
         title="관리자를 변경할 수 없습니다"
         description={
           <>

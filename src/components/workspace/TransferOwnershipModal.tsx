@@ -6,7 +6,7 @@ import MemberSearchSelect from "./MemberSearchSelect";
 import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 
-import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import MessageCircleWarningIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 type TTransferOwnershipModalProps = {
   isOpen: boolean;
