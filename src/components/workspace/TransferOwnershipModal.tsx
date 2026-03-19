@@ -49,7 +49,7 @@ export default function TransferOwnershipModal({
     >
       <div className="text-center px-2 py-6 ">
         <div className="flex justify-center mb-6">
-          <WarnIcon className="text-status-red" aria-hidden="true" />
+          <WarnIcon className="text-status-red w-15 h-15" aria-hidden="true" />
         </div>
         <h2 className="font-heading2 text-text-main mb-3">
           관리자를 변경하시겠습니까?

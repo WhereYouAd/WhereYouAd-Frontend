@@ -132,8 +132,9 @@ export default function MemberManagement() {
           buttonSize="big"
           buttonClassName="px-8 !rounded-component-md"
           // buttonDisabled={}
-          leadingSlot={<WarnIcon className="text-status-red w-15 h-15" />}
+          leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
         />
+
         <TransferOwnershipModal
           isOpen={isTransferModalOpen}
           onClose={closeTransferModal}
