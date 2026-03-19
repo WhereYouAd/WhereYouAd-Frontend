@@ -7,8 +7,8 @@ import type { TTransferCandidate } from "@/types/workspace/workspace";
 
 import Input from "../common/input/Input";
 
-import SearchIcon from "@/assets/icon/workspace/search.svg?react";
-import UserIcon from "@/assets/icon/workspace/user.svg?react";
+import SearchIcon from "@/assets/icon/common/search.svg?react";
+import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TMemberSearchSelectProps = {
   candidates: TTransferCandidate[];

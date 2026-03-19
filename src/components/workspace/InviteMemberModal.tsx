@@ -13,7 +13,7 @@ import Modal from "../common/modal/Modal";
 
 import CopyIcon from "@/assets/icon/common/link.svg";
 
-import UserIcon from "@/assets/icon/workspace/user.svg?react";
+import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TInviteMemberModalProps = {
   isOpen: boolean;
