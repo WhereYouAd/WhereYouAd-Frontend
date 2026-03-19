@@ -2,7 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import type { TMemberRole } from "@/types/workspace/workspace";
 
-import ChevronIcon from "@/assets/icon/sidebar/chevron-left.svg?react";
+import ChevronIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 
 type TProps = {
   role: TMemberRole;
@@ -71,7 +71,7 @@ export default function MemberRoleSelect({
           aria-haspopup="menu"
           aria-controls={isOpen && !disabled ? menuId : undefined}
           onClick={() => setIsOpen((prev) => !prev)}
-          className={`flex h-10 min-w-[98px] items-center justify-between gap-4 px-4 font-body2 transition-all ${
+          className={`flex h-10 min-w-24.5 items-center justify-between gap-4 px-4 font-body2 transition-all ${
             triggerStyleMap[role]
           } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
         >

@@ -9,10 +9,10 @@ import Step02Password from "@/components/auth/flows/signup/PasswordSetupStep";
 import Step03Profile from "@/components/auth/flows/signup/ProfileSetupStep";
 import Button from "@/components/common/button/Button";
 
-import GoogleIcon from "@/assets/auth/social/google.svg?react";
-import KakaoIcon from "@/assets/auth/social/kakao.svg?react";
-import MailIcon from "@/assets/auth/social/mail.svg?react";
-import NaverIcon from "@/assets/auth/social/naver.svg?react";
+import MailIcon from "@/assets/icon/common/mail.svg?react";
+import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
+import NaverIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {

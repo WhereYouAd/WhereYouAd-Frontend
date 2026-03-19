@@ -53,7 +53,7 @@ const MainRoutes: RouteObject[] = [
     element: <CampaignGroup />,
   },
   {
-    path: "ads/:id",
+    path: "ads/:orgId/:projectId",
     element: <CampaignDetail />,
   },
 

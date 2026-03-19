@@ -26,3 +26,6 @@ dist-ssr
 node_modules/
 *storybook.log
 storybook-static
+
+# Claude Code
+.claude/

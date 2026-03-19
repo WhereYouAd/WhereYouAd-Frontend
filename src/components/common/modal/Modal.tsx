@@ -9,7 +9,7 @@ import { createPortal } from "react-dom";
 import { RemoveScroll } from "react-remove-scroll";
 import { twMerge } from "tailwind-merge";
 
-import CloseIcon from "@/assets/icon/x-icon.svg?react";
+import CloseIcon from "@/assets/icon/common/close.svg?react";
 
 export interface IModalProps {
   isOpen: boolean;

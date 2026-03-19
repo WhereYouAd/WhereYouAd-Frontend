@@ -10,7 +10,7 @@ import InviteMemberModal from "./InviteMemberModal";
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
 
-import PlusIcon from "@/assets/icon/workspace/plus.svg?react";
+import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
 const mockMembers: TWorkspaceMember[] = [
   {

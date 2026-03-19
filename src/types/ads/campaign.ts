@@ -1,6 +1,24 @@
 export type TPlatform = "kakao" | "google" | "naver";
-export type TCampaignStatus = "inactive" | "syncing" | "success";
+export type TCampaignStatus = "ON_GOING" | "PAUSED" | "OVER";
 
+// Campaign List
+export interface ICampaign {
+  projectId: number;
+  name: string;
+  providers: TPlatform[];
+  status: TCampaignStatus;
+  description?: string;
+  budgetUsageRate: number;
+}
+
+// Campaign Detail
+export interface ICampaignDetail extends ICampaign {
+  budget: number;
+  createdAt: string;
+  ads: IAd[];
+}
+
+// Ad List
 export interface IAd {
   id: number;
   name: string;
@@ -10,19 +28,4 @@ export interface IAd {
   description: string;
   tags: string[];
   link: string;
-}
-
-export interface ICampaign {
-  id: number;
-  name: string;
-  platforms: TPlatform[];
-  status: TCampaignStatus;
-  statusText: string;
-  progress: number;
-  runStatus: "running" | "stopped";
-  runStatusText: string;
-  budget: string;
-  startDate: string;
-  description?: string;
-  ads: IAd[];
 }

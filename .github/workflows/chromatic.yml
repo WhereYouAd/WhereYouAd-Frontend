@@ -52,4 +52,5 @@ jobs:
             |------|------|
             | 📖 Storybook | ${{ steps.chromatic.outputs.storybookUrl }} |
             | 🔍 Chromatic | ${{ steps.chromatic.outputs.buildUrl }} |
+          comment_tag: storybook-url
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

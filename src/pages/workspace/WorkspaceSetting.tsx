@@ -6,6 +6,7 @@ import Button from "@/components/common/button/Button";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
 import {
@@ -14,9 +15,8 @@ import {
   updateWorkspace,
   uploadImage,
 } from "@/api/workspace/org";
-import BuildingIcon from "@/assets/icon/workspace/building.svg?react";
-import MessageCircleWarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
-import WarningIcon from "@/assets/icon/workspace/warning.svg?react";
+import BuildingIcon from "@/assets/icon/common/building.svg?react";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
 
@@ -171,13 +171,11 @@ export default function WorkspaceSetting() {
       : null;
 
   return (
-    <section className="w-full">
-      <header className="mb-7">
-        <h1 className="font-heading2 text-text-main">워크스페이스 관리</h1>
-        <p className="font-body1 text-text-sub">
-          워크스페이스 정보를 확인하고 관리하세요.
-        </p>
-      </header>
+    <section className="w-full flex flex-col gap-8">
+      <PageHeader
+        title="워크스페이스 관리"
+        description="워크스페이스 정보를 확인하고 관리하세요."
+      />
 
       {loading && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
@@ -203,8 +201,8 @@ export default function WorkspaceSetting() {
             <p className="font-body2 text-text-sub mt-2">
               워크스페이스의 대표적인 정보를 설정합니다.
             </p>
-            <div className="mt-7 grid grid-cols-1 xl:grid-cols-[480px_minmax(0,1fr)] gap-8">
-              <div className="flex flex-col items-center xl:items-center">
+            <div className="mt-7 grid grid-cols-[480px_minmax(0,1fr)] tablet:grid-cols-1 gap-8">
+              <div className="flex flex-col items-center">
                 <div className="text-text-main mb-2 self-start">
                   로고 이미지
                 </div>
@@ -215,7 +213,7 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-40 w-40 sm:h-57 sm:w-57 lg:h-90 lg:w-90 xl:h-120 xl:w-120 overflow-hidden">
+                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-120 w-120 tablet:h-57 tablet:w-57 overflow-hidden">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
@@ -277,7 +275,7 @@ export default function WorkspaceSetting() {
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
-                  className="min-h-55 xl:min-h-93"
+                  className="min-h-93 tablet:min-h-55"
                   disabled={saving || deleting || uploading}
                 />
               </div>
@@ -290,7 +288,7 @@ export default function WorkspaceSetting() {
               onClick={onSave}
               disabled={!name.trim() || saving || deleting || uploading}
               aria-label="변경사항 저장하기"
-              className="w-full sm:w-auto"
+              className="w-auto tablet:w-full"
             >
               {saving ? "저장 중.." : "변경사항 저장하기"}
             </Button>
@@ -309,7 +307,7 @@ export default function WorkspaceSetting() {
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
               buttonDisabled={saving || deleting || uploading}
-              leadingSlot={<WarningIcon />}
+              leadingSlot={<WarnCircleIcon />}
             />
           </div>
           <Modal
@@ -321,7 +319,7 @@ export default function WorkspaceSetting() {
           >
             <div className="text-center px-2 py-6 ">
               <div className="flex justify-center mb-6">
-                <MessageCircleWarningIcon
+                <WarnCircleIcon
                   className="text-status-red"
                   aria-hidden="true"
                 />
@@ -339,7 +337,7 @@ export default function WorkspaceSetting() {
                   size="big"
                   aria-label="워크스페이스 최종 삭제 버튼"
                   onClick={onDelete}
-                  className="w-full md:w-auto"
+                  className="w-auto tablet:w-full"
                   type="button"
                   disabled={deleting}
                 >

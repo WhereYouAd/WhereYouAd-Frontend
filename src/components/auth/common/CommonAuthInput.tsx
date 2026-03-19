@@ -6,8 +6,8 @@ import Input, { type IInputProps } from "@/components/common/input/Input";
 
 import InputActions from "./InputActions";
 
-import EyeIcon from "@/assets/auth/password/eye.svg?react";
-import EyeOffIcon from "@/assets/auth/password/eye-off.svg?react";
+import EyeIcon from "@/assets/icon/common/eye.svg?react";
+import EyeOffIcon from "@/assets/icon/common/eye-off.svg?react";
 
 type TCommonAuthInputProps = {
   type?: string;

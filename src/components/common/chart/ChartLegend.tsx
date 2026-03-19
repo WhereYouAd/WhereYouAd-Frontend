@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 export interface IChartLegendItem {
@@ -10,7 +11,10 @@ export interface IChartLegendProps {
   className?: string;
 }
 
-export default function ChartLegend({ items, className }: IChartLegendProps) {
+const ChartLegend = memo(function ChartLegend({
+  items,
+  className,
+}: IChartLegendProps) {
   return (
     <div className={twMerge("flex items-center gap-4", className)}>
       {items.map((item) => (
@@ -25,4 +29,6 @@ export default function ChartLegend({ items, className }: IChartLegendProps) {
       ))}
     </div>
   );
-}
+});
+
+export default ChartLegend;

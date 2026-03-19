@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { toast } from "sonner";
+import { useParams } from "react-router-dom";
+
+import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
+import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
@@ -9,49 +11,67 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { MOCK_CAMPAIGNS } from "./campaign.mock";
-
-import WarningIcon from "@/assets/icon/workspace/message-circle-warning.svg?react";
+import { updateCampaignStatus } from "@/api/ads/ads";
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
-  const data = MOCK_CAMPAIGNS[0];
+  const { orgId, projectId } = useParams<{
+    orgId: string;
+    projectId: string;
+  }>();
+  const { data, isLoading, refetch } = useCampaignDetail(Number(orgId));
 
-  const [stopOpen, setStopOpen] = useState(false);
-  const [isStopping, setIsStopping] = useState(false);
+  const stopControl = useControlModal({
+    successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
+    errorMessage: "중단 처리에 실패하였습니다.",
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
-  const [resumeOpen, setResumeOpen] = useState(false);
-  const [isResuming, setIsResuming] = useState(false);
+  const resumeControl = useControlModal({
+    successMessage: "해당 캠페인의 광고 운영이 재개되었습니다.",
+    errorMessage: "재개 처리에 실패하였습니다.",
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
-  const onStopConfirm = () => {
-    setIsStopping(true);
-    try {
-      toast.success("해당 캠페인 내 모든 광고 운영이 중단되었습니다.");
-      setStopOpen(false);
-    } finally {
-      setIsStopping(false);
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="flex h-[90vh] items-center justify-center">
+        <p className="font-body1 text-text-placeholder">
+          데이터를 불러오는 중입니다...
+        </p>
+      </div>
+    );
+  }
 
-  const onResumeConfirm = () => {
-    setIsResuming(true);
-    try {
-      toast.success("해당 캠페인 운영이 재개되었습니다.");
-      setResumeOpen(false);
-    } finally {
-      setIsResuming(false);
-    }
-  };
+  if (!data) {
+    return (
+      <div className="p-10 text-center text-text-placeholder">
+        정보를 불러올 수 없습니다.
+      </div>
+    );
+  }
 
   return (
     <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
-      <div className="flex-1 py-15 px-10 md:px-15 lg:px-25">
+      <div className="flex-1 py-15 px-25 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
             <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden w-full">
               <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
-              <Badge variant={data.runStatus} size="sm">
-                {data.runStatusText}
+              <Badge
+                variant={data.status === "ON_GOING" ? "running" : "stopped"}
+                size="sm"
+              >
+                {data.status === "ON_GOING"
+                  ? "운영 중"
+                  : data.status === "PAUSED"
+                    ? "중단"
+                    : "종료"}
               </Badge>
             </div>
             <div className="border-l-3 border-text-auth-sub pl-4 py-1">
@@ -64,8 +84,8 @@ export default function CampaignDetail() {
           {/* card section */}
           <div className="flex flex-wrap gap-7 w-full">
             <CampaignInfoCard
-              budget={data.budget}
-              date={data.startDate}
+              budget={data.budget.toLocaleString()}
+              date={data.createdAt.replaceAll("-", ".")}
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
@@ -74,26 +94,39 @@ export default function CampaignDetail() {
             />
           </div>
 
-          <div className="w-full overflow-x-auto">
+          <div className="w-full">
             {/* ads list */}
-            <AdListTable ads={data.ads} />
+            <AdListTable ads={data.ads || []} />
 
             {/* campaign controlbox */}
             <div className="mt-10">
-              <ControlBox
-                title="캠페인 운영 제어"
-                description={`전체 플랫폼의 광고 운영을 한번에 제어할 수 있습니다.\n클릭 시 해당 캠페인 내 속한 모든 광고 소재의 운영이 즉시 중단됩니다.`}
-                buttonText="중단하기"
-                onButtonClick={() => {
-                  setStopOpen(true);
-                }}
-                buttonDisabled={false}
-                containerClassName="bg-status-red/7 border-status-red px-6 py-4 min-w-140 shrink-0"
-                titleClassName="text-status-red font-heading3"
-                descriptionClassName="font-body2 text-text-sub leading-relaxed"
-                buttonSize="big"
-                buttonClassName="font-body1 bg-status-red"
-              />
+              {data.status === "ON_GOING" ? (
+                <ControlBox
+                  title="캠페인 운영 중단"
+                  description={`클릭 시 해당 캠페인 내 속한 모든 광고 소재의 운영이 즉시 중단됩니다.`}
+                  buttonText="중단하기"
+                  onButtonClick={stopControl.openModal}
+                  buttonDisabled={stopControl.isLoading}
+                  containerClassName="bg-status-red/7 border-status-red px-6 py-4"
+                  titleClassName="text-status-red font-heading3"
+                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
+                  buttonSize="big"
+                  buttonClassName="font-body1 bg-status-red"
+                />
+              ) : data.status === "PAUSED" ? (
+                <ControlBox
+                  title="캠페인 운영 제어"
+                  description={`중단된 캠페인을 다시 활성화하여 광고 노출을 시작합니다.`}
+                  buttonText="시작하기"
+                  onButtonClick={resumeControl.openModal}
+                  buttonDisabled={resumeControl.isLoading}
+                  containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
+                  titleClassName="text-status-blue font-heading3"
+                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
+                  buttonSize="big"
+                  buttonClassName="font-body1 bg-status-blue"
+                />
+              ) : null}
             </div>
           </div>
         </div>
@@ -101,34 +134,46 @@ export default function CampaignDetail() {
 
       {/* 해당 캠페인 중단 */}
       <Modal
-        isOpen={stopOpen}
-        onClose={() => setStopOpen(false)}
+        isOpen={stopControl.isOpen}
+        onClose={stopControl.closeModal}
         title="캠페인 운영 중단"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-status-red" />}
           title="캠페인 운영을 중단하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 중단됩니다."
           buttonText="중단하기"
-          onConfirm={onStopConfirm}
-          isLoading={isStopping}
+          onConfirm={() =>
+            stopControl.handleConfirm(() =>
+              updateCampaignStatus(Number(orgId), Number(projectId), "PAUSED"),
+            )
+          }
+          isLoading={stopControl.isLoading}
           variant="danger"
         />
       </Modal>
 
       {/* 해당 캠페인 재개 */}
       <Modal
-        isOpen={resumeOpen}
-        onClose={() => setResumeOpen(false)}
+        isOpen={resumeControl.isOpen}
+        onClose={resumeControl.closeModal}
         title="캠페인 운영 재개"
       >
         <ModalContent
-          icon={<WarningIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-status-blue" />}
           title="캠페인 운영을 재개하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
           buttonText="시작하기"
-          onConfirm={onResumeConfirm}
-          isLoading={isResuming}
+          onConfirm={() =>
+            resumeControl.handleConfirm(() =>
+              updateCampaignStatus(
+                Number(orgId),
+                Number(projectId),
+                "ON_GOING",
+              ),
+            )
+          }
+          isLoading={resumeControl.isLoading}
           variant="primary"
         />
       </Modal>

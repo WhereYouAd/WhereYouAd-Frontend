@@ -4,10 +4,10 @@ import type { TPlatform } from "@/types/ads/campaign";
 
 import Badge from "../common/badge/Badge";
 
-import GoogleLogo from "@/assets/icon/ads/google-circle.svg?react";
-import KakaoLogo from "@/assets/icon/ads/kakao-circle.svg?react";
-import NaverLogo from "@/assets/icon/ads/naver-circle.svg?react";
-import ChevronIcon from "@/assets/icon/common/chevron-up.svg?react";
+import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 interface IAdRowProps {
   name: string;

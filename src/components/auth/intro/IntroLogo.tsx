@@ -1,4 +1,4 @@
-import SymbolWhite from "@/assets/logo/symbol-white.svg?react";
+import SymbolWhite from "@/assets/logo/service-logo/symbol-white.svg?react";
 
 export default function IntroLogo({ isActive }: { isActive: boolean }) {
   return (

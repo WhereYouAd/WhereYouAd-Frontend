@@ -11,7 +11,8 @@ import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 import Modal from "../common/modal/Modal";
 
-import CopyIcon from "@/assets/icon/common/copy.svg?react";
+import CopyIcon from "@/assets/icon/common/link.svg";
+
 import UserIcon from "@/assets/icon/workspace/user.svg?react";
 
 type TInviteMemberModalProps = {
@@ -74,7 +75,7 @@ export default function InviteMemberModal({
             onClick={handleCopyLink}
             className="flex items-center gap-2 rounded-component-sm px-2 py-1 text-chart-3 transition-opacity hover:opacity-80"
           >
-            <CopyIcon className="h-4 w-4" />
+            <CopyIcon />
             <span className="font-body1">링크 복사</span>
           </button>
         </div>

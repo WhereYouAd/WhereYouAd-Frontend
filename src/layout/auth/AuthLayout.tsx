@@ -5,11 +5,11 @@ import OnboardingIntro from "@/components/auth/intro/OnboardingIntro";
 export default function AuthLayout() {
   return (
     <div className="flex h-screen w-full overflow-hidden">
-      <div className="hidden w-[55%] 2xl:flex">
+      <div className="flex w-[55%] tablet:hidden">
         <OnboardingIntro />
       </div>
 
-      <div className="flex w-full items-center justify-center bg-white 2xl:w-[65%]">
+      <div className="flex flex-1 items-center justify-center bg-white">
         <div className="w-full max-w-md px-6">
           <Outlet />
         </div>
