@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import type { TTransferCandidate } from "@/types/workspace/workspace";
@@ -81,6 +81,8 @@ const mockTransferCandidates: TTransferCandidate[] = [
 
 export default function MemberManagement() {
   const navigate = useNavigate();
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const orgId = Number(workspaceId);
   const [changing, setChanging] = useState(false);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
@@ -99,14 +101,20 @@ export default function MemberManagement() {
     if (changing) return;
     setIsTransferModalOpen(false);
   };
-  const handleTransferOwnership = (member: TTransferCandidate) => {
+  const handleTransferOwnership = async (member: TTransferCandidate) => {
     setChanging(true);
-    setTimeout(() => {
+    try {
+      // TODO: API호출
+      await new Promise((resolve) => setTimeout(resolve, 500));
       toast.success(`${member.name}님으로 관리자가 변경되었습니다`);
-      setChanging(false);
       setIsTransferModalOpen(false);
       navigate("/workspace");
-    }, 500);
+    } catch (error) {
+      toast.error("관리자 변경에 실패했습니다. 다시 시도해주세요");
+      console.error("관리자변경실패", error);
+    } finally {
+      setChanging(false);
+    }
   };
   return (
     <section className="w-full min-w-0">
@@ -117,7 +125,7 @@ export default function MemberManagement() {
         </p>
       </header>
       <div className="flex flex-col gap-10 w-full min-w-0">
-        <MemberList orgId={1} />
+        <MemberList orgId={orgId} />
         <PermissionTable />
         <ControlBox
           title="관리자 변경"

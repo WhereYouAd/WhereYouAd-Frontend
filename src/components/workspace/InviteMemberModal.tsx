@@ -47,14 +47,18 @@ export default function InviteMemberModal({
     setForm({ email: value });
   };
 
-  const handleInvite = () => {
+  const handleInvite = async () => {
     const requestBody: TInviteMemberRequest = {
       email: trimmedEmail,
     };
-    toast.success("초대 이메일 발송에 성공했습니다");
-    console.log("초대 요청 orgId:", orgId);
-    console.log("초대 요청 body:", requestBody);
-    setForm({ email: "" });
+    try {
+      // TODO: API호출
+      toast.success("초대 이메일 발송에 성공했습니다");
+      setForm({ email: "" });
+    } catch (error) {
+      toast.error("초대에 실패했습니다. 다시 시도해주세요");
+      console.log("초대 실패", error);
+    }
   };
   return (
     <Modal

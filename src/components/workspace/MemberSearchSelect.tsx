@@ -42,7 +42,7 @@ export default function MemberSearchSelect({
     };
     document.addEventListener("mousedown", handleOutsideClick);
     return () => document.removeEventListener("mousedown", handleOutsideClick);
-  }, []);
+  }, [onOpenChange]);
 
   const filteredCandidates = useMemo(() => {
     const trimmedKeyword = keyword.trim().toLowerCase();
