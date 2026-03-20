@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { TCampaignStatus, TPlatform } from "@/types/ads/campaign";
+import type { TPlatform, TStatus } from "@/types/ads/campaign";
 
 import ProgressBar from "../common/progressbar/ProgressBar";
 
@@ -12,7 +12,7 @@ interface ICampaignRowProps {
   projectId: number;
   name: string;
   providers: TPlatform[];
-  status: TCampaignStatus;
+  status: TStatus;
   budgetUsageRate: number;
   onClick?: () => void;
 }

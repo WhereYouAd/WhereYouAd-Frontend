@@ -25,7 +25,7 @@ export const useCampaignDetail = (orgId: number | null) => {
       const detailData = await getCampaignDetail(orgId, Number(projectId));
       setData(detailData);
     } catch {
-      toast.error(" 캠페인 상세 정보를 불러오지 못했습니다.");
+      toast.error("캠페인 상세 정보를 불러오지 못했습니다.");
     } finally {
       setIsLoading(false);
     }
