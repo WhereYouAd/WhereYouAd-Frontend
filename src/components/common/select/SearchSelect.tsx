@@ -105,7 +105,7 @@ export default function SearchSelect<T>({
                   <button
                     type="button"
                     onClick={() => handleSelect(option)}
-                    className="w-full text-left hover:bg-gray-50"
+                    className="w-full text-left hover:bg-gray-50 py-2"
                   >
                     {renderOption(option)}
                   </button>
