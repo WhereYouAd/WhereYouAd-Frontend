@@ -49,7 +49,7 @@ export default function MemberItem({
             type="button"
             aria-label="멤버 삭제버튼"
             onClick={onDeleteClick}
-            className="text-text-sub hover:text-status-red transition-all"
+            className="text-text-sub hover:text-status-red transition-colors"
           >
             <TrashIcon className="w-5 h-5" />
           </button>

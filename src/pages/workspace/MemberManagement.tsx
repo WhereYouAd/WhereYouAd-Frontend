@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import type { TTransferCandidate } from "@/types/workspace/workspace";
+import {
+  type TMemberRole,
+  type TTransferCandidate,
+  type TWorkspaceMember,
+} from "@/types/workspace/workspace";
 
 import ControlBox from "@/components/common/controlbox/ControlBox";
+import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
 import PermissionTable from "@/components/workspace/PermissionTable";
 import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwnershipBlockedModal";
@@ -12,9 +17,8 @@ import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModa
 
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-const mockTransferCandidates: TTransferCandidate[] = [
+const mockMembers: TWorkspaceMember[] = [
   {
-    memberId: 1,
     name: "이유찬",
     email: "uuuchan@wya.com",
     profileImageUrl: null,
@@ -22,7 +26,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: true,
   },
   {
-    memberId: 2,
     name: "박치국",
     email: "peach@wya.com",
     profileImageUrl: null,
@@ -30,7 +33,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 3,
     name: "강승호",
     email: "kang@wya.com",
     profileImageUrl: null,
@@ -38,7 +40,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 4,
     name: "플렉센",
     email: "flex@wya.com",
     profileImageUrl: null,
@@ -46,7 +47,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 5,
     name: "잭로그",
     email: "jackjack@wya.com",
     profileImageUrl: null,
@@ -54,7 +54,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 6,
     name: "양의지",
     email: "yang@wya.com",
     profileImageUrl: null,
@@ -62,7 +61,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 7,
     name: "최민석",
     email: "kkokko@wya.com",
     profileImageUrl: null,
@@ -70,7 +68,6 @@ const mockTransferCandidates: TTransferCandidate[] = [
     isMe: false,
   },
   {
-    memberId: 8,
     name: "양재훈",
     email: "yanghun@wya.com",
     profileImageUrl: null,
@@ -83,13 +80,40 @@ export default function MemberManagement() {
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
+  const [members, setMembers] = useState<TWorkspaceMember[]>(mockMembers);
   const [changing, setChanging] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
 
-  const transferableCandidates = mockTransferCandidates.filter(
-    (member) => !member.isMe && member.role === "ADMIN",
-  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedDeleteMember, setSelectedDeleteMember] =
+    useState<TWorkspaceMember | null>(null);
+
+  const adminCount = useMemo(() => {
+    return members.filter((member) => member.role === "ADMIN").length;
+  }, [members]);
+
+  const transferableCandidates = useMemo<TTransferCandidate[]>(() => {
+    return members
+      .filter((member) => !member.isMe && member.role === "ADMIN")
+      .map((member, index) => ({
+        memberId: index + 1,
+        name: member.name,
+        email: member.email,
+        profileImageUrl: member.profileImageUrl,
+        role: member.role,
+        isMe: member.isMe ?? false,
+      }));
+  }, [members]);
+  const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
+    setMembers((prev) =>
+      prev.map((member) =>
+        member.email === targetEmail ? { ...member, role: newRole } : member,
+      ),
+    );
+  };
   const openChangeModal = () => {
     if (transferableCandidates.length === 0) {
       setIsBlockedModalOpen(true);
@@ -106,6 +130,17 @@ export default function MemberManagement() {
     try {
       // TODO: API호출
       await new Promise((resolve) => setTimeout(resolve, 500));
+      setMembers((prev) =>
+        prev.map((currentMember) => {
+          if (currentMember.isMe) {
+            return { ...currentMember, role: "MEMBER" };
+          }
+          if (currentMember.email === member.email) {
+            return { ...currentMember, role: "ADMIN" };
+          }
+          return currentMember;
+        }),
+      );
       toast.success(`${member.name}님으로 관리자가 변경되었습니다`);
       setIsTransferModalOpen(false);
       navigate("/workspace");
@@ -114,6 +149,43 @@ export default function MemberManagement() {
       console.error("관리자변경실패", error);
     } finally {
       setChanging(false);
+    }
+  };
+
+  const openDeleteMember = (member: TWorkspaceMember) => {
+    if (member.isMe) {
+      toast.error("본인 계정은 삭제할 수 없습니다");
+      return;
+    }
+    const isLastAdmin = member.role === "ADMIN" && adminCount === 1;
+    if (isLastAdmin) {
+      toast.error("마지막 관리자는 삭제할 수 없습니다");
+      return;
+    }
+    setSelectedDeleteMember(member);
+    setIsDeleteModalOpen(true);
+  };
+  const closeDeleteMember = () => {
+    if (deleting) return;
+    setIsDeleteModalOpen(false);
+    setSelectedDeleteMember(null);
+  };
+  const handleDeleteMember = async (member: TWorkspaceMember) => {
+    setDeleting(true);
+    try {
+      // TODO: API 호출
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setMembers((prev) =>
+        prev.filter((currentMember) => currentMember.email !== member.email),
+      );
+      toast.success(`${member.name}님으로 삭제되었습니다`);
+      setIsDeleteModalOpen(false);
+      setSelectedDeleteMember(null);
+    } catch (error) {
+      toast.error("팀원 삭제에 실패했습니다. 다시 시도해주세요");
+      console.error("팀원 삭제 실패", error);
+    } finally {
+      setDeleting(false);
     }
   };
   return (
@@ -125,7 +197,12 @@ export default function MemberManagement() {
         </p>
       </header>
       <div className="flex flex-col gap-10 w-full min-w-0">
-        <MemberList orgId={orgId} />
+        <MemberList
+          orgId={orgId}
+          members={members}
+          onRoleChange={handleRoleChange}
+          onDeleteclick={openDeleteMember}
+        />
         <PermissionTable />
         <ControlBox
           title="관리자 변경"
@@ -139,7 +216,6 @@ export default function MemberManagement() {
           buttonVariant="dangerSoft"
           buttonSize="big"
           buttonClassName="px-8 !rounded-component-md"
-          // buttonDisabled={}
           leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
         />
 
@@ -153,6 +229,13 @@ export default function MemberManagement() {
         <TransferOwnershipBlockedModal
           isOpen={isBlockedModalOpen}
           onClose={() => setIsBlockedModalOpen(false)}
+        />
+        <DeleteMemberModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteMember}
+          member={selectedDeleteMember}
+          onConfirm={handleDeleteMember}
+          isLoading={deleting}
         />
       </div>
     </section>
