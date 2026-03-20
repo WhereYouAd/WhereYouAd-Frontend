@@ -16,34 +16,60 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
 const mockMembers: TWorkspaceMember[] = [
   {
-    name: "김택연",
-    email: "himnaera@naver.com",
+    name: "이유찬",
+    email: "uuuchan@wya.com",
     profileImageUrl: null,
     role: "ADMIN",
+    isMe: true,
   },
   {
-    name: "문보경",
-    email: "parkbogum@naver.com",
+    name: "박치국",
+    email: "peach@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    isMe: false,
+  },
+  {
+    name: "강승호",
+    email: "kang@wya.com",
+    profileImageUrl: null,
+    role: "MEMBER",
+    isMe: false,
+  },
+  {
+    name: "플렉센",
+    email: "flex@wya.com",
     profileImageUrl: null,
     role: "ADMIN",
+    isMe: false,
   },
   {
-    name: "노경은",
-    email: "grandpapa@naver.com",
+    name: "잭로그",
+    email: "jackjack@wya.com",
     profileImageUrl: null,
     role: "MEMBER",
+    isMe: false,
   },
   {
-    name: "조병현",
-    email: "niceguy@naver.com",
+    name: "양의지",
+    email: "yang@wya.com",
     profileImageUrl: null,
-    role: "MEMBER",
+    role: "ADMIN",
+    isMe: false,
   },
   {
-    name: "곽빈",
-    email: "whathappen@naver.com",
+    name: "최민석",
+    email: "kkokko@wya.com",
+    profileImageUrl: null,
+    role: "ADMIN",
+    isMe: false,
+  },
+  {
+    name: "양재훈",
+    email: "yanghun@wya.com",
     profileImageUrl: null,
     role: "MEMBER",
+    isMe: false,
   },
 ];
 
@@ -132,6 +158,10 @@ export default function MemberList({ orgId }: TMemberListProps) {
   );
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const getAdminCount = () => {
+    return memberList.filter((member) => member.role === "ADMIN").length;
+  };
+
   const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
     setMemberList((prev) =>
       prev.map((member) =>
@@ -146,6 +176,15 @@ export default function MemberList({ orgId }: TMemberListProps) {
     setInviteMemberOpen(false);
   };
   const openDeleteMember = (member: TWorkspaceMember) => {
+    if (member.isMe) {
+      toast.error("본인 계정은 삭제할 수 없습니다");
+      return;
+    }
+    const isLastAdmin = member.role === "ADMIN" && getAdminCount() === 1;
+    if (isLastAdmin) {
+      toast.error("마지막 관리자는 삭제할 수 없습니다");
+      return;
+    }
     setSelectedMember(member);
     setDeleteMemberOpen(true);
   };

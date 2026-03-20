@@ -44,14 +44,16 @@ export default function MemberItem({
       </div>
       <div className="flex items-center gap-4">
         <MemberRoleSelect role={member.role} onChange={onRoleChange} />
-        <button
-          type="button"
-          aria-label="멤버 삭제버튼"
-          onClick={onDeleteClick}
-          className="text-text-sub hover:text-text-main transition-all"
-        >
-          <TrashIcon className="w-5 h-5" />
-        </button>
+        {!member.isMe && (
+          <button
+            type="button"
+            aria-label="멤버 삭제버튼"
+            onClick={onDeleteClick}
+            className="text-text-sub hover:text-status-red transition-all"
+          >
+            <TrashIcon className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </li>
   );

@@ -54,6 +54,7 @@ export type TWorkspaceMember = {
   email: string;
   profileImageUrl: string | null;
   role: TMemberRole;
+  isMe?: boolean;
 };
 
 export type TUpdateMemberRoleRequest = {

@@ -88,7 +88,7 @@ export default function MemberManagement() {
   const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
 
   const transferableCandidates = mockTransferCandidates.filter(
-    (member) => !member.isMe,
+    (member) => !member.isMe && member.role === "ADMIN",
   );
   const openChangeModal = () => {
     if (transferableCandidates.length === 0) {
