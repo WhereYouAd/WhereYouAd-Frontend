@@ -18,8 +18,8 @@ const roleLabelMap: Record<TMemberRole, string> = {
 const roleOptions: TMemberRole[] = ["ADMIN", "MEMBER"];
 
 const triggerStyleMap: Record<TMemberRole, string> = {
-  ADMIN: "bg-chart-1/18 text-chart-1",
-  MEMBER: "bg-gray-100 text-text-auth-sub",
+  ADMIN: "bg-status-blue/80 text-white shadow-sm",
+  MEMBER: "bg-chart-3/15 text-text-auth-sub",
 };
 
 export default function MemberRoleSelect({
@@ -71,20 +71,20 @@ export default function MemberRoleSelect({
           aria-haspopup="menu"
           aria-controls={isOpen && !disabled ? menuId : undefined}
           onClick={() => setIsOpen((prev) => !prev)}
-          className={`flex h-10 min-w-24.5 items-center justify-between gap-4 px-4 font-body2 transition-all ${
+          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-[22px] px-4 font-body2 transition-colors ${
             triggerStyleMap[role]
-          } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+          } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:brightness-95"}`}
         >
           <span>{roleLabelMap[role]}</span>
           <ChevronIcon
-            className={`h-4 w-4 shrink-0  transition-transform ${isOpen ? "rotate-90" : "-rotate-90"}`}
+            className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-90" : "-rotate-90"}`}
           />
         </button>
         {isOpen && !disabled && (
           <div
             id={menuId}
             role="menu"
-            className={`overflow-hidden bg-gray-100 transition-all duration-200 ease-out ${isOpen && !disabled ? "max-h-10 opacity-100" : "max-h-0 opacity-0"}`}
+            className="absolute left-0 top-[calc(100%+3px)] z-20 min-w-full overflow-hidden rounded-[22px] shadow-sm"
           >
             {restOptions.map((option) => (
               <button
@@ -92,7 +92,7 @@ export default function MemberRoleSelect({
                 key={option}
                 role="menuitem"
                 onClick={() => handleSelect(option)}
-                className={`flex h-10 w-full items-center justify-start px-7 font-body2 text-text-auth-sub transition-all hover:bg-gray-200`}
+                className={`flex h-10 w-full items-center justify-start px-4 font-body2 transition-colors ${triggerStyleMap[option]}`}
               >
                 {roleLabelMap[option]}
               </button>
