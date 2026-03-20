@@ -86,15 +86,15 @@ const mockInviteItems: TInviteMemberItem[] = [
 type TMemberListProps = {
   orgId: number;
   members: TWorkspaceMember[];
-  onRoleChange: (targetEmail: string, newRole: TMemberRole) => void;
-  onDeleteclick: (member: TWorkspaceMember) => void;
+  onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
+  onDeleteClick: (member: TWorkspaceMember) => void;
 };
 
 export default function MemberList({
   orgId,
   members,
   onRoleChange,
-  onDeleteclick,
+  onDeleteClick,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
@@ -134,8 +134,8 @@ export default function MemberList({
           <MemberItem
             key={member.email}
             member={member}
-            onRoleChange={(newRole) => onRoleChange(member.email, newRole)}
-            onDeleteClick={() => onDeleteclick(member)}
+            onRoleChange={(newRole) => onRoleChange(member.memberId, newRole)}
+            onDeleteClick={() => onDeleteClick(member)}
           />
         ))}
       </ul>

@@ -103,21 +103,14 @@ export default function MemberManagement() {
   }, [members]);
 
   const transferableCandidates = useMemo<TWorkspaceMember[]>(() => {
-    return members
-      .filter((member) => !member.isMe && member.role === "ADMIN")
-      .map((member, index) => ({
-        memberId: index + 1,
-        name: member.name,
-        email: member.email,
-        profileImageUrl: member.profileImageUrl,
-        role: member.role,
-        isMe: member.isMe ?? false,
-      }));
+    return members.filter((member) => !member.isMe && member.role === "ADMIN");
   }, [members]);
-  const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
+  const handleRoleChange = (targetMemberId: number, newRole: TMemberRole) => {
     setMembers((prev) =>
       prev.map((member) =>
-        member.email === targetEmail ? { ...member, role: newRole } : member,
+        member.memberId === targetMemberId
+          ? { ...member, role: newRole }
+          : member,
       ),
     );
   };
@@ -142,7 +135,7 @@ export default function MemberManagement() {
           if (currentMember.isMe) {
             return { ...currentMember, role: "MEMBER" };
           }
-          if (currentMember.email === member.email) {
+          if (currentMember.memberId === member.memberId) {
             return { ...currentMember, role: "ADMIN" };
           }
           return currentMember;
@@ -183,7 +176,9 @@ export default function MemberManagement() {
       // TODO: API 호출
       await new Promise((resolve) => setTimeout(resolve, 500));
       setMembers((prev) =>
-        prev.filter((currentMember) => currentMember.email !== member.email),
+        prev.filter(
+          (currentMember) => currentMember.memberId !== member.memberId,
+        ),
       );
       toast.success(`${member.name}님으로 삭제되었습니다`);
       setIsDeleteModalOpen(false);
@@ -208,7 +203,7 @@ export default function MemberManagement() {
           orgId={orgId}
           members={members}
           onRoleChange={handleRoleChange}
-          onDeleteclick={openDeleteMember}
+          onDeleteClick={openDeleteMember}
         />
         <PermissionTable />
         <ControlBox
