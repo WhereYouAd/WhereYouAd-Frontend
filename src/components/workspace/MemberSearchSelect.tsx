@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { TTransferCandidate } from "@/types/workspace/workspace";
+import type { TWorkspaceMember } from "@/types/workspace/workspace";
 
 import Input from "../common/input/Input";
 
@@ -11,9 +11,9 @@ import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TMemberSearchSelectProps = {
-  candidates: TTransferCandidate[];
-  selectedMember: TTransferCandidate | null;
-  onSelect: (member: TTransferCandidate) => void;
+  candidates: TWorkspaceMember[];
+  selectedMember: TWorkspaceMember | null;
+  onSelect: (member: TWorkspaceMember) => void;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   placeholder?: string;
@@ -67,7 +67,7 @@ export default function MemberSearchSelect({
     onOpenChange(true);
   };
 
-  const handleSelect = (member: TTransferCandidate) => {
+  const handleSelect = (member: TWorkspaceMember) => {
     onSelect(member);
     setKeyword(member.name);
     onOpenChange(false);

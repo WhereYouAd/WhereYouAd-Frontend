@@ -50,6 +50,7 @@ export type TUploadImageResponse = {
 export type TMemberRole = "ADMIN" | "MEMBER";
 
 export type TWorkspaceMember = {
+  memberId: number;
   name: string;
   email: string;
   profileImageUrl: string | null;
@@ -75,21 +76,20 @@ export type TWorkspaceMemberCount = {
 
 export type TDeleteWorkspaceMemberResponse = string;
 
-export type TPermissionValue = "가능" | "불가능";
+export type TPermissionKey =
+  | "campaignView"
+  | "billingManage"
+  | "workspaceView"
+  | "memberInvite"
+  | "memberRoleEdit"
+  | "workspaceEdit"
+  | "projectDelete";
 
 export type TPermissionRow = {
-  key:
-    | "campaignView"
-    | "billingManage"
-    | "workspaceView"
-    | "memberInvite"
-    | "memberRoleEdit"
-    | "workspaceEdit"
-    | "projectDelete";
+  key: TPermissionKey;
   label: string;
   description: string;
-  admin: TPermissionValue;
-  member: TPermissionValue;
+  defaultMemberEnabled: boolean;
 };
 
 export type TInviteMemberRequest = {
@@ -108,14 +108,5 @@ export type TInviteMemberItem = {
   profileImageUrl?: string | null;
   role?: TMemberRole;
   inviteStatus: "PENDING" | "ACTIVE";
-  isMe?: boolean;
-};
-
-export type TTransferCandidate = {
-  memberId: number;
-  name: string;
-  email: string;
-  profileImageUrl?: string | null;
-  role: TMemberRole;
   isMe?: boolean;
 };

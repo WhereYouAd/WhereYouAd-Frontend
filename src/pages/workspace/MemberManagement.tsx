@@ -4,7 +4,6 @@ import { toast } from "sonner";
 
 import {
   type TMemberRole,
-  type TTransferCandidate,
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
@@ -19,6 +18,7 @@ import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 const mockMembers: TWorkspaceMember[] = [
   {
+    memberId: 1,
     name: "이유찬",
     email: "uuuchan@wya.com",
     profileImageUrl: null,
@@ -26,6 +26,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: true,
   },
   {
+    memberId: 2,
     name: "박치국",
     email: "peach@wya.com",
     profileImageUrl: null,
@@ -33,6 +34,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 3,
     name: "강승호",
     email: "kang@wya.com",
     profileImageUrl: null,
@@ -40,6 +42,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 4,
     name: "플렉센",
     email: "flex@wya.com",
     profileImageUrl: null,
@@ -47,6 +50,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 5,
     name: "잭로그",
     email: "jackjack@wya.com",
     profileImageUrl: null,
@@ -54,6 +58,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 6,
     name: "양의지",
     email: "yang@wya.com",
     profileImageUrl: null,
@@ -61,6 +66,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 7,
     name: "최민석",
     email: "kkokko@wya.com",
     profileImageUrl: null,
@@ -68,6 +74,7 @@ const mockMembers: TWorkspaceMember[] = [
     isMe: false,
   },
   {
+    memberId: 8,
     name: "양재훈",
     email: "yanghun@wya.com",
     profileImageUrl: null,
@@ -95,7 +102,7 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  const transferableCandidates = useMemo<TTransferCandidate[]>(() => {
+  const transferableCandidates = useMemo<TWorkspaceMember[]>(() => {
     return members
       .filter((member) => !member.isMe && member.role === "ADMIN")
       .map((member, index) => ({
@@ -125,7 +132,7 @@ export default function MemberManagement() {
     if (changing) return;
     setIsTransferModalOpen(false);
   };
-  const handleTransferOwnership = async (member: TTransferCandidate) => {
+  const handleTransferOwnership = async (member: TWorkspaceMember) => {
     setChanging(true);
     try {
       // TODO: API호출

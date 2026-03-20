@@ -6,56 +6,51 @@ import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
 
-const permissionRows: TPermissionRow[] = [
+const permissionRows: Array<
+  Omit<TPermissionRow, "admin" | "member"> & { defaultMemberEnabled: boolean }
+> = [
   {
     key: "campaignView",
     label: "광고/캠페인 조회",
     description: "광고 및 캠페인을 조회할 수 있습니다",
-    admin: "가능",
-    member: "가능",
+    defaultMemberEnabled: true,
   },
   {
     key: "billingManage",
     label: "결제 관리",
     description: "구독 플랜 변경 및 결제 수단을 관리합니다",
-    admin: "가능",
-    member: "불가능",
+    defaultMemberEnabled: false,
   },
   {
     key: "workspaceView",
     label: "워크스페이스 조회",
     description: "워크스페이스에 대한 정보를 조회할 수 있습니다",
-    admin: "가능",
-    member: "가능",
+    defaultMemberEnabled: true,
   },
   {
     key: "memberInvite",
     label: "멤버 초대",
     description: "새로운 팀원을 워크스페이스에 초대할 수 있습니다",
-    admin: "가능",
-    member: "불가능",
+    defaultMemberEnabled: true,
   },
   {
     key: "memberRoleEdit",
     label: "멤버 역할 변경",
     description:
       "워크스페이스에 소속되어있는 멤버들의 역할을 변경할 수 있습니다",
-    admin: "가능",
-    member: "불가능",
+    defaultMemberEnabled: false,
   },
   {
     key: "workspaceEdit",
     label: "워크스페이스 설정 수정",
     description: "워크스페이스 이름, 로고 등 기본 정보를 수정합니다",
-    admin: "가능",
-    member: "불가능",
+    defaultMemberEnabled: false,
   },
   {
     key: "projectDelete",
     label: "프로젝트 삭제",
     description: "생성된 프로젝트를 영구적으로 삭제합니다",
-    admin: "가능",
-    member: "가능",
+    defaultMemberEnabled: false,
   },
 ];
 
@@ -63,7 +58,7 @@ type TMemberPermissionState = Record<TPermissionRow["key"], boolean>;
 
 const initialMemberPermissionState: TMemberPermissionState =
   permissionRows.reduce((acc, row) => {
-    acc[row.key] = row.member === "가능";
+    acc[row.key] = row.defaultMemberEnabled;
     return acc;
   }, {} as TMemberPermissionState);
 
@@ -93,7 +88,7 @@ export default function PermissionTable() {
           권한 설정
         </h2>
         <p className="font-body2 text-text-sub mt-2">
-          역할별로 수행할 수 있는 작업을 상세하게 설정합니다
+          역할별 권한을 확인하고 설정할 수 있습니다
         </p>
       </header>
 
