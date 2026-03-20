@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -83,11 +83,16 @@ const mockMembers: TWorkspaceMember[] = [
   },
 ];
 
+function getInitialMembers() {
+  return mockMembers.map((member) => ({ ...member }));
+}
+
 export default function MemberManagement() {
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
-  const [members, setMembers] = useState<TWorkspaceMember[]>(mockMembers);
+
+  const [members, setMembers] = useState<TWorkspaceMember[]>(getInitialMembers);
   const [changing, setChanging] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -98,6 +103,16 @@ export default function MemberManagement() {
   const [selectedDeleteMember, setSelectedDeleteMember] =
     useState<TWorkspaceMember | null>(null);
 
+  useEffect(() => {
+    setMembers(getInitialMembers());
+    setChanging(false);
+    setDeleting(false);
+    setIsTransferModalOpen(false);
+    setIsBlockedModalOpen(false);
+    setIsDeleteModalOpen(false);
+    setSelectedDeleteMember(null);
+  }, [workspaceId]);
+
   const adminCount = useMemo(() => {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
@@ -105,7 +120,28 @@ export default function MemberManagement() {
   const transferableCandidates = useMemo<TWorkspaceMember[]>(() => {
     return members.filter((member) => !member.isMe && member.role === "ADMIN");
   }, [members]);
+
   const handleRoleChange = (targetMemberId: number, newRole: TMemberRole) => {
+    const targetMember = members.find(
+      (member) => member.memberId === targetMemberId,
+    );
+
+    if (!targetMember) return;
+    if (targetMember.role === newRole) return;
+
+    if (targetMember.isMe) {
+      toast.error("본인 권한은 여기서 변경할 수 없습니다");
+      return;
+    }
+
+    const isLastAdminDemotion =
+      targetMember.role === "ADMIN" && newRole === "MEMBER" && adminCount === 1;
+
+    if (isLastAdminDemotion) {
+      toast.error("마지막 관리자는 멤버로 변경할 수 없습니다");
+      return;
+    }
+
     setMembers((prev) =>
       prev.map((member) =>
         member.memberId === targetMemberId
@@ -114,6 +150,7 @@ export default function MemberManagement() {
       ),
     );
   };
+
   const openChangeModal = () => {
     if (transferableCandidates.length === 0) {
       setIsBlockedModalOpen(true);
@@ -121,10 +158,12 @@ export default function MemberManagement() {
     }
     setIsTransferModalOpen(true);
   };
+
   const closeTransferModal = () => {
     if (changing) return;
     setIsTransferModalOpen(false);
   };
+
   const handleTransferOwnership = async (member: TWorkspaceMember) => {
     setChanging(true);
     try {
@@ -157,19 +196,23 @@ export default function MemberManagement() {
       toast.error("본인 계정은 삭제할 수 없습니다");
       return;
     }
+
     const isLastAdmin = member.role === "ADMIN" && adminCount === 1;
     if (isLastAdmin) {
       toast.error("마지막 관리자는 삭제할 수 없습니다");
       return;
     }
+
     setSelectedDeleteMember(member);
     setIsDeleteModalOpen(true);
   };
+
   const closeDeleteMember = () => {
     if (deleting) return;
     setIsDeleteModalOpen(false);
     setSelectedDeleteMember(null);
   };
+
   const handleDeleteMember = async (member: TWorkspaceMember) => {
     setDeleting(true);
     try {
@@ -180,7 +223,7 @@ export default function MemberManagement() {
           (currentMember) => currentMember.memberId !== member.memberId,
         ),
       );
-      toast.success(`${member.name}님으로 삭제되었습니다`);
+      toast.success(`${member.name}님이 삭제되었습니다`);
       setIsDeleteModalOpen(false);
       setSelectedDeleteMember(null);
     } catch (error) {
@@ -190,6 +233,7 @@ export default function MemberManagement() {
       setDeleting(false);
     }
   };
+
   return (
     <section className="w-full min-w-0">
       <header className="mb-7">
@@ -198,7 +242,8 @@ export default function MemberManagement() {
           팀 구성원을 효율적으로 관리하세요
         </p>
       </header>
-      <div className="flex flex-col gap-10 w-full min-w-0">
+
+      <div className="flex w-full min-w-0 flex-col gap-10">
         <MemberList
           orgId={orgId}
           members={members}
@@ -208,17 +253,17 @@ export default function MemberManagement() {
         <PermissionTable />
         <ControlBox
           title="관리자 변경"
-          description={`이 조직의 소유권을 다른 멤버에게 양도합니다. 이 작업은 되돌릴 수 없습니다.`}
+          description="이 조직의 소유권을 다른 멤버에게 양도합니다. 이 작업은 되돌릴 수 없습니다."
           buttonText="소유권 이전"
           onButtonClick={openChangeModal}
           className="w-full min-w-0"
-          containerClassName="bg-status-red/10 border-status-red"
+          containerClassName="border-status-red bg-status-red/10"
           titleClassName="text-status-red"
           descriptionClassName="text-text-auth-sub"
           buttonVariant="dangerSoft"
           buttonSize="big"
           buttonClassName="px-8 !rounded-component-md"
-          leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
+          leadingSlot={<WarnIcon className="h-12 w-12 text-red-500" />}
         />
 
         <TransferOwnershipModal
@@ -228,10 +273,12 @@ export default function MemberManagement() {
           onConfirm={handleTransferOwnership}
           isLoading={changing}
         />
+
         <TransferOwnershipBlockedModal
           isOpen={isBlockedModalOpen}
           onClose={() => setIsBlockedModalOpen(false)}
         />
+
         <DeleteMemberModal
           isOpen={isDeleteModalOpen}
           onClose={closeDeleteMember}

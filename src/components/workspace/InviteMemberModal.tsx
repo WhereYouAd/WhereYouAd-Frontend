@@ -57,7 +57,7 @@ export default function InviteMemberModal({
       setForm({ email: "" });
     } catch (error) {
       toast.error("초대에 실패했습니다. 다시 시도해주세요");
-      console.log("초대 실패", error);
+      console.error("초대 실패", error);
     }
   };
   return (

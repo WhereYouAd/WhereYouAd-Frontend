@@ -132,7 +132,7 @@ export default function MemberList({
       <ul className="divide-y divide-gray-100">
         {members.map((member) => (
           <MemberItem
-            key={member.email}
+            key={member.memberId}
             member={member}
             onRoleChange={(newRole) => onRoleChange(member.memberId, newRole)}
             onDeleteClick={() => onDeleteClick(member)}
