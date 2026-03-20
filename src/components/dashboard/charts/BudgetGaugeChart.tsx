@@ -117,7 +117,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50 mb-5">
+      <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50 mb-3">
         <span className="font-caption font-medium text-text-auth-sub">
           남은 예산
         </span>
