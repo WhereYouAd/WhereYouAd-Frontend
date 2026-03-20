@@ -1,7 +1,11 @@
-import type { ICampaign, ICampaignDetail } from "@/types/ads/campaign";
+import type { IAd, ICampaign, ICampaignDetail } from "@/types/ads/campaign";
 import type { ICommonResponse } from "@/types/common/common";
 
 import { axiosInstance } from "@/lib/axiosInstance";
+
+interface IAdListResponse {
+  adContentInfoResponses: IAd[];
+}
 
 export const getCampaignList = async (orgId: number): Promise<ICampaign[]> => {
   const { data } = await axiosInstance.get<
@@ -41,4 +45,14 @@ export const updateCampaignStatus = async (
       params: { status },
     },
   );
+};
+
+export const getAdList = async (
+  orgId: number,
+  projectId: number,
+): Promise<IAd[]> => {
+  const { data } = await axiosInstance.get<ICommonResponse<IAdListResponse>>(
+    `/api/advertisement/${orgId}/projects/${projectId}/ad-contents`,
+  );
+  return data.data.adContentInfoResponses;
 };
