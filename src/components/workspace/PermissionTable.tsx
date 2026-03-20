@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import type { TPermissionRow } from "@/types/workspace/workspace";
 
+import Button from "../common/button/Button";
 import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
@@ -72,15 +74,43 @@ function AdminCheckBadge() {
 }
 
 export default function PermissionTable() {
-  const [memberPermissionState, setMemberPermissionState] = useState(
+  const [savedPermissionState, setSavedPermissionState] = useState(
     initialMemberPermissionState,
   );
+  const [draftPermissionState, setDraftPermissionState] = useState(
+    initialMemberPermissionState,
+  );
+  const [isSaving, setIsSaving] = useState(false);
+  const hasChanges = useMemo(() => {
+    return permissionRows.some(
+      (row) => savedPermissionState[row.key] !== draftPermissionState[row.key],
+    );
+  }, [savedPermissionState, draftPermissionState]);
   const handleToggleMemberPermission = (key: TPermissionRow["key"]) => {
-    setMemberPermissionState((prev) => ({
+    setDraftPermissionState((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
+  const handleResetChange = () => {
+    setDraftPermissionState(savedPermissionState);
+  };
+  const handleSaveChanges = async () => {
+    if (!hasChanges || isSaving) return;
+    setIsSaving(true);
+    try {
+      // TODO: 권한 저장 API 호출
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setSavedPermissionState(draftPermissionState);
+      toast.success("권한 설정이 저장되었습니다");
+    } catch (error) {
+      toast.error("권한 설정 저장에 실패했습니다. 다시 시도해주세요");
+      console.error("권한 설정 저장 실패", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7">
@@ -127,7 +157,7 @@ export default function PermissionTable() {
                 <td className="px-6 py-5 text-center">
                   <div className="flex justify-center">
                     <Toggle
-                      checked={memberPermissionState[row.key]}
+                      checked={draftPermissionState[row.key]}
                       onToggle={() => handleToggleMemberPermission(row.key)}
                       ariaLabel={`${row.label} 권한 토글`}
                     />
@@ -137,6 +167,28 @@ export default function PermissionTable() {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex gap-3 items-center justify-end mt-5">
+        <Button
+          type="button"
+          variant="secondary"
+          size="big"
+          onClick={handleResetChange}
+          disabled={!hasChanges || isSaving}
+          className="rounded-component-md"
+        >
+          변경 취소
+        </Button>
+        <Button
+          type="button"
+          variant="primary"
+          size="big"
+          onClick={handleSaveChanges}
+          disabled={!hasChanges || isSaving}
+          className="rounded-component-md"
+        >
+          {isSaving ? "저장 중..." : "변경사항 저장하기"}
+        </Button>
       </div>
     </div>
   );
