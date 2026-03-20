@@ -69,9 +69,9 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   return (
     <div className="flex flex-col w-full h-full font-pretendard pt-6">
       <div className="flex flex-col mb-6">
-        <span className="font-body2 font-semibold text-text-auth-sub mb-3">
+        <h3 className="font-body2 font-semibold text-text-auth-sub mb-3">
           사용 예산
-        </span>
+        </h3>
         <div className="flex items-baseline gap-2">
           <span className="font-heading1 font-extrabold text-text-main tracking-tight leading-none tabular-nums">
             {percentage}%
