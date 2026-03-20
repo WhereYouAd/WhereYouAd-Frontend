@@ -12,9 +12,14 @@ import UserIcon from "@/assets/icon/common/user.svg?react";
 type TProps = {
   member: TWorkspaceMember;
   onRoleChange: (newRole: TMemberRole) => void;
+  onDeleteClick: () => void;
 };
 
-export default function MemberItem({ member, onRoleChange }: TProps) {
+export default function MemberItem({
+  member,
+  onRoleChange,
+  onDeleteClick,
+}: TProps) {
   return (
     <li className="flex items-center justify-between py-5 gap-4">
       <div className="flex items-center gap-4">
@@ -42,7 +47,7 @@ export default function MemberItem({ member, onRoleChange }: TProps) {
         <button
           type="button"
           aria-label="멤버 삭제버튼"
-          onClick={() => alert("TODO:팀원삭제확인모달버튼")}
+          onClick={onDeleteClick}
           className="text-text-sub hover:text-text-main transition-all"
         >
           <TrashIcon className="w-5 h-5" />

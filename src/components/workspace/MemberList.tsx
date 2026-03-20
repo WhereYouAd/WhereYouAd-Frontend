@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 
 import type {
   TInviteMemberItem,
@@ -6,6 +7,7 @@ import type {
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
+import DeleteMemberModal from "./DeleteMemberModal";
 import InviteMemberModal from "./InviteMemberModal";
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
@@ -124,6 +126,12 @@ export default function MemberList({ orgId }: TMemberListProps) {
   const [memberList, setMemberList] = useState<TWorkspaceMember[]>(mockMembers);
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
+  const [deleteMemberOpen, setDeleteMemberOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<TWorkspaceMember | null>(
+    null,
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
     setMemberList((prev) =>
       prev.map((member) =>
@@ -137,6 +145,34 @@ export default function MemberList({ orgId }: TMemberListProps) {
   const closeInviteMember = () => {
     setInviteMemberOpen(false);
   };
+  const openDeleteMember = (member: TWorkspaceMember) => {
+    setSelectedMember(member);
+    setDeleteMemberOpen(true);
+  };
+  const closeDeleteMember = () => {
+    if (isDeleting) return;
+    setDeleteMemberOpen(false);
+    setSelectedMember(null);
+  };
+  const handleDeleteMember = async (member: TWorkspaceMember) => {
+    setIsDeleting(true);
+    try {
+      //TODO: 팀원 삭제 API 연동
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setMemberList((prev) =>
+        prev.filter((item) => item.email !== member.email),
+      );
+      toast.success(`${member.name}님이 삭제되었습니다`);
+      setDeleteMemberOpen(false);
+      setSelectedMember(null);
+    } catch (error) {
+      toast.error("팀원 삭제에 실패했습니다. 다시 시도해주세요");
+      console.error("팀원 삭제 실패", error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex justify-between">
@@ -168,6 +204,7 @@ export default function MemberList({ orgId }: TMemberListProps) {
             key={member.email}
             member={member}
             onRoleChange={(newRole) => handleRoleChange(member.email, newRole)}
+            onDeleteClick={() => openDeleteMember(member)}
           />
         ))}
       </ul>
@@ -176,6 +213,13 @@ export default function MemberList({ orgId }: TMemberListProps) {
         onClose={closeInviteMember}
         orgId={orgId}
         inviteItems={mockInviteItems}
+      />
+      <DeleteMemberModal
+        isOpen={deleteMemberOpen}
+        onClose={closeDeleteMember}
+        member={selectedMember}
+        onConfirm={handleDeleteMember}
+        isLoading={isDeleting}
       />
     </div>
   );

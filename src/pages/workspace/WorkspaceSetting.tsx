@@ -317,7 +317,7 @@ export default function WorkspaceSetting() {
             padding="lg"
             title="워크스페이스 삭제 확인"
           >
-            <div className="text-center px-2 py-6 ">
+            <div className="text-center px-2 py-6">
               <div className="flex justify-center mb-6">
                 <WarnIcon
                   className="text-status-red w-15 h-15"

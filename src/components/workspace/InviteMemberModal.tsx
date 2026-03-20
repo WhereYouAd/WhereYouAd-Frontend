@@ -48,9 +48,9 @@ export default function InviteMemberModal({
   };
 
   const handleInvite = async () => {
-    const requestBody: TInviteMemberRequest = {
-      email: trimmedEmail,
-    };
+    // const requestBody: TInviteMemberRequest = {
+    //   email: trimmedEmail,
+    // };
     try {
       // TODO: API호출
       toast.success("초대 이메일 발송에 성공했습니다");
