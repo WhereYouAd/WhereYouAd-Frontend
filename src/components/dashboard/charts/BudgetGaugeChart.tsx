@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
@@ -51,22 +51,6 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   const isOverBudget = spent > totalBudget;
   const remaining = isOverBudget ? spent - totalBudget : totalBudget - spent;
 
-  const { periodElapsedDays, periodTotalDays, periodElapsedRate } =
-    useMemo(() => {
-      const now = new Date();
-      const elapsed = now.getDate();
-      const total = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        0,
-      ).getDate();
-      return {
-        periodElapsedDays: elapsed,
-        periodTotalDays: total,
-        periodElapsedRate: Math.round((elapsed / total) * 100),
-      };
-    }, []);
-
   const status = getBudgetStatus(percentage, warningThreshold, dangerThreshold);
 
   // 데이터 인사이트 메시지
@@ -74,31 +58,20 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
 
   if (isOverBudget) {
     insightDesc = "예산을 초과했습니다. 캠페인 조정이 필요해요.";
-  } else if (
-    percentage >= dangerThreshold ||
-    percentage > periodElapsedRate + 15
-  ) {
+  } else if (percentage >= dangerThreshold) {
     insightDesc = "예산 소진이 빨라요. 일일 한도 점검을 추천해요.";
-  } else if (
-    percentage >= warningThreshold ||
-    percentage > periodElapsedRate + 5
-  ) {
+  } else if (percentage >= warningThreshold) {
     insightDesc = "예산 소진 속도가 다소 높아요. 매체 효율을 확인해 보세요.";
-  } else if (percentage < periodElapsedRate - 5) {
-    insightDesc = "예산이 여유로워요. 효율이 좋은 매체에 더 투자해 보세요.";
   } else {
-    insightDesc = "계획된 일정에 맞게 예산이 잘 사용되고 있어요.";
+    insightDesc = "계획된 예산 범위 내에서 잘 사용되고 있어요.";
   }
 
   return (
     <div className="flex flex-col w-full h-full font-pretendard pt-6">
-      <div className="flex flex-col mb-8">
-        <div className="flex items-center mb-3">
-          <span className="font-body2 font-semibold text-text-auth-sub">
-            이번 달 사용 예산
-          </span>
-        </div>
-
+      <div className="flex flex-col mb-6">
+        <h3 className="font-body2 font-semibold text-text-auth-sub mb-3">
+          사용 예산
+        </h3>
         <div className="flex items-baseline gap-2">
           <span className="font-heading1 font-extrabold text-text-main tracking-tight leading-none tabular-nums">
             {percentage}%
@@ -109,10 +82,10 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="relative mb-10 w-full">
+      <div className="relative mb-6 w-full">
         <div
           role="progressbar"
-          aria-label="이번 달 사용 예산 소진율"
+          aria-label="전체 예산 소진율"
           aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
           aria-valuemin={0}
           aria-valuemax={100}
@@ -144,38 +117,18 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 tablet:grid-cols-1 gap-4 mb-5">
-        <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50">
-          <span className="font-caption font-medium text-text-auth-sub">
-            남은 예산
-          </span>
-          <span
-            className={twMerge(
-              "font-body1 font-bold tracking-tight tabular-nums",
-              isOverBudget ? "text-status-red" : "text-text-main",
-            )}
-          >
-            {isOverBudget ? "-" : ""}₩{remaining.toLocaleString()}
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-1 p-4 rounded-2xl bg-bg-surface/50">
-          <div className="flex items-center justify-between">
-            <span className="font-caption font-medium text-text-auth-sub">
-              기간 진행률
-            </span>
-            <span className="font-caption font-semibold text-text-sub tabular-nums">
-              {periodElapsedRate}%
-            </span>
-          </div>
-          <span className="font-body1 font-bold text-text-main tabular-nums text-right mt-0.5">
-            {periodElapsedDays}일
-            <span className="font-caption font-medium text-text-auth-sub">
-              {" "}
-              / {periodTotalDays}일
-            </span>
-          </span>
-        </div>
+      <div className="flex flex-col gap-1.5 p-4 rounded-2xl bg-bg-surface/50 mb-3">
+        <span className="font-caption font-medium text-text-auth-sub">
+          남은 예산
+        </span>
+        <span
+          className={twMerge(
+            "font-heading3 font-bold tracking-tight tabular-nums",
+            isOverBudget ? "text-status-red" : "text-text-auth-sub",
+          )}
+        >
+          {isOverBudget ? "-" : ""}₩{remaining.toLocaleString()}
+        </span>
       </div>
 
       <div className="mt-auto px-5 py-4 flex items-center gap-3 rounded-[16px] bg-[#F2F4F6]">
