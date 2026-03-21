@@ -4,6 +4,8 @@ import { toast } from "sonner";
 
 import { printAsPdf } from "@/utils/download";
 
+import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
+
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -21,8 +23,6 @@ import TrafficChart, {
 } from "@/components/dashboard/charts/TrafficChart";
 import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
 
-import { overviewMockData } from "./overview.mock";
-
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
@@ -34,6 +34,7 @@ const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
+  const { data: kpis } = useOverviewMetrics();
   const [currentDate] = useState(() =>
     new Date().toLocaleString("ko-KR", {
       year: "numeric",
@@ -75,7 +76,7 @@ export default function OverviewDashboard() {
       />
 
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {overviewMockData.kpis.map((kpi) => (
+        {(kpis ?? []).map((kpi) => (
           <StatCard key={kpi.title} {...kpi} />
         ))}
       </div>

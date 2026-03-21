@@ -19,7 +19,7 @@ export default function CampaignDetail() {
     orgId: string;
     projectId: string;
   }>();
-  const { data, isLoading, refetch } = useCampaignDetail(Number(orgId));
+  const { data, isLoading, refetch } = useCampaignDetail();
 
   const stopControl = useControlModal({
     successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
