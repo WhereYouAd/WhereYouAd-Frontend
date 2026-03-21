@@ -46,7 +46,7 @@ export default function AdListTable({ ads, refetchAds }: IAdsListTableProps) {
                 />
 
                 {openAdId === ad.id && (
-                  <div className="w-full origin-top animate-fade-in">
+                  <div className="w-full origin-top">
                     <AdDetailContent ad={ad} refetchAds={refetchAds} />
                   </div>
                 )}
