@@ -209,11 +209,10 @@ export default function AdDetailContent({
           buttonText="시작하기"
           onConfirm={() =>
             trackControl.handleConfirm(async () => {
-              if (ad.landingUrl) {
-                await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
-              } else {
-                toast.error("landingUrl이 없어 트래킹을 활성화할 수 없습니다.");
+              if (!ad.landingUrl) {
+                throw new Error("랜딩 URL이 없습니다.");
               }
+              await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
             })
           }
           isLoading={trackControl.isLoading}
