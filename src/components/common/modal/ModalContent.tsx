@@ -25,7 +25,9 @@ export default function ModalContent({
     <div className="text-center px-2 pt-10 pb-6">
       <div className="flex justify-center items-center gap-2 mb-3">
         {icon && <div className="shrink-0">{icon}</div>}
-        <h3 className="font-heading2 text-text-main leading-none">{title}</h3>
+        <h3 className="font-heading2 text-text-main leading-none whitespace-nowrap">
+          {title}
+        </h3>
       </div>
       <div className="font-body1 text-text-auth-sub mb-7 leading-relaxed">
         {description}
