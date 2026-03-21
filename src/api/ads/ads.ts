@@ -56,3 +56,14 @@ export const getAdList = async (
   );
   return data.data.adContentInfoResponses;
 };
+
+export const getAdDetail = async (
+  orgId: number,
+  projectId: number,
+  adContentId: number,
+): Promise<IAd> => {
+  const { data } = await axiosInstance.get<ICommonResponse<IAd>>(
+    `/api/advertisement/${orgId}/projects/${projectId}/ad-contents/${adContentId}`,
+  );
+  return data.data;
+};
