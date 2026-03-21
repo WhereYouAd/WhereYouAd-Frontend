@@ -86,6 +86,7 @@ const mockInviteItems: TInviteMemberItem[] = [
 type TMemberListProps = {
   orgId: number;
   members: TWorkspaceMember[];
+  totalCount: number;
   onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
   onDeleteClick: (member: TWorkspaceMember) => void;
 };
@@ -93,6 +94,7 @@ type TMemberListProps = {
 export default function MemberList({
   orgId,
   members,
+  totalCount,
   onRoleChange,
   onDeleteClick,
 }: TMemberListProps) {
@@ -113,7 +115,7 @@ export default function MemberList({
             팀 구성원
           </h2>
           <p className="font-body2 text-text-sub mt-2">
-            현재 {members.length}명의 구성원이 활동 중입니다
+            현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
         </div>
         <Button

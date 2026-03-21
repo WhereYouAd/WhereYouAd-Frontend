@@ -3,11 +3,13 @@ import {
   type TCreateOrgRequest,
   type TCreateOrgResponse,
   type TGetOrgResponse,
+  type TGetWorkspaceMembersData,
   type TMyOrgsData,
   type TUpdateWorkspaceRequest,
   type TUploadImageResponse,
   type TWorkspace,
   type TWorkspaceDetail,
+  type TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -55,4 +57,28 @@ export const uploadImage = async (file: File): Promise<string> => {
     ICommonResponse<TUploadImageResponse>
   >(`/api/images/upload`, formData);
   return data.data.url;
+};
+
+export const getWorkspaceMembers = async (
+  orgId: number,
+  cursor?: string | null,
+  size = 20,
+): Promise<TGetWorkspaceMembersData> => {
+  const params: Record<string, string | number> = { size };
+  if (cursor) {
+    params.cursor = cursor;
+  }
+  const { data } = await axiosInstance.get<
+    TApiResult<TGetWorkspaceMembersData>
+  >(`/api/org/members/${orgId}`, { params });
+  return data.data;
+};
+
+export const getWorkspaceMemberCount = async (
+  orgId: number,
+): Promise<TWorkspaceMemberCount> => {
+  const { data } = await axiosInstance.get<TApiResult<TWorkspaceMemberCount>>(
+    `/api/org/members/${orgId}/count`,
+  );
+  return data.data;
 };
