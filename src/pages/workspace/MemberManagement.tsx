@@ -37,7 +37,6 @@ export default function MemberManagement() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDeleteMember, setSelectedDeleteMember] =
     useState<TWorkspaceMember | null>(null);
-
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   const memberCountQuery = useQuery({
@@ -45,6 +44,7 @@ export default function MemberManagement() {
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
+
   const membersQuery = useInfiniteQuery({
     queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
     queryFn: ({ pageParam }: { pageParam: string | null }) =>
