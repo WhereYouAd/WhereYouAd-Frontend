@@ -68,6 +68,20 @@ export const getAdDetail = async (
   return data.data;
 };
 
+export const createTrackingUrl = async (
+  orgId: number,
+  adContentId: number,
+  landingUrl: string,
+) => {
+  const { data } = await axiosInstance.post(
+    `/api/clicks/${orgId}/${adContentId}/tracking-url`,
+    {
+      landingUrl,
+    },
+  );
+  return data.data;
+};
+
 export const updateAdStatus = async (
   orgId: number,
   projectId: number,

@@ -10,7 +10,7 @@ import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import { updateAdStatus } from "@/api/ads/ads";
+import { createTrackingUrl, updateAdStatus } from "@/api/ads/ads";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
@@ -49,6 +49,8 @@ export default function AdDetailContent({
     errorMessage: "트래킹 중단에 실패했습니다.",
     onSuccess: refetchAds,
   });
+
+  const isTrackingActive = !!ad.trackingUrl && ad.trackingUrl.length > 0;
 
   //targetInfo 변환
   const targetTags = () => {
@@ -128,16 +130,30 @@ export default function AdDetailContent({
         <div className="w-[15%] shrink-0 mr-2" />
         <div className="flex-1 min-w-0 flex flex-col gap-6 pl-2">
           <ControlBox
-            title="트래킹 활성화 시 실시간 성과 수집이 시작돼요"
-            description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다."
-            buttonText="트래킹 활성화"
-            onButtonClick={trackControl.openModal}
+            title={
+              isTrackingActive
+                ? "트래킹이 활성화되어 데이터 수집 중입니다"
+                : "트래킹 활성화 시 실시간 성과 수집이 시작돼요"
+            }
+            description={
+              isTrackingActive
+                ? "트래킹을 중단하면 더 이상 광고 성과 리포트가 갱신되지 않습니다."
+                : "광고 클릭 데이터를 실시간으로 수집하여 성과 분석에 반영합니다."
+            }
+            buttonText={isTrackingActive ? "트래킹 중단하기" : "트래킹 활성화"}
+            onButtonClick={
+              isTrackingActive
+                ? stopTrackControl.openModal
+                : trackControl.openModal
+            }
             buttonDisabled={false}
-            containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4"
-            titleClassName="text-chart-3 font-heading3"
+            containerClassName={`${isTrackingActive ? "bg-status-red/7 border-status-red" : "bg-chart-3/7 border-chart-3"} px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4`}
+            titleClassName={`${isTrackingActive ? "text-status-red" : "text-chart-3"} font-heading3`}
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
-            buttonClassName="font-body1 tablet:w-full"
+            buttonClassName={`${
+              isTrackingActive ? "bg-status-red" : "bg-chart-3"
+            } font-body1 tablet:w-full `}
           />
           <ControlBox
             title={
@@ -189,7 +205,11 @@ export default function AdDetailContent({
           buttonText="시작하기"
           onConfirm={() =>
             trackControl.handleConfirm(async () => {
-              /* API 호출 */
+              if (ad.landingUrl) {
+                await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
+              } else {
+                toast.error("landingUrl이 없어 트래킹을 활성화할 수 없습니다.");
+              }
             })
           }
           isLoading={trackControl.isLoading}
