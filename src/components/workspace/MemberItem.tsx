@@ -12,9 +12,14 @@ import UserIcon from "@/assets/icon/common/user.svg?react";
 type TProps = {
   member: TWorkspaceMember;
   onRoleChange: (newRole: TMemberRole) => void;
+  onDeleteClick: () => void;
 };
 
-export default function MemberItem({ member, onRoleChange }: TProps) {
+export default function MemberItem({
+  member,
+  onRoleChange,
+  onDeleteClick,
+}: TProps) {
   return (
     <li className="flex items-center justify-between py-5 gap-4">
       <div className="flex items-center gap-4">
@@ -38,15 +43,29 @@ export default function MemberItem({ member, onRoleChange }: TProps) {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <MemberRoleSelect role={member.role} onChange={onRoleChange} />
-        <button
-          type="button"
-          aria-label="멤버 삭제버튼"
-          onClick={() => alert("TODO:팀원삭제확인모달버튼")}
-          className="text-text-sub hover:text-text-main transition-all"
-        >
-          <TrashIcon className="w-5 h-5" />
-        </button>
+        {member.isMe ? (
+          <span
+            className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-[22px] px-4 font-body2 ${
+              member.role === "ADMIN"
+                ? "bg-status-blue/80 text-white shadow-sm"
+                : "bg-chart-3/15 text-text-auth-sub"
+            }`}
+          >
+            {member.role === "ADMIN" ? "관리자" : "멤버"}
+          </span>
+        ) : (
+          <>
+            <MemberRoleSelect role={member.role} onChange={onRoleChange} />
+            <button
+              type="button"
+              aria-label="멤버 삭제버튼"
+              onClick={onDeleteClick}
+              className="text-text-sub transition-colors hover:text-status-red"
+            >
+              <TrashIcon className="h-5 w-5" />
+            </button>
+          </>
+        )}
       </div>
     </li>
   );

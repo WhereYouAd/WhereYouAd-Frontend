@@ -1,8 +1,11 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-
 import type { TMemberRole } from "@/types/workspace/workspace";
 
-import ChevronIcon from "@/assets/icon/chevron/chervon-left.svg?react";
+import {
+  DropdownMenu,
+  type TMenuItem,
+} from "../common/dropdownmenu/DropdownMenu";
+
+import ChevonIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
 type TProps = {
   role: TMemberRole;
@@ -15,11 +18,9 @@ const roleLabelMap: Record<TMemberRole, string> = {
   MEMBER: "멤버",
 };
 
-const roleOptions: TMemberRole[] = ["ADMIN", "MEMBER"];
-
 const triggerStyleMap: Record<TMemberRole, string> = {
-  ADMIN: "bg-chart-1/18 text-chart-1",
-  MEMBER: "bg-gray-100 text-text-auth-sub",
+  ADMIN: "bg-status-blue/80 text-white shadow-sm",
+  MEMBER: "bg-chart-3/15 text-text-auth-sub",
 };
 
 export default function MemberRoleSelect({
@@ -27,79 +28,35 @@ export default function MemberRoleSelect({
   onChange,
   disabled = false,
 }: TProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const menuId = useId();
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!wrapperRef.current) return;
-      if (!wrapperRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (disabled) {
-      setIsOpen(false);
-    }
-  }, [disabled]);
-
-  const restOptions = useMemo(
-    () => roleOptions.filter((option) => option !== role),
-    [role],
-  );
-
-  const handleSelect = (newRole: TMemberRole) => {
-    onChange(newRole);
-    setIsOpen(false);
-  };
+  const items: TMenuItem[] = disabled
+    ? []
+    : [
+        {
+          label: "관리자",
+          onClick: () => onChange("ADMIN"),
+          active: role === "ADMIN",
+        },
+        {
+          label: "멤버",
+          onClick: () => onChange("MEMBER"),
+          active: role === "MEMBER",
+        },
+      ];
   return (
-    <div ref={wrapperRef} className="relative">
-      <div
-        className={`overflow-hidden rounded-[22px]  ${disabled ? "opacity-50" : ""}`}
-      >
-        <button
-          type="button"
-          disabled={disabled}
-          aria-expanded={isOpen}
-          aria-haspopup="menu"
-          aria-controls={isOpen && !disabled ? menuId : undefined}
-          onClick={() => setIsOpen((prev) => !prev)}
-          className={`flex h-10 min-w-24.5 items-center justify-between gap-4 px-4 font-body2 transition-all ${
-            triggerStyleMap[role]
-          } ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+    <DropdownMenu
+      key={disabled ? "disabled" : "enabled"}
+      items={items}
+      className={disabled ? "pointer-events-none opacity-50" : undefined}
+      trigger={(open) => (
+        <div
+          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-component-lg px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
         >
           <span>{roleLabelMap[role]}</span>
-          <ChevronIcon
-            className={`h-4 w-4 shrink-0  transition-transform ${isOpen ? "rotate-90" : "-rotate-90"}`}
+          <ChevonIcon
+            className={`h-4 w-4 shrink-0 transition-transform ${open ? "rotate-0" : "-rotate-180"}`}
           />
-        </button>
-        {isOpen && !disabled && (
-          <div
-            id={menuId}
-            role="menu"
-            className={`overflow-hidden bg-gray-100 transition-all duration-200 ease-out ${isOpen && !disabled ? "max-h-10 opacity-100" : "max-h-0 opacity-0"}`}
-          >
-            {restOptions.map((option) => (
-              <button
-                type="button"
-                key={option}
-                role="menuitem"
-                onClick={() => handleSelect(option)}
-                className={`flex h-10 w-full items-center justify-start px-7 font-body2 text-text-auth-sub transition-all hover:bg-gray-200`}
-              >
-                {roleLabelMap[option]}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    />
   );
 }
