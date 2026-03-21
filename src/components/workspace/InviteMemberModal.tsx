@@ -11,8 +11,7 @@ import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 import Modal from "../common/modal/Modal";
 
-import CopyIcon from "@/assets/icon/common/link.svg";
-
+import CopyIcon from "@/assets/icon/common/link.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TInviteMemberModalProps = {
@@ -48,14 +47,18 @@ export default function InviteMemberModal({
     setForm({ email: value });
   };
 
-  const handleInvite = () => {
-    const requestBody: TInviteMemberRequest = {
-      email: trimmedEmail,
-    };
-    toast.success("초대 이메일 발송에 성공했습니다");
-    console.log("초대 요청 orgId:", orgId);
-    console.log("초대 요청 body:", requestBody);
-    setForm({ email: "" });
+  const handleInvite = async () => {
+    // const requestBody: TInviteMemberRequest = {
+    //   email: trimmedEmail,
+    // };
+    try {
+      // TODO: API호출
+      toast.success("초대 이메일 발송에 성공했습니다");
+      setForm({ email: "" });
+    } catch (error) {
+      toast.error("초대에 실패했습니다. 다시 시도해주세요");
+      console.error("초대 실패", error);
+    }
   };
   return (
     <Modal

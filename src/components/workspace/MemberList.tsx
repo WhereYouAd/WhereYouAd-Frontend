@@ -12,39 +12,6 @@ import Button from "../common/button/Button";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
-const mockMembers: TWorkspaceMember[] = [
-  {
-    name: "김택연",
-    email: "himnaera@naver.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-  },
-  {
-    name: "문보경",
-    email: "parkbogum@naver.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-  },
-  {
-    name: "노경은",
-    email: "grandpapa@naver.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-  },
-  {
-    name: "조병현",
-    email: "niceguy@naver.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-  },
-  {
-    name: "곽빈",
-    email: "whathappen@naver.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-  },
-];
-
 const mockInviteItems: TInviteMemberItem[] = [
   {
     email: "aaa111@wya.com",
@@ -118,25 +85,26 @@ const mockInviteItems: TInviteMemberItem[] = [
 
 type TMemberListProps = {
   orgId: number;
+  members: TWorkspaceMember[];
+  onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
+  onDeleteClick: (member: TWorkspaceMember) => void;
 };
 
-export default function MemberList({ orgId }: TMemberListProps) {
-  const [memberList, setMemberList] = useState<TWorkspaceMember[]>(mockMembers);
+export default function MemberList({
+  orgId,
+  members,
+  onRoleChange,
+  onDeleteClick,
+}: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
-  const handleRoleChange = (targetEmail: string, newRole: TMemberRole) => {
-    setMemberList((prev) =>
-      prev.map((member) =>
-        member.email === targetEmail ? { ...member, role: newRole } : member,
-      ),
-    );
-  };
   const openInviteMember = () => {
     setInviteMemberOpen(true);
   };
   const closeInviteMember = () => {
     setInviteMemberOpen(false);
   };
+
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex justify-between">
@@ -145,7 +113,7 @@ export default function MemberList({ orgId }: TMemberListProps) {
             팀 구성원
           </h2>
           <p className="font-body2 text-text-sub mt-2">
-            현재 {memberList.length}명의 구성원이 활동 중입니다
+            현재 {members.length}명의 구성원이 활동 중입니다
           </p>
         </div>
         <Button
@@ -154,7 +122,6 @@ export default function MemberList({ orgId }: TMemberListProps) {
           size="small"
           aria-label="팀원 초대 버튼"
           onClick={openInviteMember}
-          // disabled={}
           className="p-5 py-6 rounded-component-md"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
@@ -163,11 +130,12 @@ export default function MemberList({ orgId }: TMemberListProps) {
       </header>
 
       <ul className="divide-y divide-gray-100">
-        {memberList.map((member) => (
+        {members.map((member) => (
           <MemberItem
-            key={member.email}
+            key={member.memberId}
             member={member}
-            onRoleChange={(newRole) => handleRoleChange(member.email, newRole)}
+            onRoleChange={(newRole) => onRoleChange(member.memberId, newRole)}
+            onDeleteClick={() => onDeleteClick(member)}
           />
         ))}
       </ul>

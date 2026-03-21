@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 
-import type { TTransferCandidate } from "@/types/workspace/workspace";
+import type { TWorkspaceMember } from "@/types/workspace/workspace";
 
 import MemberSearchSelect from "./MemberSearchSelect";
 import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 
-import MessageCircleWarningIcon from "@/assets/icon/common/warn-circle.svg?react";
+import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 type TTransferOwnershipModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  candidates: TTransferCandidate[];
-  onConfirm: (member: TTransferCandidate) => void;
+  candidates: TWorkspaceMember[];
+  onConfirm: (member: TWorkspaceMember) => void;
   isLoading?: boolean;
 };
 
@@ -23,8 +23,9 @@ export default function TransferOwnershipModal({
   onConfirm,
   isLoading = false,
 }: TTransferOwnershipModalProps) {
-  const [selectedMember, setSelectedMember] =
-    useState<TTransferCandidate | null>(null);
+  const [selectedMember, setSelectedMember] = useState<TWorkspaceMember | null>(
+    null,
+  );
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   useEffect(() => {
@@ -49,10 +50,7 @@ export default function TransferOwnershipModal({
     >
       <div className="text-center px-2 py-6 ">
         <div className="flex justify-center mb-6">
-          <MessageCircleWarningIcon
-            className="text-status-red"
-            aria-hidden="true"
-          />
+          <WarnIcon className="text-status-red w-15 h-15" aria-hidden="true" />
         </div>
         <h2 className="font-heading2 text-text-main mb-3">
           관리자를 변경하시겠습니까?

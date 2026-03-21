@@ -14,7 +14,7 @@ export function DropdownMenu({
   className,
   "aria-label": ariaLabel,
 }: {
-  trigger: React.ReactNode;
+  trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   items: TMenuItem[];
   className?: string;
   "aria-label"?: string;
@@ -51,7 +51,7 @@ export function DropdownMenu({
         }}
         className={twMerge(className)}
       >
-        {trigger}
+        {typeof trigger === "function" ? trigger(open) : trigger}
       </div>
       {open && (
         <div
