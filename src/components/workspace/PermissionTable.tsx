@@ -8,9 +8,7 @@ import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
 
-const permissionRows: Array<
-  Omit<TPermissionRow, "admin" | "member"> & { defaultMemberEnabled: boolean }
-> = [
+const permissionRows: TPermissionRow[] = [
   {
     key: "campaignView",
     label: "광고/캠페인 조회",
