@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import type { IAd } from "@/types/ads/campaign";
 
+// import { useControlModal } from "@/hooks/ads/useControlModal";
 import Badge from "../common/badge/Badge";
 import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
@@ -28,6 +29,19 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
   // 광고 재개
   const [resumeOpen, setResumeOpen] = useState(false);
   const [isResuming, setIsResuming] = useState(false);
+
+  //targetInfo 변환
+  const targetTags = () => {
+    try {
+      if (!ad.targetInfo) return [];
+      const parsed = JSON.parse(ad.targetInfo);
+      return Object.values(parsed) as string[];
+    } catch {
+      return ad.targetInfo ? [ad.targetInfo] : [];
+    }
+  };
+
+  const tags = targetTags();
 
   const onTrackConfirm = () => {
     setIsTracking(true);
@@ -90,26 +104,35 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
 
           {/* tags */}
           <div className="flex flex-wrap gap-2">
-            {ad.tags.map((tag, idx) => (
-              <Badge
-                key={idx}
-                variant="running"
-                size="sm"
-                className="border border-bg-text-sub bg-bg-surface text-text-sub font-normal px-3"
-              >
-                #{tag}
-              </Badge>
-            ))}
+            {tags.length > 0 ? (
+              tags.map((tag, idx) => (
+                <Badge
+                  key={idx}
+                  variant="running"
+                  size="sm"
+                  className="border border-bg-text-sub bg-bg-surface text-text-sub font-normal px-3"
+                >
+                  #{tag}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-caption text-text-placeholder">
+                설정된 타겟 정보가 없습니다.
+              </span>
+            )}
           </div>
 
           {/* link */}
           <div className="relative w-full max-w-150 group">
             <div className="flex items-center justify-between w-full h-10 px-4 py-2 bg-white border border-text-placeholder rounded-component-sm group-hover:border-primary-light transition-all">
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
-                {ad.link}
+                {ad.landingUrl}
               </span>
               <button
-                onClick={() => handleCopy(ad.link)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ad.landingUrl && handleCopy(ad.landingUrl);
+                }}
                 className="shrink-0 text-text-placeholder hover:text-primary-main transition-colors p-1"
                 title="링크 복사"
               >
@@ -139,32 +162,28 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
           />
           <ControlBox
             title={
-              ad.runStatus === "stopped"
+              ad.status === "PAUSED"
                 ? "광고 소재를 다시 켤 수 있어요"
                 : "해당 광고를 중단할 수 있어요"
             }
             description="선택한 광고의 노출과 클릭이 즉시 중단되며, 다른 광고에는 영향을 주지 않습니다."
-            buttonText={ad.runStatus === "stopped" ? "재개하기" : "중단하기"}
+            buttonText={ad.status === "PAUSED" ? "재개하기" : "중단하기"}
             onButtonClick={() => {
-              ad.runStatus === "stopped"
-                ? setResumeOpen(true)
-                : setStopOpen(true);
+              ad.status === "PAUSED" ? setResumeOpen(true) : setStopOpen(true);
             }}
             buttonDisabled={false}
             containerClassName={`px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4 ${
-              ad.runStatus === "stopped"
+              ad.status === "PAUSED"
                 ? "bg-status-blue/7 border-status-blue"
                 : "bg-status-red/7 border-status-red"
             }`}
             titleClassName={`font-heading3 ${
-              ad.runStatus === "stopped"
-                ? "text-status-blue"
-                : "text-status-red"
+              ad.status === "PAUSED" ? "text-status-blue" : "text-status-red"
             }`}
             descriptionClassName="font-caption text-text-sub"
             buttonSize="big"
             buttonClassName={`font-body1 tablet:w-full ${
-              ad.runStatus === "stopped" ? "bg-status-blue" : "bg-status-red"
+              ad.status === "PAUSED" ? "bg-status-blue" : "bg-status-red"
             }`}
           />
         </div>
