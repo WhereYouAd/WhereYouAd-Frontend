@@ -267,7 +267,7 @@ export default function AdDetailContent({
       >
         <ModalContent
           icon={<WarnCircleIcon className="text-status-blue" />}
-          title="광고 소재의 운영을 재개하시겠습니까?"
+          title="광고 운영을 재개하시겠습니까?"
           description="중단되었던 광고 소재가 다시 플랫폼에 노출되기 시작합니다."
           buttonText="시작하기"
           onConfirm={() =>
