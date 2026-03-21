@@ -36,7 +36,7 @@ export const getCampaignDetail = async (
 export const updateCampaignStatus = async (
   orgId: number,
   projectId: number,
-  status: "ON_GOING" | "PAUSED",
+  status: "ON_GOING" | "PAUSED" | "OVER",
 ): Promise<void> => {
   await axiosInstance.patch(
     `/api/advertisement/${orgId}/projects/${projectId}/status`,
@@ -66,4 +66,19 @@ export const getAdDetail = async (
     `/api/advertisement/${orgId}/projects/${projectId}/ad-contents/${adContentId}`,
   );
   return data.data;
+};
+
+export const updateAdStatus = async (
+  orgId: number,
+  projectId: number,
+  adContentId: number,
+  status: "ON_GOING" | "PAUSED" | "OVER",
+): Promise<void> => {
+  await axiosInstance.patch(
+    `/api/advertisement/${orgId}/projects/${projectId}/ad-contents/${adContentId}/status`,
+    null,
+    {
+      params: { status },
+    },
+  );
 };

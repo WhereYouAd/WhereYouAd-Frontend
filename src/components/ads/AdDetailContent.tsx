@@ -1,34 +1,54 @@
-import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import type { IAd } from "@/types/ads/campaign";
 
-// import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useControlModal } from "@/hooks/ads/useControlModal";
+
 import Badge from "../common/badge/Badge";
 import ControlBox from "../common/controlbox/ControlBox";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
+import { updateAdStatus } from "@/api/ads/ads";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-interface IAdDetailContentProps {
+export default function AdDetailContent({
+  ad,
+  refetchAds,
+}: {
   ad: IAd;
-}
+  refetchAds: () => void;
+}) {
+  const { orgId, projectId } = useParams<{
+    orgId: string;
+    projectId: string;
+  }>();
 
-export default function AdDetailContent({ ad }: IAdDetailContentProps) {
-  // 트래킹 활성화
-  const [trackOpen, setTrackOpen] = useState(false);
-  const [isTracking, setIsTracking] = useState(false);
-  // 트래킹 중단
-  const [trackStopOpen, setTrackStopOpen] = useState(false);
-  const [isTrackStopping, setIsTrackStopping] = useState(false);
-  // 광고 중단
-  const [stopOpen, setStopOpen] = useState(false);
-  const [isStopping, setIsStopping] = useState(false);
-  // 광고 재개
-  const [resumeOpen, setResumeOpen] = useState(false);
-  const [isResuming, setIsResuming] = useState(false);
+  const stopControl = useControlModal({
+    successMessage: "광고 소재 노출이 중단되었습니다.",
+    errorMessage: "중단 처리에 실패했습니다.",
+    onSuccess: refetchAds,
+  });
+
+  const resumeControl = useControlModal({
+    successMessage: "광고 소재 운영이 재개되었습니다.",
+    errorMessage: "재개 처리에 실패했습니다.",
+    onSuccess: refetchAds,
+  });
+
+  const trackControl = useControlModal({
+    successMessage: "트래킹이 활성화되었습니다.",
+    errorMessage: "트래킹 활성화에 실패했습니다.",
+    onSuccess: refetchAds,
+  });
+
+  const stopTrackControl = useControlModal({
+    successMessage: "트래킹이 중단되었습니다.",
+    errorMessage: "트래킹 중단에 실패했습니다.",
+    onSuccess: refetchAds,
+  });
 
   //targetInfo 변환
   const targetTags = () => {
@@ -43,46 +63,6 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
 
   const tags = targetTags();
 
-  const onTrackConfirm = () => {
-    setIsTracking(true);
-    try {
-      toast.success("트래킹이 활성화되었습니다.");
-      setTrackOpen(false);
-    } finally {
-      setIsTracking(false);
-    }
-  };
-
-  const onTrackStopConfirm = () => {
-    setIsTrackStopping(true);
-    try {
-      toast.success("트래킹이 중단되었습니다.");
-      setTrackStopOpen(false);
-    } finally {
-      setIsTrackStopping(false);
-    }
-  };
-
-  const onStopConfirm = () => {
-    setIsStopping(true);
-    try {
-      toast.success("광고 소재 노출이 중단되었습니다.");
-      setStopOpen(false);
-    } finally {
-      setIsStopping(false);
-    }
-  };
-
-  const onResumeConfirm = () => {
-    setIsResuming(true);
-    try {
-      toast.success("광고 소재 운영이 재개되었습니다.");
-      setResumeOpen(false);
-    } finally {
-      setIsResuming(false);
-    }
-  };
-
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -91,6 +71,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
       toast.error("복사에 실패했습니다.");
     }
   };
+
   return (
     <div className="px-5 pt-2 pb-6 flex flex-col gap-6 transition-all animate-fade-in overflow-hidden">
       <div className="flex w-full">
@@ -150,9 +131,7 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             title="트래킹 활성화 시 실시간 성과 수집이 시작돼요"
             description="광고 클릭/전환 데이터를 실시간으로 수집하여 성과 분석과 보고서에 바로 반영됩니다."
             buttonText="트래킹 활성화"
-            onButtonClick={() => {
-              setTrackOpen(true);
-            }}
+            onButtonClick={trackControl.openModal}
             buttonDisabled={false}
             containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4"
             titleClassName="text-chart-3 font-heading3"
@@ -168,9 +147,11 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             }
             description="선택한 광고의 노출과 클릭이 즉시 중단되며, 다른 광고에는 영향을 주지 않습니다."
             buttonText={ad.status === "PAUSED" ? "재개하기" : "중단하기"}
-            onButtonClick={() => {
-              ad.status === "PAUSED" ? setResumeOpen(true) : setStopOpen(true);
-            }}
+            onButtonClick={
+              ad.status === "PAUSED"
+                ? resumeControl.openModal
+                : stopControl.openModal
+            }
             buttonDisabled={false}
             containerClassName={`px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4 ${
               ad.status === "PAUSED"
@@ -191,8 +172,8 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
 
       {/* 트래킹 활성화 */}
       <Modal
-        isOpen={trackOpen}
-        onClose={() => setTrackOpen(false)}
+        isOpen={trackControl.isOpen}
+        onClose={trackControl.closeModal}
         title="트래킹 활성화"
       >
         <ModalContent
@@ -206,16 +187,20 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
             </>
           }
           buttonText="시작하기"
-          onConfirm={onTrackConfirm}
-          isLoading={isTracking}
+          onConfirm={() =>
+            trackControl.handleConfirm(async () => {
+              /* API 호출 */
+            })
+          }
+          isLoading={trackControl.isLoading}
           variant="primary"
         />
       </Modal>
 
       {/* 트래킹 중단 */}
       <Modal
-        isOpen={trackStopOpen}
-        onClose={() => setTrackStopOpen(false)}
+        isOpen={stopTrackControl.isOpen}
+        onClose={stopTrackControl.closeModal}
         title="트래킹 중단"
       >
         <ModalContent
@@ -223,16 +208,20 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
           title="트래킹을 중단하시겠습니까?"
           description="데이터 수집이 중단되어 분석 리포트에 공백이 생길 수 있습니다."
           buttonText="중단하기"
-          onConfirm={onTrackStopConfirm}
-          isLoading={isTrackStopping}
+          onConfirm={() =>
+            stopTrackControl.handleConfirm(async () => {
+              /* API 호출 */
+            })
+          }
+          isLoading={stopTrackControl.isLoading}
           variant="danger"
         />
       </Modal>
 
       {/* 광고 소재 중단 */}
       <Modal
-        isOpen={stopOpen}
-        onClose={() => setStopOpen(false)}
+        isOpen={stopControl.isOpen}
+        onClose={stopControl.closeModal}
         title="광고 소재 중단"
       >
         <ModalContent
@@ -240,16 +229,20 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
           title="광고 소재를 중단하시겠습니까?"
           description="해당 광고의 노출이 즉시 중단됩니다."
           buttonText="중단하기"
-          onConfirm={onStopConfirm}
-          isLoading={isStopping}
+          onConfirm={() =>
+            stopControl.handleConfirm(() =>
+              updateAdStatus(Number(orgId), Number(projectId), ad.id, "PAUSED"),
+            )
+          }
+          isLoading={stopControl.isLoading}
           variant="danger"
         />
       </Modal>
 
       {/* 광고 소재 재개 */}
       <Modal
-        isOpen={resumeOpen}
-        onClose={() => setResumeOpen(false)}
+        isOpen={resumeControl.isOpen}
+        onClose={resumeControl.closeModal}
         title="광고 소재 재개"
       >
         <ModalContent
@@ -257,8 +250,17 @@ export default function AdDetailContent({ ad }: IAdDetailContentProps) {
           title="광고 소재의 운영을 재개하시겠습니까?"
           description="중단되었던 광고 소재가 다시 플랫폼에 노출되기 시작합니다."
           buttonText="시작하기"
-          onConfirm={onResumeConfirm}
-          isLoading={isResuming}
+          onConfirm={() =>
+            resumeControl.handleConfirm(() =>
+              updateAdStatus(
+                Number(orgId),
+                Number(projectId),
+                ad.id,
+                "ON_GOING",
+              ),
+            )
+          }
+          isLoading={resumeControl.isLoading}
           variant="primary"
         />
       </Modal>
