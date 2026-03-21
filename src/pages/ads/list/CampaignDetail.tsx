@@ -20,7 +20,7 @@ export default function CampaignDetail() {
     orgId: string;
     projectId: string;
   }>();
-  const { data, isLoading, refetch } = useCampaignDetail(Number(orgId));
+  const { data, isLoading, refetch } = useCampaignDetail();
 
   const { ads, isAdLoading, refetchAds } = useAdList(
     orgId ? Number(orgId) : null,
