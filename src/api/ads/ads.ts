@@ -7,6 +7,10 @@ interface IAdListResponse {
   adContentInfoResponses: IAd[];
 }
 
+interface ITrackingUrlResponse {
+  trackingUrl: string;
+}
+
 export const getCampaignList = async (orgId: number): Promise<ICampaign[]> => {
   const { data } = await axiosInstance.get<
     ICommonResponse<{ projects: ICampaign[] }>
@@ -72,13 +76,12 @@ export const createTrackingUrl = async (
   orgId: number,
   adContentId: number,
   landingUrl: string,
-) => {
-  const { data } = await axiosInstance.post(
-    `/api/clicks/${orgId}/${adContentId}/tracking-url`,
-    {
-      landingUrl,
-    },
-  );
+): Promise<ITrackingUrlResponse> => {
+  const { data } = await axiosInstance.post<
+    ICommonResponse<ITrackingUrlResponse>
+  >(`/api/clicks/${orgId}/${adContentId}/tracking-url`, {
+    landingUrl,
+  });
   return data.data;
 };
 
