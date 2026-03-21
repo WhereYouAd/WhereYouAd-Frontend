@@ -28,22 +28,25 @@ export default function MemberRoleSelect({
   onChange,
   disabled = false,
 }: TProps) {
-  const items: TMenuItem[] = [
-    {
-      label: "관리자",
-      onClick: () => onChange("ADMIN"),
-      active: role === "ADMIN",
-    },
-    {
-      label: "멤버",
-      onClick: () => onChange("MEMBER"),
-      active: role === "MEMBER",
-    },
-  ];
+  const items: TMenuItem[] = disabled
+    ? []
+    : [
+        {
+          label: "관리자",
+          onClick: () => onChange("ADMIN"),
+          active: role === "ADMIN",
+        },
+        {
+          label: "멤버",
+          onClick: () => onChange("MEMBER"),
+          active: role === "MEMBER",
+        },
+      ];
   return (
     <DropdownMenu
+      key={disabled ? "disabled" : "enabled"}
       items={items}
-      className={`${disabled ? "pointer-events-none opacity-50" : ""}`}
+      className={disabled ? "pointer-events-none opacity-50" : undefined}
       trigger={(open) => (
         <div
           className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-component-lg px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
