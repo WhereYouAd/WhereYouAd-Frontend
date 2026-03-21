@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 import type { ICampaign } from "@/types/ads/campaign";
 
@@ -19,6 +19,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const { data: campaigns = [], isLoading } = useCoreQuery<ICampaign[]>(
@@ -27,20 +28,20 @@ export default function AdsListPage() {
     { enabled: !!orgId },
   );
 
+  const invalidateCampaigns = () => {
+    queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
+  };
+
   const stopAll = useControlModal({
     successMessage: "전체 캠페인의 모든 광고 노출이 중단되었습니다.",
     errorMessage: "중단 처리에 실패하였습니다.",
-    onSuccess: () => {
-      toast.success("전체 캠페인의 모든 광고 노출이 중단되었습니다.");
-    },
+    onSuccess: invalidateCampaigns,
   });
 
   const resumeAll = useControlModal({
     successMessage: "전체 캠페인의 광고 노출이 재개되었습니다.",
     errorMessage: "재개 처리에 실패하였습니다.",
-    onSuccess: () => {
-      toast.success("전체 캠페인의 광고 노출이 재개되었습니다.");
-    },
+    onSuccess: invalidateCampaigns,
   });
 
   const handleCampaignClick = (id: number) => {

@@ -34,7 +34,11 @@ const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
 export default function OverviewDashboard() {
   const navigate = useNavigate();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
-  const { data: kpis } = useOverviewMetrics();
+  const {
+    data: kpis,
+    isLoading: isKpisLoading,
+    isError: isKpisError,
+  } = useOverviewMetrics();
   const [currentDate] = useState(() =>
     new Date().toLocaleString("ko-KR", {
       year: "numeric",
@@ -76,9 +80,24 @@ export default function OverviewDashboard() {
       />
 
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {(kpis ?? []).map((kpi) => (
-          <StatCard key={kpi.title} {...kpi} />
-        ))}
+        {isKpisError ? (
+          <div className="col-span-4 tablet:col-span-2 flex items-center justify-center py-8 rounded-[24px] bg-white/80 border border-white/40 text-status-red font-body2">
+            지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
+          </div>
+        ) : isKpisLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40 animate-pulse"
+            >
+              <div className="h-4 w-16 rounded bg-bg-surface" />
+              <div className="h-8 w-24 rounded bg-bg-surface" />
+              <div className="h-6 w-14 rounded-full bg-bg-surface" />
+            </div>
+          ))
+        ) : (
+          (kpis ?? []).map((kpi) => <StatCard key={kpi.title} {...kpi} />)
+        )}
       </div>
 
       <div className="grid grid-cols-7 tablet:grid-cols-1 gap-6">
