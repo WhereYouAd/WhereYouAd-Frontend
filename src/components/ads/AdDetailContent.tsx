@@ -161,7 +161,11 @@ export default function AdDetailContent({
                 ? "광고 소재를 다시 켤 수 있어요"
                 : "해당 광고를 중단할 수 있어요"
             }
-            description="선택한 광고의 노출과 클릭이 즉시 중단되며, 다른 광고에는 영향을 주지 않습니다."
+            description={
+              ad.status === "PAUSED"
+                ? "중단되었던 광고 소재가 다시 플랫폼에 노출되며 광고 운영이 재개됩니다."
+                : "선택한 광고의 노출과 클릭이 즉시 중단되며, 다른 광고에는 영향을 주지 않습니다."
+            }
             buttonText={ad.status === "PAUSED" ? "재개하기" : "중단하기"}
             onButtonClick={
               ad.status === "PAUSED"
