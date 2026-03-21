@@ -7,6 +7,8 @@ import type { IStatCardProps } from "@/components/common/card/StatCard";
 import { getOverview } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
+const toRate = (rate: number) => `${(Math.abs(rate) * 100).toFixed(1)}%`;
+
 function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
   return [
     {
@@ -14,7 +16,7 @@ function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
       value: metrics.clicks.toLocaleString(),
       trend: {
         direction: metrics.clickChangeRate >= 0 ? "up" : "down",
-        value: `${Math.abs(metrics.clickChangeRate)}%`,
+        value: toRate(metrics.clickChangeRate),
       },
     },
     {
@@ -22,23 +24,23 @@ function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
       value: metrics.impressions.toLocaleString(),
       trend: {
         direction: metrics.impressionChangeRate >= 0 ? "up" : "down",
-        value: `${Math.abs(metrics.impressionChangeRate)}%`,
+        value: toRate(metrics.impressionChangeRate),
       },
     },
     {
-      title: "전환수",
-      value: metrics.conversion.toLocaleString(),
+      title: "전환율",
+      value: `${(metrics.conversion * 100).toFixed(1)}%`,
       trend: {
         direction: metrics.cvrChangeRate >= 0 ? "up" : "down",
-        value: `${Math.abs(metrics.cvrChangeRate)}%`,
+        value: toRate(metrics.cvrChangeRate),
       },
     },
     {
       title: "ROAS",
-      value: `${metrics.ROAS.toLocaleString()}%`,
+      value: `${(metrics.ROAS * 100).toFixed(1)}%`,
       trend: {
         direction: metrics.ROASChangeRate >= 0 ? "up" : "down",
-        value: `${Math.abs(metrics.ROASChangeRate)}%`,
+        value: toRate(metrics.ROASChangeRate),
       },
     },
   ];
@@ -52,7 +54,7 @@ export function useOverviewMetrics() {
     () => getOverview(orgId!),
     {
       enabled: !!orgId,
-      select: (res) => toKpis(res),
+      select: toKpis,
     },
   );
 }
