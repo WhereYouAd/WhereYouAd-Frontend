@@ -14,8 +14,6 @@ export const useAdList = (orgId: number | null, projectId: number | null) => {
     try {
       setIsAdLoading(true);
       const result = await getAdList(orgId, projectId);
-      console.log("응답: ", result);
-
       setAds(result);
     } catch {
       toast.error("광고 목록을 불러오지 못했습니다.");

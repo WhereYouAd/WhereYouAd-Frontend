@@ -7,9 +7,10 @@ import AdRow from "./AdRow";
 
 interface IAdsListTableProps {
   ads: IAd[];
+  refetchAds: () => void;
 }
 
-export default function AdListTable({ ads }: IAdsListTableProps) {
+export default function AdListTable({ ads, refetchAds }: IAdsListTableProps) {
   const [openAdId, setOpenAdId] = useState<number | null>(null);
 
   const handleToggle = (id: number) => {
@@ -46,7 +47,7 @@ export default function AdListTable({ ads }: IAdsListTableProps) {
 
                 {openAdId === ad.id && (
                   <div className="w-full origin-top animate-fade-in">
-                    <AdDetailContent ad={ad} />
+                    <AdDetailContent ad={ad} refetchAds={refetchAds} />
                   </div>
                 )}
               </div>

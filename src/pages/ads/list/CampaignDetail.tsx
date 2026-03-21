@@ -109,7 +109,7 @@ export default function CampaignDetail() {
                 광고 목록을 불러오는 중입니다...
               </div>
             ) : (
-              <AdListTable ads={ads || []} />
+              <AdListTable ads={ads || []} refetchAds={refetchAds} />
             )}
 
             {/* campaign controlbox */}
