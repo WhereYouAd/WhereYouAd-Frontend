@@ -23,8 +23,8 @@ export default function CampaignDetail() {
   const { data, isLoading, refetch } = useCampaignDetail(Number(orgId));
 
   const { ads, isAdLoading, refetchAds } = useAdList(
-    Number(orgId),
-    Number(projectId),
+    orgId ? Number(orgId) : null,
+    projectId ? Number(projectId) : null,
   );
 
   const stopControl = useControlModal({
