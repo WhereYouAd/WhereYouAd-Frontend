@@ -67,7 +67,7 @@ export default function InviteMemberModal({
       size="lg"
       padding="none"
       title="팀원 초대하기"
-      className="w-full max-w-[760px] overflow-hidden"
+      className="w-full max-w-190 overflow-hidden"
     >
       <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6">
         <div className="flex justify-between items-center px-8 py-6 pb-3 shrink-0">
@@ -98,7 +98,7 @@ export default function InviteMemberModal({
               size="big"
               onClick={handleInvite}
               disabled={isInviteDisabled}
-              className="min-w-[88px]"
+              className="min-w-22"
             >
               초대
             </Button>
