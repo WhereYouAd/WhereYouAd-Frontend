@@ -8,3 +8,11 @@ export interface IMetricsResponse {
   ROAS: number;
   ROASChangeRate: number;
 }
+
+export interface IBudgetsResponse {
+  providerType: string;
+  usagePercentage: number;
+  totalBudget: number;
+  totalSpend: number;
+  remainingBudget: number;
+}
