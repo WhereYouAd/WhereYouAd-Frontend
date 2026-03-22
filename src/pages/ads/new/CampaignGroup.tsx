@@ -6,9 +6,9 @@ import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
-import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/wordmark/kakao-wordmark.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
+import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 interface ICampaignOption {
   id: number | string;
@@ -84,8 +84,11 @@ export default function CampaignGroup() {
 
         <div className="flex flex-col gap-10">
           {/* Google */}
-          <div className="flex flex-col gap-2">
-            <GoogleLogo className="h-7 w-auto self-start" />
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 px-1">
+              <GoogleIcon className="w-6 h-6" />
+              <span className="font-heading4 text-text-main">Google</span>
+            </div>
             <DropdownSelect<ICampaignOption>
               placeholder="캠페인 선택"
               options={MOCK_CAMPAIGNS}
@@ -97,8 +100,11 @@ export default function CampaignGroup() {
           </div>
 
           {/* NAVER */}
-          <div className="flex flex-col gap-2">
-            <NaverLogo className="h-4 w-auto self-start" />
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 px-1">
+              <NaverIcon className="w-6 h-6" />
+              <span className="font-heading4 text-text-main">NAVER</span>
+            </div>
             <DropdownSelect<ICampaignOption>
               placeholder="캠페인 선택"
               options={MOCK_CAMPAIGNS}
@@ -110,8 +116,11 @@ export default function CampaignGroup() {
           </div>
 
           {/* Kakao */}
-          <div className="flex flex-col gap-2">
-            <KakaoLogo className="h-6 w-auto self-start" />
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 px-1">
+              <KakaoIcon className="w-6 h-6" />
+              <span className="font-heading4 text-text-main">Kakao</span>
+            </div>
             <DropdownSelect<ICampaignOption>
               placeholder="캠페인 선택"
               options={MOCK_CAMPAIGNS}
