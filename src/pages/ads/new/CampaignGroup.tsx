@@ -47,9 +47,9 @@ export default function CampaignGroup() {
 
         {/* 캠페인 기본 정보 */}
         <Card className="flex flex-col gap-8 p-10 shadow-sm bg-white">
-          <h3 className="font-heading4 text-text-main border-b border-bg-disabled pb-2">
-            캠페인 기본 정보
-          </h3>
+          <div className="border-l-3 border-text-auth-sub pl-4 py-1">
+            <h3 className="font-heading4 text-text-main">캠페인 기본 정보</h3>
+          </div>
           <div className="flex flex-col gap-10 w-full">
             {/* 캠페인명 */}
             <div className="flex flex-col gap-2">
@@ -89,9 +89,11 @@ export default function CampaignGroup() {
 
         {/* 플랫폼별 캠페인 연결 */}
         <Card className="flex flex-col gap-8 p-10 shadow-sm bg-white">
-          <h3 className="font-heading4 text-text-main border-b border-bg-disabled pb-2">
-            플랫폼별 캠페인 연결
-          </h3>
+          <div className="border-l-3 border-text-auth-sub pl-4 py-1">
+            <h3 className="font-heading4 text-text-main">
+              플랫폼별 캠페인 연결
+            </h3>
+          </div>
           <div className="flex flex-col gap-10">
             {/* Google */}
             <div className="flex flex-col gap-3">
