@@ -89,6 +89,7 @@ export default function OverviewDashboard() {
             지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
           </div>
         ) : isKpisLoading ? (
+          // TODO: 스켈레톤 UI 통일 작업 시 개선
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
@@ -145,6 +146,7 @@ export default function OverviewDashboard() {
           {budget ? (
             <BudgetGaugeChart {...budget} />
           ) : (
+            // TODO: 스켈레톤 UI 통일 작업 시 개선
             <div className="flex-1 animate-pulse rounded-2xl bg-bg-surface" />
           )}
         </Card>
