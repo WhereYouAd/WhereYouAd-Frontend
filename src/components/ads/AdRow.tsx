@@ -13,7 +13,7 @@ interface IAdRowProps {
   name: string;
   runStatus: "running" | "stopped";
   runStatusText: string;
-  platform: TPlatform[];
+  platform: TPlatform;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -58,14 +58,9 @@ export default function AdRow({
 
       {/* platform */}
       <div className="w-[10%] shrink-0 flex justify-end mr-5">
-        {platform.map((p, idx) => (
-          <div
-            key={idx}
-            className="flex h-8 w-8 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0"
-          >
-            {LogoMap[p]}
-          </div>
-        ))}
+        <div className="flex h-8 w-8 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0">
+          {LogoMap[platform]}
+        </div>
       </div>
 
       {/* chevron */}

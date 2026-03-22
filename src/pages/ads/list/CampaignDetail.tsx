@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 
+import { useAdList } from "@/hooks/ads/useAdList";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
 
@@ -21,11 +22,17 @@ export default function CampaignDetail() {
   }>();
   const { data, isLoading, refetch } = useCampaignDetail();
 
+  const { ads, isAdLoading, refetchAds } = useAdList(
+    orgId ? Number(orgId) : null,
+    projectId ? Number(projectId) : null,
+  );
+
   const stopControl = useControlModal({
     successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
     errorMessage: "중단 처리에 실패하였습니다.",
     onSuccess: () => {
       refetch();
+      refetchAds();
     },
   });
 
@@ -34,6 +41,7 @@ export default function CampaignDetail() {
     errorMessage: "재개 처리에 실패하였습니다.",
     onSuccess: () => {
       refetch();
+      refetchAds();
     },
   });
 
@@ -96,7 +104,13 @@ export default function CampaignDetail() {
 
           <div className="w-full">
             {/* ads list */}
-            <AdListTable ads={data.ads || []} />
+            {isAdLoading ? (
+              <div className="py-20 text-center font-body2 text-text-placeholder">
+                광고 목록을 불러오는 중입니다...
+              </div>
+            ) : (
+              <AdListTable ads={ads || []} refetchAds={refetchAds} />
+            )}
 
             {/* campaign controlbox */}
             <div className="mt-10">
