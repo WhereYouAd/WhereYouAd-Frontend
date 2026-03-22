@@ -38,10 +38,6 @@ export type TUpdateWorkspaceRequest = {
   description: string;
   logoUrl: string | null;
 };
-export type TApiResult<T> = {
-  status: string;
-  data: T;
-};
 
 export type TUploadImageResponse = {
   url: string;

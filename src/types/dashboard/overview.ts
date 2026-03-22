@@ -1,14 +1,10 @@
-interface ITrend {
-  direction: "up" | "down";
-  value: string;
-}
-
-export interface IKpiMetric {
-  title: string;
-  value: string | number;
-  trend?: ITrend;
-}
-
-export interface IOverviewData {
-  kpis: IKpiMetric[];
+export interface IMetricsResponse {
+  clicks: number;
+  clickChangeRate: number;
+  impressions: number;
+  impressionChangeRate: number;
+  conversion: number;
+  cvrChangeRate: number;
+  ROAS: number;
+  ROASChangeRate: number;
 }
