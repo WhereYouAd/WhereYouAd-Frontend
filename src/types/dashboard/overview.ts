@@ -13,6 +13,15 @@ export interface IMetricsResponse {
   ROASChangeRate: number;
 }
 
+// 예산 집계 응답
+export interface IBudgetsResponse {
+  providerType: string;
+  usagePercentage: number;
+  totalBudget: number;
+  totalSpend: number;
+  remainingBudget: number;
+}
+
 // ROAS 순위 조회 요청 파라미터
 export interface IRoasRankingsParams {
   startDate?: string;
@@ -34,4 +43,12 @@ export interface IRoasRanking {
   diffRate: number | null;
   revenue: number;
   adSpend: number;
+}
+
+// 플랫폼별 ROAS 순위 + 지표(CTR/CVR) 통합 항목
+export interface IPlatformRankingItem extends IRoasRanking {
+  clickRate?: number; // CTR (%)
+  ctrDelta?: number; // CTR 전기 대비 증감 (%)
+  conversionRate?: number; // CVR (%)
+  conversionDelta?: number; // CVR 전기 대비 증감 (%)
 }
