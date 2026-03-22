@@ -1,43 +1,29 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 
-import type { ICampaignDetail } from "@/types/ads/campaign";
+import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getCampaignDetail } from "@/api/ads/ads";
 
-export const useCampaignDetail = (orgId: number | null) => {
-  const { projectId } = useParams<{ projectId: string }>();
+export const useCampaignDetail = () => {
+  const { orgId, projectId } = useParams<{
+    orgId: string;
+    projectId: string;
+  }>();
 
-  const [data, setData] = useState<ICampaignDetail | null>(null);
+  // URL 파라미터를 숫자로 변환
+  const parsedOrgId = Number(orgId);
+  const parsedProjectId = Number(projectId);
 
-  const [isLoading, setIsLoading] = useState(true);
+  // 유효한 ID일 때만 요청
+  const isValid =
+    Number.isFinite(parsedOrgId) &&
+    parsedOrgId > 0 &&
+    Number.isFinite(parsedProjectId) &&
+    parsedProjectId > 0;
 
-  const fetchDetail = async () => {
-    if (!orgId || !projectId) {
-      console.log("데이터 부족");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const detailData = await getCampaignDetail(orgId, Number(projectId));
-      setData(detailData);
-    } catch {
-      toast.error(" 캠페인 상세 정보를 불러오지 못했습니다.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDetail();
-  }, [orgId, projectId]);
-
-  return {
-    data,
-    isLoading,
-    refetch: fetchDetail,
-  };
+  return useCoreQuery(
+    ["campaignDetail", parsedOrgId, parsedProjectId],
+    () => getCampaignDetail(parsedOrgId, parsedProjectId),
+    { enabled: isValid },
+  );
 };

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 import type { ICampaign } from "@/types/ads/campaign";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useCoreQuery } from "@/hooks/customQuery";
 
 import CampaignTable from "@/components/ads/CampaignTable";
 import Card from "@/components/common/card/Card";
@@ -14,71 +14,38 @@ import ModalContent from "@/components/common/modal/ModalContent";
 import PageHeader from "@/components/common/PageHeader";
 
 import { getCampaignList, updateAllCampaignStatus } from "@/api/ads/ads";
-import { getMyWorkspaces } from "@/api/workspace/org";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function AdsListPage() {
-  const [campaigns, setCampaigns] = useState<ICampaign[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentOrgId, setCurrentOrgId] = useState<number | null>(null); //orgId
-
-  useEffect(() => {
-    const initData = async () => {
-      try {
-        setIsLoading(true);
-        const workspaces = await getMyWorkspaces();
-
-        if (workspaces && workspaces.length > 0) {
-          // 워크스페이스 ID 임시 지정 -> 추후 선택한 워크스페이스 api 연결 예정
-          const TemporaryOrg = workspaces[0];
-          const orgId = TemporaryOrg.orgId;
-
-          setCurrentOrgId(orgId);
-
-          // 캠페인 목록 API 호출
-          const campaignData = await getCampaignList(orgId);
-
-          setCampaigns(campaignData);
-        } else {
-          toast.error("조직이 없습니다.");
-        }
-      } catch {
-        toast.error("데이터를 불러오는 중 오류가 발생하였습니다.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    initData();
-  }, []);
-
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+
+  const { data: campaigns = [], isLoading } = useCoreQuery<ICampaign[]>(
+    ["campaigns", orgId],
+    () => getCampaignList(orgId!),
+    { enabled: !!orgId },
+  );
+
+  const invalidateCampaigns = () => {
+    queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
+  };
 
   const stopAll = useControlModal({
     successMessage: "전체 캠페인의 모든 광고 노출이 중단되었습니다.",
     errorMessage: "중단 처리에 실패하였습니다.",
-    onSuccess: () => {
-      setCampaigns((prev) =>
-        prev.map((c) =>
-          c.status === "ON_GOING" ? { ...c, status: "PAUSED" } : c,
-        ),
-      );
-    },
+    onSuccess: invalidateCampaigns,
   });
 
   const resumeAll = useControlModal({
     successMessage: "전체 캠페인의 광고 노출이 재개되었습니다.",
     errorMessage: "재개 처리에 실패하였습니다.",
-    onSuccess: () => {
-      setCampaigns((prev) =>
-        prev.map((c) =>
-          c.status === "PAUSED" ? { ...c, status: "ON_GOING" } : c,
-        ),
-      );
-    },
+    onSuccess: invalidateCampaigns,
   });
 
   const handleCampaignClick = (id: number) => {
-    navigate(`/ads/${currentOrgId}/${id}`);
+    navigate(`/ads/${orgId}/${id}`);
   };
 
   const handleCampaignGroupClick = () => {
@@ -86,7 +53,6 @@ export default function AdsListPage() {
   };
 
   const hasCampaigns = campaigns.length > 0;
-
   const hasActiveCampaign = campaigns.some((c) => c.status === "ON_GOING");
 
   if (isLoading) {
@@ -169,7 +135,7 @@ export default function AdsListPage() {
           buttonText="중단하기"
           onConfirm={() =>
             stopAll.handleConfirm(() =>
-              updateAllCampaignStatus(currentOrgId!, "PAUSED"),
+              updateAllCampaignStatus(orgId!, "PAUSED"),
             )
           }
           isLoading={stopAll.isLoading}
@@ -190,7 +156,7 @@ export default function AdsListPage() {
           buttonText="시작하기"
           onConfirm={() =>
             resumeAll.handleConfirm(() =>
-              updateAllCampaignStatus(currentOrgId!, "ON_GOING"),
+              updateAllCampaignStatus(orgId!, "ON_GOING"),
             )
           }
           isLoading={resumeAll.isLoading}
