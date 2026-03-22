@@ -35,3 +35,15 @@ export interface ICampaignDetail extends ICampaign {
   createdAt: string;
   ads: IAd[];
 }
+
+export interface IPlatformCampaign {
+  adCampaignId: number;
+  name: string;
+  description: string;
+}
+
+export interface ICreateCampaignGroupRequest {
+  name: string;
+  description: string;
+  campaignIds: number[];
+}
