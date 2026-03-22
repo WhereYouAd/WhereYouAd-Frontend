@@ -42,7 +42,7 @@ export default function CampaignGroup() {
       <div className="flex flex-col gap-8 w-full max-w-4xl">
         <PageHeader
           title="캠페인 그룹 정보 설정"
-          description="각 플랫폼에서 불러온 캠페인을 선택해 하나의 통합 캠페인으로 묶습니다."
+          description="각 플랫폼의 동일한 캠페인들을 그룹으로 묶어, 플랫폼 경계 없이 하나의 통합 캠페인으로 관리하세요."
         />
 
         {/* 캠페인 기본 정보 */}
@@ -99,7 +99,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <GoogleIcon className="w-6 h-6" />
-                <span className="font-heading4 text-text-main">Google</span>
+                <span className="font-body1 text-text-main">Google</span>
               </div>
               <DropdownSelect<ICampaignOption>
                 placeholder="캠페인 선택"
@@ -115,7 +115,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <NaverIcon className="w-6 h-6" />
-                <span className="font-heading4 text-text-main">NAVER</span>
+                <span className="font-body1 text-text-main">NAVER</span>
               </div>
               <DropdownSelect<ICampaignOption>
                 placeholder="캠페인 선택"
@@ -131,7 +131,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <KakaoIcon className="w-6 h-6" />
-                <span className="font-heading4 text-text-main">Kakao</span>
+                <span className="font-body1 text-text-main">Kakao</span>
               </div>
               <DropdownSelect<ICampaignOption>
                 placeholder="캠페인 선택"
