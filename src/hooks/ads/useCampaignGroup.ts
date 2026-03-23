@@ -7,7 +7,6 @@ import type { IPlatformCampaign } from "@/types/ads/campaign";
 import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-// '선택 안 함' 옵션 정의 (ID를 -1로 설정)
 const NONE_OPTION: IPlatformCampaign = {
   adCampaignId: -1,
   name: "선택 안 함",
