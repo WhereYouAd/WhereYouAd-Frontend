@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
 
+import type { TPlatform } from "@/types/ads/campaign";
+
 import { useAdList } from "@/hooks/ads/useAdList";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
@@ -97,7 +99,9 @@ export default function CampaignDetail() {
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
-              platforms={["kakao", "google", "naver"]}
+              platforms={data.providers.map(
+                (p) => p.toLowerCase() as TPlatform,
+              )}
               className="flex-1 min-w-[320px] w-full"
             />
           </div>
