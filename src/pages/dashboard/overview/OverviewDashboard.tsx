@@ -39,37 +39,39 @@ export default function OverviewDashboard() {
     data: kpis,
     isLoading: isKpisLoading,
     isError: isKpisError,
+    dataUpdatedAt,
   } = useOverviewMetrics();
   const { data: budget } = useOverviewBudget();
   const { data: roasRankingsData } = useOverviewRoasRankings();
-  const [currentDate] = useState(() =>
-    new Date().toLocaleString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
-  );
+
+  const currentDate = dataUpdatedAt
+    ? new Date(dataUpdatedAt).toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
 
   // 예산 상태 계산 - 카드 헤더 배지
-  const warningThreshold = budget?.warningThreshold ?? 50;
-  const dangerThreshold = budget?.dangerThreshold ?? 75;
   const budgetPct =
     budget && budget.totalBudget > 0
       ? Math.round((budget.spent / budget.totalBudget) * 100)
       : 0;
-  const budgetStatus = getBudgetStatus(
-    budgetPct,
-    warningThreshold,
-    dangerThreshold,
-  );
+  const budgetStatus = budget
+    ? getBudgetStatus(
+        budgetPct,
+        budget.warningThreshold,
+        budget.dangerThreshold,
+      )
+    : "안정";
 
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
       <PageHeader
         title="통합 대시보드"
-        description={`데이터 기준 · ${currentDate}`}
+        description={currentDate ? `데이터 기준 · ${currentDate}` : undefined}
         actions={
           <button
             type="button"
