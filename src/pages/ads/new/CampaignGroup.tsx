@@ -5,10 +5,13 @@ import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
+import CheckIcon from "@/assets/icon/common/check.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
@@ -29,6 +32,9 @@ export default function CampaignGroup() {
     naverCampaigns,
     kakaoCampaigns,
     isFormValid,
+    isSuccessModalOpen,
+    handleCloseSuccessModal,
+    handleComplete,
   } = useCampaignGroup();
 
   return (
@@ -144,11 +150,26 @@ export default function CampaignGroup() {
             size="big"
             className="w-full max-w-40 py-4 font-bold"
             disabled={!isFormValid}
+            onClick={handleComplete}
           >
             완료
           </Button>
         </div>
       </div>
+      <Modal
+        isOpen={isSuccessModalOpen}
+        onClose={handleCloseSuccessModal}
+        size="md"
+      >
+        <ModalContent
+          // icon={<CheckIcon className="w-8 h-8 text-status-success" />}
+          title="캠페인 생성 완료"
+          description="캠페인 그룹이 성공적으로 생성되었습니다."
+          buttonText="확인"
+          onConfirm={handleCloseSuccessModal}
+          variant="primary"
+        />
+      </Modal>
     </section>
   );
 }

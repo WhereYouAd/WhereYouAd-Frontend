@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type { IPlatformCampaign } from "@/types/ads/campaign";
 
-import { getPlatformCampaigns } from "@/api/ads/ads";
+import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export const useCampaignGroup = () => {
+  const navigate = useNavigate();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const [name, setName] = useState("");
@@ -49,6 +51,39 @@ export const useCampaignGroup = () => {
       naverSelected !== null ||
       kakaoSelected !== null);
 
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  const { mutate: createGroup, isPending: isCreating } = useMutation({
+    mutationFn: () => {
+      const campaignIds: number[] = [
+        googleSelected?.adCampaignId,
+        naverSelected?.adCampaignId,
+        kakaoSelected?.adCampaignId,
+      ].filter((id): id is number => !!id);
+
+      return createCampaignGroup(orgId!, {
+        name,
+        description,
+        campaignIds,
+      });
+    },
+    onSuccess: () => {
+      setIsSuccessModalOpen(true);
+    },
+    onError: () => {
+      alert("캠페인 그룹 생성에 실패했습니다.");
+    },
+  });
+  const handleComplete = () => {
+    if (!isFormValid) return;
+    createGroup();
+  };
+
+  const handleCloseSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    navigate("/ads");
+  };
+
   return {
     name,
     setName,
@@ -64,5 +99,9 @@ export const useCampaignGroup = () => {
     naverCampaigns,
     kakaoCampaigns,
     isFormValid,
+    isCreating,
+    handleComplete,
+    isSuccessModalOpen,
+    handleCloseSuccessModal,
   };
 };
