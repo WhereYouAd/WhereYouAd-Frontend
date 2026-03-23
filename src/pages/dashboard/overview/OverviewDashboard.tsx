@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { printAsPdf } from "@/utils/download";
 
+import { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 
 import Badge from "@/components/common/badge/Badge";
@@ -17,7 +18,6 @@ import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
-import { budgetGaugeChartMock } from "@/components/dashboard/charts/budgetGaugeChart.mock";
 import TrafficChart, {
   TrafficChartDownload,
 } from "@/components/dashboard/charts/TrafficChart";
@@ -39,6 +39,7 @@ export default function OverviewDashboard() {
     isLoading: isKpisLoading,
     isError: isKpisError,
   } = useOverviewMetrics();
+  const { data: budget } = useOverviewBudget();
   const [currentDate] = useState(() =>
     new Date().toLocaleString("ko-KR", {
       year: "numeric",
@@ -49,10 +50,13 @@ export default function OverviewDashboard() {
     }),
   );
 
-  const { totalBudget, spent, warningThreshold, dangerThreshold } =
-    budgetGaugeChartMock;
+  // 예산 상태 계산 - 카드 헤더 배지
+  const warningThreshold = budget?.warningThreshold ?? 50;
+  const dangerThreshold = budget?.dangerThreshold ?? 75;
   const budgetPct =
-    totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+    budget && budget.totalBudget > 0
+      ? Math.round((budget.spent / budget.totalBudget) * 100)
+      : 0;
   const budgetStatus = getBudgetStatus(
     budgetPct,
     warningThreshold,
@@ -85,6 +89,7 @@ export default function OverviewDashboard() {
             지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
           </div>
         ) : isKpisLoading ? (
+          // TODO: 스켈레톤 UI 통일 작업 시 개선
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
@@ -138,7 +143,12 @@ export default function OverviewDashboard() {
             </Badge>
           }
         >
-          <BudgetGaugeChart {...budgetGaugeChartMock} />
+          {budget ? (
+            <BudgetGaugeChart {...budget} />
+          ) : (
+            // TODO: 스켈레톤 UI 통일 작업 시 개선
+            <div className="flex-1 animate-pulse rounded-2xl bg-bg-surface" />
+          )}
         </Card>
       </div>
 

@@ -1,5 +1,8 @@
 import type { ICommonResponse } from "@/types/common/common";
-import type { IMetricsResponse } from "@/types/dashboard/overview";
+import type {
+  IBudgetsResponse,
+  IMetricsResponse,
+} from "@/types/dashboard/overview";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 
@@ -13,6 +16,18 @@ export const getOverview = async (
   const { data } = await axiosInstance.get<ICommonResponse<IMetricsResponse>>(
     `/api/dashboard/${orgId}/metrics`,
     { params: providerType ? { providerType } : undefined },
+  );
+  return data.data;
+};
+
+// 대시보드 - 예산 집계 API
+export const getBudget = async (
+  orgId: number,
+  providerType?: TProviderType,
+): Promise<IBudgetsResponse> => {
+  const { data } = await axiosInstance.get<ICommonResponse<IBudgetsResponse>>(
+    `/api/dashboard/budgets`,
+    { params: { orgId, ...(providerType ? { providerType } : {}) } },
   );
   return data.data;
 };
