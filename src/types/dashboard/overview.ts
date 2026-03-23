@@ -44,3 +44,11 @@ export interface IRoasRanking {
   revenue: number;
   adSpend: number;
 }
+
+// 플랫폼별 ROAS 순위 + 지표(CTR/CVR) 통합 항목
+export interface IPlatformRankingItem extends IRoasRanking {
+  clickRate?: number; // CTR (%)
+  ctrDelta?: number; // CTR 전기 대비 증감 (%)
+  conversionRate?: number; // CVR (%)
+  conversionDelta?: number; // CVR 전기 대비 증감 (%)
+}

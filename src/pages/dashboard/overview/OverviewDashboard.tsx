@@ -6,6 +6,7 @@ import { printAsPdf } from "@/utils/download";
 
 import { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
+import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
@@ -40,6 +41,7 @@ export default function OverviewDashboard() {
     isError: isKpisError,
   } = useOverviewMetrics();
   const { data: budget } = useOverviewBudget();
+  const { data: roasRankingsData } = useOverviewRoasRankings();
   const [currentDate] = useState(() =>
     new Date().toLocaleString("ko-KR", {
       year: "numeric",
@@ -176,7 +178,7 @@ export default function OverviewDashboard() {
           </div>
         }
       >
-        <PlatformRoasTable />
+        <PlatformRoasTable rankings={roasRankingsData ?? []} />
       </Card>
 
       <Drawer
