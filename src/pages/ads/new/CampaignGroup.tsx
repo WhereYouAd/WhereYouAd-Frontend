@@ -34,6 +34,7 @@ export default function CampaignGroup() {
     isFormValid,
     isSuccessModalOpen,
     handleCloseSuccessModal,
+    isCreating,
     handleComplete,
   } = useCampaignGroup();
 
@@ -149,10 +150,10 @@ export default function CampaignGroup() {
           <Button
             size="big"
             className="w-full max-w-40 py-4 font-bold"
-            disabled={!isFormValid}
+            disabled={!isFormValid || isCreating}
             onClick={handleComplete}
           >
-            완료
+            {isCreating ? "생성 중..." : "완료"}
           </Button>
         </div>
       </div>

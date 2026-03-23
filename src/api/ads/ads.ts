@@ -117,7 +117,7 @@ export const getPlatformCampaigns = async (
 ): Promise<IPlatformCampaign[]> => {
   const { data } = await axiosInstance.get<
     ICommonResponse<IPlatformCampaignResponse>
-  >(`api/advertisement/${orgId}/campaigns`, { params: { providerType } });
+  >(`/api/advertisement/${orgId}/campaigns`, { params: { providerType } });
   return data.data.adCampaigns;
 };
 
