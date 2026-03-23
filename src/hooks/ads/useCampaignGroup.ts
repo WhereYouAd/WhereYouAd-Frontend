@@ -7,6 +7,13 @@ import type { IPlatformCampaign } from "@/types/ads/campaign";
 import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
+// '선택 안 함' 옵션 정의 (ID를 -1로 설정)
+const NONE_OPTION: IPlatformCampaign = {
+  adCampaignId: -1,
+  name: "선택 안 함",
+  description: "",
+};
+
 export const useCampaignGroup = () => {
   const navigate = useNavigate();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
@@ -23,33 +30,35 @@ export const useCampaignGroup = () => {
     null,
   );
 
-  // Google Campaign
-  const { data: googleCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: googleData = [] } = useQuery<IPlatformCampaign[]>({
     queryKey: ["platformCampaigns", orgId, "GOOGLE"],
     queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
     enabled: !!orgId,
   });
 
-  // Naver Campaing
-  const { data: naverCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: naverData = [] } = useQuery<IPlatformCampaign[]>({
     queryKey: ["platformCampaigns", orgId, "NAVER"],
     queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
     enabled: !!orgId,
   });
 
-  // Kakao Campaign
-  const { data: kakaoCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: kakaoData = [] } = useQuery<IPlatformCampaign[]>({
     queryKey: ["platformCampaigns", orgId, "KAKAO"],
     queryFn: () => getPlatformCampaigns(orgId!, "KAKAO"),
     enabled: !!orgId,
   });
 
-  // 유효성 검사 (캠페인명, 최소 하나의 플랫폼 캠페인)
+  // '선택 안 함'이 포함된 리스트 생성
+  const googleCampaigns = [NONE_OPTION, ...googleData];
+  const naverCampaigns = [NONE_OPTION, ...naverData];
+  const kakaoCampaigns = [NONE_OPTION, ...kakaoData];
+
+  // 유효성 검사 (실제 캠페인이 하나라도 선택되었는지 확인)
   const isFormValid =
     name.trim() !== "" &&
-    (googleSelected !== null ||
-      naverSelected !== null ||
-      kakaoSelected !== null);
+    [googleSelected, naverSelected, kakaoSelected].some(
+      (sel) => sel !== null && sel.adCampaignId !== -1,
+    );
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
@@ -59,7 +68,9 @@ export const useCampaignGroup = () => {
         googleSelected?.adCampaignId,
         naverSelected?.adCampaignId,
         kakaoSelected?.adCampaignId,
-      ].filter((id): id is number => !!id);
+      ].filter(
+        (id): id is number => id !== undefined && id !== null && id !== -1,
+      );
 
       return createCampaignGroup(orgId!, {
         name,
@@ -74,6 +85,7 @@ export const useCampaignGroup = () => {
       alert("캠페인 그룹 생성에 실패했습니다.");
     },
   });
+
   const handleComplete = () => {
     if (!isFormValid) return;
     createGroup();
