@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { IPlatformCampaign } from "@/types/ads/campaign";
 
@@ -15,6 +15,7 @@ const NONE_OPTION: IPlatformCampaign = {
 
 export const useCampaignGroup = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const [name, setName] = useState("");
@@ -78,6 +79,7 @@ export const useCampaignGroup = () => {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
       setIsSuccessModalOpen(true);
     },
     onError: () => {
