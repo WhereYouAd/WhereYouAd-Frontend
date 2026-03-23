@@ -194,7 +194,7 @@ export default function WorkspacePage() {
         <div className="flex-1">
           <Input
             aria-label="조직 검색"
-            placeholder="조직을 검색하세요"
+            placeholder="워크스페이스 검색하기"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             rightElement={<SearchIcon className="w-6 h-6 fill-chart-3" />}
@@ -267,7 +267,7 @@ export default function WorkspacePage() {
 
             <Input
               label="워크스페이스 이름"
-              placeholder="조직의 이름을 입력하세요."
+              placeholder="사용할 워크스페이스의 이름을 입력하세요."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               disabled={isCreating}
@@ -275,7 +275,7 @@ export default function WorkspacePage() {
             <TextareaField
               id="workspace-desc"
               label="워크스페이스 설명"
-              placeholder="조직에 대한 간단한 설명을 입력하세요"
+              placeholder="워크스페이스에 대한 간단한 설명을 입력하세요"
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
               disabled={isCreating}
