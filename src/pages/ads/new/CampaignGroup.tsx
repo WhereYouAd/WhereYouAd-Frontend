@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
 import type { IPlatformCampaign } from "@/types/ads/campaign";
+
+import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -10,45 +9,26 @@ import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
-import { getPlatformCampaigns } from "@/api/ads/ads";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function CampaignGroup() {
-  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  const [googleSelected, setGoogleSelected] =
-    useState<IPlatformCampaign | null>(null);
-  const [naverSelected, setNaverSelected] = useState<IPlatformCampaign | null>(
-    null,
-  );
-  const [kakaoSelected, setKakaoSelected] = useState<IPlatformCampaign | null>(
-    null,
-  );
-
-  // Google Campaign
-  const { data: googleCampaigns = [] } = useQuery<IPlatformCampaign[]>({
-    queryKey: ["platformCampaigns", orgId, "GOOGLE"],
-    queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
-    enabled: !!orgId,
-  });
-  // Naver Campaing
-  const { data: naverCampaigns = [] } = useQuery<IPlatformCampaign[]>({
-    queryKey: ["platformCampaigns", orgId, "NAVER"],
-    queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
-    enabled: !!orgId,
-  });
-  // Kakao Campaign
-  const { data: kakaoCampaigns = [] } = useQuery<IPlatformCampaign[]>({
-    queryKey: ["platformCampaigns", orgId, "KAKAO"],
-    queryFn: () => getPlatformCampaigns(orgId!, "KAKAO"),
-    enabled: !!orgId,
-  });
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    googleSelected,
+    setGoogleSelected,
+    naverSelected,
+    setNaverSelected,
+    kakaoSelected,
+    setKakaoSelected,
+    googleCampaigns,
+    naverCampaigns,
+    kakaoCampaigns,
+  } = useCampaignGroup();
 
   return (
     <section className="flex flex-col items-center w-full pt-0 pb-20 min-h-screen bg-bg-surface/30">
