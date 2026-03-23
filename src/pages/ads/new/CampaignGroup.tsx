@@ -51,7 +51,7 @@ export default function CampaignGroup() {
   });
 
   return (
-    <section className="flex flex-col items-center w-full pt-0 min-h-screen bg-bg-surface/30">
+    <section className="flex flex-col items-center w-full pt-0 pb-20 min-h-screen bg-bg-surface/30">
       <div className="flex flex-col gap-8 w-full max-w-4xl">
         <PageHeader
           title="캠페인 그룹 정보 설정"
