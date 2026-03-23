@@ -7,8 +7,10 @@ import type { IStatCardProps } from "@/components/common/card/StatCard";
 import { getOverview } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
+// 변화율 퍼센트 문자열로 변환
 const toRate = (rate: number) => `${(Math.abs(rate) * 100).toFixed(1)}%`;
 
+// API 응답 KPI 카드 형식으로 변환
 function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
   return [
     {
@@ -46,6 +48,7 @@ function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
   ];
 }
 
+// 통합 지표 조회
 export function useOverviewMetrics() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
