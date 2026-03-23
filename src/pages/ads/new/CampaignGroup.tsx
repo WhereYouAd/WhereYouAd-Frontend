@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import type { IPlatformCampaign } from "@/types/ads/campaign";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -7,35 +10,45 @@ import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
+import { getPlatformCampaigns } from "@/api/ads/ads";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-
-interface ICampaignOption {
-  id: number | string;
-  name: string;
-}
-const MOCK_CAMPAIGNS: ICampaignOption[] = [
-  { id: "none", name: "선택 안함" },
-  { id: 1, name: "2026 새해맞이 병오년 캠페인" },
-  { id: 2, name: "2025 연말 기념 캠페인" },
-  { id: 3, name: "가을 프로모션 캠페인" },
-  { id: 4, name: "벚꽃 프로모션 캠페인" },
-];
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function CampaignGroup() {
+  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  const [googleSelected, setGoogleSelected] = useState<ICampaignOption | null>(
+  const [googleSelected, setGoogleSelected] =
+    useState<IPlatformCampaign | null>(null);
+  const [naverSelected, setNaverSelected] = useState<IPlatformCampaign | null>(
     null,
   );
-  const [naverSelected, setNaverSelected] = useState<ICampaignOption | null>(
+  const [kakaoSelected, setKakaoSelected] = useState<IPlatformCampaign | null>(
     null,
   );
-  const [kakaoSelected, setKakaoSelected] = useState<ICampaignOption | null>(
-    null,
-  );
+
+  // Google Campaign
+  const { data: googleCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+    queryKey: ["platformCampaigns", orgId, "GOOGLE"],
+    queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
+    enabled: !!orgId,
+  });
+  // Naver Campaing
+  const { data: naverCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+    queryKey: ["platformCampaigns", orgId, "NAVER"],
+    queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
+    enabled: !!orgId,
+  });
+  // Kakao Campaign
+  const { data: kakaoCampaigns = [] } = useQuery<IPlatformCampaign[]>({
+    queryKey: ["platformCampaigns", orgId, "KAKAO"],
+    queryFn: () => getPlatformCampaigns(orgId!, "KAKAO"),
+    enabled: !!orgId,
+  });
 
   return (
     <section className="flex flex-col items-center w-full pt-0 min-h-screen bg-bg-surface/30">
@@ -101,12 +114,12 @@ export default function CampaignGroup() {
                 <GoogleIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">Google</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={googleCampaigns}
                 selectedOption={googleSelected}
                 onSelect={setGoogleSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
@@ -117,12 +130,12 @@ export default function CampaignGroup() {
                 <NaverIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">NAVER</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={naverCampaigns}
                 selectedOption={naverSelected}
                 onSelect={setNaverSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
@@ -133,12 +146,12 @@ export default function CampaignGroup() {
                 <KakaoIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">Kakao</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={kakaoCampaigns}
                 selectedOption={kakaoSelected}
                 onSelect={setKakaoSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
