@@ -13,6 +13,15 @@ export interface IMetricsResponse {
   ROASChangeRate: number;
 }
 
+// 예산 집계 응답
+export interface IBudgetsResponse {
+  providerType: string;
+  usagePercentage: number;
+  totalBudget: number;
+  totalSpend: number;
+  remainingBudget: number;
+}
+
 // ROAS 순위 조회 요청 파라미터
 export interface IRoasRankingsParams {
   startDate?: string;

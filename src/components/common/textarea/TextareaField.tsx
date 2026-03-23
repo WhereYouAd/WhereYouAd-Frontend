@@ -36,9 +36,11 @@ export default function TextareaField({
 
   return (
     <div className="flex flex-col">
-      <label className="text-text-main select-none ml-1 mb-2" htmlFor={id}>
-        {label}
-      </label>
+      {label && (
+        <label className="text-text-main select-none ml-1 mb-2" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <textarea
         ref={ref}
         id={id}
