@@ -15,6 +15,10 @@ import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
 import PageHeader from "@/components/common/PageHeader";
+import {
+  Skeleton,
+  SkeletonCircle,
+} from "@/components/common/skeleton/Skeleton";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
@@ -41,8 +45,16 @@ export default function OverviewDashboard() {
     isError: isKpisError,
     dataUpdatedAt,
   } = useOverviewMetrics();
-  const { data: budget } = useOverviewBudget();
-  const { data: roasRankingsData } = useOverviewRoasRankings();
+  const {
+    data: budget,
+    isLoading: isBudgetLoading,
+    isError: isBudgetError,
+  } = useOverviewBudget();
+  const {
+    data: roasRankingsData,
+    isLoading: isRankingsLoading,
+    isError: isRankingsError,
+  } = useOverviewRoasRankings();
 
   const currentDate = dataUpdatedAt
     ? new Date(dataUpdatedAt).toLocaleString("ko-KR", {
@@ -59,13 +71,14 @@ export default function OverviewDashboard() {
     budget && budget.totalBudget > 0
       ? Math.round((budget.spent / budget.totalBudget) * 100)
       : 0;
-  const budgetStatus = budget
-    ? getBudgetStatus(
-        budgetPct,
-        budget.warningThreshold,
-        budget.dangerThreshold,
-      )
-    : "안정";
+  const budgetStatus =
+    budget && !isBudgetLoading
+      ? getBudgetStatus(
+          budgetPct,
+          budget.warningThreshold,
+          budget.dangerThreshold,
+        )
+      : null;
 
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
@@ -93,15 +106,14 @@ export default function OverviewDashboard() {
             지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
           </div>
         ) : isKpisLoading ? (
-          // TODO: 스켈레톤 UI 통일 작업 시 개선
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40 animate-pulse"
+              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
             >
-              <div className="h-4 w-16 rounded bg-bg-surface" />
-              <div className="h-8 w-24 rounded bg-bg-surface" />
-              <div className="h-6 w-14 rounded-full bg-bg-surface" />
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-6 w-14 rounded-full" />
             </div>
           ))
         ) : (
@@ -123,8 +135,13 @@ export default function OverviewDashboard() {
           }
           RightElement={<TrafficChartDownload />}
         >
-          <TrafficChart />
+          <Suspense
+            fallback={<Skeleton className="flex-1 w-full rounded-2xl" />}
+          >
+            <TrafficChart />
+          </Suspense>
         </Card>
+
         <Card
           className="col-span-2 tablet:col-span-1 flex flex-col min-h-120"
           title="예산 소진 현황"
@@ -138,21 +155,38 @@ export default function OverviewDashboard() {
             />
           }
           RightElement={
-            <Badge
-              variant={statusBadgeVariant[budgetStatus]}
-              size="sm"
-              className="px-2"
-            >
-              {budgetStatus}
-            </Badge>
+            budgetStatus ? (
+              <Badge
+                variant={statusBadgeVariant[budgetStatus]}
+                size="sm"
+                className="px-2"
+              >
+                {budgetStatus}
+              </Badge>
+            ) : undefined
           }
         >
-          {budget ? (
+          {isBudgetError ? (
+            <div className="flex flex-1 items-center justify-center text-status-red font-body2 text-center px-4">
+              예산 데이터를 불러오지 못했습니다.
+              <br />
+              잠시 후 다시 시도해 주세요.
+            </div>
+          ) : isBudgetLoading ? (
+            <div className="flex flex-col flex-1 gap-4 pt-6">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-10 w-24" />
+              <Skeleton className="h-3 w-full rounded-full" />
+              <div className="flex justify-between">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+              <Skeleton className="h-16 w-full rounded-2xl" />
+              <Skeleton className="mt-auto h-16 w-full rounded-2xl" />
+            </div>
+          ) : budget ? (
             <BudgetGaugeChart {...budget} />
-          ) : (
-            // TODO: 스켈레톤 UI 통일 작업 시 개선
-            <div className="flex-1 animate-pulse rounded-2xl bg-bg-surface" />
-          )}
+          ) : null}
         </Card>
       </div>
 
@@ -180,7 +214,36 @@ export default function OverviewDashboard() {
           </div>
         }
       >
-        <PlatformRoasTable rankings={roasRankingsData ?? []} />
+        {isRankingsError ? (
+          <div className="flex items-center justify-center py-16 text-status-red font-body2">
+            플랫폼 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
+          </div>
+        ) : isRankingsLoading ? (
+          <div className="flex flex-col divide-y divide-[#F2F4F6]">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-[32px_1.5fr_2.5fr_1.5fr] gap-x-4 px-4 py-4 min-h-20 items-center"
+              >
+                <Skeleton className="h-4 w-4 mx-auto" />
+                <div className="flex items-center gap-3">
+                  <SkeletonCircle className="h-7 w-7 shrink-0" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+                <div className="flex flex-col gap-2 pr-4">
+                  <Skeleton className="h-6 w-20" />
+                  <Skeleton className="h-1.5 w-full rounded-full" />
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <PlatformRoasTable rankings={roasRankingsData ?? []} />
+        )}
       </Card>
 
       <Drawer
