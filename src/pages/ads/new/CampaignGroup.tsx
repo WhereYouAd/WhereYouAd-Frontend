@@ -28,6 +28,7 @@ export default function CampaignGroup() {
     googleCampaigns,
     naverCampaigns,
     kakaoCampaigns,
+    isFormValid,
   } = useCampaignGroup();
 
   return (
@@ -139,7 +140,11 @@ export default function CampaignGroup() {
         </Card>
 
         <div className="flex justify-end mb-5">
-          <Button size="big" className="w-full max-w-40 py-4 font-bold">
+          <Button
+            size="big"
+            className="w-full max-w-40 py-4 font-bold"
+            disabled={!isFormValid}
+          >
             완료
           </Button>
         </div>

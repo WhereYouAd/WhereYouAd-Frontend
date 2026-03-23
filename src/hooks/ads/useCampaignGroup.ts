@@ -42,6 +42,13 @@ export const useCampaignGroup = () => {
     enabled: !!orgId,
   });
 
+  // 유효성 검사 (캠페인명, 최소 하나의 플랫폼 캠페인)
+  const isFormValid =
+    name.trim() !== "" &&
+    (googleSelected !== null ||
+      naverSelected !== null ||
+      kakaoSelected !== null);
+
   return {
     name,
     setName,
@@ -56,5 +63,6 @@ export const useCampaignGroup = () => {
     googleCampaigns,
     naverCampaigns,
     kakaoCampaigns,
+    isFormValid,
   };
 };
