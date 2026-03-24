@@ -235,6 +235,14 @@ button {
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.2);
   }
 
+  .shadow-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  }
+
   .checkbox {
     appearance: none;
     width: 24px;
