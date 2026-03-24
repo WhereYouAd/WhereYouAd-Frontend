@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import Button from "@/components/common/button/Button";
@@ -23,6 +24,7 @@ import { getImageUrl } from "@/lib/getImageUrl";
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
+  const queryClient = useQueryClient();
 
   const orgId = useMemo(() => {
     if (!workspaceId) return null;
@@ -118,6 +120,7 @@ export default function WorkspaceSetting() {
     setDeleting(true);
     try {
       await deleteWorkspace(orgId);
+      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
       toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
