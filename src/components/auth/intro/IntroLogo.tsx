@@ -12,6 +12,9 @@ export default function IntroLogo({ isActive }: { isActive: boolean }) {
 
         <div className="flex h-96 w-96 items-center justify-center relative z-10 transform hover:scale-105 transition-transform duration-700 ease-out">
           <SymbolWhite className="h-full w-full drop-shadow-xl" />
+          <div className="absolute bottom-0 left-0 right-0 text-center font-heading3 text-white mb-4">
+            Where you ad
+          </div>
         </div>
       </div>
     </div>
