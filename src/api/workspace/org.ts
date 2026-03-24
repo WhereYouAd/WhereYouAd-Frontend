@@ -69,7 +69,7 @@ export const getWorkspaceMembers = async (
     params.cursor = cursor;
   }
   const { data } = await axiosInstance.get<
-    TApiResult<TGetWorkspaceMembersData>
+    ICommonResponse<TGetWorkspaceMembersData>
   >(`/api/org/members/${orgId}`, { params });
   return data.data;
 };
@@ -77,8 +77,8 @@ export const getWorkspaceMembers = async (
 export const getWorkspaceMemberCount = async (
   orgId: number,
 ): Promise<TWorkspaceMemberCount> => {
-  const { data } = await axiosInstance.get<TApiResult<TWorkspaceMemberCount>>(
-    `/api/org/members/${orgId}/count`,
-  );
+  const { data } = await axiosInstance.get<
+    ICommonResponse<TWorkspaceMemberCount>
+  >(`/api/org/members/${orgId}/count`);
   return data.data;
 };
