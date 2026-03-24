@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type RefObject, useState } from "react";
 
 import type {
   TInviteMemberItem,
@@ -89,6 +89,8 @@ type TMemberListProps = {
   totalCount: number;
   onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
   onDeleteClick: (member: TWorkspaceMember) => void;
+  isFetchingNextPage: boolean;
+  observerRef: RefObject<HTMLDivElement | null>;
 };
 
 export default function MemberList({
@@ -97,6 +99,8 @@ export default function MemberList({
   totalCount,
   onRoleChange,
   onDeleteClick,
+  isFetchingNextPage,
+  observerRef,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
@@ -131,16 +135,32 @@ export default function MemberList({
         </Button>
       </header>
 
-      <ul className="divide-y divide-gray-100">
-        {members.map((member) => (
-          <MemberItem
-            key={member.memberId}
-            member={member}
-            onRoleChange={(newRole) => onRoleChange(member.memberId, newRole)}
-            onDeleteClick={() => onDeleteClick(member)}
-          />
-        ))}
-      </ul>
+      {members.length === 0 ? (
+        <div className="flex min-h-40 items-center justify-center rounded-component-md bg-gray-50 text-text-sub">
+          아직 등록된 팀원이 없습니다
+        </div>
+      ) : (
+        <>
+          <ul className="divide-y divide-gray-100">
+            {members.map((member) => (
+              <MemberItem
+                key={member.memberId}
+                member={member}
+                onRoleChange={(newRole) =>
+                  onRoleChange(member.memberId, newRole)
+                }
+                onDeleteClick={() => onDeleteClick(member)}
+              />
+            ))}
+          </ul>
+          <div ref={observerRef} className="w-full h-6" />
+          {isFetchingNextPage && (
+            <div className="pt-4 text-center font-body2 text-text-sub">
+              팀원을 더 불러오는 중입니다...
+            </div>
+          )}
+        </>
+      )}
       <InviteMemberModal
         isOpen={inviteMemberOpen}
         onClose={closeInviteMember}

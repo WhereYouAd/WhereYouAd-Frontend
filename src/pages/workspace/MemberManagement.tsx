@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
@@ -21,6 +21,8 @@ import {
 } from "@/api/workspace/org";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
+const PAGE_SIZE = 20;
+
 export default function MemberManagement() {
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -36,18 +38,29 @@ export default function MemberManagement() {
   const [selectedDeleteMember, setSelectedDeleteMember] =
     useState<TWorkspaceMember | null>(null);
 
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
   const memberCountQuery = useQuery({
     queryKey: ["workspaceMemberCount", orgId],
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
-  const membersQuery = useQuery({
-    queryKey: ["workspaceMembers", orgId],
-    queryFn: () => getWorkspaceMembers(orgId, null, 20),
+  const membersQuery = useInfiniteQuery({
+    queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
+    queryFn: ({ pageParam }: { pageParam: string | null }) =>
+      getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNext) return undefined;
+      return lastPage.nextCursor;
+    },
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
 
-  const members = membersQuery?.data?.members ?? [];
+  const members = useMemo(() => {
+    return membersQuery.data?.pages.flatMap((page) => page.members) ?? [];
+  }, [membersQuery.data]);
+
   const totalCount = memberCountQuery?.data?.totalCount ?? 0;
 
   const adminCount = useMemo(() => {
@@ -57,6 +70,36 @@ export default function MemberManagement() {
   const transferableCandidates = useMemo(() => {
     return members.filter((member) => !member.isMe && member.role === "ADMIN");
   }, [members]);
+
+  useEffect(() => {
+    const target = observerRef.current;
+    if (!target) return;
+    if (!membersQuery.hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (
+          firstEntry?.isIntersecting &&
+          membersQuery.hasNextPage &&
+          !membersQuery.isFetchingNextPage
+        ) {
+          void membersQuery.fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "120px",
+        threshold: 0,
+      },
+    );
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [
+    membersQuery.hasNextPage,
+    membersQuery.isFetchingNextPage,
+    membersQuery.fetchNextPage,
+  ]);
 
   const handleRoleChange = (targetMemberId: number, newRole: TMemberRole) => {
     const targetMember = members.find(
@@ -198,6 +241,8 @@ export default function MemberManagement() {
           totalCount={totalCount}
           onRoleChange={handleRoleChange}
           onDeleteClick={openDeleteMember}
+          isFetchingNextPage={membersQuery.isFetchingNextPage}
+          observerRef={observerRef}
         />
         <PermissionTable />
         <ControlBox
