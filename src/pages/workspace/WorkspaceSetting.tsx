@@ -204,9 +204,9 @@ export default function WorkspaceSetting() {
             <p className="font-body2 text-text-sub mt-2">
               워크스페이스의 대표적인 정보를 설정합니다.
             </p>
-            <div className="mt-7 grid grid-cols-[480px_minmax(0,1fr)] gap-8 tablet:grid-cols-1 tablet:gap-5">
-              <div className="flex flex-col items-center">
-                <div className="text-text-main mb-2 self-start">
+            <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
+              <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
+                <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
                   로고 이미지
                 </div>
                 <input
@@ -216,35 +216,34 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="border border-gray-100 bg-gray-50 rounded-component-lg flex items-center justify-center h-120 w-120 tablet:h-57 tablet:w-57 overflow-hidden">
+                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-component-sm border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
                       alt={"새 로고 미리보기"}
-                      className="h-full w-full object-cover"
+                      className="w-full h-full object-cover rounded-component-sm"
                     />
                   ) : resolvedLogoUrl ? (
                     <img
                       src={resolvedLogoUrl}
                       alt={`${name || "워크스페이스"} 로고`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.log("이미지 로드 실패:", e.currentTarget.src);
+                      className="w-full h-full object-cover rounded-component-sm"
+                      onError={() => {
                         setImageError(true);
                       }}
                     />
                   ) : (
                     <BuildingIcon
                       aria-hidden="true"
-                      className="w-12 h-12 text-text-placeholder"
+                      className="w-11 h-11 text-text-placeholder"
                     />
                   )}
                 </div>
-                <div className="flex gap-3 mt-3 justify-center">
+                <div className="flex gap-2 mt-4 justify-center">
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={saving || deleting || uploading}
@@ -254,7 +253,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={saving || deleting || uploading}
@@ -263,7 +262,7 @@ export default function WorkspaceSetting() {
                   </Button>
                 </div>
               </div>
-              <div className="space-y-5">
+              <div className="flex-1 w-full space-y-6">
                 <Input
                   label="워크스페이스명"
                   value={name}
@@ -278,7 +277,7 @@ export default function WorkspaceSetting() {
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
-                  className="min-h-93 tablet:min-h-55"
+                  className="min-h-90"
                   disabled={saving || deleting || uploading}
                 />
               </div>

@@ -40,7 +40,7 @@ export default function WorkspaceCard({
       )}
     >
       <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
-        <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
+        <div className="w-24 h-24 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
           {showPlaceholder ? (
             <div className="w-full h-full flex items-center justify-center">
               <BuildingIcon className="w-8 h-8 text-text-placeholder" />
