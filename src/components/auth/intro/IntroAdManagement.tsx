@@ -38,7 +38,7 @@ export default function IntroAdManagement({ isActive }: { isActive: boolean }) {
       <div className="flex h-full w-full flex-col justify-center gap-[18vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 text-sm font-bold text-logo-2">
+            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 font-label text-logo-2">
               통합 관리
             </span>
             <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">

@@ -37,7 +37,7 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
       <div className="flex h-full w-full flex-col justify-center gap-[18vh]">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 text-sm font-bold text-logo-2">
+            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 font-label text-logo-2">
               AI 성과 분석
             </span>
             <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
@@ -76,11 +76,15 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
                 >
                   {bar.isBlue && (
                     <div
-                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) z-50 ${
+                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 transition-all duration-700 z-50 ${
                         showBubble
                           ? "opacity-100 translate-y-0 scale-100"
                           : "opacity-0 translate-y-8 scale-50"
                       }`}
+                      style={{
+                        transitionTimingFunction:
+                          "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      }}
                     >
                       <div className="hover:scale-105 transition-transform duration-300">
                         <AiTalkBubble text="토요일 성과가 +18% 상승!" />
