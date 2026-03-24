@@ -9,8 +9,8 @@ export default function AuthLayout() {
         <OnboardingIntro />
       </div>
 
-      <div className="flex flex-1 items-center justify-center bg-white">
-        <div className="w-full max-w-md px-6">
+      <div className="flex-1 overflow-y-auto bg-white">
+        <div className="flex min-h-full items-center justify-center">
           <Outlet />
         </div>
       </div>

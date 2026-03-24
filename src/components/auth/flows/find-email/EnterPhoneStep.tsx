@@ -113,107 +113,103 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
   }, [watchedCode, watchedPhone]);
 
   return (
-    <div className="w-full min-h-screen bg-white flex items-center justify-center">
-      <div className="w-full max-w-130 px-6 pb-12">
-        <h1 className="text-start font-heading2 text-text-main mb-10">
-          <span className="block">이메일 찾기를 위해</span>
-          <span className="block">휴대폰 인증을 진행할게요</span>
-        </h1>
+    <div className="w-full max-w-130 px-6 pb-12">
+      <h1 className="text-start font-heading2 text-text-main mb-10">
+        <span className="block">이메일 찾기를 위해</span>
+        <span className="block">휴대폰 인증을 진행할게요</span>
+      </h1>
 
-        <div className="flex flex-col gap-6">
-          {!sendCode ? (
-            <div className="flex gap-2 w-full items-start">
-              <div className="flex-1">
-                <CommonAuthInput
-                  placeholder="전화번호를 입력하세요"
-                  type="tel"
-                  {...register("phoneNum")}
-                  error={!!errors.phoneNum}
-                  errorMessage={errors.phoneNum?.message}
-                />
-              </div>
-              <Button
-                variant="custom"
-                className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
-                onClick={postSendCode}
-                type="button"
-                disabled={isSending}
-              >
-                인증번호 받기
-              </Button>
-            </div>
-          ) : (
-            <div className="relative w-full">
+      <div className="flex flex-col gap-6">
+        {!sendCode ? (
+          <div className="flex gap-2 w-full items-start">
+            <div className="flex-1">
               <CommonAuthInput
-                type="text"
-                value={watchedPhone || ""}
-                readOnly
-                aria-label="입력된 전화번호"
-                className="w-full h-13.5 px-5 border rounded-component-md text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+                placeholder="전화번호를 입력하세요"
+                type="tel"
+                {...register("phoneNum")}
+                error={!!errors.phoneNum}
+                errorMessage={errors.phoneNum?.message}
               />
-              <button
-                type="button"
-                onClick={handleEditPhone}
-                aria-label="전화번호 수정"
-                className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-main"
-              >
-                수정
-              </button>
             </div>
-          )}
-
-          <CommonAuthInput
-            placeholder={
-              sendCode
-                ? "문자로 발송된 6자리 인증번호"
-                : "인증번호를 입력하세요"
-            }
-            type="text"
-            timer={sendCode ? formattedTime : undefined}
-            {...register("code")}
-            disabled={isExpired && sendCode}
-            error={!!errors.code || !!codeError || (isExpired && sendCode)}
-            errorMessage={
-              isExpired && sendCode
-                ? "인증 시간이 만료되었습니다."
-                : errors.code?.message || codeError
-            }
-          />
-        </div>
-
-        <div className="mt-10">
-          <Button
-            size="big"
-            fullWidth
-            onClick={handleSubmit(onSubmit)}
-            variant="gradient"
-            disabled={!isValid || isVerifying || (isExpired && sendCode)}
-          >
-            다음으로
-          </Button>
-        </div>
-
-        {sendCode && (
-          <div className="mt-6 flex justify-center">
+            <Button
+              variant="custom"
+              className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
+              onClick={postSendCode}
+              type="button"
+              disabled={isSending}
+            >
+              인증번호 받기
+            </Button>
+          </div>
+        ) : (
+          <div className="relative w-full">
+            <CommonAuthInput
+              type="text"
+              value={watchedPhone || ""}
+              readOnly
+              aria-label="입력된 전화번호"
+              className="w-full h-13.5 px-5 border rounded-component-md text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+            />
             <button
               type="button"
-              onClick={handleResendSMS}
-              disabled={isSending}
-              className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub disabled:opacity-50"
+              onClick={handleEditPhone}
+              aria-label="전화번호 수정"
+              className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-main"
             >
-              인증번호 다시 받기
+              수정
             </button>
           </div>
         )}
 
-        <div className="mt-10 flex justify-center">
-          <Link
-            to="/find-pw"
-            className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+        <CommonAuthInput
+          placeholder={
+            sendCode ? "문자로 발송된 6자리 인증번호" : "인증번호를 입력하세요"
+          }
+          type="text"
+          timer={sendCode ? formattedTime : undefined}
+          {...register("code")}
+          disabled={isExpired && sendCode}
+          error={!!errors.code || !!codeError || (isExpired && sendCode)}
+          errorMessage={
+            isExpired && sendCode
+              ? "인증 시간이 만료되었습니다."
+              : errors.code?.message || codeError
+          }
+        />
+      </div>
+
+      <div className="mt-10">
+        <Button
+          size="big"
+          fullWidth
+          onClick={handleSubmit(onSubmit)}
+          variant="gradient"
+          disabled={!isValid || isVerifying || (isExpired && sendCode)}
+        >
+          다음으로
+        </Button>
+      </div>
+
+      {sendCode && (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={handleResendSMS}
+            disabled={isSending}
+            className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub disabled:opacity-50"
           >
-            비밀번호 찾기
-          </Link>
+            인증번호 다시 받기
+          </button>
         </div>
+      )}
+
+      <div className="mt-10 flex justify-center">
+        <Link
+          to="/find-pw"
+          className="font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
+        >
+          비밀번호 찾기
+        </Link>
       </div>
     </div>
   );
