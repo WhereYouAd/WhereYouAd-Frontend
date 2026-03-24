@@ -201,7 +201,7 @@ export default function WorkspaceSetting() {
             <p className="font-body2 text-text-sub mt-2">
               워크스페이스의 대표적인 정보를 설정합니다.
             </p>
-            <div className="mt-7 grid grid-cols-[480px_minmax(0,1fr)] tablet:grid-cols-1 gap-8">
+            <div className="mt-7 grid grid-cols-[480px_minmax(0,1fr)] gap-8 tablet:grid-cols-1 tablet:gap-5">
               <div className="flex flex-col items-center">
                 <div className="text-text-main mb-2 self-start">
                   로고 이미지
@@ -281,7 +281,7 @@ export default function WorkspaceSetting() {
               </div>
             </div>
           </div>
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-end">
             <Button
               size="big"
               variant="primary"
@@ -299,7 +299,7 @@ export default function WorkspaceSetting() {
               description={`워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.\n 이 작업은 되돌릴 수 없습니다`}
               buttonText="워크스페이스 삭제"
               onButtonClick={openDeleteModal}
-              className="w-full mt-12"
+              className="w-full mt-5"
               containerClassName="bg-status-red/10 border-status-red"
               titleClassName="text-status-red"
               descriptionClassName="text-text-auth-sub"

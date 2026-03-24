@@ -113,7 +113,7 @@ export default function MemberList({
 
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
-      <header className="mb-7 flex justify-between">
+      <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <h2 className="font-heading4 text-text-main font-semibold!">
             팀 구성원

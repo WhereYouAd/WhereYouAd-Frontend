@@ -21,8 +21,8 @@ export default function MemberItem({
   onDeleteClick,
 }: TProps) {
   return (
-    <li className="flex items-center justify-between py-5 gap-4">
-      <div className="flex items-center gap-4">
+    <li className="flex items-center justify-between py-5 gap-4 tablet:items-start">
+      <div className="flex items-center gap-4 w-full min-w-0">
         <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-component-lg overflow-hidden">
           {member.profileImageUrl ? (
             <img
@@ -34,9 +34,9 @@ export default function MemberItem({
             <UserIcon className="text-text-auth-sub h-6 w-6" />
           )}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-text-main font-body1">{member.name}</p>
-          <div className=" flex text-text-auth-sub items-center gap-2">
+          <div className="flex text-text-auth-sub items-center gap-2 min-w-0">
             <MailIcon className="w-4 h-4" />
             <p className="truncate">{member.email}</p>
           </div>
@@ -45,7 +45,7 @@ export default function MemberItem({
       <div className="flex items-center gap-4">
         {member.isMe ? (
           <span
-            className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-[22px] px-4 font-body2 ${
+            className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-component-lg px-4 font-body2 ${
               member.role === "ADMIN"
                 ? "bg-status-blue/80 text-white shadow-sm"
                 : "bg-chart-3/15 text-text-auth-sub"

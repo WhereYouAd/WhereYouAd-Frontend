@@ -26,9 +26,9 @@ export default function WorkspaceCard({ workspace: w, menuItems }: TProps) {
   const imageSrc = w.logoUrl ? getImageUrl(w.logoUrl) : null;
   const showPlaceholder = !imageSrc || imageError;
   return (
-    <li className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border border-gray-100">
-      <div className="flex items-center gap-5 min-w-0">
-        <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm">
+    <li className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border border-gray-100 tablet:px-4 tablet:py-4">
+      <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
+        <div className="w-20 h-20 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
           {showPlaceholder ? (
             <div className="w-full h-full flex items-center justify-center">
               <BuildingIcon className="w-8 h-8 text-text-placeholder" />

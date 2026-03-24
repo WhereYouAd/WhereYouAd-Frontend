@@ -16,7 +16,12 @@ const PageHeader = memo(function PageHeader({
   className,
 }: IPageHeaderProps) {
   return (
-    <header className={twMerge("flex items-center justify-between", className)}>
+    <header
+      className={twMerge(
+        "flex items-center justify-between tablet:items-start tablet:gap-3",
+        className,
+      )}
+    >
       <div className="flex flex-col gap-1">
         <h1 className="font-heading2 text-text-main">{title}</h1>
         {description && (
