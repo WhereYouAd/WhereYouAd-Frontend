@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
@@ -19,7 +19,7 @@ type TProps = {
   isSelected?: boolean;
 };
 
-export default function WorkspaceCard({
+function WorkspaceCard({
   workspace: w,
   menuItems,
   isSelected = false,
@@ -64,7 +64,10 @@ export default function WorkspaceCard({
               {w.name}
             </div>
             {isSelected && (
-              <span className="shrink-0 rounded-full bg-chart-3/12 px-2 py-1 font-caption text-chart-3">
+              <span
+                role="status"
+                className="shrink-0 rounded-full bg-chart-3/12 px-2 py-1 font-caption text-chart-3"
+              >
                 현재 대시보드 기준
               </span>
             )}
@@ -74,7 +77,7 @@ export default function WorkspaceCard({
             {w.description ?? ""}
           </div>
           <div className="font-body1 text-text-sub mt-2">
-            {ROLE_LABEL_MAP[w.myRole] ?? "내 직책 및 역할"}
+            {ROLE_LABEL_MAP[w.myRole]}
           </div>
         </div>
       </div>
@@ -90,3 +93,5 @@ export default function WorkspaceCard({
     </li>
   );
 }
+
+export default React.memo(WorkspaceCard);

@@ -28,12 +28,12 @@ export default function MemberRoleSelect({
     ? []
     : [
         {
-          label: "관리자",
+          label: ROLE_LABEL_MAP.ADMIN,
           onClick: () => onChange("ADMIN"),
           active: role === "ADMIN",
         },
         {
-          label: "멤버",
+          label: ROLE_LABEL_MAP.MEMBER,
           onClick: () => onChange("MEMBER"),
           active: role === "MEMBER",
         },
