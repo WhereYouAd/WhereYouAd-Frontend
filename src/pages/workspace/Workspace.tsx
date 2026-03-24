@@ -226,17 +226,23 @@ export default function WorkspacePage() {
 
       {renderWorkspaceContent()}
 
-      <Modal isOpen={createOpen} onClose={onCloseCreate} size="xl" padding="lg">
-        <div className="px-2">
+      <Modal
+        isOpen={createOpen}
+        onClose={onCloseCreate}
+        size="xl"
+        padding="lg"
+        className="tablet:w-150"
+      >
+        <div className="px-1 tablet:px-0">
           <h2 className="font-heading4 text-text-main mb-2">
             워크스페이스 생성
           </h2>
-          <p className="font-body1 text-text-sub mb-6">
+          <p className="font-body1 text-text-sub mb-5">
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.{" "}
             <br /> 로고 이미지와 기본 정보를 입력해 주세요.
           </p>
-          <div className="flex flex-row tablet:flex-col gap-10 items-start">
-            <div className="flex flex-col items-center w-45 tablet:w-full shrink-0">
+          <div className="flex flex-row gap-8 items-start tablet:flex-col tablet:gap-5">
+            <div className="flex flex-col items-center w-45 shrink-0 tablet:w-full">
               <div className="w-full mb-3 select-none font-label text-text-main tablet:text-center">
                 로고 이미지
               </div>
@@ -260,7 +266,7 @@ export default function WorkspacePage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <UpLoadImgIcon className="text-text-placeholder w-8 h-8" />
+                  <UpLoadImgIcon className="text-text-placeholder w-8 h-8 tablet:w-7 tablet:h-7" />
                 )}
               </button>
 
@@ -294,7 +300,7 @@ export default function WorkspacePage() {
               )}
             </div>
           </div>
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-center mt-12 tablet:mt-6">
             <Button
               size="big"
               variant="primary"
