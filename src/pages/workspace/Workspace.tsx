@@ -235,8 +235,11 @@ export default function WorkspacePage() {
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.{" "}
             <br /> 로고 이미지와 기본 정보를 입력해 주세요.
           </p>
-          <div className="space-y-6 mx-auto w-full max-w-200">
-            <div className="max-w-140 mx-auto w-full mb-10">
+          <div className="flex flex-row tablet:flex-col gap-10 items-start">
+            <div className="flex flex-col items-center w-45 tablet:w-full shrink-0">
+              <div className="w-full mb-3 select-none font-label text-text-main tablet:text-center">
+                로고 이미지
+              </div>
               <input
                 ref={fileRef}
                 type="file"
@@ -244,23 +247,11 @@ export default function WorkspacePage() {
                 className="hidden"
                 onChange={onPickLogo}
               />
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-label text-text-sub">로고 이미지</div>
-                <Button
-                  variant="custom"
-                  className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                  onClick={openFile}
-                  type="button"
-                >
-                  업로드
-                </Button>
-              </div>
-
               <button
                 type="button"
                 aria-label="로고 이미지 업로드"
                 onClick={openFile}
-                className="mx-auto aspect-square w-full max-w-65 overflow-hidden rounded-component-lg border border-gray-100 bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-component-sm border border-gray-100 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 {logoPreview ? (
                   <img
@@ -269,37 +260,47 @@ export default function WorkspacePage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-text-sub">
-                    <UpLoadImgIcon />
-                  </span>
+                  <UpLoadImgIcon className="text-text-placeholder w-8 h-8" />
                 )}
               </button>
-            </div>
 
-            <Input
-              label="워크스페이스 이름"
-              placeholder="사용할 워크스페이스의 이름을 입력하세요."
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              disabled={isCreating}
-            />
-            <TextareaField
-              id="workspace-desc"
-              label="워크스페이스 설명"
-              placeholder="워크스페이스에 대한 간단한 설명을 입력하세요"
-              value={newDesc}
-              onChange={(e) => setNewDesc(e.target.value)}
-              disabled={isCreating}
-            />
-            {createErrorMsg && (
-              <p className="font-body2 text-status-red">{createErrorMsg}</p>
-            )}
+              <Button
+                variant="custom"
+                className="h-7! mt-4 border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                onClick={openFile}
+                type="button"
+              >
+                업로드
+              </Button>
+            </div>
+            <div className="flex-1 w-full space-y-5">
+              <Input
+                label="워크스페이스 이름"
+                placeholder="사용할 워크스페이스의 이름을 입력하세요."
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                disabled={isCreating}
+              />
+              <TextareaField
+                id="workspace-desc"
+                label="워크스페이스 설명"
+                placeholder="워크스페이스에 대한 간단한 설명을 입력하세요"
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
+                disabled={isCreating}
+              />
+              {createErrorMsg && (
+                <p className="font-body2 text-status-red">{createErrorMsg}</p>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mt-12">
             <Button
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
               disabled={!newName.trim() || isCreating}
-              className="mx-auto px-10 mt-10"
+              className="px-12 w-auto tablet:w-full"
               type="button"
             >
               {isCreating ? "생성 중.. " : "생성하기"}
