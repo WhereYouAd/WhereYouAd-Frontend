@@ -100,7 +100,7 @@ button {
 
 @font-face {
   font-family: "Pretendard";
-  src: url("/fonts/PretendardVariable.woff2") format("font-woff2");
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
   font-display: swap;
   font-weight: 45 920;
 }
@@ -154,11 +154,15 @@ button {
 
   /* 기본 트랜지션 */
   .transition-smooth {
-    transition: all var(--duration-normal) var(--ease-smooth);
+    transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+    transition-duration: var(--duration-normal);
+    transition-timing-function: var(--ease-smooth);
   }
 
   .transition-fast {
-    transition: all var(--duration-fast) var(--ease-out);
+    transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+    transition-duration: var(--duration-fast);
+    transition-timing-function: var(--ease-out);
   }
 
   /* 클릭 */
@@ -268,6 +272,15 @@ button {
     }
   }
 
+  @keyframes modal-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
   @keyframes modal-scale-in {
     from {
       opacity: 0;
@@ -279,12 +292,31 @@ button {
     }
   }
 
+  @keyframes modal-scale-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
   .animate-modal-overlay {
     animation: modal-fade-in var(--duration-normal) var(--ease-out);
   }
 
+  .animate-modal-overlay-out {
+    animation: modal-fade-out var(--duration-fast) var(--ease-in) forwards;
+  }
+
   .animate-modal-content {
     animation: modal-scale-in var(--duration-normal) var(--ease-out);
+  }
+
+  .animate-modal-content-out {
+    animation: modal-scale-out var(--duration-fast) var(--ease-in) forwards;
   }
 
   /* 스크롤 애니메이션 */

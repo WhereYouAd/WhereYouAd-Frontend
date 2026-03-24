@@ -4,6 +4,7 @@ import React, {
   useEffect,
   useId,
   useRef,
+  useState,
 } from "react";
 import { createPortal } from "react-dom";
 import { RemoveScroll } from "react-remove-scroll";
@@ -23,6 +24,8 @@ export interface IModalProps {
   title?: string;
 }
 
+const CLOSE_DURATION = 150; // --duration-fast 와 동일
+
 function Modal({
   isOpen,
   onClose,
@@ -37,6 +40,23 @@ function Modal({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const titleId = useId();
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isClosing, setIsClosing] = useState(false);
+
+  // 진입/퇴장 렌더링 제어
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+      setIsClosing(false);
+    } else {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setShouldRender(false);
+        setIsClosing(false);
+      }, CLOSE_DURATION);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   // 포커스 관리: 모달 열릴 때 포커스 이동, 닫힐 때 원래 위치로 복귀
   useEffect(() => {
@@ -83,7 +103,7 @@ function Modal({
     [],
   );
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
 
   const sizeClasses = {
     sm: "max-w-modal-sm",
@@ -108,7 +128,7 @@ function Modal({
   return createPortal(
     <RemoveScroll enabled={isOpen}>
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-modal-overlay"
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${isClosing ? "animate-modal-overlay-out" : "animate-modal-overlay"}`}
         onClick={handleOverlayClick}
         role="dialog"
         aria-modal="true"
@@ -117,7 +137,7 @@ function Modal({
         <div
           ref={modalRef}
           className={twMerge(
-            "relative bg-white rounded-component-md shadow-Medium w-full max-h-[90vh] overflow-auto animate-modal-content",
+            `relative bg-white rounded-component-md shadow-Medium w-full max-h-[90vh] overflow-auto ${isClosing ? "animate-modal-content-out" : "animate-modal-content"}`,
             sizeClasses[size],
             paddingClasses[padding],
             className,
