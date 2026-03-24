@@ -20,10 +20,7 @@ export default function InfoCard({
         className,
       )}
     >
-      {/* title */}
       <h3 className="font-heading4 text-text-main text-center">{title}</h3>
-
-      {/* content */}
       <div className="flex flex-1 items-center justify-center w-full">
         {children}
       </div>
