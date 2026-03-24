@@ -1,44 +1,45 @@
-import { useState } from "react";
+import type { IPlatformCampaign } from "@/types/ads/campaign";
+
+import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
-interface ICampaignOption {
-  id: number | string;
-  name: string;
-}
-const MOCK_CAMPAIGNS: ICampaignOption[] = [
-  { id: "none", name: "선택 안함" },
-  { id: 1, name: "2026 새해맞이 병오년 캠페인" },
-  { id: 2, name: "2025 연말 기념 캠페인" },
-  { id: 3, name: "가을 프로모션 캠페인" },
-  { id: 4, name: "벚꽃 프로모션 캠페인" },
-];
-
 export default function CampaignGroup() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  const [googleSelected, setGoogleSelected] = useState<ICampaignOption | null>(
-    null,
-  );
-  const [naverSelected, setNaverSelected] = useState<ICampaignOption | null>(
-    null,
-  );
-  const [kakaoSelected, setKakaoSelected] = useState<ICampaignOption | null>(
-    null,
-  );
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    googleSelected,
+    setGoogleSelected,
+    naverSelected,
+    setNaverSelected,
+    kakaoSelected,
+    setKakaoSelected,
+    googleCampaigns,
+    naverCampaigns,
+    kakaoCampaigns,
+    isFormValid,
+    isSuccessModalOpen,
+    handleCloseSuccessModal,
+    isCreating,
+    handleComplete,
+  } = useCampaignGroup();
 
   return (
-    <section className="flex flex-col items-center w-full pt-0 min-h-screen bg-bg-surface/30">
+    <section className="flex flex-col items-center w-full pt-0 pb-20 min-h-screen bg-bg-surface/30">
       <div className="flex flex-col gap-8 w-full max-w-4xl">
         <PageHeader
           title="캠페인 그룹 정보 설정"
@@ -101,12 +102,12 @@ export default function CampaignGroup() {
                 <GoogleIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">Google</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={googleCampaigns}
                 selectedOption={googleSelected}
                 onSelect={setGoogleSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
@@ -117,12 +118,12 @@ export default function CampaignGroup() {
                 <NaverIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">NAVER</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={naverCampaigns}
                 selectedOption={naverSelected}
                 onSelect={setNaverSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
@@ -133,12 +134,12 @@ export default function CampaignGroup() {
                 <KakaoIcon className="w-6 h-6" />
                 <span className="font-body1 text-text-main">Kakao</span>
               </div>
-              <DropdownSelect<ICampaignOption>
+              <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
-                options={MOCK_CAMPAIGNS}
+                options={kakaoCampaigns}
                 selectedOption={kakaoSelected}
                 onSelect={setKakaoSelected}
-                getOptionKey={(opt) => opt.id}
+                getOptionKey={(opt) => opt.adCampaignId}
                 getOptionLabel={(opt) => opt.name}
               />
             </div>
@@ -146,11 +147,30 @@ export default function CampaignGroup() {
         </Card>
 
         <div className="flex justify-end mb-5">
-          <Button size="big" className="w-full max-w-40 py-4 font-bold">
-            완료
+          <Button
+            size="big"
+            className="w-full max-w-40 py-4 font-bold"
+            disabled={!isFormValid || isCreating}
+            onClick={handleComplete}
+          >
+            {isCreating ? "생성 중..." : "완료"}
           </Button>
         </div>
       </div>
+      <Modal
+        isOpen={isSuccessModalOpen}
+        onClose={handleCloseSuccessModal}
+        size="md"
+      >
+        <ModalContent
+          icon={<WarnCircleIcon className="w-8 h-8 text-status-blue" />}
+          title="캠페인 생성 완료"
+          description="캠페인 그룹이 성공적으로 생성되었습니다."
+          buttonText="확인"
+          onConfirm={handleCloseSuccessModal}
+          variant="primary"
+        />
+      </Modal>
     </section>
   );
 }

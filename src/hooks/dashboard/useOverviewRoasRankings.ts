@@ -38,9 +38,9 @@ export function useOverviewRoasRankings() {
         return {
           ...item,
           clickRate,
-          ctrDelta: metrics ? metrics.clickChangeRate * 100 : undefined,
-          conversionRate: metrics ? metrics.conversion * 100 : undefined,
-          conversionDelta: metrics ? metrics.cvrChangeRate * 100 : undefined,
+          ctrDelta: metrics ? metrics.clickChangeRate : undefined,
+          conversionRate: metrics ? metrics.conversion : undefined,
+          conversionDelta: metrics ? metrics.cvrChangeRate : undefined,
         };
       });
     },

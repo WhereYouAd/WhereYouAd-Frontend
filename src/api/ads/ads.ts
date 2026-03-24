@@ -1,4 +1,11 @@
-import type { IAd, ICampaign, ICampaignDetail } from "@/types/ads/campaign";
+import type {
+  IAd,
+  ICampaign,
+  ICampaignDetail,
+  ICreateCampaignGroupRequest,
+  IPlatformCampaign,
+  TProvider,
+} from "@/types/ads/campaign";
 import type { ICommonResponse } from "@/types/common/common";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -9,6 +16,10 @@ interface IAdListResponse {
 
 interface ITrackingUrlResponse {
   trackingUrl: string;
+}
+
+interface IPlatformCampaignResponse {
+  adCampaigns: IPlatformCampaign[];
 }
 
 export const getCampaignList = async (orgId: number): Promise<ICampaign[]> => {
@@ -98,4 +109,21 @@ export const updateAdStatus = async (
       params: { status },
     },
   );
+};
+
+export const getPlatformCampaigns = async (
+  orgId: number,
+  providerType: TProvider,
+): Promise<IPlatformCampaign[]> => {
+  const { data } = await axiosInstance.get<
+    ICommonResponse<IPlatformCampaignResponse>
+  >(`/api/advertisement/${orgId}/campaigns`, { params: { providerType } });
+  return data.data.adCampaigns;
+};
+
+export const createCampaignGroup = async (
+  orgId: number,
+  body: ICreateCampaignGroupRequest,
+): Promise<void> => {
+  await axiosInstance.post(`/api/project/create/${orgId}`, body);
 };

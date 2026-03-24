@@ -8,7 +8,7 @@ import { getOverview } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 // 변화율 퍼센트 문자열로 변환
-const toRate = (rate: number) => `${(Math.abs(rate) * 100).toFixed(1)}%`;
+const toRate = (rate: number) => `${Math.abs(rate).toFixed(1)}%`;
 
 // API 응답 KPI 카드 형식으로 변환
 function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
@@ -31,7 +31,7 @@ function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
     },
     {
       title: "전환율",
-      value: `${(metrics.conversion * 100).toFixed(1)}%`,
+      value: `${metrics.conversion.toFixed(1)}%`,
       trend: {
         direction: metrics.cvrChangeRate >= 0 ? "up" : "down",
         value: toRate(metrics.cvrChangeRate),
@@ -39,7 +39,7 @@ function toKpis(metrics: IMetricsResponse): IStatCardProps[] {
     },
     {
       title: "ROAS",
-      value: `${(metrics.ROAS * 100).toFixed(1)}%`,
+      value: `${metrics.ROAS.toFixed(1)}%`,
       trend: {
         direction: metrics.ROASChangeRate >= 0 ? "up" : "down",
         value: toRate(metrics.ROASChangeRate),
