@@ -82,11 +82,13 @@ export default function CampaignDetail() {
                     : "종료"}
               </Badge>
             </div>
-            <div className="border-l-3 border-text-auth-sub pl-4 py-1">
-              <p className="text-text-auth-sub font-body1 whitespace-pre-line leading-relaxed">
-                {data.description}
-              </p>
-            </div>
+            {data.description && (
+              <div className="border-l-3 border-text-auth-sub pl-4 py-1">
+                <p className="text-text-auth-sub font-body1 whitespace-pre-line leading-relaxed">
+                  {data.description}
+                </p>
+              </div>
+            )}
           </header>
 
           {/* card section */}
@@ -97,7 +99,9 @@ export default function CampaignDetail() {
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
-              platforms={["kakao", "google", "naver"]}
+              platforms={data.providers.map(
+                (p) => p.toLowerCase() as TPlatform,
+              )}
               className="flex-1 min-w-[320px] w-full"
             />
           </div>
