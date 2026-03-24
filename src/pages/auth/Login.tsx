@@ -46,9 +46,7 @@ export default function Login() {
 
   return (
     <div className="w-full max-w-130 px-6 py-12">
-      <h1 className="text-center font-heading1 font-bold text-text-main mb-10">
-        로그인
-      </h1>
+      <h1 className="text-center font-heading2 text-text-main mb-10">로그인</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
         <CommonAuthInput
@@ -114,7 +112,7 @@ export default function Login() {
 
         <div className="w-full mt-12 flex items-center gap-4 px-10">
           <div className="flex-1 h-px bg-gray-100" />
-          <span className="font-body2 text-text-placeholder text-sm select-none">
+          <span className="font-body2 text-text-placeholder select-none">
             또는
           </span>
           <div className="flex-1 h-px bg-gray-100" />
