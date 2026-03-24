@@ -10,7 +10,7 @@ export default function OnboardingIntro() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
-    }, 10000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);

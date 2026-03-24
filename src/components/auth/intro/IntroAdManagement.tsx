@@ -31,29 +31,32 @@ const CAROUSEL_ITEMS = [...PLATFORMS, ...PLATFORMS];
 export default function IntroAdManagement({ isActive }: { isActive: boolean }) {
   return (
     <div
-      className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ease-out bg-brand-300 ${
+      className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 ease-out bg-brand-300 ${
         isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
       }`}
     >
       <div className="flex h-full w-full flex-col justify-center gap-16">
         <div className="w-full flex justify-center px-20">
-          <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <span className="mb-6 inline-block rounded-full bg-logo-1/15 px-4 py-1.5 font-label text-logo-2">
+          <div
+            key={isActive ? "text-active" : "text-inactive"}
+            className={`w-full max-w-150 flex flex-col items-start text-left ${isActive ? "animate-slide-fade-up" : "opacity-0"}`}
+          >
+            <span className="mb-6 inline-block rounded-full bg-status-blue/10 px-4 py-1.5 font-label text-status-blue">
               통합 관리
             </span>
-            <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
+            <h2 className="font-heading1 text-text-main whitespace-pre-line">
               흩어진 광고 성과를{"\n"}
               한곳에서 관리하세요
             </h2>
-            <p className="mt-6 text-xl text-text-sub font-medium leading-relaxed whitespace-pre-line">
+            <p className="mt-4 font-body1 text-text-sub whitespace-pre-line">
               여러 매체의 광고 데이터를{"\n"}
               실시간으로 모아서 보여드려요
             </p>
           </div>
         </div>
 
-        <div className="flex w-full justify-center" aria-hidden="true">
-          <div className="w-full overflow-hidden py-10">
+        <div className="flex w-full justify-center pt-16" aria-hidden="true">
+          <div className="w-full overflow-hidden h-60 flex items-center">
             <div
               className="flex w-max gap-8 px-4 animate-scroll"
               style={{
