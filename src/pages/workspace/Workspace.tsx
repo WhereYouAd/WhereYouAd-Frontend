@@ -26,6 +26,7 @@ import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
@@ -86,12 +87,21 @@ export default function WorkspacePage() {
   };
 
   const workspaces = workspacesQuery.data ?? [];
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return workspaces;
     return workspaces.filter((w) => w.name.toLowerCase().includes(q));
   }, [query, workspaces]);
+
+  const sortedWorkspaces = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      if (a.orgId === selectedOrgId) return -1;
+      if (b.orgId === selectedOrgId) return 1;
+      return 0;
+    });
+  }, [filtered, selectedOrgId]);
 
   const menuItems = (id: TWorkspace["orgId"]): TMenuItem[] => [
     {
@@ -164,7 +174,7 @@ export default function WorkspacePage() {
         />
       );
     }
-    if (filtered.length === 0) {
+    if (sortedWorkspaces.length === 0) {
       return (
         <ul className="space-y-5">
           <WorkspaceEmptyState message="워크스페이스가 없습니다" />
@@ -173,11 +183,12 @@ export default function WorkspacePage() {
     }
     return (
       <ul className="space-y-5">
-        {filtered.map((w) => (
+        {sortedWorkspaces.map((w) => (
           <WorkspaceCard
             key={String(w.orgId)}
             workspace={w}
             menuItems={menuItems(w.orgId)}
+            isSelected={w.orgId === selectedOrgId}
           />
         ))}
       </ul>
