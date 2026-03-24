@@ -6,7 +6,7 @@ interface IAiTalkBubbleProps {
 
 export default function AiTalkBubble({ text }: IAiTalkBubbleProps) {
   return (
-    <div className="relative drop-shadow-xl">
+    <div className="relative drop-shadow-sm mb-6">
       <div className="flex items-center gap-3 rounded-component-md bg-white px-5 py-4 whitespace-nowrap">
         <SparkleIcon className="w-6 h-6 shrink-0" />
         <span className="font-body1 text-text-sub">{text}</span>
