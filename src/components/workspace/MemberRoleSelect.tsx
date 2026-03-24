@@ -1,4 +1,5 @@
 import type { TMemberRole } from "@/types/workspace/workspace";
+import { ROLE_LABEL_MAP } from "@/constants/workspaceRole";
 
 import {
   DropdownMenu,
@@ -11,11 +12,6 @@ type TProps = {
   role: TMemberRole;
   onChange: (newRole: TMemberRole) => void;
   disabled?: boolean;
-};
-
-const roleLabelMap: Record<TMemberRole, string> = {
-  ADMIN: "관리자",
-  MEMBER: "멤버",
 };
 
 const triggerStyleMap: Record<TMemberRole, string> = {
@@ -51,7 +47,7 @@ export default function MemberRoleSelect({
         <div
           className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-component-lg px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
         >
-          <span>{roleLabelMap[role]}</span>
+          <span>{ROLE_LABEL_MAP[role]}</span>
           <ChevonIcon
             className={`h-4 w-4 shrink-0 transition-transform ${open ? "rotate-0" : "-rotate-180"}`}
           />

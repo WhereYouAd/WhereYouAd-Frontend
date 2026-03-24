@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
+import { ROLE_LABEL_MAP } from "@/constants/workspaceRole";
 
 import {
   DropdownMenu,
@@ -73,7 +74,7 @@ export default function WorkspaceCard({
             {w.description ?? ""}
           </div>
           <div className="font-body1 text-text-sub mt-2">
-            {w.myRole ?? "내 직책 및 역할"}
+            {ROLE_LABEL_MAP[w.myRole] ?? "내 직책 및 역할"}
           </div>
         </div>
       </div>
