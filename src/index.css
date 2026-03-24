@@ -428,9 +428,38 @@ button {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    /* 스파클 */
     .animate-sparkle-pulse {
       animation: none;
       opacity: 1;
+    }
+
+    /* 인트로 캐러셀 — 위치 이동 중단 */
+    .animate-scroll {
+      animation: none;
+    }
+
+    /* 바 차트 — 즉시 완성 상태로 표시 */
+    .animate-graph-up {
+      animation: none;
+      transform: scaleY(1);
+    }
+
+    /* 모달 — scale 제거, opacity 전환만 유지 */
+    .animate-modal-content {
+      animation: modal-fade-in var(--duration-normal) var(--ease-out);
+    }
+    .animate-modal-content-out {
+      animation: modal-fade-out var(--duration-fast) var(--ease-in) forwards;
+    }
+
+    /* 토스트 — translateY 제거, opacity 전환만 유지 */
+    @keyframes fade-in-up-reduced {
+      from { opacity: 0; transform: translate(-50%, 0); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+    .animate-fade-in-up {
+      animation: fade-in-up-reduced 200ms var(--ease-out) forwards;
     }
   }
 

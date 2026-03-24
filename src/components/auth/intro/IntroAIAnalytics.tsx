@@ -30,14 +30,14 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
 
   return (
     <div
-      className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-1000 ease-in-out bg-brand-300 ${
-        isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+      className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ease-out bg-brand-300 ${
+        isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
       }`}
     >
-      <div className="flex h-full w-full flex-col justify-center gap-[18vh]">
+      <div className="flex h-full w-full flex-col justify-center gap-16">
         <div className="w-full flex justify-center px-20">
           <div className="w-full max-w-150 flex flex-col items-start text-left">
-            <span className="mb-6 inline-block rounded-full bg-logo-1/10 px-4 py-1.5 font-label text-logo-2">
+            <span className="mb-6 inline-block rounded-full bg-logo-1/15 px-4 py-1.5 font-label text-logo-2">
               AI 성과 분석
             </span>
             <h2 className="text-4xl font-bold leading-tight text-text-main whitespace-pre-line">
@@ -51,7 +51,7 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
           </div>
         </div>
 
-        <div className="flex w-full justify-center px-20">
+        <div className="flex w-full justify-center px-20" aria-hidden="true">
           <div className="w-full max-w-150 flex justify-start pl-2">
             <div
               key={isActive ? "active" : "inactive"}
@@ -71,24 +71,25 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
                     {
                       height: bar.height,
                       animationDelay: bar.delay,
+                      animationPlayState: isActive ? "running" : "paused",
                     } as React.CSSProperties
                   }
                 >
                   {bar.isBlue && (
                     <div
-                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 transition-all duration-700 z-50 ${
+                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 z-50 ${
                         showBubble
                           ? "opacity-100 translate-y-0 scale-100"
-                          : "opacity-0 translate-y-8 scale-50"
+                          : "opacity-0 translate-y-3 scale-95"
                       }`}
                       style={{
+                        transitionProperty: "transform, opacity",
+                        transitionDuration: "300ms",
                         transitionTimingFunction:
                           "cubic-bezier(0.34, 1.56, 0.64, 1)",
                       }}
                     >
-                      <div className="hover:scale-105 transition-transform duration-300">
-                        <AiTalkBubble text="토요일 성과가 +18% 상승!" />
-                      </div>
+                      <AiTalkBubble text="토요일 성과가 +18% 상승!" />
                     </div>
                   )}
                 </div>
