@@ -82,7 +82,6 @@ const mockInviteItems: TInviteMemberItem[] = [
     isMe: false,
   },
 ];
-
 type TMemberListProps = {
   orgId: number;
   members: TWorkspaceMember[];
