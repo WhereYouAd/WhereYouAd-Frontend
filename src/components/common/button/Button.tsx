@@ -55,7 +55,8 @@ export default function Button({
   return (
     <button
       className={twMerge(
-        "flex items-center justify-center gap-2 active-scale whitespace-nowrap",
+        "flex items-center justify-center gap-2 whitespace-nowrap",
+        !(disabled || isLoading) && "active-scale",
         sizeClasses[size],
         variantClasses[variant],
         fullWidth && "w-full relative",
