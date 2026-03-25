@@ -83,7 +83,7 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
           type="text"
           timer={sendCode ? formattedTime : undefined}
           {...register("code")}
-          disabled={isExpired}
+          disabled={!sendCode || isExpired}
           error={!!errors.code || !!codeError || (isExpired && sendCode)}
           errorMessage={
             isExpired && sendCode

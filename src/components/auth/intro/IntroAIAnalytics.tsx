@@ -80,17 +80,11 @@ export default function IntroAIAnalytics({ isActive }: { isActive: boolean }) {
                 >
                   {bar.isBlue && (
                     <div
-                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 z-50 ${
+                      className={`absolute bottom-[calc(100%+16px)] left-1/2 -translate-x-1/2 z-50 bubble-transition ${
                         showBubble
                           ? "opacity-100 translate-y-0 scale-100"
                           : "opacity-0 translate-y-3 scale-95"
                       }`}
-                      style={{
-                        transitionProperty: "transform, opacity",
-                        transitionDuration: "300ms",
-                        transitionTimingFunction:
-                          "cubic-bezier(0.2, 1.05, 0.4, 1)",
-                      }}
                     >
                       <AiTalkBubble text="토요일 성과가 +18% 상승!" />
                     </div>

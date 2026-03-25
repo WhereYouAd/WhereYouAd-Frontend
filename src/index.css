@@ -368,6 +368,13 @@ button {
     transform-origin: bottom;
   }
 
+  /* AI 버블 진입 전환 */
+  .bubble-transition {
+    transition-property: transform, opacity;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.2, 1.05, 0.4, 1);
+  }
+
   /* 로딩 애니메이션 */
   @keyframes shimmer {
     to {
@@ -462,6 +469,11 @@ button {
     .animate-graph-up {
       animation: none;
       transform: scaleY(1);
+    }
+
+    /* AI 버블 — transform/opacity 전환 제거 */
+    .bubble-transition {
+      transition: none;
     }
 
     /* 모달 — scale 제거, opacity 전환만 유지 */

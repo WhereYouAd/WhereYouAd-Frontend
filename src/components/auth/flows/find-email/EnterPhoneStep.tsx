@@ -168,7 +168,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
           type="text"
           timer={sendCode ? formattedTime : undefined}
           {...register("code")}
-          disabled={isExpired && sendCode}
+          disabled={!sendCode || (isExpired && sendCode)}
           error={!!errors.code || !!codeError || (isExpired && sendCode)}
           errorMessage={
             isExpired && sendCode
