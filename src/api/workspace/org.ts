@@ -5,10 +5,12 @@ import {
   type TGetOrgResponse,
   type TGetWorkspaceMembersData,
   type TMyOrgsData,
+  type TUpdateMemberRoleRequest,
   type TUpdateWorkspaceRequest,
   type TUploadImageResponse,
   type TWorkspace,
   type TWorkspaceDetail,
+  type TWorkspaceMember,
   type TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
@@ -81,4 +83,24 @@ export const getWorkspaceMemberCount = async (
     ICommonResponse<TWorkspaceMemberCount>
   >(`/api/org/members/${orgId}/count`);
   return data.data;
+};
+
+export const updateWorkspaceMemberPermission = async (
+  orgId: number,
+  memberId: number,
+  body: TUpdateMemberRoleRequest,
+): Promise<void> => {
+  await axiosInstance.patch<ICommonResponse<TWorkspaceMember>>(
+    `/api/org/members/${orgId}/${memberId}`,
+    body,
+  );
+};
+
+export const deleteMember = async (
+  orgId: number,
+  memberId: number,
+): Promise<void> => {
+  (await axiosInstance.delete)<ICommonResponse<string>>(
+    `/api/org/${orgId}/members/${memberId}`,
+  );
 };
