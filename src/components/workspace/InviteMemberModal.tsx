@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type {
@@ -6,13 +7,17 @@ import type {
   TInviteMemberRequest,
 } from "@/types/workspace/workspace";
 
+import { emailSchema } from "@/utils/validation";
+
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 import Modal from "../common/modal/Modal";
 
+import { postInviteEmail } from "@/api/workspace/org";
 import CopyIcon from "@/assets/icon/common/link.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
+import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 type TInviteMemberModalProps = {
   isOpen: boolean;
@@ -27,9 +32,32 @@ export default function InviteMemberModal({
   orgId,
   inviteItems,
 }: TInviteMemberModalProps) {
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<TInviteMemberRequest>({ email: "" });
   const trimmedEmail = form.email.trim();
-  const isInviteDisabled = trimmedEmail.length === 0;
+  const emailValidation = emailSchema.safeParse(trimmedEmail);
+  const isValidEmail = emailValidation.success;
+
+  const inviteMutation = useMutation({
+    mutationFn: (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
+    onSuccess: () => {
+      toast.success("초대 이메일을 발송했습니다");
+      setForm({ email: "" });
+      void queryClient.invalidateQueries({
+        queryKey: ["workspaceMembers", orgId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["workspaceMemberCount", orgId],
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        getAxiosMessage(error, "초대에 실패했습니다. 다시 시도해주세요"),
+      );
+    },
+  });
+
+  const isInviteDisabled = !isValidEmail || inviteMutation.isPending;
 
   const inviteLink = useMemo(() => {
     return `${window.location.origin}/workspace/${orgId}/invite`;
@@ -48,22 +76,25 @@ export default function InviteMemberModal({
   };
 
   const handleInvite = async () => {
-    // const requestBody: TInviteMemberRequest = {
-    //   email: trimmedEmail,
-    // };
+    if (!emailValidation.success) {
+      toast.error(
+        emailValidation.error.issues[0]?.message ??
+          "올바른 이메일을 입력해주세요",
+      );
+      return;
+    }
     try {
-      // TODO: API호출
-      toast.success("초대 이메일 발송에 성공했습니다");
-      setForm({ email: "" });
+      await inviteMutation.mutateAsync({
+        email: emailValidation.data,
+      });
     } catch (error) {
-      toast.error("초대에 실패했습니다. 다시 시도해주세요");
       console.error("초대 실패", error);
     }
   };
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={inviteMutation.isPending ? () => {} : onClose}
       size="lg"
       padding="none"
       title="팀원 초대하기"
@@ -89,6 +120,7 @@ export default function InviteMemberModal({
                 value={form.email}
                 placeholder="이메일을 입력해서 팀원을 초대하세요"
                 onChange={(e) => handleChangeEmail(e.target.value)}
+                disabled={inviteMutation.isPending}
               />
             </div>
             <Button
@@ -100,7 +132,7 @@ export default function InviteMemberModal({
               disabled={isInviteDisabled}
               className="min-w-22"
             >
-              초대
+              {inviteMutation.isPending ? "초대 중..." : "초대"}
             </Button>
           </div>
         </div>
