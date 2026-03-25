@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
@@ -14,85 +15,19 @@ import PermissionTable from "@/components/workspace/PermissionTable";
 import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwnershipBlockedModal";
 import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModal";
 
+import {
+  getWorkspaceMemberCount,
+  getWorkspaceMembers,
+} from "@/api/workspace/org";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-const mockMembers: TWorkspaceMember[] = [
-  {
-    memberId: 1,
-    name: "이유찬",
-    email: "uuuchan@wya.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-    isMe: true,
-  },
-  {
-    memberId: 2,
-    name: "박치국",
-    email: "peach@wya.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-    isMe: false,
-  },
-  {
-    memberId: 3,
-    name: "강승호",
-    email: "kang@wya.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-    isMe: false,
-  },
-  {
-    memberId: 4,
-    name: "플렉센",
-    email: "flex@wya.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-    isMe: false,
-  },
-  {
-    memberId: 5,
-    name: "잭로그",
-    email: "jackjack@wya.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-    isMe: false,
-  },
-  {
-    memberId: 6,
-    name: "양의지",
-    email: "yang@wya.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-    isMe: false,
-  },
-  {
-    memberId: 7,
-    name: "최민석",
-    email: "kkokko@wya.com",
-    profileImageUrl: null,
-    role: "ADMIN",
-    isMe: false,
-  },
-  {
-    memberId: 8,
-    name: "양재훈",
-    email: "yanghun@wya.com",
-    profileImageUrl: null,
-    role: "MEMBER",
-    isMe: false,
-  },
-];
-
-function getInitialMembers() {
-  return mockMembers.map((member) => ({ ...member }));
-}
+const PAGE_SIZE = 20;
 
 export default function MemberManagement() {
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
 
-  const [members, setMembers] = useState<TWorkspaceMember[]>(getInitialMembers);
   const [changing, setChanging] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -103,23 +38,68 @@ export default function MemberManagement() {
   const [selectedDeleteMember, setSelectedDeleteMember] =
     useState<TWorkspaceMember | null>(null);
 
-  useEffect(() => {
-    setMembers(getInitialMembers());
-    setChanging(false);
-    setDeleting(false);
-    setIsTransferModalOpen(false);
-    setIsBlockedModalOpen(false);
-    setIsDeleteModalOpen(false);
-    setSelectedDeleteMember(null);
-  }, [workspaceId]);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const memberCountQuery = useQuery({
+    queryKey: ["workspaceMemberCount", orgId],
+    queryFn: () => getWorkspaceMemberCount(orgId),
+    enabled: Number.isFinite(orgId) && orgId > 0,
+  });
+  const membersQuery = useInfiniteQuery({
+    queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
+    queryFn: ({ pageParam }: { pageParam: string | null }) =>
+      getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNext) return undefined;
+      return lastPage.nextCursor;
+    },
+    enabled: Number.isFinite(orgId) && orgId > 0,
+  });
+
+  const members = useMemo(() => {
+    return membersQuery.data?.pages.flatMap((page) => page.members) ?? [];
+  }, [membersQuery.data]);
+
+  const totalCount = memberCountQuery?.data?.totalCount ?? 0;
 
   const adminCount = useMemo(() => {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  const transferableCandidates = useMemo<TWorkspaceMember[]>(() => {
+  const transferableCandidates = useMemo(() => {
     return members.filter((member) => !member.isMe && member.role === "ADMIN");
   }, [members]);
+
+  useEffect(() => {
+    const target = observerRef.current;
+    if (!target) return;
+    if (!membersQuery.hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (
+          firstEntry?.isIntersecting &&
+          membersQuery.hasNextPage &&
+          !membersQuery.isFetchingNextPage
+        ) {
+          void membersQuery.fetchNextPage();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "120px",
+        threshold: 0,
+      },
+    );
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [
+    membersQuery.hasNextPage,
+    membersQuery.isFetchingNextPage,
+    membersQuery.fetchNextPage,
+  ]);
 
   const handleRoleChange = (targetMemberId: number, newRole: TMemberRole) => {
     const targetMember = members.find(
@@ -141,14 +121,7 @@ export default function MemberManagement() {
       toast.error("마지막 관리자는 멤버로 변경할 수 없습니다");
       return;
     }
-
-    setMembers((prev) =>
-      prev.map((member) =>
-        member.memberId === targetMemberId
-          ? { ...member, role: newRole }
-          : member,
-      ),
-    );
+    // TODO:관리자 변경 API 연동
   };
 
   const openChangeModal = () => {
@@ -167,19 +140,7 @@ export default function MemberManagement() {
   const handleTransferOwnership = async (member: TWorkspaceMember) => {
     setChanging(true);
     try {
-      // TODO: API호출
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setMembers((prev) =>
-        prev.map((currentMember) => {
-          if (currentMember.isMe) {
-            return { ...currentMember, role: "MEMBER" };
-          }
-          if (currentMember.memberId === member.memberId) {
-            return { ...currentMember, role: "ADMIN" };
-          }
-          return currentMember;
-        }),
-      );
+      // TODO: 관리자 변경 API 연동
       toast.success(`${member.name}님으로 관리자가 변경되었습니다`);
       setIsTransferModalOpen(false);
       navigate("/workspace");
@@ -216,13 +177,7 @@ export default function MemberManagement() {
   const handleDeleteMember = async (member: TWorkspaceMember) => {
     setDeleting(true);
     try {
-      // TODO: API 호출
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setMembers((prev) =>
-        prev.filter(
-          (currentMember) => currentMember.memberId !== member.memberId,
-        ),
-      );
+      // TODO: 삭제 API 연동
       toast.success(`${member.name}님이 삭제되었습니다`);
       setIsDeleteModalOpen(false);
       setSelectedDeleteMember(null);
@@ -234,6 +189,42 @@ export default function MemberManagement() {
     }
   };
 
+  if (!Number.isFinite(orgId) || orgId <= 0) {
+    return (
+      <section className="w-full min-w-0">
+        <header className="mb-7">
+          <h1 className="font-heading2">멤버 관리</h1>
+          <p className="font-body1 text-status-red">
+            올바르지 않은 워크스페이스입니다.
+          </p>
+        </header>
+      </section>
+    );
+  }
+  if (memberCountQuery.isLoading || membersQuery.isLoading) {
+    return (
+      <section className="w-full min-w-0">
+        <header className="mb-7">
+          <h1 className="font-heading2">멤버 관리</h1>
+          <p className="font-body1 text-text-sub">
+            팀 구성원 정보를 불러오는 중입니다...
+          </p>
+        </header>
+      </section>
+    );
+  }
+  if (memberCountQuery.isError || membersQuery.isError) {
+    return (
+      <section className="w-full min-w-0">
+        <header className="mb-7">
+          <h1 className="font-heading2">멤버 관리</h1>
+          <p className="font-body1 text-status-red">
+            팀 구성원 정보를 불러오지 못했습니다
+          </p>
+        </header>
+      </section>
+    );
+  }
   return (
     <section className="w-full min-w-0">
       <header className="mb-7">
@@ -247,8 +238,11 @@ export default function MemberManagement() {
         <MemberList
           orgId={orgId}
           members={members}
+          totalCount={totalCount}
           onRoleChange={handleRoleChange}
           onDeleteClick={openDeleteMember}
+          isFetchingNextPage={membersQuery.isFetchingNextPage}
+          observerRef={observerRef}
         />
         <PermissionTable />
         <ControlBox
