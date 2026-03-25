@@ -24,7 +24,6 @@ export default function TextareaField({
   minRows = 4,
 }: TProps) {
   const ref = useRef<HTMLTextAreaElement | null>(null);
-
   const resize = () => {
     const el = ref.current;
     if (!el) return;
@@ -48,20 +47,7 @@ export default function TextareaField({
         rows={minRows}
         value={value}
         className={twMerge(
-          "w-full rounded-component-md bg-white ring-1 ring-logo-1/30 transition-colors duration-200 ease-out overflow-hidden",
-          disabled
-            ? "bg-gray-100 cursor-not-allowed"
-            : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
-        )}
-      />
-      <textarea
-        ref={ref}
-        id={id}
-        rows={minRows}
-        value={value}
-        className={twMerge(
-          "w-full resize-none overflow-hidden bg-transparent px-5 py-4 outline-none text-body1 text-text-main placeholder:text-text-placeholder",
-          "disabled:cursor-not-allowed disabled:text-text-disabled",
+          "w-full resize-none overflow-hidden rounded-component-md bg-gray-50 px-5 py-4 outline-none transition-smooth hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-logo-1/30 text-body1 text-text-main placeholder:text-text-placeholder",
           className,
         )}
         placeholder={placeholder}
