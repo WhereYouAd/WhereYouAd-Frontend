@@ -42,6 +42,7 @@ function Modal({
   const titleId = useId();
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [isClosing, setIsClosing] = useState(false);
+  const isVisible = isOpen || isClosing; // 모달이 열려있거나 닫히는 중일 때
 
   // 진입/퇴장 렌더링 제어
   useEffect(() => {
@@ -58,9 +59,9 @@ function Modal({
     }
   }, [isOpen]);
 
-  // 포커스 관리: 모달 열릴 때 포커스 이동, 닫힐 때 원래 위치로 복귀
+  // 포커스 관리: 모달 열릴 때 포커스 이동, 닫힘 애니메이션 종료 후 원래 위치로 복귀
   useEffect(() => {
-    if (isOpen) {
+    if (isVisible) {
       previousActiveElement.current = document.activeElement as HTMLElement;
 
       setTimeout(() => {
@@ -71,7 +72,7 @@ function Modal({
         previousActiveElement.current.focus();
       }
     }
-  }, [isOpen]);
+  }, [isVisible]);
 
   // ESC 키로 모달 닫기
   useEffect(() => {
@@ -126,7 +127,8 @@ function Modal({
   }
 
   return createPortal(
-    <RemoveScroll enabled={isOpen}>
+    // isVisible 기준으로 잠금: 닫힘 애니메이션 중에 배경 스크롤 막음
+    <RemoveScroll enabled={isVisible}>
       <div
         className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${isClosing ? "animate-modal-overlay-out" : "animate-modal-overlay"}`}
         onClick={handleOverlayClick}

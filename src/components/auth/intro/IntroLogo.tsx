@@ -3,6 +3,7 @@ import SymbolWhite from "@/assets/logo/service-logo/symbol-white.svg?react";
 export default function IntroLogo({ isActive }: { isActive: boolean }) {
   return (
     <div
+      aria-hidden={!isActive}
       className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-300 ease-out bg-linear-to-b from-logo-1 to-logo-2 ${
         isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
       }`}
