@@ -24,6 +24,7 @@ type TInviteMemberModalProps = {
   onClose: () => void;
   orgId: number;
   inviteItems: TInviteMemberItem[];
+  onInviteSuccess: (email: string) => void;
 };
 
 export default function InviteMemberModal({
@@ -31,6 +32,7 @@ export default function InviteMemberModal({
   onClose,
   orgId,
   inviteItems,
+  onInviteSuccess,
 }: TInviteMemberModalProps) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<TInviteMemberRequest>({ email: "" });
@@ -40,8 +42,9 @@ export default function InviteMemberModal({
 
   const inviteMutation = useMutation({
     mutationFn: (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       toast.success("초대 이메일을 발송했습니다");
+      onInviteSuccess(variables.email);
       setForm({ email: "" });
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
