@@ -201,6 +201,7 @@ export default function MemberManagement() {
       </section>
     );
   }
+
   if (memberCountQuery.isLoading || membersQuery.isLoading) {
     return (
       <section className="w-full min-w-0">
@@ -213,6 +214,7 @@ export default function MemberManagement() {
       </section>
     );
   }
+
   if (memberCountQuery.isError || membersQuery.isError) {
     return (
       <section className="w-full min-w-0">
@@ -225,6 +227,7 @@ export default function MemberManagement() {
       </section>
     );
   }
+
   return (
     <section className="w-full min-w-0">
       <header className="mb-7">
