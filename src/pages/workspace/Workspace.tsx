@@ -243,7 +243,7 @@ export default function WorkspacePage() {
           </p>
           <div className="flex flex-row gap-8 items-start tablet:flex-col tablet:gap-5">
             <div className="flex flex-col items-center w-45 shrink-0 tablet:w-full">
-              <div className="w-full mb-3 select-none font-label text-text-main tablet:text-center">
+              <div className="w-full mb-3 select-none text-text-main tablet:text-center">
                 로고 이미지
               </div>
               <input
