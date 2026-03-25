@@ -2,15 +2,16 @@ import type { ICommonResponse } from "@/types/common/common";
 import {
   type TCreateOrgRequest,
   type TCreateOrgResponse,
+  type TDeleteWorkspaceMemberResponse,
   type TGetOrgResponse,
   type TGetWorkspaceMembersData,
   type TMyOrgsData,
   type TUpdateMemberRoleRequest,
+  type TUpdateMemberRoleResponse,
   type TUpdateWorkspaceRequest,
   type TUploadImageResponse,
   type TWorkspace,
   type TWorkspaceDetail,
-  type TWorkspaceMember,
   type TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
@@ -89,18 +90,21 @@ export const updateWorkspaceMemberPermission = async (
   orgId: number,
   memberId: number,
   body: TUpdateMemberRoleRequest,
-): Promise<void> => {
-  await axiosInstance.patch<ICommonResponse<TWorkspaceMember>>(
-    `/api/org/members/${orgId}/${memberId}`,
-    body,
-  );
+): Promise<TUpdateMemberRoleResponse> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TUpdateMemberRoleResponse>
+  >(`/api/org/members/${orgId}/${memberId}`, body);
+
+  return data.data;
 };
 
-export const deleteMember = async (
+export const deleteWorkspaceMember = async (
   orgId: number,
   memberId: number,
-): Promise<void> => {
-  (await axiosInstance.delete)<ICommonResponse<string>>(
-    `/api/org/${orgId}/members/${memberId}`,
-  );
+): Promise<TDeleteWorkspaceMemberResponse> => {
+  const { data } = await axiosInstance.delete<
+    ICommonResponse<TDeleteWorkspaceMemberResponse>
+  >(`/api/org/${orgId}/members/${memberId}`);
+
+  return data.data;
 };
