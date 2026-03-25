@@ -175,10 +175,22 @@ export default function WorkspaceSetting() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <PageHeader
-        title="워크스페이스 관리"
-        description="워크스페이스 정보를 확인하고 관리하세요."
-      />
+      <div className="flex flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            void navigate(-1);
+          }}
+          className="inline-flex w-fit items-center gap-1 text-text-sub transition-colors hover:text-text-main"
+        >
+          <span aria-hidden="true">←</span>
+          <span className="font-body2">뒤로 이동</span>
+        </button>
+        <PageHeader
+          title="워크스페이스 관리"
+          description="워크스페이스 정보를 확인하고 관리하세요."
+        />
+      </div>
 
       {loading && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
