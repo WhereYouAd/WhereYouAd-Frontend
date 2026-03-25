@@ -282,26 +282,41 @@ export default function WorkspaceSetting() {
                 />
               </div>
             </div>
+            <div className="flex justify-end mt-6 gap-4 tablet:flex-col">
+              <Button
+                size="big"
+                variant="secondary"
+                type="button"
+                onClick={() => {
+                  if (!orgId) return;
+                  void navigate(`/workspace/${orgId}/members`);
+                }}
+                aria-label="멤버 관리로 이동하기"
+                className="w-auto tablet:w-full"
+              >
+                멤버 관리로 이동
+              </Button>
+              <Button
+                size="big"
+                variant="primary"
+                type="button"
+                onClick={onSave}
+                disabled={!name.trim() || saving || deleting || uploading}
+                aria-label="변경사항 저장하기"
+                className="w-auto tablet:w-full"
+              >
+                {saving ? "저장 중.." : "변경사항 저장하기"}
+              </Button>
+            </div>
           </div>
-          <div className="flex justify-end">
-            <Button
-              size="big"
-              variant="primary"
-              onClick={onSave}
-              disabled={!name.trim() || saving || deleting || uploading}
-              aria-label="변경사항 저장하기"
-              className="w-auto tablet:w-full"
-            >
-              {saving ? "저장 중.." : "변경사항 저장하기"}
-            </Button>
-          </div>
+
           <div className="w-full flex flex-col">
             <ControlBox
               title="워크스페이스 삭제"
               description={`워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.\n 이 작업은 되돌릴 수 없습니다`}
               buttonText="워크스페이스 삭제"
               onButtonClick={openDeleteModal}
-              className="w-full mt-5"
+              className="w-full"
               containerClassName="bg-status-red/10 border-status-red"
               titleClassName="text-status-red"
               descriptionClassName="text-text-auth-sub"
