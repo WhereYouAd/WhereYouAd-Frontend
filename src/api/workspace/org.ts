@@ -5,6 +5,8 @@ import {
   type TDeleteWorkspaceMemberResponse,
   type TGetOrgResponse,
   type TGetWorkspaceMembersData,
+  type TInviteMemberRequest,
+  type TInviteMemberResponse,
   type TMyOrgsData,
   type TUpdateMemberRoleRequest,
   type TUpdateMemberRoleResponse,
@@ -106,5 +108,15 @@ export const deleteWorkspaceMember = async (
     ICommonResponse<TDeleteWorkspaceMemberResponse>
   >(`/api/org/${orgId}/members/${memberId}`);
 
+  return data.data;
+};
+
+export const postInviteEmail = async (
+  orgId: number,
+  body: TInviteMemberRequest,
+): Promise<TInviteMemberResponse> => {
+  const { data } = await axiosInstance.post<
+    ICommonResponse<TInviteMemberResponse>
+  >(`/api/org/members/${orgId}/invitation`, body);
   return data.data;
 };
