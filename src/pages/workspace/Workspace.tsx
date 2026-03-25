@@ -189,6 +189,9 @@ export default function WorkspacePage() {
             workspace={w}
             menuItems={menuItems(w.orgId)}
             isSelected={w.orgId === selectedOrgId}
+            onClick={() => {
+              void navigate(`/workspace/${w.orgId}/settings`);
+            }}
           />
         ))}
       </ul>

@@ -17,12 +17,14 @@ type TProps = {
   workspace: TWorkspace;
   menuItems: TMenuItem[];
   isSelected?: boolean;
+  onClick?: () => void;
 };
 
 function WorkspaceCard({
   workspace: w,
   menuItems,
   isSelected = false,
+  onClick,
 }: TProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -37,8 +39,11 @@ function WorkspaceCard({
     <li
       className={twMerge(
         "flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border tablet:px-4 tablet:py-4",
-        isSelected ? "border-chart-3 bg-chart-3/3" : "border-gray-100",
+        onClick &&
+          "cursor-pointer hover:bg-gray-50 active:scale-93 duration-50 transition-transform",
+        isSelected ? "border-chart-3/80 bg-chart-3/2" : "border-gray-100",
       )}
+      onClick={onClick}
     >
       <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
         <div className="w-24 h-24 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
@@ -82,7 +87,10 @@ function WorkspaceCard({
         </div>
       </div>
 
-      <div className="flex items-center gap-4 shrink-0">
+      <div
+        className="flex items-center gap-4 shrink-0"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DropdownMenu
           trigger={<VectorIcon aria-hidden="true" />}
           aria-label={`${w.name} 워크스페이스 메뉴`}
