@@ -51,6 +51,7 @@ export default function TextareaField({
           disabled
             ? "bg-gray-100 cursor-not-allowed"
             : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
+          className,
         )}
         placeholder={placeholder}
         onChange={onChange}
