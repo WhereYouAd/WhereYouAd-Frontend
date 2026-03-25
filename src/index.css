@@ -66,12 +66,6 @@ button {
   --height-button-big: 55px;
   --height-button-small: 40px;
 
-  --spacing-component-xs: 0.5rem;
-  --spacing-component-sm: 1rem;
-  --spacing-component-md: 1.5rem;
-  --spacing-component-lg: 2rem;
-  --spacing-component-xl: 3rem;
-
   --radius-component-sm: 0.5rem;
   --radius-component-md: 1rem;
   --radius-component-lg: 1.5rem;
@@ -95,7 +89,6 @@ button {
   /* 애니메이션 속도 */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
-  --duration-slow: 400ms;
 }
 
 @font-face {
