@@ -1,10 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
   type TMemberRole,
+  type TUpdateMemberRoleRequest,
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
@@ -17,10 +23,13 @@ import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwners
 import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModal";
 
 import {
+  deleteWorkspaceMember,
   getWorkspaceMemberCount,
   getWorkspaceMembers,
+  updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
+import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 const PAGE_SIZE = 20;
 
@@ -28,9 +37,9 @@ export default function MemberManagement() {
   const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
+  const queryClient = useQueryClient();
 
   const [changing, setChanging] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
@@ -68,9 +77,48 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
+  // 소유권이전. 나빼고, 이미 ADMIN인 사람
+  // 기능 보류. 회의 거쳐야함.
   const transferableCandidates = useMemo(() => {
     return members.filter((member) => !member.isMe && member.role === "ADMIN");
   }, [members]);
+
+  const updateMemberRoleMutation = useMutation({
+    mutationFn: ({
+      memberId,
+      body,
+    }: {
+      memberId: number;
+      body: TUpdateMemberRoleRequest;
+    }) => updateWorkspaceMemberPermission(orgId, memberId, body),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["workspaceMembers", orgId],
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        getAxiosMessage(error, "권한 변경에 실패했습니다. 다시 시도해주세요"),
+      );
+    },
+  });
+
+  const deleteMemberMutation = useMutation({
+    mutationFn: (memberId: number) => deleteWorkspaceMember(orgId, memberId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["workspaceMembers", orgId],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: ["workspaceMemberCount", orgId],
+      });
+    },
+    onError: (error) => {
+      toast.error(
+        getAxiosMessage(error, "팀원 삭제에 실패했습니다. 다시 시도해주세요"),
+      );
+    },
+  });
 
   useEffect(() => {
     const target = observerRef.current;
@@ -102,7 +150,10 @@ export default function MemberManagement() {
     membersQuery.fetchNextPage,
   ]);
 
-  const handleRoleChange = (targetMemberId: number, newRole: TMemberRole) => {
+  const handleRoleChange = async (
+    targetMemberId: number,
+    newRole: TMemberRole,
+  ) => {
     const targetMember = members.find(
       (member) => member.memberId === targetMemberId,
     );
@@ -122,7 +173,17 @@ export default function MemberManagement() {
       toast.error("마지막 관리자는 멤버로 변경할 수 없습니다");
       return;
     }
-    // TODO:관리자 변경 API 연동
+    try {
+      await updateMemberRoleMutation.mutateAsync({
+        memberId: targetMemberId,
+        body: { orgRole: newRole },
+      });
+      toast.success(
+        `${targetMember.name}님의 권한이 ${newRole === "ADMIN" ? "관리자" : "멤버"}로 변경되었습니다`,
+      );
+    } catch (error) {
+      console.error("권한 변경 실패", error);
+    }
   };
 
   const openChangeModal = () => {
@@ -170,23 +231,19 @@ export default function MemberManagement() {
   };
 
   const closeDeleteMember = () => {
-    if (deleting) return;
+    if (deleteMemberMutation.isPending) return;
     setIsDeleteModalOpen(false);
     setSelectedDeleteMember(null);
   };
 
   const handleDeleteMember = async (member: TWorkspaceMember) => {
-    setDeleting(true);
     try {
-      // TODO: 삭제 API 연동
+      await deleteMemberMutation.mutateAsync(member.memberId);
       toast.success(`${member.name}님이 삭제되었습니다`);
       setIsDeleteModalOpen(false);
       setSelectedDeleteMember(null);
     } catch (error) {
-      toast.error("팀원 삭제에 실패했습니다. 다시 시도해주세요");
       console.error("팀원 삭제 실패", error);
-    } finally {
-      setDeleting(false);
     }
   };
 
@@ -292,7 +349,7 @@ export default function MemberManagement() {
           onClose={closeDeleteMember}
           member={selectedDeleteMember}
           onConfirm={handleDeleteMember}
-          isLoading={deleting}
+          isLoading={deleteMemberMutation.isPending}
         />
       </div>
     </section>

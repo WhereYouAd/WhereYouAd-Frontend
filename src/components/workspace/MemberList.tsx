@@ -103,6 +103,9 @@ export default function MemberList({
   observerRef,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
+  const [pendingInviteItems, setPendingInviteItems] = useState<
+    TInviteMemberItem[]
+  >([]);
 
   const openInviteMember = () => {
     setInviteMemberOpen(true);
@@ -110,6 +113,36 @@ export default function MemberList({
   const closeInviteMember = () => {
     setInviteMemberOpen(false);
   };
+
+  const handleInviteSuccess = (email: string) => {
+    setPendingInviteItems((prev) => {
+      const alreadyExists = prev.some((item) => item.email === email);
+      if (alreadyExists) return prev;
+
+      return [
+        {
+          email,
+          inviteStatus: "PENDING",
+        },
+        ...prev,
+      ];
+    });
+  };
+
+  const inviteItems: TInviteMemberItem[] = [
+    ...pendingInviteItems,
+    ...members.map((member) => ({
+      memberId: member.memberId,
+      name: member.name,
+      email: member.email,
+      profileImageUrl: member.profileImageUrl,
+      role: member.role,
+      inviteStatus: "ACTIVE" as const,
+      isMe: member.isMe,
+    })),
+  ];
+
+  const hasVisibleItems = members.length > 0 || pendingInviteItems.length > 0;
 
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
@@ -135,7 +168,7 @@ export default function MemberList({
         </Button>
       </header>
 
-      {members.length === 0 ? (
+      {!hasVisibleItems ? (
         <div className="flex min-h-40 items-center justify-center rounded-component-md bg-gray-50 text-text-sub">
           아직 등록된 팀원이 없습니다
         </div>
@@ -165,7 +198,8 @@ export default function MemberList({
         isOpen={inviteMemberOpen}
         onClose={closeInviteMember}
         orgId={orgId}
-        inviteItems={mockInviteItems}
+        inviteItems={inviteItems}
+        onInviteSuccess={handleInviteSuccess}
       />
     </div>
   );
