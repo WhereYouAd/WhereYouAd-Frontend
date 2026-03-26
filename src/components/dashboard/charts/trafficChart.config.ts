@@ -41,7 +41,12 @@ export function buildChartOptions(params: {
   anomalyY?: number; // 이상 징후 y 좌표
 }): ApexOptions {
   const { categories, maxCount, anomalyCategory, anomalyY } = params;
-  const yMax = maxCount > 0 ? Math.ceil(maxCount / 10000) * 10000 : 10000;
+  const yMax = (() => {
+    if (maxCount <= 0) return 1000;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(maxCount)));
+    const unit = magnitude >= 1000 ? magnitude : 1000;
+    return Math.ceil((maxCount * 1.2) / unit) * unit;
+  })();
 
   return {
     chart: {
@@ -134,10 +139,14 @@ export function buildChartOptions(params: {
     yaxis: {
       min: 0,
       max: yMax,
-      tickAmount: 6,
+      tickAmount: 5,
       labels: {
-        formatter: (val: number) =>
-          val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,
+        formatter: (val: number) => {
+          if (val === 0) return "";
+          const rounded = Math.round(val);
+          if (rounded < 1000) return rounded.toLocaleString();
+          return `${Math.round(rounded / 1000)}K`;
+        },
         style: { colors: "#8b8b8f", fontSize: "12px" },
       },
     },
@@ -151,6 +160,9 @@ export function buildChartOptions(params: {
 
     tooltip: {
       x: { show: false },
+      y: {
+        formatter: (val: number) => val.toLocaleString(),
+      },
       style: { fontFamily: "Pretendard" },
     },
   };

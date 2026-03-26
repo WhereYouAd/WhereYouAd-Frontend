@@ -7,7 +7,10 @@ import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function useClickStream(mode: "real" | "dummy" = "dummy") {
-  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  // TODO: 테스트용 - 더미 데이터가 orgId 1에만 있어서 임시 고정, 테스트 후 원래대로 복구할 예정
+  // const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  useWorkspaceStore((s) => s.selectedOrgId);
+  const orgId = 1;
   const accessToken = useAuthStore((s) => s.accessToken);
   const [data, setData] = useState<IClickStreamItem | null>(null);
   const [suspectDetail, setSuspectDetail] =

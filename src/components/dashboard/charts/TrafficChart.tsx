@@ -106,16 +106,35 @@ const TrafficChart = memo(function TrafficChart() {
     });
     const chartData = items.map((d) => d.count);
 
-    // 이상 징후 발생 시 최대 클릭 지점을 마커로 표시
+    // 이상 징후 발생 시 suspectDetail.timestamp로 해당 분 단위 지점을 마커로 표시
     let anomCat: string | undefined;
     let anomY: number | undefined;
     if (data?.hasSuspect && items.length > 0) {
-      const maxIdx = items.reduce(
-        (maxI, cur, i, arr) => (cur.count > arr[maxI].count ? i : maxI),
-        0,
-      );
-      anomCat = cats[maxIdx];
-      anomY = items[maxIdx].count;
+      let matchIdx = -1;
+
+      if (suspectDetail?.timestamp) {
+        const ts = new Date(suspectDetail.timestamp);
+        if (!isNaN(ts.getTime())) {
+          const minute =
+            ts.getFullYear().toString() +
+            String(ts.getMonth() + 1).padStart(2, "0") +
+            String(ts.getDate()).padStart(2, "0") +
+            String(ts.getHours()).padStart(2, "0") +
+            String(ts.getMinutes()).padStart(2, "0");
+          matchIdx = items.findIndex((d) => d.minute === minute);
+        }
+      }
+
+      // timestamp 매칭 실패 시 최대 클릭 지점으로 fallback
+      if (matchIdx === -1) {
+        matchIdx = items.reduce(
+          (maxI, cur, i, arr) => (cur.count > arr[maxI].count ? i : maxI),
+          0,
+        );
+      }
+
+      anomCat = cats[matchIdx];
+      anomY = items[matchIdx].count;
     }
 
     return {
@@ -124,7 +143,7 @@ const TrafficChart = memo(function TrafficChart() {
       anomalyCategory: anomCat,
       anomalyY: anomY,
     };
-  }, [data]);
+  }, [data, suspectDetail]);
 
   const chartOptions = useMemo(
     () =>
