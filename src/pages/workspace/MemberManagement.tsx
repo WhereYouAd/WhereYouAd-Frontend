@@ -156,7 +156,7 @@ export default function MemberManagement() {
 
     if (isLastAdminDemotion) {
       toast.error(
-        "관리자는 최소 1명 이상 이어야합니다. 다른 멤버를 관리자로 먼저 지정 후 다시 시도해 주세요",
+        "관리자는 최소 1명 이상이어야 합니다. 다른 멤버를 먼저 관리자로 지정한 후 다시 시도해 주세요",
       );
       return;
     }
