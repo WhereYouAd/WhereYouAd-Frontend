@@ -14,13 +14,10 @@ import {
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
-import ControlBox from "@/components/common/controlbox/ControlBox";
 import PageHeader from "@/components/common/PageHeader";
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
 import PermissionTable from "@/components/workspace/PermissionTable";
-import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwnershipBlockedModal";
-import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModal";
 
 import {
   deleteWorkspaceMember,
@@ -28,7 +25,6 @@ import {
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
-import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 const PAGE_SIZE = 20;
@@ -38,11 +34,6 @@ export default function MemberManagement() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
   const queryClient = useQueryClient();
-
-  const [changing, setChanging] = useState(false);
-
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDeleteMember, setSelectedDeleteMember] =
@@ -77,12 +68,6 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  // 소유권이전. 나빼고, 이미 ADMIN인 사람
-  // 기능 보류. 회의 거쳐야함.
-  const transferableCandidates = useMemo(() => {
-    return members.filter((member) => !member.isMe && member.role === "ADMIN");
-  }, [members]);
-
   const updateMemberRoleMutation = useMutation({
     mutationFn: ({
       memberId,
@@ -98,7 +83,7 @@ export default function MemberManagement() {
     },
     onError: (error) => {
       toast.error(
-        getAxiosMessage(error, "권한 변경에 실패했습니다. 다시 시도해주세요"),
+        getAxiosMessage(error, "역할 변경에 실패했습니다. 다시 시도해주세요"),
       );
     },
   });
@@ -183,34 +168,6 @@ export default function MemberManagement() {
       );
     } catch (error) {
       console.error("권한 변경 실패", error);
-    }
-  };
-
-  const openChangeModal = () => {
-    if (transferableCandidates.length === 0) {
-      setIsBlockedModalOpen(true);
-      return;
-    }
-    setIsTransferModalOpen(true);
-  };
-
-  const closeTransferModal = () => {
-    if (changing) return;
-    setIsTransferModalOpen(false);
-  };
-
-  const handleTransferOwnership = async (member: TWorkspaceMember) => {
-    setChanging(true);
-    try {
-      // TODO: 관리자 변경 API 연동
-      toast.success(`${member.name}님으로 관리자가 변경되었습니다`);
-      setIsTransferModalOpen(false);
-      navigate("/workspace");
-    } catch (error) {
-      toast.error("관리자 변경에 실패했습니다. 다시 시도해주세요");
-      console.error("관리자변경실패", error);
-    } finally {
-      setChanging(false);
     }
   };
 
@@ -315,34 +272,8 @@ export default function MemberManagement() {
           isFetchingNextPage={membersQuery.isFetchingNextPage}
           observerRef={observerRef}
         />
+
         <PermissionTable />
-        <ControlBox
-          title="관리자 변경"
-          description="이 조직의 소유권을 다른 멤버에게 양도합니다. 이 작업은 되돌릴 수 없습니다."
-          buttonText="소유권 이전"
-          onButtonClick={openChangeModal}
-          className="w-full min-w-0"
-          containerClassName="border-status-red bg-status-red/10"
-          titleClassName="text-status-red"
-          descriptionClassName="text-text-auth-sub"
-          buttonVariant="dangerSoft"
-          buttonSize="big"
-          buttonClassName="px-8 !rounded-component-md"
-          leadingSlot={<WarnIcon className="h-12 w-12 text-red-500" />}
-        />
-
-        <TransferOwnershipModal
-          isOpen={isTransferModalOpen}
-          onClose={closeTransferModal}
-          candidates={transferableCandidates}
-          onConfirm={handleTransferOwnership}
-          isLoading={changing}
-        />
-
-        <TransferOwnershipBlockedModal
-          isOpen={isBlockedModalOpen}
-          onClose={() => setIsBlockedModalOpen(false)}
-        />
 
         <DeleteMemberModal
           isOpen={isDeleteModalOpen}
