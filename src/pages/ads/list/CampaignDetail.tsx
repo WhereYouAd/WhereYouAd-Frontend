@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import type { TPlatform } from "@/types/ads/campaign";
 
@@ -15,6 +15,7 @@ import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
 import { updateCampaignStatus } from "@/api/ads/ads";
+import LeftChevronIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function CampaignDetail() {
@@ -28,6 +29,8 @@ export default function CampaignDetail() {
     orgId ? Number(orgId) : null,
     projectId ? Number(projectId) : null,
   );
+
+  const navigate = useNavigate();
 
   const stopControl = useControlModal({
     successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
@@ -67,10 +70,17 @@ export default function CampaignDetail() {
 
   return (
     <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
-      <div className="flex-1 py-15 px-25 tablet:px-10">
+      <div className="flex-1 py-10 px-20 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2 text-text-sub font-body2 hover:text-text-main transition-colors w-fit mb-3"
+            >
+              <LeftChevronIcon className="w-4 h-4" />
+              광고 운영 관리
+            </button>
             <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden w-full">
               <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
               <Badge
