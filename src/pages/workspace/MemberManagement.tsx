@@ -155,7 +155,9 @@ export default function MemberManagement() {
       targetMember.role === "ADMIN" && newRole === "MEMBER" && adminCount === 1;
 
     if (isLastAdminDemotion) {
-      toast.error("마지막 관리자는 멤버로 변경할 수 없습니다");
+      toast.error(
+        "관리자는 최소 1명 이상 이어야합니다. 다른 멤버를 관리자로 먼저 지정후 다시 시도해주세요",
+      );
       return;
     }
     try {
