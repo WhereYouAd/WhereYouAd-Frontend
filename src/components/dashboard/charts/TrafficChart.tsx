@@ -94,7 +94,7 @@ const AnomalyBubble = memo(function AnomalyBubble({
 
 const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data, suspectDetail } = useClickStream("dummy");
+  const { data, suspectDetail, isError } = useClickStream("dummy");
 
   // timeSeriesData → 차트 series 및 카테고리 변환
   const { series, categories, anomalyCategory, anomalyY } = useMemo(() => {
@@ -191,6 +191,15 @@ const TrafficChart = memo(function TrafficChart() {
   const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
   const showBubble = isAnomalyHovered || isAnomalyFocused;
+
+  if (isError && !data) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-100 gap-2 text-text-sub">
+        <p className="font-body2">실시간 데이터를 불러오지 못했습니다.</p>
+        <p className="font-caption">잠시 후 다시 시도해 주세요.</p>
+      </div>
+    );
+  }
 
   if (!data) {
     return <Skeleton className="w-full h-100" />;

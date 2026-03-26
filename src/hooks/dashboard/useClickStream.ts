@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 import type { IClickStreamItem } from "@/types/dashboard/overview";
 
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+const MAX_RETRIES = 3;
 
 export function useClickStream(mode: "real" | "dummy" = "dummy") {
   // TODO: 테스트용 - 더미 데이터가 orgId 1에만 있어서 임시 고정, 테스트 후 원래대로 복구할 예정
@@ -15,17 +17,26 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
   const [data, setData] = useState<IClickStreamItem | null>(null);
   const [suspectDetail, setSuspectDetail] =
     useState<IClickStreamItem["suspectDetail"]>(null);
+  const [isError, setIsError] = useState(false);
+  const retryCountRef = useRef(0);
 
   useEffect(() => {
     if (!orgId || !accessToken) return;
 
     const controller = new AbortController();
+    retryCountRef.current = 0;
 
     fetchEventSource(`/api/dashboard/${orgId}/clicks/stream?mode=${mode}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       signal: controller.signal,
+      onopen: async (response) => {
+        if (response.ok) {
+          retryCountRef.current = 0;
+          setIsError(false);
+        }
+      },
       onmessage(event) {
         if (event.event === "org-click-update") {
           const wrapper = JSON.parse(event.data);
@@ -36,10 +47,18 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
           }
         }
       },
+      onerror(err) {
+        retryCountRef.current += 1;
+        if (retryCountRef.current >= MAX_RETRIES) {
+          setIsError(true);
+          throw err; // 재시도 중단
+        }
+        // MAX_RETRIES 미만이면 기본 재시도 동작 유지
+      },
     });
 
     return () => controller.abort();
   }, [orgId, accessToken, mode]);
 
-  return { data, suspectDetail };
+  return { data, suspectDetail, isError };
 }
