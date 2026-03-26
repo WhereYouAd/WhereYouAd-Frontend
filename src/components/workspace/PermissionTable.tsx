@@ -120,8 +120,8 @@ export default function PermissionTable() {
         </p>
       </header>
 
-      <div className="overflow-hidden">
-        <table className="w-full border-collapse table-fixed">
+      <div className="w-full overflow-hidden">
+        <table className="w-full table-fixed">
           <thead>
             <tr className="border-b border-gray-100">
               <th className="text-text-auth-sub py-2 text-left">

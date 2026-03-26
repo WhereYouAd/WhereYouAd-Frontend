@@ -66,7 +66,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
           <input
             ref={ref}
             className={twMerge(
-              "flex-1 h-full w-full bg-transparent border-none outline-none text-body1 text-text-main placeholder:text-text-placeholder px-5",
+              "flex-1 h-full w-full bg-transparent border-none outline-none font-body1 text-text-main placeholder:text-text-placeholder px-5",
               "disabled:cursor-not-allowed disabled:text-text-disabled",
               rightElement ? "pr-2" : "",
               inputClassName,

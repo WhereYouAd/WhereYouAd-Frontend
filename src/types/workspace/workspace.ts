@@ -1,10 +1,12 @@
+export type TMemberRole = "ADMIN" | "MEMBER";
+
 export type TWorkspace = {
   orgId: number;
   name: string;
   description: string;
   url?: string | null;
   logoUrl?: string | null;
-  myRole: string;
+  myRole: TMemberRole;
 };
 
 export type TMyOrgsData = {
@@ -42,8 +44,6 @@ export type TUpdateWorkspaceRequest = {
 export type TUploadImageResponse = {
   url: string;
 };
-
-export type TMemberRole = "ADMIN" | "MEMBER";
 
 export type TWorkspaceMember = {
   memberId: number;

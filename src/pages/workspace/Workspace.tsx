@@ -26,6 +26,7 @@ import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
 import { getAxiosMessage } from "@/lib/getAxiosMessage";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
@@ -86,12 +87,21 @@ export default function WorkspacePage() {
   };
 
   const workspaces = workspacesQuery.data ?? [];
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return workspaces;
     return workspaces.filter((w) => w.name.toLowerCase().includes(q));
   }, [query, workspaces]);
+
+  const sortedWorkspaces = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      if (a.orgId === selectedOrgId) return -1;
+      if (b.orgId === selectedOrgId) return 1;
+      return 0;
+    });
+  }, [filtered, selectedOrgId]);
 
   const menuItems = (id: TWorkspace["orgId"]): TMenuItem[] => [
     {
@@ -164,7 +174,7 @@ export default function WorkspacePage() {
         />
       );
     }
-    if (filtered.length === 0) {
+    if (sortedWorkspaces.length === 0) {
       return (
         <ul className="space-y-5">
           <WorkspaceEmptyState message="워크스페이스가 없습니다" />
@@ -173,11 +183,15 @@ export default function WorkspacePage() {
     }
     return (
       <ul className="space-y-5">
-        {filtered.map((w) => (
+        {sortedWorkspaces.map((w) => (
           <WorkspaceCard
             key={String(w.orgId)}
             workspace={w}
             menuItems={menuItems(w.orgId)}
+            isSelected={w.orgId === selectedOrgId}
+            onClick={() => {
+              void navigate(`/workspace/${w.orgId}/settings`);
+            }}
           />
         ))}
       </ul>
@@ -190,11 +204,11 @@ export default function WorkspacePage() {
         title="워크스페이스 관리"
         description="워크스페이스 정보를 확인하고 관리하세요."
       />
-      <div className="mb-6 flex flex-row items-center gap-4">
-        <div className="flex-1">
+      <div className="flex items-center justify-between gap-4 tablet:flex-col tablet:items-stretch">
+        <div className="flex-1 tablet:w-full">
           <Input
             aria-label="조직 검색"
-            placeholder="조직을 검색하세요"
+            placeholder="워크스페이스 검색하기"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             rightElement={<SearchIcon className="w-6 h-6 fill-chart-3" />}
@@ -205,7 +219,7 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2"
+          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2 tablet:w-full tablet:justify-center"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           <span className="tablet:hidden">워크스페이스 생성하기</span>
@@ -215,17 +229,26 @@ export default function WorkspacePage() {
 
       {renderWorkspaceContent()}
 
-      <Modal isOpen={createOpen} onClose={onCloseCreate} size="xl" padding="lg">
-        <div className="px-2">
+      <Modal
+        isOpen={createOpen}
+        onClose={onCloseCreate}
+        size="xl"
+        padding="lg"
+        className="tablet:w-150"
+      >
+        <div className="px-1 tablet:px-0">
           <h2 className="font-heading4 text-text-main mb-2">
             워크스페이스 생성
           </h2>
-          <p className="font-body1 text-text-sub mb-6">
+          <p className="font-body1 text-text-sub mb-5">
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.{" "}
             <br /> 로고 이미지와 기본 정보를 입력해 주세요.
           </p>
-          <div className="space-y-6 mx-auto w-full max-w-200">
-            <div className="max-w-140 mx-auto w-full mb-10">
+          <div className="flex flex-row gap-8 items-start tablet:flex-col tablet:gap-5">
+            <div className="flex flex-col items-center w-45 shrink-0 tablet:w-full">
+              <div className="w-full mb-3 select-none text-text-main tablet:text-center">
+                로고 이미지
+              </div>
               <input
                 ref={fileRef}
                 type="file"
@@ -233,23 +256,11 @@ export default function WorkspacePage() {
                 className="hidden"
                 onChange={onPickLogo}
               />
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-label text-text-sub">로고 이미지</div>
-                <Button
-                  variant="custom"
-                  className="h-7! border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
-                  onClick={openFile}
-                  type="button"
-                >
-                  업로드
-                </Button>
-              </div>
-
               <button
                 type="button"
                 aria-label="로고 이미지 업로드"
                 onClick={openFile}
-                className="mx-auto aspect-square w-full max-w-65 overflow-hidden rounded-component-lg border border-gray-100 bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                className="flex h-48 w-48 items-center justify-center overflow-hidden rounded-component-sm border border-gray-100 bg-gray-100 hover:bg-gray-200 transition-colors"
               >
                 {logoPreview ? (
                   <img
@@ -258,37 +269,47 @@ export default function WorkspacePage() {
                     className="h-full w-full object-cover"
                   />
                 ) : (
-                  <span className="text-text-sub">
-                    <UpLoadImgIcon />
-                  </span>
+                  <UpLoadImgIcon className="text-text-placeholder w-8 h-8 tablet:w-7 tablet:h-7" />
                 )}
               </button>
-            </div>
 
-            <Input
-              label="워크스페이스 이름"
-              placeholder="조직의 이름을 입력하세요."
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              disabled={isCreating}
-            />
-            <TextareaField
-              id="workspace-desc"
-              label="워크스페이스 설명"
-              placeholder="조직에 대한 간단한 설명을 입력하세요"
-              value={newDesc}
-              onChange={(e) => setNewDesc(e.target.value)}
-              disabled={isCreating}
-            />
-            {createErrorMsg && (
-              <p className="font-body2 text-status-red">{createErrorMsg}</p>
-            )}
+              <Button
+                variant="custom"
+                className="h-7! mt-4 border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                onClick={openFile}
+                type="button"
+              >
+                업로드
+              </Button>
+            </div>
+            <div className="flex-1 w-full space-y-5">
+              <Input
+                label="워크스페이스 이름"
+                placeholder="사용할 워크스페이스의 이름을 입력하세요."
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                disabled={isCreating}
+              />
+              <TextareaField
+                id="workspace-desc"
+                label="워크스페이스 설명"
+                placeholder="워크스페이스에 대한 간단한 설명을 입력하세요"
+                value={newDesc}
+                onChange={(e) => setNewDesc(e.target.value)}
+                disabled={isCreating}
+              />
+              {createErrorMsg && (
+                <p className="font-body2 text-status-red">{createErrorMsg}</p>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-center mt-12 tablet:mt-6">
             <Button
               size="big"
               variant="primary"
               onClick={onSubmitCreate}
               disabled={!newName.trim() || isCreating}
-              className="mx-auto px-10 mt-10"
+              className="px-12 w-auto tablet:w-full"
               type="button"
             >
               {isCreating ? "생성 중.. " : "생성하기"}
