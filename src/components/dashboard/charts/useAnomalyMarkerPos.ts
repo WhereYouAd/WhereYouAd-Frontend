@@ -3,6 +3,7 @@ import { type RefObject, useEffect, useState } from "react";
 // 이상 징후 빨간 점(annotation marker)의 컨테이너 기준 좌표를 반환하는 훅
 export function useAnomalyMarkerPos(
   containerRef: RefObject<HTMLDivElement | null>,
+  dep?: unknown,
 ) {
   const [markerPos, setMarkerPos] = useState<{ x: number; y: number } | null>(
     null,
@@ -42,7 +43,7 @@ export function useAnomalyMarkerPos(
       clearTimeout(debounceTimer);
       observer.disconnect();
     };
-  }, [containerRef]);
+  }, [containerRef, dep]);
 
   return markerPos;
 }

@@ -4,31 +4,26 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 
+import { useClickStream } from "@/hooks/dashboard/useClickStream";
+
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
+import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import {
-  BASE_OPTIONS,
+  buildChartOptions,
   CHART_CONTAINER_ID,
   DOWNLOAD_ITEMS,
 } from "./trafficChart.config";
-import { trafficChartMock } from "./trafficChart.mock";
 import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
 import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 const ReactApexChart = lazy(() => import("react-apexcharts"));
-
-// 모듈 수준 상수 - 렌더마다 재생성 방지
-const series = [
-  {
-    name: "클릭수",
-    data: trafficChartMock.clicks.map((y, i) => ({ x: i, y })),
-  },
-];
 
 // 차트 우측 상단 다운로드 버튼
 export function TrafficChartDownload() {
@@ -91,9 +86,53 @@ const AnomalyBubble = memo(function AnomalyBubble({
 
 const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { data, suspectDetail } = useClickStream("real");
 
-  // 빨간 점의 컨테이너 기준 좌표
-  const markerPos = useAnomalyMarkerPos(containerRef);
+  // timeSeriesData → 차트 series 및 카테고리 변환
+  const { series, categories, anomalyCategory, anomalyY } = useMemo(() => {
+    const items = data?.timeSeriesData ?? [];
+    const cats = items.map((d) => {
+      const hh = d.minute.slice(8, 10);
+      const mm = d.minute.slice(10, 12);
+      return `${hh}:${mm}`;
+    });
+    const chartData = items.map((d) => d.count);
+
+    // 이상 징후 발생 시 최대 클릭 지점을 마커로 표시
+    let anomCat: string | undefined;
+    let anomY: number | undefined;
+    if (data?.hasSuspect && items.length > 0) {
+      const maxIdx = items.reduce(
+        (maxI, cur, i, arr) => (cur.count > arr[maxI].count ? i : maxI),
+        0,
+      );
+      anomCat = cats[maxIdx];
+      anomY = items[maxIdx].count;
+    }
+
+    return {
+      series: [{ name: "클릭수", data: chartData }],
+      categories: cats,
+      anomalyCategory: anomCat,
+      anomalyY: anomY,
+    };
+  }, [data]);
+
+  const chartOptions = useMemo(
+    () =>
+      buildChartOptions({
+        categories,
+        maxCount: Math.max(
+          ...(data?.timeSeriesData?.map((d) => d.count) ?? [0]),
+        ),
+        anomalyCategory,
+        anomalyY,
+      }),
+    [categories, data, anomalyCategory, anomalyY],
+  );
+
+  // 빨간 점의 컨테이너 기준 좌표 (anomalyCategory 변경 시 재계산)
+  const markerPos = useAnomalyMarkerPos(containerRef, anomalyCategory);
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
   const [isAnomalyFocused, setIsAnomalyFocused] = useState(false);
 
@@ -126,6 +165,13 @@ const TrafficChart = memo(function TrafficChart() {
 
   const showBubble = isAnomalyHovered || isAnomalyFocused;
 
+  // 클릭 이상 징후 상세 정보 (추후 툴팁 내용으로 활용 예정)
+  void suspectDetail;
+
+  if (!data) {
+    return <Skeleton className="w-full h-100" />;
+  }
+
   return (
     <div
       id={CHART_CONTAINER_ID}
@@ -138,7 +184,7 @@ const TrafficChart = memo(function TrafficChart() {
       <Suspense fallback={<div className="h-100" />}>
         <ReactApexChart
           type="area"
-          options={BASE_OPTIONS}
+          options={chartOptions}
           series={series}
           height={400}
         />
