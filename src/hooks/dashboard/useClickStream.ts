@@ -39,11 +39,15 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
       },
       onmessage(event) {
         if (event.event === "org-click-update") {
-          const wrapper = JSON.parse(event.data);
-          const parsed: IClickStreamItem = wrapper.data ?? wrapper;
-          setData(parsed);
-          if (parsed.suspectDetail) {
-            setSuspectDetail(parsed.suspectDetail);
+          try {
+            const wrapper = JSON.parse(event.data);
+            const parsed: IClickStreamItem = wrapper.data ?? wrapper;
+            setData(parsed);
+            if (parsed.suspectDetail) {
+              setSuspectDetail(parsed.suspectDetail);
+            }
+          } catch {
+            // 파싱 실패 시 해당 이벤트 무시하고 스트림 유지
           }
         }
       },
