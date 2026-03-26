@@ -111,7 +111,7 @@ export default function Drawer({
         ref={panelRef}
         className={twMerge(
           // [데스크톱] 우측 슬라이드
-          "relative w-full rounded-l-4xl overflow-hidden max-w-md bg-white shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-in-out",
+          "relative w-full rounded-l-4xl overflow-hidden max-w-md bg-white shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-out",
           // [태블릿] 하단 bottom sheet
           "tablet:rounded-t-4xl tablet:rounded-bl-none tablet:h-auto tablet:max-h-[85vh] tablet:max-w-none tablet:border-t tablet:border-bg-disabled",
           isOpen

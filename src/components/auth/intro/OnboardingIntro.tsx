@@ -10,7 +10,7 @@ export default function OnboardingIntro() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % 3);
-    }, 10000);
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
@@ -38,7 +38,7 @@ export default function OnboardingIntro() {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-2.5 rounded-full transition-all duration-300 ${getIndicatorColor(
+            className={`h-2.5 rounded-full transition-[width,background-color] duration-300 ${getIndicatorColor(
               index,
             )}`}
             aria-label={`${index + 1}번 슬라이드로 이동`}

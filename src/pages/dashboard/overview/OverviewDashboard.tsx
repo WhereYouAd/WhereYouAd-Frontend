@@ -198,7 +198,7 @@ export default function OverviewDashboard() {
             onClick={() => navigate("/platform")}
             className="group flex items-center gap-1 h-8 px-4 bg-bg-surface/60 border-none hover:bg-bg-surface text-text-sub hover:text-text-auth-sub transition-colors rounded-full"
           >
-            <span className="font-caption font-bold leading-none">
+            <span className="font-caption font-semibold">
               플랫폼 대시보드 살펴보기
             </span>
             <ChevronDoubleRightIcon className="w-4.5 h-4.5" />

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 export default function SignupPageSkeleton() {
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full max-w-130 flex-col items-center px-6">
       <div className="flex w-full flex-col gap-10">
         <Skeleton className="h-16 w-full rounded-component-md" />
         <Skeleton className="h-16 w-full rounded-component-md" />

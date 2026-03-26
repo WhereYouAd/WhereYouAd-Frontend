@@ -29,3 +29,5 @@ storybook-static
 
 # Claude Code
 .claude/
+.claude/skills
+.claude/agents
