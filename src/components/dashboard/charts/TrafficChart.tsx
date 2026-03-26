@@ -21,6 +21,7 @@ import {
 } from "./trafficChart.config";
 import { useAnomalyMarkerPos } from "./useAnomalyMarkerPos";
 
+import { toggleDummyClicks } from "@/api/dashboard/overview";
 import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 const ReactApexChart = lazy(() => import("react-apexcharts"));
@@ -93,7 +94,7 @@ const AnomalyBubble = memo(function AnomalyBubble({
 
 const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data, suspectDetail } = useClickStream("real");
+  const { data, suspectDetail } = useClickStream("dummy");
 
   // timeSeriesData → 차트 series 및 카테고리 변환
   const { series, categories, anomalyCategory, anomalyY } = useMemo(() => {
@@ -177,53 +178,63 @@ const TrafficChart = memo(function TrafficChart() {
   }
 
   return (
-    <div
-      id={CHART_CONTAINER_ID}
-      ref={containerRef}
-      role="group"
-      aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
-      data-hide-tooltip={showBubble || undefined}
-      className="relative will-change-transform [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
-    >
-      <Suspense fallback={<div className="h-100" />}>
-        <ReactApexChart
-          type="area"
-          options={chartOptions}
-          series={series}
-          height={400}
-        />
-      </Suspense>
-      {markerPos && (
-        <>
-          <span
-            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
-            style={{ left: markerPos.x, top: markerPos.y }}
+    <>
+      {/* TODO: 테스트용 - 개발 완료 후 제거 */}
+      <button
+        type="button"
+        onClick={toggleDummyClicks}
+        className="mb-2 px-3 py-1 text-xs bg-gray-200 rounded"
+      >
+        더미 데이터 토글
+      </button>
+      <div
+        id={CHART_CONTAINER_ID}
+        ref={containerRef}
+        role="group"
+        aria-label="실시간 트래픽 변화 차트: 시간대별 클릭수 추이"
+        data-hide-tooltip={showBubble || undefined}
+        className="relative will-change-transform [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
+      >
+        <Suspense fallback={<div className="h-100" />}>
+          <ReactApexChart
+            type="area"
+            options={chartOptions}
+            series={series}
+            height={400}
           />
-          <span
-            className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
-            style={{ left: markerPos.x, top: markerPos.y }}
-          />
-          <button
-            type="button"
-            className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
-            style={{ left: markerPos.x, top: markerPos.y }}
-            aria-label="클릭 이상 징후 상세 보기"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onPointerEnter={handlePointerEnter}
-            onPointerLeave={handlePointerLeave}
-          />
-          {showBubble && (
-            <AnomalyBubble
-              x={markerPos.x}
-              y={markerPos.y}
-              message={suspectDetail?.message}
-              timestamp={suspectDetail?.timestamp}
+        </Suspense>
+        {markerPos && (
+          <>
+            <span
+              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
+              style={{ left: markerPos.x, top: markerPos.y }}
             />
-          )}
-        </>
-      )}
-    </div>
+            <span
+              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
+              style={{ left: markerPos.x, top: markerPos.y }}
+            />
+            <button
+              type="button"
+              className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
+              style={{ left: markerPos.x, top: markerPos.y }}
+              aria-label="클릭 이상 징후 상세 보기"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onPointerEnter={handlePointerEnter}
+              onPointerLeave={handlePointerLeave}
+            />
+            {showBubble && (
+              <AnomalyBubble
+                x={markerPos.x}
+                y={markerPos.y}
+                message={suspectDetail?.message}
+                timestamp={suspectDetail?.timestamp}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 });
 
