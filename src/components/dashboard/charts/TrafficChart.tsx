@@ -53,9 +53,13 @@ export function TrafficChartDownload() {
 const AnomalyBubble = memo(function AnomalyBubble({
   x,
   y,
+  message,
+  timestamp,
 }: {
   x: number;
   y: number;
+  message?: string;
+  timestamp?: string;
 }) {
   const GAP = 12;
   return (
@@ -75,9 +79,12 @@ const AnomalyBubble = memo(function AnomalyBubble({
           </p>
         </div>
         <div className="text-center">
-          <p className="text-text-sub font-caption leading-5">
-            구글 · 캠페인 A · 광고 1
-          </p>
+          {message && (
+            <p className="text-text-sub font-caption leading-5">{message}</p>
+          )}
+          {timestamp && (
+            <p className="text-text-sub font-caption leading-5">{timestamp}</p>
+          )}
         </div>
       </div>
     </div>
@@ -165,9 +172,6 @@ const TrafficChart = memo(function TrafficChart() {
 
   const showBubble = isAnomalyHovered || isAnomalyFocused;
 
-  // 클릭 이상 징후 상세 정보 (추후 툴팁 내용으로 활용 예정)
-  void suspectDetail;
-
   if (!data) {
     return <Skeleton className="w-full h-100" />;
   }
@@ -209,7 +213,14 @@ const TrafficChart = memo(function TrafficChart() {
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
           />
-          {showBubble && <AnomalyBubble x={markerPos.x} y={markerPos.y} />}
+          {showBubble && (
+            <AnomalyBubble
+              x={markerPos.x}
+              y={markerPos.y}
+              message={suspectDetail?.message}
+              timestamp={suspectDetail?.timestamp}
+            />
+          )}
         </>
       )}
     </div>
