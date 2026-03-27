@@ -139,19 +139,6 @@ export default function CampaignDetail() {
             </div>
           </header>
 
-          {/* card section */}
-          {/* <div className="flex flex-wrap gap-7 w-full">
-            <CampaignInfoCard
-              budget={data.budget.toLocaleString()}
-              date={data.createdAt.replaceAll("-", ".")}
-              className="flex-1 min-w-[320px] w-full"
-            />
-            <PlatformCard
-              platforms={data.providers.map((p) => p.toLowerCase() as TPlatform)}
-              className="flex-1 min-w-[320px] w-full"
-            />
-          </div> */}
-
           <div className="w-full">
             {/* ads list */}
             {isAdLoading ? (
