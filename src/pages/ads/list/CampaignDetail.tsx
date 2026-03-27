@@ -83,7 +83,7 @@ export default function CampaignDetail() {
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/ads")}
               className="flex items-center gap-2 text-text-sub font-body2 hover:text-text-main transition-colors w-fit mb-3"
             >
               <LeftChevronIcon className="w-4 h-4" />
