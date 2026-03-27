@@ -42,7 +42,7 @@ export default function AdRow({
       }
     >
       {/* status badge */}
-      <div className="w-[10%] shrink-0">
+      <div className="w-21 shrink-0 mr-3">
         <Badge
           variant={runStatus === "running" ? "running" : "stopped"}
           size="sm"
@@ -52,7 +52,7 @@ export default function AdRow({
       </div>
 
       {/* platform */}
-      <div className="w-[6%] shrink-0 flex items-center justify-center">
+      <div className="w-[6%] shrink-0 flex items-center justify-center mr-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0">
           {LogoMap[platform]}
         </div>

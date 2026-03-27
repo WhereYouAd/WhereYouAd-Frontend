@@ -91,7 +91,7 @@ export default function CampaignDetail() {
             </button>
 
             <div className="flex flex-col gap-5">
-              <div className="flex items-center justify-between w-full">
+              <div className="flex items-center justify-between w-full tablet:flex-col tablet:items-start tablet:gap-2">
                 <div className="flex items-center gap-5">
                   <h1 className="font-heading2 text-text-main">{data.name}</h1>
                   <Badge
