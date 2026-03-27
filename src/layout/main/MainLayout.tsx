@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import Sidebar from "@/components/Sidebar/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces } from "@/api/workspace/org";
