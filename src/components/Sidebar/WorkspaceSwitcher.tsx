@@ -1,0 +1,78 @@
+// src/components/Sidebar/WorkspaceSwitcher.tsx
+
+import { useState } from "react";
+import { twMerge } from "tailwind-merge";
+
+import { useCoreQuery } from "@/hooks/customQuery";
+
+import { getMyWorkspaces } from "@/api/workspace/org";
+import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
+  const { data: workspaces = [] } = useCoreQuery(
+    ["workspaces"],
+    getMyWorkspaces,
+  );
+
+  const currentWorkspace = workspaces.find((w) => w.orgId === selectedOrgId);
+  const otherWorkspaces = workspaces.filter((w) => w.orgId !== selectedOrgId);
+
+  // API 연동 예정
+  const handleWorkspaceSelect = (orgId: number) => {
+    setSelectedOrgId(orgId);
+    setIsOpen(false);
+  };
+
+  if (isCollapsed) return null;
+
+  return (
+    <div className="relative font-body1 mb-4">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-center gap-3 rounded-component-md p-3 hover:bg-bg-surface transition-colors"
+      >
+        {/* image */}
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-bg-disabled/80 text-text-sub font-bold">
+          {currentWorkspace?.name[0] || "W"}
+        </div>
+
+        {/* name */}
+        <span className="flex-1 text-left font-semibold text-text-main truncate">
+          {currentWorkspace?.name || "워크스페이스 선택"}
+        </span>
+
+        {/* icon */}
+        <ChevronIcon
+          className={twMerge(
+            "h-3 w-3 text-text-sub transition-transform duration-200",
+            isOpen ? "rotate-0" : "rotate-180",
+          )}
+        />
+      </button>
+
+      {/* dropdown */}
+      {isOpen && (
+        <div className="absolute left-1 right-4 top-full z-50 mt-1 flex flex-col gap-1 rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface">
+          {otherWorkspaces.map((org) => (
+            <button
+              key={org.orgId}
+              onClick={() => handleWorkspaceSelect(org.orgId)}
+              className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
+            >
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded  bg-bg-disabled/80 text-text-sub font-label">
+                {org.name[0]}
+              </div>
+              <span className="truncate">{org.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
