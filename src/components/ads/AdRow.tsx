@@ -42,7 +42,7 @@ export default function AdRow({
       }
     >
       {/* status badge */}
-      <div className="w-[15%] shrink-0 mr-2">
+      <div className="w-[10%] shrink-0">
         <Badge
           variant={runStatus === "running" ? "running" : "stopped"}
           size="sm"
@@ -51,20 +51,20 @@ export default function AdRow({
         </Badge>
       </div>
 
-      {/* title */}
-      <div className="w-[65%] shrink-0 pl-2">
-        <span className="font-body1 truncate block">{name}</span>
-      </div>
-
       {/* platform */}
-      <div className="w-[10%] shrink-0 flex justify-end mr-5">
+      <div className="w-[6%] shrink-0 flex items-center justify-center">
         <div className="flex h-8 w-8 items-center justify-center rounded-full shadow-sm overflow-hidden shrink-0">
           {LogoMap[platform]}
         </div>
       </div>
 
+      {/* title */}
+      <div className="flex-1 min-w-0 pl-3">
+        <span className="font-body1 truncate block">{name}</span>
+      </div>
+
       {/* chevron */}
-      <div className="w-[5%] shrink-0 flex justify-end">
+      <div className="w-[5%] shrink-0 flex justify-end ml-4">
         <ChevronIcon
           className={`w-4 h-4 transition-transform duration-200 text-text-auth-sub ${
             isOpen ? "rotate-0" : "rotate-180"

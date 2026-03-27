@@ -75,17 +75,19 @@ export default function AdDetailContent({
   };
 
   return (
-    <div className="px-5 pt-2 pb-6 flex flex-col gap-6 transition-all animate-fade-in overflow-hidden">
-      <div className="flex w-full">
-        <div className="w-[15%] shrink-0 mr-2" />
-
-        <div className="w-[70%] flex flex-col gap-4 pl-2">
-          {/* description */}
+    <div className="pt-5 pb-5 flex flex-col gap-7 bg-bg-surface/30 transition-all animate-fade-in overflow-hidden border-t border-bg-disabled">
+      <div className="flex flex-col w-full px-7 gap-6 tablet:flex-col tablet:gap-8">
+        {/* description */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0">
+          <span className="text-text-placeholder font-caption">광고 소재</span>
           <p className="font-body2 text-text-sub whitespace-pre-line leading-relaxed">
             {ad.description}
           </p>
+        </div>
 
-          {/* tags */}
+        {/* tags */}
+        <div className="w-[30%] flex flex-col gap-2 shrink-0 tablet:w-full">
+          <span className="text-text-placeholder font-caption">타겟</span>
           <div className="flex flex-wrap gap-2">
             {tags.length > 0 ? (
               tags.map((tag, idx) => (
@@ -93,7 +95,7 @@ export default function AdDetailContent({
                   key={idx}
                   variant="running"
                   size="sm"
-                  className="border border-bg-text-sub bg-bg-surface text-text-sub font-normal px-3"
+                  className="border border-bg-disabled bg-white text-text-sub px-3"
                 >
                   #{tag}
                 </Badge>
@@ -104,10 +106,13 @@ export default function AdDetailContent({
               </span>
             )}
           </div>
+        </div>
 
-          {/* link */}
-          <div className="relative w-full max-w-150 group">
-            <div className="flex items-center justify-between w-full h-10 px-4 py-2 bg-white border border-text-placeholder rounded-component-sm group-hover:border-primary-light transition-all">
+        {/* link */}
+        <div className="flex flex-col gap-2">
+          <span className="text-text-placeholder font-caption">랜딩 URL</span>
+          <div className="relative w-full max-w-160">
+            <div className="flex items-center justify-between w-full h-9 px-4 py-2 bg-white border border-bg-disabled rounded-component-sm group-hover:border-primary-light transition-all">
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
                 {ad.landingUrl}
               </span>
@@ -126,9 +131,8 @@ export default function AdDetailContent({
         </div>
       </div>
 
-      <div className="flex w-full">
-        <div className="w-[15%] shrink-0 mr-2" />
-        <div className="flex-1 min-w-0 flex flex-col gap-6 pl-2">
+      <div className="flex w-full px-7">
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
           <ControlBox
             title={
               isTrackingActive
