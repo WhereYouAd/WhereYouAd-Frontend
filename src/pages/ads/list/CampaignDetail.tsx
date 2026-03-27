@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import type { TPlatform } from "@/types/ads/campaign";
@@ -7,8 +8,6 @@ import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
-import CampaignInfoCard from "@/components/ads/CampaignInfoCard";
-import PlatformCard from "@/components/ads/PlatformCard";
 import Badge from "@/components/common/badge/Badge";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
@@ -17,6 +16,15 @@ import ModalContent from "@/components/common/modal/ModalContent";
 import { updateCampaignStatus } from "@/api/ads/ads";
 import LeftChevronIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+
+const LogoMap: Record<TPlatform, React.ReactNode> = {
+  kakao: <KakaoLogo className="w-6 h-6" />,
+  google: <GoogleLogo className="w-6 h-6" />,
+  naver: <NaverLogo className="w-6 h-6" />,
+};
 
 export default function CampaignDetail() {
   const { orgId, projectId } = useParams<{
@@ -81,42 +89,68 @@ export default function CampaignDetail() {
               <LeftChevronIcon className="w-4 h-4" />
               광고 운영 관리
             </button>
-            <div className="flex items-center gap-4 flex-nowrap whitespace-nowrap overflow-hidden w-full">
-              <h1 className="font-heading2 text-text-main mr-3">{data.name}</h1>
-              <Badge
-                variant={data.status === "ON_GOING" ? "running" : "stopped"}
-                size="sm"
-              >
-                {data.status === "ON_GOING"
-                  ? "운영 중"
-                  : data.status === "PAUSED"
-                    ? "중단"
-                    : "종료"}
-              </Badge>
-            </div>
-            {data.description && (
-              <div className="border-l-3 border-text-auth-sub pl-4 py-1">
-                <p className="text-text-auth-sub font-body1 whitespace-pre-line leading-relaxed">
-                  {data.description}
-                </p>
+
+            <div className="flex flex-col gap-5">
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-5">
+                  <h1 className="font-heading2 text-text-main">{data.name}</h1>
+                  <Badge
+                    variant={data.status === "ON_GOING" ? "running" : "stopped"}
+                    size="sm"
+                  >
+                    {data.status === "ON_GOING"
+                      ? "운영 중"
+                      : data.status === "PAUSED"
+                        ? "중단"
+                        : "종료"}
+                  </Badge>
+                </div>
+                <span className="text-text-placeholder font-body2">
+                  {data.createdAt.replaceAll("-", ".")} 등록
+                </span>
               </div>
-            )}
+
+              <div className="flex items-center gap-4 text-text-sub font-body2">
+                <span>예산 {data.budget.toLocaleString()}원</span>
+                <span className="text-text-placeholder">·</span>
+                <div className="flex items-center gap-1">
+                  {data.providers.map((provider) => {
+                    const platform = provider.toLowerCase() as TPlatform;
+                    return (
+                      <div
+                        key={provider}
+                        title={provider}
+                        className="flex items-center justify-center w-6 h-6 rounded-full overflow-hidden shadow-sm"
+                      >
+                        {LogoMap[platform] || null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {data.description && (
+                <div className="flex flex-col gap-1">
+                  <p className="text-text-sub font-body2 whitespace-pre-line leading-relaxed">
+                    {data.description}
+                  </p>
+                </div>
+              )}
+            </div>
           </header>
 
           {/* card section */}
-          <div className="flex flex-wrap gap-7 w-full">
+          {/* <div className="flex flex-wrap gap-7 w-full">
             <CampaignInfoCard
               budget={data.budget.toLocaleString()}
               date={data.createdAt.replaceAll("-", ".")}
               className="flex-1 min-w-[320px] w-full"
             />
             <PlatformCard
-              platforms={data.providers.map(
-                (p) => p.toLowerCase() as TPlatform,
-              )}
+              platforms={data.providers.map((p) => p.toLowerCase() as TPlatform)}
               className="flex-1 min-w-[320px] w-full"
             />
-          </div>
+          </div> */}
 
           <div className="w-full">
             {/* ads list */}
