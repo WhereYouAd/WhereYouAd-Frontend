@@ -1,6 +1,4 @@
-// src/components/Sidebar/WorkspaceSwitcher.tsx
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { useCoreQuery } from "@/hooks/customQuery";
@@ -11,6 +9,12 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isCollapsed) {
+      setIsOpen(false);
+    }
+  }, [isCollapsed]);
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
