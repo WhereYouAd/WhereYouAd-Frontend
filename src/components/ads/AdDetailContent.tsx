@@ -39,14 +39,8 @@ export default function AdDetailContent({
   });
 
   const trackControl = useControlModal({
-    successMessage: "트래킹이 활성화되었습니다.",
-    errorMessage: "트래킹 활성화에 실패했습니다.",
-    onSuccess: refetchAds,
-  });
-
-  const stopTrackControl = useControlModal({
-    successMessage: "트래킹이 중단되었습니다.",
-    errorMessage: "트래킹 중단에 실패했습니다.",
+    successMessage: "트래킹 링크가 발급되었습니다.",
+    errorMessage: "트래킹 링크 발급에 실패했습니다.",
     onSuccess: refetchAds,
   });
 
@@ -75,17 +69,19 @@ export default function AdDetailContent({
   };
 
   return (
-    <div className="px-5 pt-2 pb-6 flex flex-col gap-6 transition-all animate-fade-in overflow-hidden">
-      <div className="flex w-full">
-        <div className="w-[15%] shrink-0 mr-2" />
-
-        <div className="w-[70%] flex flex-col gap-4 pl-2">
-          {/* description */}
+    <div className="pt-5 pb-5 flex flex-col gap-7 bg-bg-surface/30 transition-all animate-fade-in overflow-hidden border-t border-bg-disabled">
+      <div className="flex flex-col w-full px-8 gap-6 tablet:flex-col tablet:gap-8">
+        {/* description */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0">
+          <span className="text-text-placeholder font-caption">광고 소재</span>
           <p className="font-body2 text-text-sub whitespace-pre-line leading-relaxed">
             {ad.description}
           </p>
+        </div>
 
-          {/* tags */}
+        {/* tags */}
+        <div className="w-[30%] flex flex-col gap-2 shrink-0 tablet:w-full">
+          <span className="text-text-placeholder font-caption">타겟</span>
           <div className="flex flex-wrap gap-2">
             {tags.length > 0 ? (
               tags.map((tag, idx) => (
@@ -93,7 +89,7 @@ export default function AdDetailContent({
                   key={idx}
                   variant="running"
                   size="sm"
-                  className="border border-bg-text-sub bg-bg-surface text-text-sub font-normal px-3"
+                  className="border border-bg-disabled bg-white text-text-sub px-3"
                 >
                   #{tag}
                 </Badge>
@@ -104,10 +100,13 @@ export default function AdDetailContent({
               </span>
             )}
           </div>
+        </div>
 
-          {/* link */}
-          <div className="relative w-full max-w-150 group">
-            <div className="flex items-center justify-between w-full h-10 px-4 py-2 bg-white border border-text-placeholder rounded-component-sm group-hover:border-primary-light transition-all">
+        {/* link */}
+        <div className="flex flex-col gap-2">
+          <span className="text-text-placeholder font-caption">랜딩 URL</span>
+          <div className="relative w-full max-w-160">
+            <div className="flex items-center justify-between w-full h-9 px-4 py-2 bg-white border border-bg-disabled rounded-component-sm group-hover:border-primary-light transition-all">
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
                 {ad.landingUrl}
               </span>
@@ -126,35 +125,33 @@ export default function AdDetailContent({
         </div>
       </div>
 
-      <div className="flex w-full">
-        <div className="w-[15%] shrink-0 mr-2" />
-        <div className="flex-1 min-w-0 flex flex-col gap-6 pl-2">
+      <div className="flex w-full px-8">
+        <div className="flex-1 min-w-0 flex flex-col gap-6">
           <ControlBox
             title={
               isTrackingActive
-                ? "트래킹이 활성화되어 데이터 수집 중입니다"
-                : "트래킹 활성화 시 실시간 성과 수집이 시작돼요"
+                ? "트래킹 링크가 발급되었습니다"
+                : "트래킹 링크를 발급받아 성과를 수집해보세요"
             }
             description={
               isTrackingActive
-                ? "트래킹을 중단하면 더 이상 광고 성과 리포트가 갱신되지 않습니다."
-                : "광고 클릭 데이터를 실시간으로 수집하여 성과 분석에 반영합니다."
+                ? "발급된 트래킹 링크를 해당 광고 플랫폼에 등록해 주세요."
+                : "링크를 광고 플랫폼에 등록하면 클릭 성과가 리포트에 반영됩니다."
             }
-            buttonText={isTrackingActive ? "트래킹 중단하기" : "트래킹 활성화"}
+            buttonText={isTrackingActive ? "링크 복사하기" : "링크 발급하기"}
             onButtonClick={
               isTrackingActive
-                ? stopTrackControl.openModal
+                ? () => handleCopy(ad.trackingUrl!)
                 : trackControl.openModal
             }
             buttonDisabled={false}
-            containerClassName={`${isTrackingActive ? "bg-status-red/7 border-status-red" : "bg-chart-3/7 border-chart-3"} px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4`}
-            titleClassName={`${isTrackingActive ? "text-status-red" : "text-chart-3"} font-heading3`}
+            containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
+            titleClassName="text-status-blue font-heading4 -mb-1"
             descriptionClassName="font-caption text-text-sub"
-            buttonSize="big"
-            buttonClassName={`${
-              isTrackingActive ? "bg-status-red" : "bg-chart-3"
-            } font-body1 tablet:w-full `}
+            buttonSize="small"
+            buttonClassName="bg-status-blue font-body2 tablet:w-full"
           />
+
           <ControlBox
             title={
               ad.status === "PAUSED"
@@ -178,38 +175,41 @@ export default function AdDetailContent({
                 ? "bg-status-blue/7 border-status-blue"
                 : "bg-status-red/7 border-status-red"
             }`}
-            titleClassName={`font-heading3 ${
+            titleClassName={`font-heading4 -mb-1 ${
               ad.status === "PAUSED" ? "text-status-blue" : "text-status-red"
             }`}
             descriptionClassName="font-caption text-text-sub"
-            buttonSize="big"
-            buttonClassName={`font-body1 tablet:w-full ${
+            buttonSize="small"
+            buttonClassName={`font-body2 tablet:w-full ${
               ad.status === "PAUSED" ? "bg-status-blue" : "bg-status-red"
             }`}
           />
         </div>
       </div>
 
-      {/* 트래킹 활성화 */}
+      {/* 트래킹 링크 발급 */}
       <Modal
         isOpen={trackControl.isOpen}
         onClose={trackControl.closeModal}
-        title="트래킹 활성화"
+        title="트래킹 링크 발급"
       >
         <ModalContent
           icon={<WarnCircleIcon className="text-status-blue" />}
-          title="트래킹을 활성화하시겠습니까?"
+          title="트래킹 링크를 발급하시겠습니까?"
           description={
             <>
-              실시간 광고 성과 데이터를 수집하여
+              발급된 링크를 복사하여 광고 플랫폼에 등록하면
               <br />
-              분석 리포트에 즉시 반영합니다.
+              트래킹을 활성화할 수 있습니다.
             </>
           }
-          buttonText="시작하기"
+          buttonText="발급하기"
           onConfirm={() =>
             trackControl.handleConfirm(async () => {
               if (!ad.landingUrl) {
+                toast.error(
+                  "광고에 등록된 랜딩 URL이 없어 발급이 불가능합니다.",
+                );
                 throw new Error("랜딩 URL이 없습니다.");
               }
               await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
@@ -217,27 +217,6 @@ export default function AdDetailContent({
           }
           isLoading={trackControl.isLoading}
           variant="primary"
-        />
-      </Modal>
-
-      {/* 트래킹 중단 */}
-      <Modal
-        isOpen={stopTrackControl.isOpen}
-        onClose={stopTrackControl.closeModal}
-        title="트래킹 중단"
-      >
-        <ModalContent
-          icon={<WarnCircleIcon className="text-status-red" />}
-          title="트래킹을 중단하시겠습니까?"
-          description="데이터 수집이 중단되어 분석 리포트에 공백이 생길 수 있습니다."
-          buttonText="중단하기"
-          onConfirm={() =>
-            stopTrackControl.handleConfirm(async () => {
-              /* API 호출 */
-            })
-          }
-          isLoading={stopTrackControl.isLoading}
-          variant="danger"
         />
       </Modal>
 
