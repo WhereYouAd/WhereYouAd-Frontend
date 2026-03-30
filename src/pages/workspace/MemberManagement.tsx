@@ -84,7 +84,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message ?? "권한 변경에 실패했습니다.");
     },
   });
 
@@ -99,7 +99,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message ?? "멤버 삭제에 실패했습니다.");
     },
   });
 

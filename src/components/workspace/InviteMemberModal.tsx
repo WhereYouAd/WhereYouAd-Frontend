@@ -58,7 +58,7 @@ export default function InviteMemberModal({
       });
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message ?? "초대 이메일 발송에 실패했습니다.");
     },
   });
 

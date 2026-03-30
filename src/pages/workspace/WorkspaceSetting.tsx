@@ -104,7 +104,9 @@ export default function WorkspaceSetting() {
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
-      toast.error((e as IApiErrorResponse).message);
+      toast.error(
+        (e as IApiErrorResponse).message ?? "변경사항 저장에 실패했습니다.",
+      );
     } finally {
       setSaving(false);
       setUploading(false);
@@ -123,7 +125,9 @@ export default function WorkspaceSetting() {
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
     } catch (e) {
-      toast.error((e as IApiErrorResponse).message);
+      toast.error(
+        (e as IApiErrorResponse).message ?? "워크스페이스 삭제에 실패했습니다.",
+      );
     } finally {
       setDeleting(false);
     }
