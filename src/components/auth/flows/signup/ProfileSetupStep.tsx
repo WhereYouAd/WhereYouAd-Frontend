@@ -62,9 +62,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
           navigate("/login");
         },
         onError: (error) => {
-          toast.error(
-            error.response?.data?.message || "회원가입에 실패했습니다.",
-          );
+          toast.error(error.message ?? "회원가입에 실패했습니다.");
         },
       },
     );

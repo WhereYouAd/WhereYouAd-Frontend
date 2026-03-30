@@ -6,9 +6,9 @@ import {
   useQuery,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 
 import type {
+  IApiErrorResponse,
   TUseMutationCustomOptions,
   TUseQueryCustomOptions,
 } from "@/types/common/common";
@@ -19,7 +19,7 @@ export function useCoreQuery<TQueryFnData, TData = TQueryFnData>(
   keyName: QueryKey,
   query: QueryFunction<TQueryFnData, QueryKey>,
   options?: TUseQueryCustomOptions<TQueryFnData, TData>,
-): UseQueryResult<TData, AxiosError> {
+): UseQueryResult<TData, IApiErrorResponse> {
   return useQuery({
     queryKey: keyName,
     queryFn: query,
@@ -30,7 +30,7 @@ export function useCoreQuery<TQueryFnData, TData = TQueryFnData>(
 export function useCoreMutation<
   TData,
   TVariables,
-  TError = AxiosError<{ message?: string }>,
+  TError = IApiErrorResponse,
   TContext extends { prevData?: unknown } = { prevData?: unknown },
   TCache = unknown,
 >(

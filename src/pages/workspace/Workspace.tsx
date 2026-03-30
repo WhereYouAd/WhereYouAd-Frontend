@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import type { TWorkspace } from "@/types/workspace/workspace";
 
 import Button from "@/components/common/button/Button";
@@ -25,7 +26,6 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
 import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
@@ -41,12 +41,12 @@ export default function WorkspacePage() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
-  const workspacesQuery = useQuery({
+  const workspacesQuery = useQuery<TWorkspace[], IApiErrorResponse>({
     queryKey: ["my-workspaces"],
     queryFn: getMyWorkspaces,
   });
 
-  const createWorkspaceMutation = useMutation({
+  const createWorkspaceMutation = useMutation<unknown, IApiErrorResponse>({
     mutationFn: async () => {
       const name = newName.trim();
       const description = newDesc.trim();
@@ -65,18 +65,12 @@ export default function WorkspacePage() {
   });
   const isListLoading = workspacesQuery.isLoading;
   const listErrorMsg = workspacesQuery.isError
-    ? getAxiosMessage(
-        workspacesQuery.error,
-        "워크스페이스 목록 조회중 오류가 발생했습니다",
-      )
+    ? workspacesQuery.error.message
     : null;
 
   const isCreating = createWorkspaceMutation.isPending;
   const createErrorMsg = createWorkspaceMutation.isError
-    ? getAxiosMessage(
-        createWorkspaceMutation.error,
-        "워크스페이스 생성 중 오류가 발생했습니다",
-      )
+    ? createWorkspaceMutation.error.message
     : null;
 
   const fileRef = useRef<HTMLInputElement | null>(null);

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import type { IPlatformCampaign } from "@/types/ads/campaign";
+import type { IApiErrorResponse } from "@/types/common/common";
 
 import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -30,19 +32,28 @@ export const useCampaignGroup = () => {
     null,
   );
 
-  const { data: googleData = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: googleData = [] } = useQuery<
+    IPlatformCampaign[],
+    IApiErrorResponse
+  >({
     queryKey: ["platformCampaigns", orgId, "GOOGLE"],
     queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
     enabled: !!orgId,
   });
 
-  const { data: naverData = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: naverData = [] } = useQuery<
+    IPlatformCampaign[],
+    IApiErrorResponse
+  >({
     queryKey: ["platformCampaigns", orgId, "NAVER"],
     queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
     enabled: !!orgId,
   });
 
-  const { data: kakaoData = [] } = useQuery<IPlatformCampaign[]>({
+  const { data: kakaoData = [] } = useQuery<
+    IPlatformCampaign[],
+    IApiErrorResponse
+  >({
     queryKey: ["platformCampaigns", orgId, "KAKAO"],
     queryFn: () => getPlatformCampaigns(orgId!, "KAKAO"),
     enabled: !!orgId,
@@ -62,7 +73,10 @@ export const useCampaignGroup = () => {
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const { mutate: createGroup, isPending: isCreating } = useMutation({
+  const { mutate: createGroup, isPending: isCreating } = useMutation<
+    unknown,
+    IApiErrorResponse
+  >({
     mutationFn: () => {
       const campaignIds: number[] = [
         googleSelected?.adCampaignId,
@@ -82,8 +96,8 @@ export const useCampaignGroup = () => {
       queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
       setIsSuccessModalOpen(true);
     },
-    onError: () => {
-      alert("캠페인 그룹 생성에 실패했습니다.");
+    onError: (error) => {
+      toast.error(error.message ?? "캠페인 그룹 생성에 실패했습니다.");
     },
   });
 

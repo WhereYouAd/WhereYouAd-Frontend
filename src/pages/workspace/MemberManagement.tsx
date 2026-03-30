@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import {
   type TMemberRole,
   type TUpdateMemberRoleRequest,
@@ -25,7 +26,6 @@ import {
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 const PAGE_SIZE = 20;
 
@@ -41,7 +41,10 @@ export default function MemberManagement() {
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const memberCountQuery = useQuery({
+  const memberCountQuery = useQuery<
+    Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
+    IApiErrorResponse
+  >({
     queryKey: ["workspaceMemberCount", orgId],
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
@@ -68,28 +71,25 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  const updateMemberRoleMutation = useMutation({
-    mutationFn: ({
-      memberId,
-      body,
-    }: {
-      memberId: number;
-      body: TUpdateMemberRoleRequest;
-    }) => updateWorkspaceMemberPermission(orgId, memberId, body),
+  const updateMemberRoleMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    { memberId: number; body: TUpdateMemberRoleRequest }
+  >({
+    mutationFn: ({ memberId, body }) =>
+      updateWorkspaceMemberPermission(orgId, memberId, body),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "역할 변경에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "권한 변경에 실패했습니다.");
     },
   });
 
-  const deleteMemberMutation = useMutation({
-    mutationFn: (memberId: number) => deleteWorkspaceMember(orgId, memberId),
+  const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
+    mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
@@ -99,9 +99,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "팀원 삭제에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "멤버 삭제에 실패했습니다.");
     },
   });
 
@@ -233,13 +231,16 @@ export default function MemberManagement() {
   }
 
   if (memberCountQuery.isError || membersQuery.isError) {
+    const errorMessage =
+      memberCountQuery.error?.message ||
+      (membersQuery.error as unknown as IApiErrorResponse)?.message ||
+      "팀 구성원 정보를 불러오지 못했습니다";
+
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
           <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-status-red">
-            팀 구성원 정보를 불러오지 못했습니다
-          </p>
+          <p className="font-body1 text-status-red">{errorMessage}</p>
         </header>
       </section>
     );
