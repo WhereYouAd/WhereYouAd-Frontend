@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
@@ -32,11 +33,18 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
 
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+    onSuccess: async (_data, orgId) => {
+      // 서버 저장 성공 시에만 UI 상태 업데이트
+      setSelectedOrgId(orgId);
+      setIsOpen(false);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["my-workspaces"] }),
+        queryClient.invalidateQueries({ queryKey: ["savedWorkspace"] }),
+      ]);
     },
     onError: (error) => {
       console.error("워크스페이스 저장 실패:", error);
+      toast.error("워크스페이스 변경에 실패했습니다. 다시 시도해 주세요.");
     },
   });
 
@@ -105,9 +113,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
             <button
               key={org.orgId}
               onClick={() => {
-                setSelectedOrgId(org.orgId);
                 saveWorkspace(org.orgId);
-                setIsOpen(false);
               }}
               className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
             >
