@@ -23,9 +23,7 @@ export default function NewPasswordStep() {
           navigate("/login", { replace: true });
         },
         onError: (error) => {
-          toast.error(
-            error.response?.data?.message || "비밀번호 변경에 실패했습니다.",
-          );
+          toast.error(error.message ?? "비밀번호 변경에 실패했습니다.");
         },
       },
     );

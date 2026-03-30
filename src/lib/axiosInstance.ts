@@ -1,5 +1,7 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+
 import useAuthStore from "@/store/useAuthStore";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -108,6 +110,6 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject((error.response?.data as IApiErrorResponse) ?? error);
   },
 );

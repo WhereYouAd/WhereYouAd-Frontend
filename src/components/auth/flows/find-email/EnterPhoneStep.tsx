@@ -60,8 +60,8 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
           restart(res.data.expireIn);
           toast.success(message);
         },
-        onError: () => {
-          toast.error("인증번호 발송에 실패했습니다.");
+        onError: (error) => {
+          toast.error(error.message ?? "인증번호 발송에 실패했습니다.");
         },
       },
     );
@@ -101,8 +101,8 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             setCodeError(res.data.verificationMessage);
           }
         },
-        onError: () => {
-          setCodeError("인증번호가 올바르지 않습니다.");
+        onError: (error) => {
+          setCodeError(error.message ?? "인증번호가 올바르지 않습니다.");
         },
       },
     );

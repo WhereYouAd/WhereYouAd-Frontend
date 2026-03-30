@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import type {
   TInviteMemberItem,
   TInviteMemberRequest,
@@ -17,7 +18,6 @@ import Modal from "../common/modal/Modal";
 import { postInviteEmail } from "@/api/workspace/org";
 import CopyIcon from "@/assets/icon/common/link.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 type TInviteMemberModalProps = {
   isOpen: boolean;
@@ -40,8 +40,12 @@ export default function InviteMemberModal({
   const emailValidation = emailSchema.safeParse(trimmedEmail);
   const isValidEmail = emailValidation.success;
 
-  const inviteMutation = useMutation({
-    mutationFn: (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
+  const inviteMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    TInviteMemberRequest
+  >({
+    mutationFn: (body) => postInviteEmail(orgId, body),
     onSuccess: (_, variables) => {
       toast.success("초대 이메일을 발송했습니다");
       onInviteSuccess(variables.email);
@@ -54,9 +58,7 @@ export default function InviteMemberModal({
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "초대에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "초대 이메일 발송에 실패했습니다.");
     },
   });
 
