@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
+import type { TWorkspace } from "@/types/workspace/workspace";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getMyWorkspaces, saveSelectedWorkspace } from "@/api/workspace/org";
@@ -16,7 +18,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
   const { data: workspaces = [] } = useCoreQuery(
-    ["workspaces"],
+    ["my-workspaces"],
     getMyWorkspaces,
   );
 
@@ -31,7 +33,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["savedWorkspace"] });
+      queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
     },
     onError: (error) => {
       console.error("워크스페이스 저장 실패:", error);
@@ -44,7 +46,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     }
   }, [isCollapsed]);
 
-  const renderImage = (workspace: any) => (
+  const renderImage = (workspace: TWorkspace) => (
     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
       {workspace?.logoUrl ? (
         <img
