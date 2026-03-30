@@ -229,13 +229,16 @@ export default function MemberManagement() {
   }
 
   if (memberCountQuery.isError || membersQuery.isError) {
+    const errorMessage =
+      (memberCountQuery.error as unknown as IApiErrorResponse)?.message ||
+      (membersQuery.error as unknown as IApiErrorResponse)?.message ||
+      "팀 구성원 정보를 불러오지 못했습니다";
+
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
           <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-status-red">
-            팀 구성원 정보를 불러오지 못했습니다
-          </p>
+          <p className="font-body1 text-status-red">{errorMessage}</p>
         </header>
       </section>
     );
