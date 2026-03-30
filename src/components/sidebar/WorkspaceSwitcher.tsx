@@ -28,19 +28,6 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     workspaces.find((w) => w.isCurrentWorkspace) ||
     workspaces[0];
 
-  if (!currentWorkspace) {
-    return (
-      <div className="relative font-body1 mb-4">
-        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
-          워크스페이스 없음
-        </div>
-      </div>
-    );
-  }
-  const otherWorkspaces = workspaces.filter(
-    (w) => w.orgId !== currentWorkspace.orgId,
-  );
-
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
     onSuccess: async (_data, orgId) => {
@@ -63,6 +50,19 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
       setIsOpen(false);
     }
   }, [isCollapsed]);
+
+  if (!currentWorkspace) {
+    return (
+      <div className="relative font-body1 mb-4">
+        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
+          워크스페이스 없음
+        </div>
+      </div>
+    );
+  }
+  const otherWorkspaces = workspaces.filter(
+    (w) => w.orgId !== currentWorkspace.orgId,
+  );
 
   const renderImage = (workspace: TWorkspace) => (
     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
@@ -125,6 +125,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
           {otherWorkspaces.map((org) => (
             <button
               key={org.orgId}
+              type="button"
               onClick={() => {
                 saveWorkspace(org.orgId);
               }}
