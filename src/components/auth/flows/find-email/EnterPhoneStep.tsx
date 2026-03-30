@@ -5,8 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import type { IApiErrorResponse } from "@/types/common/common";
-
 import { stripPhoneHyphens } from "@/utils/formatPhoneNumber";
 import { findEmailSchema } from "@/utils/validation";
 
@@ -63,10 +61,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
           toast.success(message);
         },
         onError: (error) => {
-          toast.error(
-            (error as unknown as IApiErrorResponse).message ??
-              "인증번호 발송에 실패했습니다.",
-          );
+          toast.error(error.message ?? "인증번호 발송에 실패했습니다.");
         },
       },
     );
@@ -107,10 +102,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
           }
         },
         onError: (error) => {
-          setCodeError(
-            (error as unknown as IApiErrorResponse).message ??
-              "인증번호가 올바르지 않습니다.",
-          );
+          setCodeError(error.message ?? "인증번호가 올바르지 않습니다.");
         },
       },
     );

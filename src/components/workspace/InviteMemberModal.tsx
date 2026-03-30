@@ -40,8 +40,12 @@ export default function InviteMemberModal({
   const emailValidation = emailSchema.safeParse(trimmedEmail);
   const isValidEmail = emailValidation.success;
 
-  const inviteMutation = useMutation({
-    mutationFn: (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
+  const inviteMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    TInviteMemberRequest
+  >({
+    mutationFn: (body) => postInviteEmail(orgId, body),
     onSuccess: (_, variables) => {
       toast.success("초대 이메일을 발송했습니다");
       onInviteSuccess(variables.email);
@@ -54,7 +58,7 @@ export default function InviteMemberModal({
       });
     },
     onError: (error) => {
-      toast.error((error as unknown as IApiErrorResponse).message);
+      toast.error(error.message);
     },
   });
 

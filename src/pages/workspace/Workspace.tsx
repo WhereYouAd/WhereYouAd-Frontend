@@ -41,12 +41,12 @@ export default function WorkspacePage() {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
-  const workspacesQuery = useQuery({
+  const workspacesQuery = useQuery<TWorkspace[], IApiErrorResponse>({
     queryKey: ["my-workspaces"],
     queryFn: getMyWorkspaces,
   });
 
-  const createWorkspaceMutation = useMutation({
+  const createWorkspaceMutation = useMutation<unknown, IApiErrorResponse>({
     mutationFn: async () => {
       const name = newName.trim();
       const description = newDesc.trim();
@@ -65,12 +65,12 @@ export default function WorkspacePage() {
   });
   const isListLoading = workspacesQuery.isLoading;
   const listErrorMsg = workspacesQuery.isError
-    ? (workspacesQuery.error as unknown as IApiErrorResponse).message
+    ? workspacesQuery.error.message
     : null;
 
   const isCreating = createWorkspaceMutation.isPending;
   const createErrorMsg = createWorkspaceMutation.isError
-    ? (createWorkspaceMutation.error as unknown as IApiErrorResponse).message
+    ? createWorkspaceMutation.error.message
     : null;
 
   const fileRef = useRef<HTMLInputElement | null>(null);

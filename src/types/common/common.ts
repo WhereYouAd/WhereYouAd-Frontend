@@ -3,7 +3,6 @@ import type {
   UseMutationOptions,
   UseQueryOptions,
 } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 
 // API 공통 성공 응답 타입
 export interface ICommonResponse<T> {
@@ -24,7 +23,7 @@ export type TUseQueryCustomOptions<
   TQueryFnData = unknown,
   TData = TQueryFnData,
 > = Omit<
-  UseQueryOptions<TQueryFnData, AxiosError, TData, QueryKey>,
+  UseQueryOptions<TQueryFnData, IApiErrorResponse, TData, QueryKey>,
   "queryKey" | "queryFn"
 >;
 

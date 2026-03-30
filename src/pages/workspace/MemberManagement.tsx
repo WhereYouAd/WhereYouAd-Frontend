@@ -41,7 +41,10 @@ export default function MemberManagement() {
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const memberCountQuery = useQuery({
+  const memberCountQuery = useQuery<
+    Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
+    IApiErrorResponse
+  >({
     queryKey: ["workspaceMemberCount", orgId],
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
@@ -68,26 +71,25 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  const updateMemberRoleMutation = useMutation({
-    mutationFn: ({
-      memberId,
-      body,
-    }: {
-      memberId: number;
-      body: TUpdateMemberRoleRequest;
-    }) => updateWorkspaceMemberPermission(orgId, memberId, body),
+  const updateMemberRoleMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    { memberId: number; body: TUpdateMemberRoleRequest }
+  >({
+    mutationFn: ({ memberId, body }) =>
+      updateWorkspaceMemberPermission(orgId, memberId, body),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
       });
     },
     onError: (error) => {
-      toast.error((error as unknown as IApiErrorResponse).message);
+      toast.error(error.message);
     },
   });
 
-  const deleteMemberMutation = useMutation({
-    mutationFn: (memberId: number) => deleteWorkspaceMember(orgId, memberId),
+  const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
+    mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
@@ -97,7 +99,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error((error as unknown as IApiErrorResponse).message);
+      toast.error(error.message);
     },
   });
 
@@ -230,7 +232,7 @@ export default function MemberManagement() {
 
   if (memberCountQuery.isError || membersQuery.isError) {
     const errorMessage =
-      (memberCountQuery.error as unknown as IApiErrorResponse)?.message ||
+      memberCountQuery.error?.message ||
       (membersQuery.error as unknown as IApiErrorResponse)?.message ||
       "팀 구성원 정보를 불러오지 못했습니다";
 
