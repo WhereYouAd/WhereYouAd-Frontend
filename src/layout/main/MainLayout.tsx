@@ -6,20 +6,31 @@ import { useCoreQuery } from "@/hooks/customQuery";
 import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
-import { getMyWorkspaces } from "@/api/workspace/org";
+import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function MainLayout() {
   useCoreQuery(["myInfo"], getMyInfo);
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
+
   const { data: workspaces } = useCoreQuery(["workspaces"], getMyWorkspaces);
+  const { data: savedData } = useCoreQuery(
+    ["savedWorkspace"],
+    getSavedWorkspace,
+  );
 
   useEffect(() => {
-    if (workspaces && workspaces.length > 0) {
+    if (!workspaces || workspaces.length === 0) return;
+
+    const savedId = savedData?.orgId;
+    const isExist = workspaces.some((w) => w.orgId === savedId);
+
+    if (savedId !== undefined && isExist) {
+      setSelectedOrgId(savedId);
       setSelectedOrgId(workspaces[0].orgId);
     }
-  }, [workspaces, setSelectedOrgId]);
+  }, [workspaces, savedData, setSelectedOrgId]);
   return (
     <div className="fixed inset-0 box-border flex overflow-hidden p-5 bg-gray-50 tablet:p-3">
       <Sidebar />

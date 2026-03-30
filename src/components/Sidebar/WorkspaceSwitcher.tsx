@@ -10,12 +10,6 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (isCollapsed) {
-      setIsOpen(false);
-    }
-  }, [isCollapsed]);
-
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
   const { data: workspaces = [] } = useCoreQuery(
@@ -23,16 +17,40 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     getMyWorkspaces,
   );
 
-  const currentWorkspace = workspaces.find((w) => w.orgId === selectedOrgId);
-  const otherWorkspaces = workspaces.filter((w) => w.orgId !== selectedOrgId);
+  const currentWorkspace =
+    workspaces.find((w) => w.orgId === selectedOrgId) || workspaces[0];
+  const otherWorkspaces = workspaces.filter(
+    (w) => w.orgId !== currentWorkspace?.orgId,
+  );
 
-  // API 연동 예정
-  const handleWorkspaceSelect = (orgId: number) => {
-    setSelectedOrgId(orgId);
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    if (isCollapsed) {
+      setIsOpen(false);
+    }
+  }, [isCollapsed]);
 
-  if (isCollapsed) return null;
+  const renderImage = (workspace: any) => (
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
+      {workspace?.logoUrl ? (
+        <img
+          src={workspace.logoUrl}
+          className="w-full h-full object-cover"
+          alt="logo"
+        />
+      ) : (
+        workspace?.name[0] || "W"
+      )}
+    </div>
+  );
+
+  // 축소 상태: 이미지만
+  if (isCollapsed) {
+    return (
+      <div className="flex justify-center py-4">
+        {renderImage(currentWorkspace)}
+      </div>
+    );
+  }
 
   return (
     <div className="relative font-body1 mb-4">
@@ -42,9 +60,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
         className="flex w-full items-center gap-3 rounded-component-md p-3 hover:bg-bg-surface transition-colors"
       >
         {/* image */}
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-bg-disabled/80 text-text-sub font-bold">
-          {currentWorkspace?.name[0] || "W"}
-        </div>
+        {renderImage(currentWorkspace)}
 
         {/* name */}
         <span className="flex-1 text-left font-semibold text-text-main truncate">
@@ -66,10 +82,13 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
           {otherWorkspaces.map((org) => (
             <button
               key={org.orgId}
-              onClick={() => handleWorkspaceSelect(org.orgId)}
+              onClick={() => {
+                setSelectedOrgId(org.orgId);
+                setIsOpen(false);
+              }}
               className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
             >
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded  bg-bg-disabled/80 text-text-sub font-label">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-label">
                 {org.name[0]}
               </div>
               <span className="truncate">{org.name}</span>
