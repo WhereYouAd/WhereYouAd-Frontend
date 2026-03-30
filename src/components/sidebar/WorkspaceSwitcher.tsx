@@ -27,8 +27,18 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     workspaces.find((w) => w.orgId === selectedOrgId) ||
     workspaces.find((w) => w.isCurrentWorkspace) ||
     workspaces[0];
+
+  if (!currentWorkspace) {
+    return (
+      <div className="relative font-body1 mb-4">
+        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
+          워크스페이스 없음
+        </div>
+      </div>
+    );
+  }
   const otherWorkspaces = workspaces.filter(
-    (w) => w.orgId !== currentWorkspace?.orgId,
+    (w) => w.orgId !== currentWorkspace.orgId,
   );
 
   const { mutate: saveWorkspace } = useMutation({
