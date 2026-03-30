@@ -5,10 +5,19 @@ import type {
 } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-// API 공통 응답 타입
+// API 공통 성공 응답 타입
 export interface ICommonResponse<T> {
   status: string;
   data: T;
+}
+
+// API 공통 에러 응답 타입
+export interface IApiErrorResponse {
+  status: string;
+  code: string;
+  message: string;
+  method: string;
+  requestURI: string;
 }
 
 export type TUseQueryCustomOptions<
@@ -22,7 +31,7 @@ export type TUseQueryCustomOptions<
 export type TUseMutationCustomOptions<
   TData = unknown,
   TVariables = unknown,
-  TError = AxiosError,
+  TError = IApiErrorResponse,
   TContext = unknown,
   TCache = unknown,
 > = Omit<

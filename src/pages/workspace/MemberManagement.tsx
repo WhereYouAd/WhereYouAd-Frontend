@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import {
   type TMemberRole,
   type TUpdateMemberRoleRequest,
@@ -25,7 +26,6 @@ import {
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 const PAGE_SIZE = 20;
 
@@ -82,9 +82,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "역할 변경에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error((error as unknown as IApiErrorResponse).message);
     },
   });
 
@@ -99,9 +97,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "팀원 삭제에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error((error as unknown as IApiErrorResponse).message);
     },
   });
 

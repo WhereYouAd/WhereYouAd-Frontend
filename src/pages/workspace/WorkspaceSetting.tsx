@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+
 import Button from "@/components/common/button/Button";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
@@ -18,7 +20,6 @@ import {
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function WorkspaceSetting() {
@@ -66,10 +67,7 @@ export default function WorkspaceSetting() {
         return null;
       });
     } catch (e) {
-      const message = getAxiosMessage(
-        e,
-        "워크스페이스 정보를 불러오지 못했습니다",
-      );
+      const message = (e as IApiErrorResponse).message;
       setErrorMsg(message);
       toast.error(message);
     } finally {
@@ -106,7 +104,7 @@ export default function WorkspaceSetting() {
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
-      toast.error(getAxiosMessage(e, "변경사항 저장에 실패했습니다"));
+      toast.error((e as IApiErrorResponse).message);
     } finally {
       setSaving(false);
       setUploading(false);
@@ -125,7 +123,7 @@ export default function WorkspaceSetting() {
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
     } catch (e) {
-      toast.error(getAxiosMessage(e, "워크스페이스 삭제에 실패했습니다"));
+      toast.error((e as IApiErrorResponse).message);
     } finally {
       setDeleting(false);
     }
