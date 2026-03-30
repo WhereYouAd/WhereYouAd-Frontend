@@ -127,3 +127,7 @@ export const getSavedWorkspace = async () => {
   );
   return data.data;
 };
+
+export const saveSelectedWorkspace = async (orgId: number): Promise<void> => {
+  await axiosInstance.post(`/api/org/${orgId}/workspace`);
+};

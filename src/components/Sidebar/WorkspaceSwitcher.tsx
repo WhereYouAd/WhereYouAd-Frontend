@@ -1,27 +1,42 @@
 import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import { getMyWorkspaces } from "@/api/workspace/org";
+import { getMyWorkspaces, saveSelectedWorkspace } from "@/api/workspace/org";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
+
   const { data: workspaces = [] } = useCoreQuery(
     ["workspaces"],
     getMyWorkspaces,
   );
 
   const currentWorkspace =
-    workspaces.find((w) => w.orgId === selectedOrgId) || workspaces[0];
+    workspaces.find((w) => w.orgId === selectedOrgId) ||
+    workspaces.find((w) => w.isCurrentWorkspace) ||
+    workspaces[0];
   const otherWorkspaces = workspaces.filter(
     (w) => w.orgId !== currentWorkspace?.orgId,
   );
+
+  const { mutate: saveWorkspace } = useMutation({
+    mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savedWorkspace"] });
+    },
+    onError: (error) => {
+      console.error("워크스페이스 저장 실패:", error);
+    },
+  });
 
   useEffect(() => {
     if (isCollapsed) {
@@ -38,7 +53,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
           alt="logo"
         />
       ) : (
-        workspace?.name[0] || "W"
+        workspace?.name?.[0] || "W"
       )}
     </div>
   );
@@ -84,13 +99,12 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
               key={org.orgId}
               onClick={() => {
                 setSelectedOrgId(org.orgId);
+                saveWorkspace(org.orgId);
                 setIsOpen(false);
               }}
               className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
             >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-label">
-                {org.name[0]}
-              </div>
+              {renderImage(org)}
               <span className="truncate">{org.name}</span>
             </button>
           ))}

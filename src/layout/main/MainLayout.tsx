@@ -28,7 +28,9 @@ export default function MainLayout() {
 
     if (savedId !== undefined && isExist) {
       setSelectedOrgId(savedId);
-      setSelectedOrgId(workspaces[0].orgId);
+    } else {
+      const currentOrg = workspaces.find((w) => w.isCurrentWorkspace);
+      setSelectedOrgId(currentOrg?.orgId || workspaces[0].orgId);
     }
   }, [workspaces, savedData, setSelectedOrgId]);
   return (
