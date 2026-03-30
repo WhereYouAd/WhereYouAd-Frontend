@@ -95,7 +95,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
         <div
           className={twMerge(
             "absolute z-50 flex flex-col gap-1 rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
-            // 축소 상태: 오른쪽 옆으로(SubMenu와 동일) / 확장 상태: 버튼 아래로
+            // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
             isCollapsed
               ? "left-full top-0 ml-2 w-52"
               : "left-1 right-1 top-full mt-1",
