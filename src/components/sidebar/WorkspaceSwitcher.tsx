@@ -72,6 +72,8 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     <div className="relative font-body1 mb-4">
       <button
         type="button"
+        aria-expanded={isOpen}
+        aria-controls="workspace-list"
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
           "flex items-center rounded-component-md transition-colors hover:bg-bg-surface",
@@ -101,6 +103,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
       {/* dropdown */}
       {isOpen && (
         <div
+          id="workspace-list"
           className={twMerge(
             "absolute z-50 flex flex-col gap-1 rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
             // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
