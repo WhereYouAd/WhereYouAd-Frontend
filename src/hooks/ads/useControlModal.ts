@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+
 interface IUseControlModalProps {
   onSuccess?: () => void;
   successMessage: string;
@@ -25,8 +27,8 @@ export const useControlModal = ({
       toast.success(successMessage);
       onSuccess?.();
       closeModal();
-    } catch {
-      toast.error(errorMessage);
+    } catch (e) {
+      toast.error((e as IApiErrorResponse).message ?? errorMessage);
     } finally {
       setIsLoading(false);
     }
