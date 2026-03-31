@@ -299,19 +299,6 @@ export default function WorkspaceSetting() {
             <div className="flex justify-end mt-6 gap-4 tablet:flex-col">
               <Button
                 size="big"
-                variant="secondary"
-                type="button"
-                onClick={() => {
-                  if (!orgId) return;
-                  void navigate(`/workspace/${orgId}/members`);
-                }}
-                aria-label="멤버 관리로 이동하기"
-                className="w-auto tablet:w-full"
-              >
-                멤버 관리로 이동
-              </Button>
-              <Button
-                size="big"
                 variant="primary"
                 type="button"
                 onClick={onSave}
