@@ -86,18 +86,6 @@ function WorkspaceCard({
           </div>
         </div>
       </div>
-
-      <div
-        className="flex items-center gap-4 shrink-0"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DropdownMenu
-          trigger={<VectorIcon aria-hidden="true" />}
-          aria-label={`${w.name} 워크스페이스 메뉴`}
-          className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
-          items={menuItems}
-        />
-      </div>
     </li>
   );
 }

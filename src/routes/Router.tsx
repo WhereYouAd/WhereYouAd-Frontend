@@ -35,11 +35,12 @@ export const router = createBrowserRouter([
         children: AuthRoutes,
       },
       {
-        element: (
-          <AuthGuard>
-            <MainLayout />
-          </AuthGuard>
-        ),
+        // element: (
+        //   <AuthGuard>
+        //     <MainLayout />
+        //   </AuthGuard>
+        // ),
+        element: <MainLayout />,
         children: MainRoutes,
       },
     ],
