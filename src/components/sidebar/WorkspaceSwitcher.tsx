@@ -126,25 +126,29 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
         <div
           id="workspace-list"
           className={twMerge(
-            "absolute z-50 flex flex-col gap-1 rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
+            "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
             // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
             isCollapsed
               ? "left-full top-0 ml-2 w-52"
               : "left-1 right-1 top-full mt-1",
           )}
         >
-          {otherWorkspaces.map((org) => (
-            <button
-              key={org.orgId}
-              type="button"
-              onClick={() => {
-                saveWorkspace(org.orgId);
-              }}
-              className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
-            >
-              {renderImage(org)}
-              <span className="truncate">{org.name}</span>
-            </button>
+          {otherWorkspaces.map((org, index) => (
+            <div key={org.orgId}>
+              {index !== 0 && (
+                <div className="my-1 border-t border-bg-surface" />
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  saveWorkspace(org.orgId);
+                }}
+                className="group flex w-full items-center gap-3 rounded-component-sm px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
+              >
+                {renderImage(org)}
+                <span className="truncate">{org.name}</span>
+              </button>
+            </div>
           ))}
         </div>
       )}
