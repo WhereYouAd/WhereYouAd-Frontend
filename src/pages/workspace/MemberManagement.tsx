@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   useInfiniteQuery,
   useMutation,
@@ -15,7 +15,6 @@ import {
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
-import PageHeader from "@/components/common/PageHeader";
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
 import PermissionTable from "@/components/workspace/PermissionTable";
@@ -30,7 +29,6 @@ import {
 const PAGE_SIZE = 20;
 
 export default function MemberManagement() {
-  const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
   const queryClient = useQueryClient();
@@ -248,23 +246,6 @@ export default function MemberManagement() {
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            void navigate(-1);
-          }}
-          className="inline-flex w-fit items-center gap-1 text-text-sub transition-colors hover:text-text-main"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="font-body2">뒤로 이동</span>
-        </button>
-        <PageHeader
-          title="멤버 관리"
-          description="팀 멤버를 효율적으로 관리하세요"
-        />
-      </div>
-
       <div className="flex w-full min-w-0 flex-col gap-10">
         <MemberList
           orgId={orgId}

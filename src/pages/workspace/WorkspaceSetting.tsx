@@ -9,7 +9,6 @@ import Button from "@/components/common/button/Button";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
-import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
 import {
@@ -177,23 +176,6 @@ export default function WorkspaceSetting() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            void navigate(-1);
-          }}
-          className="inline-flex w-fit items-center gap-1 text-text-sub transition-colors hover:text-text-main"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="font-body2">뒤로 이동</span>
-        </button>
-        <PageHeader
-          title="워크스페이스 관리"
-          description="워크스페이스 정보를 확인하고 관리하세요."
-        />
-      </div>
-
       {loading && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
           <p className="font-body2 text-text-sub">불러오는중..</p>
@@ -214,10 +196,6 @@ export default function WorkspaceSetting() {
       {!loading && !errorMsg && (
         <>
           <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
-            <h2 className="font-heading4 text-text-main">기본 정보</h2>
-            <p className="font-body2 text-text-sub mt-2">
-              워크스페이스의 대표적인 정보를 설정합니다.
-            </p>
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
               <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
                 <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
