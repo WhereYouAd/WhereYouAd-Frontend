@@ -78,7 +78,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   );
 
   const renderImage = (workspace: TWorkspace) => (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
       {workspace?.logoUrl ? (
         <img
           src={workspace.logoUrl}
@@ -92,7 +92,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   );
 
   return (
-    <div className="relative font-body1 mb-4">
+    <div className="relative mb-4">
       <button
         type="button"
         aria-expanded={isOpen}
@@ -101,8 +101,8 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
         className={twMerge(
           "flex items-center rounded-component-md transition-colors hover:bg-bg-surface",
           isCollapsed
-            ? "h-[55px] w-[55px] justify-center p-0 mx-auto"
-            : "w-full p-3 gap-3",
+            ? "h-[55px] w-[55px] justify-center py-1.5 px-2 mx-auto"
+            : "w-full py-1.5 px-2 gap-3",
         )}
       >
         {/* image */}
@@ -110,9 +110,14 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
 
         {!isCollapsed && (
           <>
-            <span className="flex-1 text-left text-text-main truncate">
-              {currentWorkspace?.name || "워크스페이스 선택"}
-            </span>
+            <div className="flex flex-col flex-1 min-w-0 items-start">
+              <span className="text-left text-text-main font-label truncate w-full">
+                {currentWorkspace?.name || "워크스페이스 선택"}
+              </span>
+              <span className="text-text-disabled font-caption truncate">
+                {currentWorkspace?.myRole === "ADMIN" ? "관리자" : "멤버"}
+              </span>
+            </div>
             <ChevronIcon
               className={twMerge(
                 "h-3 w-3 text-text-sub transition-transform duration-200",
@@ -132,7 +137,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
             // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
             isCollapsed
               ? "left-full top-0 ml-2 w-52"
-              : "left-1 right-1 top-full mt-1",
+              : "left-1 right-0 top-full mt-1",
           )}
         >
           {otherWorkspaces.map((org, index) => (
@@ -145,10 +150,17 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
                 onClick={() => {
                   saveWorkspace(org.orgId);
                 }}
-                className="group flex w-full items-center gap-3 rounded-component-sm px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
+                className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
               >
                 {renderImage(org)}
-                <span className="truncate font-body2">{org.name}</span>
+                <div className="flex flex-col flex-1 min-w-0 items-start">
+                  <span className="truncate w-full text-left font-body2 text-text-main">
+                    {org.name}
+                  </span>
+                  <span className="font-caption text-text-disabled mt-0.5">
+                    {org.myRole === "ADMIN" ? "관리자" : "멤버"}
+                  </span>
+                </div>
               </button>
             </div>
           ))}
@@ -161,9 +173,9 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
                 setIsOpen(false);
                 navigate("/workspace");
               }}
-              className="flex w-full items-center gap-3 rounded-component-sm px-3 py-2 text-sm text-text-sub hover:bg-bg-surface transition-colors"
+              className="flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-bg-disabled">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-text-sub/50">
                 +
               </div>
               <span className="font-body2 text-text-sub">새 워크스페이스</span>
