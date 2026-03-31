@@ -6,7 +6,6 @@ import type { IApiErrorResponse } from "@/types/common/common";
 import type { TWorkspace } from "@/types/workspace/workspace";
 
 import Button from "@/components/common/button/Button";
-import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import PageHeader from "@/components/common/PageHeader";
@@ -21,11 +20,9 @@ import {
   getMyWorkspaces,
   uploadImage,
 } from "@/api/workspace/org";
-import EditContainIcon from "@/assets/icon/common/edit.svg?react";
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
-import UserProfileIcon from "@/assets/icon/common/userProfile.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
