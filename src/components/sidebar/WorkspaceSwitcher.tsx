@@ -136,7 +136,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
             "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
             // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
             isCollapsed
-              ? "left-full top-0 ml-2 w-52"
+              ? "left-full top-0 ml-2 w-53"
               : "left-1 right-0 top-full mt-1",
           )}
         >
