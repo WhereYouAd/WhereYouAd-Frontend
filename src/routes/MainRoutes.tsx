@@ -3,6 +3,8 @@ import type { RouteObject } from "react-router-dom";
 
 import { loadable } from "@/utils/loadable";
 
+import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
+
 const OverviewDashboard = loadable(
   lazy(() => import("@/pages/dashboard/overview/OverviewDashboard")),
 );
@@ -21,7 +23,10 @@ const CampaignDetail = loadable(
 const CampaignGroup = loadable(
   lazy(() => import("@/pages/ads/new/CampaignGroup")),
 );
-const Workspace = loadable(lazy(() => import("@/pages/workspace/Workspace")));
+const Workspace = loadable(
+  lazy(() => import("@/pages/workspace/Workspace")),
+  <WorkspaceListLoading />,
+);
 const WorkspaceManageLayout = loadable(
   lazy(() => import("@/layout/workspace/WorkspaceManageLayout")),
 );
