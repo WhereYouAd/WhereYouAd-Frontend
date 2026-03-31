@@ -49,7 +49,7 @@ export default function MemberRoleSelect({
         >
           <span>{ROLE_LABEL_MAP[role]}</span>
           <ChevonIcon
-            className={`h-4 w-4 shrink-0 transition-transform ${open ? "rotate-0" : "-rotate-180"}`}
+            className={`h-4 w-4 shrink-0 ${open ? "rotate-0" : "-rotate-180"}`}
           />
         </div>
       )}

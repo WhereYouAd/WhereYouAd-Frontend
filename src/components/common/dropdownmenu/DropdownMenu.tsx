@@ -57,7 +57,7 @@ export function DropdownMenu({
         <div
           id={menuId}
           role="menu"
-          className="absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-40px)] rounded-component-md bg-brand-200 py-3 px-1 shadow-Medium z-50"
+          className="absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-40px)] rounded-component-md bg-brand-200 border border-gray-100 py-3 px-1 shadow-Medium z-50 animate-modal-content origin-top-right"
         >
           <div className="space-y-1">
             {items.map((it, idx) => (
@@ -70,33 +70,35 @@ export function DropdownMenu({
                     setOpen(false);
                   }}
                   className={twMerge(
-                    "group flex w-full items-center gap-3 rounded-component-md px-5 py-4 text-left font-body2 transition-fast",
+                    "group flex w-full justify-between items-center rounded-component-md px-5 py-4 text-left font-body2 transition-fast",
                     it.active
-                      ? "bg-brand-300 text-status-blue"
-                      : "text-text-main hover:bg-brand-300 hover:text-status-blue",
+                      ? "bg-status-blue/10 text-status-blue"
+                      : "text-text-main hover:bg-status-blue/5 hover:text-status-blue",
                   )}
                 >
-                  {it.icon ? (
+                  <div className="flex items-center gap-3">
+                    {it.icon ? (
+                      <span
+                        className={twMerge(
+                          "inline-flex h-5 w-5 items-center justify-center text-text-main",
+                          it.active
+                            ? "text-status-blue"
+                            : "group-hover:text-status-blue",
+                        )}
+                        aria-hidden="true"
+                      >
+                        {it.icon}
+                      </span>
+                    ) : null}
                     <span
                       className={twMerge(
-                        "inline-flex h-5 w-5 items-center justify-center text-text-main",
-                        it.active
-                          ? "text-status-blue"
-                          : "group-hover:text-status-blue",
+                        "whitespace-nowrap",
+                        it.active ? "font-semibold" : "font-medium",
                       )}
-                      aria-hidden="true"
                     >
-                      {it.icon}
+                      {it.label}
                     </span>
-                  ) : null}
-                  <span
-                    className={twMerge(
-                      "whitespace-nowrap",
-                      it.active ? "font-semibold" : "font-medium",
-                    )}
-                  >
-                    {it.label}
-                  </span>
+                  </div>
                 </button>
               </div>
             ))}

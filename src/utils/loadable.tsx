@@ -4,7 +4,7 @@ type TPropsOf<T> = T extends ComponentType<infer P> ? P : never;
 
 export function loadable<T extends ComponentType<any>>(
   Component: T,
-  fallback: ReactNode = <div>Loading...</div>,
+  fallback: ReactNode = null,
 ) {
   function Wrapped(props: TPropsOf<T>) {
     return (
