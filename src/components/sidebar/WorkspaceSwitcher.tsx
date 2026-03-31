@@ -81,7 +81,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
         <img
           src={workspace.logoUrl}
           className="w-full h-full object-cover"
-          alt="logo"
+          alt={`${workspace.name} 로고`}
         />
       ) : (
         workspace?.name?.[0] || "W"
