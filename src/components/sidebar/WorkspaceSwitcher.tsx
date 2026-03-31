@@ -28,6 +28,17 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
     workspaces.find((w) => w.isCurrentWorkspace) ||
     workspaces[0];
 
+  useEffect(() => {
+    if (selectedOrgId === null || workspaces.length === 0) return;
+
+    const exists = workspaces.some((w) => w.orgId === selectedOrgId);
+    if (exists) return;
+
+    const fallback =
+      workspaces.find((w) => w.isCurrentWorkspace) || workspaces[0];
+    setSelectedOrgId(fallback.orgId);
+  }, [selectedOrgId, workspaces, setSelectedOrgId]);
+
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
     onSuccess: async (_data, orgId) => {
