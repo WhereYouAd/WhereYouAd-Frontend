@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -12,6 +13,7 @@ import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -108,7 +110,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
 
         {!isCollapsed && (
           <>
-            <span className="flex-1 text-left font-semibold text-text-main truncate">
+            <span className="flex-1 text-left text-text-main truncate">
               {currentWorkspace?.name || "워크스페이스 선택"}
             </span>
             <ChevronIcon
@@ -146,10 +148,27 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
                 className="group flex w-full items-center gap-3 rounded-component-sm px-3 py-2 text-sm text-text-main hover:bg-bg-surface transition-colors"
               >
                 {renderImage(org)}
-                <span className="truncate">{org.name}</span>
+                <span className="truncate font-body2">{org.name}</span>
               </button>
             </div>
           ))}
+
+          {/* + 새 워크스페이스 */}
+          <div className="mt-1 pt-1 border-t border-bg-surface">
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                navigate("/workspace");
+              }}
+              className="flex w-full items-center gap-3 rounded-component-sm px-3 py-2 text-sm text-text-sub hover:bg-bg-surface transition-colors"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-bg-disabled">
+                +
+              </div>
+              <span className="font-body2 text-text-sub">새 워크스페이스</span>
+            </button>
+          </div>
         </div>
       )}
     </div>
