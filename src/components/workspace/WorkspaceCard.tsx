@@ -4,14 +4,11 @@ import { twMerge } from "tailwind-merge";
 import type { TWorkspace } from "@/types/workspace/workspace";
 import { ROLE_LABEL_MAP } from "@/constants/workspaceRole";
 
-import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
-
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 type TProps = {
   workspace: TWorkspace;
-  menuItems: TMenuItem[];
   isSelected?: boolean;
   onClick?: () => void;
 };

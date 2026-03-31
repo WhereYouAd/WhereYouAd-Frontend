@@ -97,23 +97,6 @@ export default function WorkspacePage() {
     });
   }, [filtered, selectedOrgId]);
 
-  const menuItems = (id: TWorkspace["orgId"]): TMenuItem[] => [
-    {
-      icon: <EditContainIcon className="h-5 w-5 fill-none stroke-current" />,
-      label: "정보 수정하기",
-      onClick: () => {
-        void navigate(`/workspace/${id}/settings`);
-      },
-    },
-    {
-      icon: <UserProfileIcon className="h-5 w-5 fill-none stroke-current" />,
-      label: "멤버 관리",
-      onClick: () => {
-        void navigate(`/workspace/${id}/members`);
-      },
-    },
-  ];
-
   const onCloseCreate = () => {
     setLogoPreview(null);
     setLogoPreview((prev) => {
@@ -181,7 +164,6 @@ export default function WorkspacePage() {
           <WorkspaceCard
             key={String(w.orgId)}
             workspace={w}
-            menuItems={menuItems(w.orgId)}
             isSelected={w.orgId === selectedOrgId}
             onClick={() => {
               void navigate(`/workspace/${w.orgId}/settings`);
