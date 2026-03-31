@@ -4,13 +4,9 @@ import { twMerge } from "tailwind-merge";
 import type { TWorkspace } from "@/types/workspace/workspace";
 import { ROLE_LABEL_MAP } from "@/constants/workspaceRole";
 
-import {
-  DropdownMenu,
-  type TMenuItem,
-} from "@/components/common/dropdownmenu/DropdownMenu";
+import { type TMenuItem } from "@/components/common/dropdownmenu/DropdownMenu";
 
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
-import VectorIcon from "@/assets/icon/common/more.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 type TProps = {
@@ -20,12 +16,7 @@ type TProps = {
   onClick?: () => void;
 };
 
-function WorkspaceCard({
-  workspace: w,
-  menuItems,
-  isSelected = false,
-  onClick,
-}: TProps) {
+function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
