@@ -3,23 +3,49 @@ import { Outlet } from "react-router-dom";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import Sidebar from "@/components/Sidebar/Sidebar";
+import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
-import { getMyWorkspaces } from "@/api/workspace/org";
+import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function MainLayout() {
   useCoreQuery(["myInfo"], getMyInfo);
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
-  const { data: workspaces } = useCoreQuery(["workspaces"], getMyWorkspaces);
+
+  const savedWorkspaceQuery = useCoreQuery(
+    ["savedWorkspace"],
+    getSavedWorkspace,
+  );
+  const { data: savedData } = savedWorkspaceQuery;
+  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   useEffect(() => {
-    if (workspaces && workspaces.length > 0) {
-      setSelectedOrgId(workspaces[0].orgId);
+    // 모두 완료되었을 때 시작
+    if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
+    if (selectedOrgId !== null) return;
+
+    const savedId = savedData?.orgId;
+    const isExist = workspaces.some((w) => w.orgId === savedId);
+
+    // 1. 현재 워크스페이스 조회 API 데이터
+    if (savedId !== undefined && isExist) {
+      setSelectedOrgId(savedId);
     }
-  }, [workspaces, setSelectedOrgId]);
+    // 2. isCurrentWorkspace 또는 첫 번째
+    else {
+      const currentOrg = workspaces.find((w) => w.isCurrentWorkspace);
+      setSelectedOrgId(currentOrg?.orgId || workspaces[0].orgId);
+    }
+  }, [
+    workspaces,
+    savedWorkspaceQuery.isFetched,
+    savedData,
+    setSelectedOrgId,
+    selectedOrgId,
+  ]);
   return (
     <div className="fixed inset-0 box-border flex overflow-hidden p-5 bg-gray-50 tablet:p-3">
       <Sidebar />

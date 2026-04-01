@@ -7,6 +7,7 @@ export type TWorkspace = {
   url?: string | null;
   logoUrl?: string | null;
   myRole: TMemberRole;
+  isCurrentWorkspace: boolean;
 };
 
 export type TMyOrgsData = {
