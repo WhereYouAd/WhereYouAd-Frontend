@@ -62,7 +62,7 @@ export default function MemberList({
     })),
   ];
 
-  const hasVisibleItems = members.length > 0 || pendingMembers.length > 0;
+  const hasVisibleItems = members.length > 0;
 
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">

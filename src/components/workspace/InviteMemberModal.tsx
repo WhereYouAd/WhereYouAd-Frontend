@@ -197,7 +197,7 @@ export default function InviteMemberModal({
                         </p>
                         {item.isMe && (
                           <span className="font-body2 text-text-disabled">
-                            (you)
+                            본인
                           </span>
                         )}
                       </div>
