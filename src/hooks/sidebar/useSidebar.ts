@@ -6,7 +6,7 @@ import { mainNav } from "@/constants/sidebarNav";
 export const useSidebar = () => {
   const location = useLocation();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const lastPathRef = useRef("");
 

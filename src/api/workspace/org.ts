@@ -120,3 +120,14 @@ export const postInviteEmail = async (
   >(`/api/org/members/${orgId}/invitation`, body);
   return data.data;
 };
+
+export const getSavedWorkspace = async () => {
+  const { data } = await axiosInstance.get<ICommonResponse<{ orgId: number }>>(
+    "/api/org/my/workspace",
+  );
+  return data.data;
+};
+
+export const saveSelectedWorkspace = async (orgId: number): Promise<void> => {
+  await axiosInstance.post(`/api/org/${orgId}/workspace`);
+};
