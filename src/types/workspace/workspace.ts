@@ -99,11 +99,31 @@ export type TInviteMemberResponse = {
   email: string;
 };
 
-export type TInviteMemberItem = {
+export type TInviteMemberItem =
+  | {
+      invitationId: number;
+      email: string;
+      invitedAt: string;
+      expireAt: string;
+      inviteStatus: "PENDING";
+    }
+  | {
+      memberId: number;
+      name: string;
+      email: string;
+      profileImageUrl: string | null;
+      role: TMemberRole;
+      inviteStatus: "ACTIVE";
+      isMe?: boolean;
+    };
+
+export type TPendingMemberData = {
+  invitationId: number;
   email: string;
-  name?: string;
-  profileImageUrl?: string | null;
-  role?: TMemberRole;
-  inviteStatus: "PENDING" | "ACTIVE";
-  isMe?: boolean;
+  invitedAt: string;
+  expireAt: string;
+};
+
+export type TPendingMemberResponse = {
+  pendingMembers: TPendingMemberData[];
 };

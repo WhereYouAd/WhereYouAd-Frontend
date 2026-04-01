@@ -8,6 +8,7 @@ import {
   type TInviteMemberRequest,
   type TInviteMemberResponse,
   type TMyOrgsData,
+  type TPendingMemberResponse,
   type TUpdateMemberRoleRequest,
   type TUpdateMemberRoleResponse,
   type TUpdateWorkspaceRequest,
@@ -121,6 +122,15 @@ export const postInviteEmail = async (
   return data.data;
 };
 
+export const getPendingMember = async (
+  orgId: number,
+): Promise<TPendingMemberResponse> => {
+  const { data } = await axiosInstance.get<
+    ICommonResponse<TPendingMemberResponse>
+  >(`/api/org/members/${orgId}/pending`);
+
+  return data.data;
+};
 export const getSavedWorkspace = async () => {
   const { data } = await axiosInstance.get<ICommonResponse<{ orgId: number }>>(
     "/api/org/my/workspace",
