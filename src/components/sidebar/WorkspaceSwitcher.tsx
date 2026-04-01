@@ -141,7 +141,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
           )}
         >
           {/* 워크스페이스 목록 */}
-          <div className="flex-1 overflow-y-auto max-h-100 scrollbar-hide">
+          <div className="flex-1 overflow-y-auto max-h-100">
             {otherWorkspaces.map((org, index) => (
               <div key={org.orgId}>
                 {index !== 0 && (
