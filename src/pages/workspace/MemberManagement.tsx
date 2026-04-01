@@ -21,6 +21,7 @@ import PermissionTable from "@/components/workspace/PermissionTable";
 
 import {
   deleteWorkspaceMember,
+  getPendingMember,
   getWorkspaceMemberCount,
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
@@ -68,6 +69,24 @@ export default function MemberManagement() {
   const adminCount = useMemo(() => {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
+
+  const pendingMembersQuery = useQuery<
+    Awaited<ReturnType<typeof getPendingMember>>,
+    IApiErrorResponse
+  >({
+    queryKey: ["workspacePendingMembers", orgId],
+    queryFn: () => getPendingMember(orgId),
+    enabled: Number.isFinite(orgId) && orgId > 0,
+  });
+
+  const pendingMembers = useMemo(() => {
+    const items = pendingMembersQuery.data?.pendingMembers ?? [];
+
+    return [...items].sort(
+      (a, b) =>
+        new Date(b.invitedAt).getTime() - new Date(a.invitedAt).getTime(),
+    );
+  }, [pendingMembersQuery.data]);
 
   const updateMemberRoleMutation = useMutation<
     unknown,
@@ -215,7 +234,11 @@ export default function MemberManagement() {
     );
   }
 
-  if (memberCountQuery.isLoading || membersQuery.isLoading) {
+  if (
+    memberCountQuery.isLoading ||
+    membersQuery.isLoading ||
+    pendingMembersQuery.isLoading
+  ) {
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
@@ -228,10 +251,15 @@ export default function MemberManagement() {
     );
   }
 
-  if (memberCountQuery.isError || membersQuery.isError) {
+  if (
+    memberCountQuery.isError ||
+    membersQuery.isError ||
+    pendingMembersQuery.isError
+  ) {
     const errorMessage =
       memberCountQuery.error?.message ||
       (membersQuery.error as unknown as IApiErrorResponse)?.message ||
+      pendingMembersQuery.error?.message ||
       "팀 구성원 정보를 불러오지 못했습니다";
 
     return (
@@ -250,6 +278,7 @@ export default function MemberManagement() {
         <MemberList
           orgId={orgId}
           members={members}
+          pendingMembers={pendingMembers}
           totalCount={totalCount}
           onRoleChange={handleRoleChange}
           onDeleteClick={openDeleteMember}

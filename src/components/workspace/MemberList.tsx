@@ -3,6 +3,7 @@ import { type RefObject, useState } from "react";
 import type {
   TInviteMemberItem,
   TMemberRole,
+  TPendingMemberData,
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
@@ -15,6 +16,7 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 type TMemberListProps = {
   orgId: number;
   members: TWorkspaceMember[];
+  pendingMembers: TPendingMemberData[];
   totalCount: number;
   onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
   onDeleteClick: (member: TWorkspaceMember) => void;
@@ -25,6 +27,7 @@ type TMemberListProps = {
 export default function MemberList({
   orgId,
   members,
+  pendingMembers,
   totalCount,
   onRoleChange,
   onDeleteClick,
@@ -32,9 +35,6 @@ export default function MemberList({
   observerRef,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
-  const [pendingInviteItems, setPendingInviteItems] = useState<
-    TInviteMemberItem[]
-  >([]);
 
   const openInviteMember = () => {
     setInviteMemberOpen(true);
@@ -43,23 +43,14 @@ export default function MemberList({
     setInviteMemberOpen(false);
   };
 
-  const handleInviteSuccess = (email: string) => {
-    setPendingInviteItems((prev) => {
-      const alreadyExists = prev.some((item) => item.email === email);
-      if (alreadyExists) return prev;
-
-      return [
-        {
-          email,
-          inviteStatus: "PENDING",
-        },
-        ...prev,
-      ];
-    });
-  };
-
   const inviteItems: TInviteMemberItem[] = [
-    ...pendingInviteItems,
+    ...pendingMembers.map((member) => ({
+      invitationId: member.invitationId,
+      email: member.email,
+      invitedAt: member.invitedAt,
+      expireAt: member.expireAt,
+      inviteStatus: "PENDING" as const,
+    })),
     ...members.map((member) => ({
       memberId: member.memberId,
       name: member.name,
@@ -71,7 +62,7 @@ export default function MemberList({
     })),
   ];
 
-  const hasVisibleItems = members.length > 0 || pendingInviteItems.length > 0;
+  const hasVisibleItems = members.length > 0 || pendingMembers.length > 0;
 
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
@@ -128,7 +119,6 @@ export default function MemberList({
         onClose={closeInviteMember}
         orgId={orgId}
         inviteItems={inviteItems}
-        onInviteSuccess={handleInviteSuccess}
       />
     </div>
   );
