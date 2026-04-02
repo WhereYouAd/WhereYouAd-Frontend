@@ -136,34 +136,37 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
             "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
             // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
             isCollapsed
-              ? "left-full top-0 ml-2 w-53"
-              : "left-1 right-0 top-full mt-1",
+              ? "left-full top-0 ml-2 w-58"
+              : "left-1 -right-5 top-full mt-1",
           )}
         >
-          {otherWorkspaces.map((org, index) => (
-            <div key={org.orgId}>
-              {index !== 0 && (
-                <div className="my-1 border-t border-bg-surface" />
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  saveWorkspace(org.orgId);
-                }}
-                className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
-              >
-                {renderImage(org)}
-                <div className="flex flex-col flex-1 min-w-0 items-start">
-                  <span className="truncate w-full text-left font-body2 text-text-main">
-                    {org.name}
-                  </span>
-                  <span className="font-caption text-text-disabled mt-0.5">
-                    {org.myRole === "ADMIN" ? "관리자" : "멤버"}
-                  </span>
-                </div>
-              </button>
-            </div>
-          ))}
+          {/* 워크스페이스 목록 */}
+          <div className="flex-1 overflow-y-auto max-h-100">
+            {otherWorkspaces.map((org, index) => (
+              <div key={org.orgId}>
+                {index !== 0 && (
+                  <div className="my-1 border-t border-bg-surface" />
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    saveWorkspace(org.orgId);
+                  }}
+                  className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
+                >
+                  {renderImage(org)}
+                  <div className="flex flex-col flex-1 min-w-0 items-start">
+                    <span className="truncate w-full text-left font-body2 text-text-main">
+                      {org.name}
+                    </span>
+                    <span className="font-caption text-text-disabled mt-0.5">
+                      {org.myRole === "ADMIN" ? "관리자" : "멤버"}
+                    </span>
+                  </div>
+                </button>
+              </div>
+            ))}
+          </div>
 
           {/* + 새 워크스페이스 */}
           <div className="mt-1 pt-1 border-t border-bg-surface">
