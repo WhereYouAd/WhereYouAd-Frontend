@@ -1,4 +1,4 @@
-import type { IRoasRanking } from "@/types/dashboard/platform";
+import type { IAdStatusData, IRoasRanking } from "@/types/dashboard/platform";
 
 // 성과 우수 플랫폼
 export const roasRankingMock: IRoasRanking[] = [
@@ -27,3 +27,13 @@ export const roasRankingMock: IRoasRanking[] = [
     adSpend: 472000,
   },
 ];
+
+// 광고 소재 현황
+export const adStatusMock: IAdStatusData = {
+  totalCount: 14,
+  providerCount: [
+    { provider: "GOOGLE", count: 7 },
+    { provider: "NAVER", count: 5 },
+    { provider: "META", count: 2 },
+  ],
+};

@@ -4,11 +4,13 @@ import { twMerge } from "tailwind-merge";
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import ChartLegend from "@/components/common/chart/ChartLegend";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import PageHeader from "@/components/common/PageHeader";
+import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
-import { roasRankingMock } from "./platformDashboard.mock";
+import { adStatusMock, roasRankingMock } from "./platformDashboard.mock";
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
@@ -94,7 +96,26 @@ export default function PlatformDashboard() {
           </Card>
 
           {/* 광고 소재 현황 */}
-          <Card title="광고 소재 현황" className="flex-1 min-h-40" />
+          <Card
+            title="광고 소재 현황"
+            description={
+              <ChartLegend
+                items={[
+                  { label: "Google", colorClass: "bg-status-blue" },
+                  { label: "NAVER", colorClass: "bg-status-green" },
+                  { label: "Meta", colorClass: "bg-text-auth-sub" },
+                ]}
+              />
+            }
+            RightElement={
+              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
+                총 {adStatusMock.totalCount}개
+              </Badge>
+            }
+            className="flex-1 min-h-40 flex flex-col"
+          >
+            <AdStatusChart data={adStatusMock.providerCount} />
+          </Card>
 
           {/* 플랫폼별 성과 기여도 */}
           <Card title="플랫폼별 성과 기여도" className="flex-1 min-h-40" />

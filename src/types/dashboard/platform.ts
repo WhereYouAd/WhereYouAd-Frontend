@@ -11,3 +11,15 @@ export interface IRoasRanking {
   revenue: number;
   adSpend: number;
 }
+
+// 플랫폼 광고 소재 개수
+export interface IAdCount {
+  provider: TPlatformProvider;
+  count: number;
+}
+
+// 광고 소재 현황
+export interface IAdStatusData {
+  totalCount: number;
+  providerCount: IAdCount[];
+}
