@@ -8,9 +8,14 @@ import ChartLegend from "@/components/common/chart/ChartLegend";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import PageHeader from "@/components/common/PageHeader";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
+import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
-import { adStatusMock, roasRankingMock } from "./platformDashboard.mock";
+import {
+  adStatusMock,
+  performanceEfficiencyMock,
+  roasRankingMock,
+} from "./platformDashboard.mock";
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
@@ -21,7 +26,7 @@ export default function PlatformDashboard() {
 
   const platformItems = [
     { label: "Google", onClick: () => setSelectedPlatform("Google") },
-    { label: "Naver", onClick: () => setSelectedPlatform("Naver") },
+    { label: "NAVER", onClick: () => setSelectedPlatform("Naver") },
     { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
   ];
 
@@ -90,7 +95,7 @@ export default function PlatformDashboard() {
                 ROAS 기준 상위 3
               </Badge>
             }
-            className="flex-1 min-h-40"
+            className="flex-1 min-h-67"
           >
             <TopPerformanceList rankings={roasRankingMock} />
           </Card>
@@ -100,6 +105,7 @@ export default function PlatformDashboard() {
             title="광고 소재 현황"
             description={
               <ChartLegend
+                className="[&_div]:rounded-none"
                 items={[
                   { label: "Google", colorClass: "bg-status-blue" },
                   { label: "NAVER", colorClass: "bg-status-green" },
@@ -112,13 +118,27 @@ export default function PlatformDashboard() {
                 총 {adStatusMock.totalCount}개
               </Badge>
             }
-            className="flex-1 min-h-40 flex flex-col"
+            className="flex-1 min-h-67 flex flex-col"
           >
             <AdStatusChart data={adStatusMock.providerCount} />
           </Card>
 
-          {/* 플랫폼별 성과 기여도 */}
-          <Card title="플랫폼별 성과 기여도" className="flex-1 min-h-40" />
+          {/* 플랫폼별 성과 효율 비교 */}
+          <Card
+            title="플랫폼별 성과 효율 비교"
+            className="flex-1 min-h-67 flex flex-col pb-1"
+            description={
+              <ChartLegend
+                items={[
+                  { label: "클릭률", colorClass: "bg-status-blue" },
+                  { label: "전환률", colorClass: "bg-text-auth-sub" },
+                  { label: "노출수", colorClass: "bg-status-green" },
+                ]}
+              />
+            }
+          >
+            <PerformanceEfficiencyChart data={performanceEfficiencyMock} />
+          </Card>
         </div>
 
         {/* 실시간 트래픽 변화 */}

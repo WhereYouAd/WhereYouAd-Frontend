@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 
 import type { IRoasRanking } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/platform";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
 
@@ -13,9 +14,12 @@ interface ITopPerformanceListProps {
 }
 
 const PlatformInfo: Record<string, { name: string; logo: React.ReactNode }> = {
-  GOOGLE: { name: "Google", logo: <GoogleLogo className="w-8 h-8" /> },
-  NAVER: { name: "Naver", logo: <NaverLogo className="w-8 h-8" /> },
-  META: { name: "Meta", logo: <MetaLogo className="w-8 h-8" /> },
+  GOOGLE: {
+    name: PLATFORM_MAP.GOOGLE,
+    logo: <GoogleLogo className="w-8 h-8" />,
+  },
+  NAVER: { name: PLATFORM_MAP.NAVER, logo: <NaverLogo className="w-8 h-8" /> },
+  META: { name: PLATFORM_MAP.META, logo: <MetaLogo className="w-8 h-8" /> },
 };
 
 export const TopPerformanceList = memo(function TopPerformanceList({

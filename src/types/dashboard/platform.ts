@@ -2,6 +2,12 @@ import type { TProviderType } from "./overview";
 
 export type TPlatformProvider = TProviderType | "META";
 
+export const PLATFORM_MAP: Record<string, string> = {
+  GOOGLE: "Google",
+  NAVER: "NAVER",
+  META: "Meta",
+};
+
 // ROAS 성과 순위
 export interface IRoasRanking {
   rank: number;
@@ -22,4 +28,23 @@ export interface IAdCount {
 export interface IAdStatusData {
   totalCount: number;
   providerCount: IAdCount[];
+}
+
+// 플랫폼별 성과
+export interface IPlatformPerformance {
+  provider: TPlatformProvider;
+  clicks: number;
+  clickChangeRate: number;
+  impressions: number;
+  impressionChangeRate: number;
+  conversion: number;
+  cvrChangeRate: number;
+  ROAS: number;
+  ROASChangeRate: number;
+}
+
+// 플랫폼별 성과 효율 비교
+export interface IPlatformEfficiencyData {
+  status: string;
+  data: IPlatformPerformance[];
 }
