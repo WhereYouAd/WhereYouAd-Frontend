@@ -9,6 +9,7 @@ import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import PageHeader from "@/components/common/PageHeader";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
+import PlatformDetailCard from "@/components/dashboard/platform/PlatformDetailCard";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
 import {
@@ -146,9 +147,9 @@ export default function PlatformDashboard() {
 
         {/* 개별 플랫폼 상세 */}
         <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-          <Card title="Google" className="min-h-80" />
-          <Card title="Naver" className="min-h-80" />
-          <Card title="Meta" className="min-h-80" />
+          {performanceEfficiencyMock.map((platform) => (
+            <PlatformDetailCard key={platform.provider} data={platform} />
+          ))}
         </div>
       </div>
     </section>
