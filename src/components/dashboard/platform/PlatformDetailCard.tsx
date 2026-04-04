@@ -48,37 +48,53 @@ export const PlatformDetailCard = memo(
           <StatCard
             title="노출수"
             value={impressions.toLocaleString()}
-            trend={{
-              direction: impressionChangeRate > 0 ? "up" : "down",
-              value: `${Math.abs(impressionChangeRate * 100).toFixed(1)}%`,
-            }}
+            trend={
+              impressionChangeRate !== 0
+                ? {
+                    direction: impressionChangeRate > 0 ? "up" : "down",
+                    value: `${Math.abs(impressionChangeRate * 100).toFixed(1)}%`,
+                  }
+                : undefined
+            }
             className={innerCardClass}
           />
           <StatCard
             title="클릭수"
             value={clicks.toLocaleString()}
-            trend={{
-              direction: clickChangeRate > 0 ? "up" : "down",
-              value: `${Math.abs(clickChangeRate * 100).toFixed(1)}%`,
-            }}
+            trend={
+              clickChangeRate !== 0
+                ? {
+                    direction: clickChangeRate > 0 ? "up" : "down",
+                    value: `${Math.abs(clickChangeRate * 100).toFixed(1)}%`,
+                  }
+                : undefined
+            }
             className={innerCardClass}
           />
           <StatCard
             title="전환율"
             value={`${conversion}%`}
-            trend={{
-              direction: cvrChangeRate > 0 ? "up" : "down",
-              value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,
-            }}
+            trend={
+              cvrChangeRate !== 0
+                ? {
+                    direction: cvrChangeRate > 0 ? "up" : "down",
+                    value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,
+                  }
+                : undefined
+            }
             className={innerCardClass}
           />
           <StatCard
             title="ROAS"
             value={`${ROAS.toLocaleString()}%`}
-            trend={{
-              direction: ROASChangeRate > 0 ? "up" : "down",
-              value: `${Math.abs(ROASChangeRate * 100).toFixed(1)}%`,
-            }}
+            trend={
+              ROASChangeRate !== 0
+                ? {
+                    direction: ROASChangeRate > 0 ? "up" : "down",
+                    value: `${Math.abs(ROASChangeRate * 100).toFixed(1)}%`,
+                  }
+                : undefined
+            }
             className={innerCardClass}
           />
         </div>
