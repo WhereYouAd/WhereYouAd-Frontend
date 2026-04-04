@@ -2,6 +2,7 @@ import type { ApexOptions } from "apexcharts";
 
 export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   chart: {
+    type: "line",
     toolbar: { show: false },
     fontFamily: "Pretendard",
     zoom: { enabled: false },
