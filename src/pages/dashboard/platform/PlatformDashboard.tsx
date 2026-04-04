@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Badge from "@/components/common/badge/Badge";
@@ -10,6 +10,14 @@ import PageHeader from "@/components/common/PageHeader";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
 import PlatformDetailCard from "@/components/dashboard/platform/PlatformDetailCard";
+import {
+  AdStatusChartSkeleton,
+  BadgeSkeleton,
+  PerformanceEfficiencyChartSkeleton,
+  PlatformDetailCardSkeleton,
+  TopPerformanceListSkeleton,
+  TrafficChartSkeleton,
+} from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
 import {
@@ -22,6 +30,7 @@ import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
 export default function PlatformDashboard() {
   const [selectedPlatform, setSelectedPlatform] = useState("전체");
+  const [isLoading, setIsLoading] = useState(true);
 
   const isAllView = selectedPlatform === "전체";
 
@@ -30,6 +39,12 @@ export default function PlatformDashboard() {
     { label: "NAVER", onClick: () => setSelectedPlatform("Naver") },
     { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
   ];
+
+  // 로딩 시뮬레이션 (태스크 요구사항)
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1600);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
@@ -92,13 +107,25 @@ export default function PlatformDashboard() {
           <Card
             title="성과 우수 플랫폼"
             RightElement={
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
-                ROAS 기준 상위 3
-              </Badge>
+              isLoading ? (
+                <BadgeSkeleton className="w-28" />
+              ) : (
+                <Badge
+                  variant="stopped"
+                  size="sm"
+                  className="text-text-auth-sub"
+                >
+                  ROAS 기준 상위 3
+                </Badge>
+              )
             }
             className="flex-1 min-h-67 flex flex-col"
           >
-            <TopPerformanceList rankings={roasRankingMock} />
+            {isLoading ? (
+              <TopPerformanceListSkeleton />
+            ) : (
+              <TopPerformanceList rankings={roasRankingMock} />
+            )}
           </Card>
 
           {/* 광고 소재 현황 */}
@@ -115,13 +142,25 @@ export default function PlatformDashboard() {
               />
             }
             RightElement={
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
-                총 {adStatusMock.totalCount}개
-              </Badge>
+              isLoading ? (
+                <BadgeSkeleton className="w-14" />
+              ) : (
+                <Badge
+                  variant="stopped"
+                  size="sm"
+                  className="text-text-auth-sub"
+                >
+                  총 {adStatusMock.totalCount}개
+                </Badge>
+              )
             }
             className="flex-1 min-h-67 flex flex-col"
           >
-            <AdStatusChart data={adStatusMock.providerCount} />
+            {isLoading ? (
+              <AdStatusChartSkeleton />
+            ) : (
+              <AdStatusChart data={adStatusMock.providerCount} />
+            )}
           </Card>
 
           {/* 플랫폼별 성과 효율 비교 */}
@@ -138,18 +177,28 @@ export default function PlatformDashboard() {
               />
             }
           >
-            <PerformanceEfficiencyChart data={performanceEfficiencyMock} />
+            {isLoading ? (
+              <PerformanceEfficiencyChartSkeleton />
+            ) : (
+              <PerformanceEfficiencyChart data={performanceEfficiencyMock} />
+            )}
           </Card>
         </div>
 
         {/* 실시간 트래픽 변화 */}
-        <Card title="실시간 트래픽 변화" className="min-h-125" />
+        <Card title="실시간 트래픽 변화" className="min-h-125">
+          {isLoading ? <TrafficChartSkeleton /> : null}
+        </Card>
 
         {/* 개별 플랫폼 상세 */}
         <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-          {performanceEfficiencyMock.map((platform) => (
-            <PlatformDetailCard key={platform.provider} data={platform} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <PlatformDetailCardSkeleton key={i} />
+              ))
+            : performanceEfficiencyMock.map((platform) => (
+                <PlatformDetailCard key={platform.provider} data={platform} />
+              ))}
         </div>
       </div>
     </section>
