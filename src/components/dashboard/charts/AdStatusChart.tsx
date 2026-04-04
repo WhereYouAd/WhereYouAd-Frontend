@@ -15,6 +15,8 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
     [data],
   );
 
+  const getWidth = (count: number) => (total > 0 ? (count / total) * 100 : 0);
+
   return (
     <div className="flex flex-1 flex-col gap-1 justify-center px-3">
       {/* 개수 라벨 */}
@@ -22,7 +24,7 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
         {data.map((item) => (
           <div
             key={item.provider}
-            style={{ width: `${(item.count / total) * 100}%` }}
+            style={{ width: `${getWidth(item.count)}%` }}
             className="flex justify-center text-caption text-text-sub tabular-nums"
           >
             {item.count}개
@@ -35,7 +37,7 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
         {data.map((item) => (
           <div
             key={item.provider}
-            style={{ width: `${(item.count / total) * 100}%` }}
+            style={{ width: `${getWidth(item.count)}%` }}
             className={twMerge(
               PLATFORM_COLORS[item.provider],
               "h-full rounded-sm",
