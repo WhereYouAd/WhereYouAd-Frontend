@@ -36,7 +36,7 @@ export default function PlatformDashboard() {
 
   const platformItems = [
     { label: "Google", onClick: () => setSelectedPlatform("Google") },
-    { label: "NAVER", onClick: () => setSelectedPlatform("Naver") },
+    { label: "NAVER", onClick: () => setSelectedPlatform("NAVER") },
     { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
   ];
 
