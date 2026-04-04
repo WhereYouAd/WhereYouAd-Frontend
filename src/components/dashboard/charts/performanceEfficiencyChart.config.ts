@@ -1,7 +1,12 @@
 import type { ApexOptions } from "apexcharts";
 
 export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
-  chart: { toolbar: { show: false }, fontFamily: "Pretendard" },
+  chart: {
+    toolbar: { show: false },
+    fontFamily: "Pretendard",
+    zoom: { enabled: false },
+    selection: { enabled: false },
+  },
   stroke: {
     show: false,
     width: 0,
@@ -56,6 +61,18 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       },
     },
   ],
+  tooltip: {
+    shared: true,
+    intersect: false,
+    y: {
+      formatter: (val, { seriesIndex }) => {
+        if (seriesIndex === 0 || seriesIndex === 1) {
+          return `${val.toFixed(2)}%`;
+        }
+        return val.toLocaleString();
+      },
+    },
+  },
   grid: {
     borderColor: "#f1f1f1",
     yaxis: { lines: { show: true } },
