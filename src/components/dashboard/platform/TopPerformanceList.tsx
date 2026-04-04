@@ -32,8 +32,6 @@ export const TopPerformanceList = memo(function TopPerformanceList({
           name: item.provider,
           logo: null,
         };
-        const diffRate = item.diffRate ?? 0;
-        const isUp = diffRate >= 0;
 
         return (
           <div key={item.provider} className="flex items-center gap-4 w-full">
@@ -50,10 +48,12 @@ export const TopPerformanceList = memo(function TopPerformanceList({
               <span className="font-heading4 text-text-main tabular-nums whitespace-nowrap">
                 {item.roas.toFixed(2)}%
               </span>
-              <TrendBadge
-                direction={isUp ? "up" : "down"}
-                value={`${Math.abs(diffRate)}%`}
-              />
+              {item.diffRate !== null && item.diffRate !== 0 && (
+                <TrendBadge
+                  direction={item.diffRate > 0 ? "up" : "down"}
+                  value={`${Math.abs(item.diffRate)}%`}
+                />
+              )}
             </div>
           </div>
         );
