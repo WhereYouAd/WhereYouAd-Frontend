@@ -96,7 +96,7 @@ export default function PlatformDashboard() {
                 ROAS 기준 상위 3
               </Badge>
             }
-            className="flex-1 min-h-67"
+            className="flex-1 min-h-67 flex flex-col"
           >
             <TopPerformanceList rankings={roasRankingMock} />
           </Card>

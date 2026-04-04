@@ -26,7 +26,7 @@ export const TopPerformanceList = memo(function TopPerformanceList({
   rankings,
 }: ITopPerformanceListProps) {
   return (
-    <div className="flex flex-col gap-5 w-full mt-8">
+    <div className="flex-1 flex flex-col justify-center gap-6 w-full pt-3">
       {rankings.map((item) => {
         const info = PlatformInfo[item.provider] || {
           name: item.provider,
@@ -38,6 +38,9 @@ export const TopPerformanceList = memo(function TopPerformanceList({
         return (
           <div key={item.provider} className="flex items-center gap-4 w-full">
             <div className="flex flex-1 items-center gap-4 min-w-0">
+              <span className="font-body1 text-text-sub w-4 shrink-0">
+                {item.rank}
+              </span>
               <div className="shrink-0">{info.logo}</div>
               <span className="font-body1 text-text-main truncate">
                 {info.name}
