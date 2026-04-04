@@ -4,7 +4,7 @@ import type { IPlatformPerformance } from "@/types/dashboard/platform";
 import { PLATFORM_MAP } from "@/types/dashboard/platform";
 
 import Card from "@/components/common/card/Card";
-import { TrendBadge } from "@/components/common/card/StatCard";
+import StatCard from "@/components/common/card/StatCard";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
@@ -30,75 +30,61 @@ export const PlatformDetailCard = memo(
     } = data;
     const ctr = (clicks / impressions) * 100;
 
+    const innerCardClass =
+      "shadow-none! hover:shadow-none! rounded-component-md! p-2! gap-2!";
+
     return (
-      <Card className="flex-1 p-7 bg-white/80 backdrop-blur-sm">
+      <Card className="flex-1 p-7 backdrop-blur-sm">
         {/* 로고 + 이름 */}
         <div className="flex items-center gap-2 mb-8">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
-          <h3 className="font-heading3 text-text-main truncate">
+          <h3 className="font-heading4 font-semibold! text-text-main truncate">
             {PLATFORM_MAP[provider]}
           </h3>
         </div>
 
         {/* 지표 */}
-        <div className="grid grid-cols-2 gap-y-8 gap-x-4">
-          <MetricItem
-            label="노출수"
+        <div className="grid grid-cols-2 gap-2">
+          <StatCard
+            title="노출수"
             value={impressions.toLocaleString()}
-            rate={impressionChangeRate}
+            trend={{
+              direction: impressionChangeRate > 0 ? "up" : "down",
+              value: `${Math.abs(impressionChangeRate * 100).toFixed(1)}%`,
+            }}
+            className={innerCardClass}
           />
-          <MetricItem
-            label="클릭수"
+          <StatCard
+            title="클릭수"
             value={clicks.toLocaleString()}
-            rate={clickChangeRate}
+            trend={{
+              direction: clickChangeRate > 0 ? "up" : "down",
+              value: `${Math.abs(clickChangeRate * 100).toFixed(1)}%`,
+            }}
+            className={innerCardClass}
           />
-          <MetricItem
-            label="클릭률"
+          <StatCard
+            title="클릭률"
             value={`${ctr.toFixed(1)}%`}
-            rate={cvrChangeRate}
+            trend={{
+              direction: cvrChangeRate > 0 ? "up" : "down",
+              value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,
+            }}
+            className={innerCardClass}
           />
-          <MetricItem
-            label="ROAS"
-            value={`${ROAS.toLocaleString()}`}
-            unit="%"
-            rate={ROASChangeRate}
+          <StatCard
+            title="ROAS"
+            value={`${ROAS.toLocaleString()}%`}
+            trend={{
+              direction: ROASChangeRate > 0 ? "up" : "down",
+              value: `${Math.abs(ROASChangeRate * 100).toFixed(1)}%`,
+            }}
+            className={innerCardClass}
           />
         </div>
       </Card>
     );
   },
 );
-
-function MetricItem({
-  label,
-  value,
-  unit,
-  rate,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-  rate?: number;
-}) {
-  const isUp = rate && rate > 0;
-
-  return (
-    <div className="flex flex-col gap-1 min-w-0">
-      <span className="font-body2 text-text-sub truncate">{label}</span>
-      <div className="flex flex-col gap-2">
-        <span className="font-heading2 text-text-main tabular-nums leading-tight">
-          {value}
-          <span className="text-body2 ml-0.5">{unit}</span>
-        </span>
-        {rate !== undefined && (
-          <TrendBadge
-            direction={isUp ? "up" : "down"}
-            value={`${Math.abs(rate * 100).toFixed(1)}%`}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
 
 export default PlatformDetailCard;
