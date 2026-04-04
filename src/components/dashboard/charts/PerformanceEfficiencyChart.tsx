@@ -25,7 +25,7 @@ export const PerformanceEfficiencyChart = memo(
         data: data.map((d) => (d.clicks / d.impressions) * 100),
       },
       {
-        name: "전환률(CVR)",
+        name: "전환율(CVR)",
         type: "column", // 세로 막대
         data: data.map((d) => d.conversion),
       },

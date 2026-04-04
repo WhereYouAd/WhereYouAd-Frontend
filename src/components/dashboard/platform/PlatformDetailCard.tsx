@@ -22,19 +22,19 @@ export const PlatformDetailCard = memo(
       provider,
       impressions,
       clicks,
+      conversion,
       ROAS,
       impressionChangeRate,
       clickChangeRate,
       cvrChangeRate,
       ROASChangeRate,
     } = data;
-    const ctr = (clicks / impressions) * 100;
 
     const innerCardClass =
       "shadow-none! hover:shadow-none! rounded-component-md! p-2! gap-2!";
 
     return (
-      <Card className="flex-1 p-7 backdrop-blur-sm">
+      <Card className="flex-1 p-7 bg-white/80 backdrop-blur-sm">
         {/* 로고 + 이름 */}
         <div className="flex items-center gap-2 mb-8">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
@@ -64,8 +64,8 @@ export const PlatformDetailCard = memo(
             className={innerCardClass}
           />
           <StatCard
-            title="클릭률"
-            value={`${ctr.toFixed(1)}%`}
+            title="전환율"
+            value={`${conversion}%`}
             trend={{
               direction: cvrChangeRate > 0 ? "up" : "down",
               value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,

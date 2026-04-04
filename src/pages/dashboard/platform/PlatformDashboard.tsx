@@ -132,7 +132,7 @@ export default function PlatformDashboard() {
               <ChartLegend
                 items={[
                   { label: "클릭률", colorClass: "bg-status-blue" },
-                  { label: "전환률", colorClass: "bg-text-auth-sub" },
+                  { label: "전환율", colorClass: "bg-text-auth-sub" },
                   { label: "노출수", colorClass: "bg-status-green" },
                 ]}
               />

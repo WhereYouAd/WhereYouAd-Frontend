@@ -47,7 +47,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
         },
       },
     },
-    { show: false, seriesName: "전환률" },
+    { show: false, seriesName: "전환율" },
     {
       opposite: true,
       seriesName: "노출수",
