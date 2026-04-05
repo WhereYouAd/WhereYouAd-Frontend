@@ -15,7 +15,6 @@ import {
   deleteWorkspace,
   getWorkspace,
   updateWorkspace,
-  uploadImage,
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
@@ -43,8 +42,8 @@ export default function WorkspaceSetting() {
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const fetchWorkspaceDetail = async () => {
@@ -61,6 +60,7 @@ export default function WorkspaceSetting() {
       setDesc(detail.description ?? "");
       setServerLogoUrl(detail.logoUrl ?? null);
       setLogoFile(null);
+      setIsImageDeleted(false);
       setLogoPreview((prev) => {
         if (prev) URL.revokeObjectURL(prev);
         return null;
@@ -88,17 +88,11 @@ export default function WorkspaceSetting() {
     setSaving(true);
 
     try {
-      let nextLogoUrl = serverLogoUrl ?? null;
-
-      if (logoFile) {
-        setUploading(true);
-        nextLogoUrl = await uploadImage(logoFile);
-        setUploading(false);
-      }
       await updateWorkspace(orgId, {
         name: nextName,
         description: nextDesc,
-        logoUrl: nextLogoUrl,
+        imageFile: logoFile,
+        isImageDeleted,
       });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
@@ -108,7 +102,6 @@ export default function WorkspaceSetting() {
       );
     } finally {
       setSaving(false);
-      setUploading(false);
     }
   };
   const onDelete = async () => {
@@ -147,6 +140,8 @@ export default function WorkspaceSetting() {
     if (!file) return;
 
     setLogoFile(file);
+    setIsImageDeleted(false);
+
     const previewUrl = URL.createObjectURL(file);
     setLogoPreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
@@ -162,6 +157,9 @@ export default function WorkspaceSetting() {
 
   const onResetLogo = () => {
     setLogoFile(null);
+    setIsImageDeleted(true);
+    setImageError(false);
+
     setLogoPreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return null;
@@ -238,7 +236,7 @@ export default function WorkspaceSetting() {
                     className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
-                    disabled={saving || deleting || uploading}
+                    disabled={saving || deleting}
                   >
                     업로드
                   </Button>
@@ -248,7 +246,7 @@ export default function WorkspaceSetting() {
                     className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
-                    disabled={saving || deleting || uploading}
+                    disabled={saving || deleting}
                   >
                     초기화
                   </Button>
@@ -260,7 +258,7 @@ export default function WorkspaceSetting() {
                   value={name}
                   placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
                   onChange={(e) => setName(e.target.value)}
-                  disabled={saving || deleting || uploading}
+                  disabled={saving || deleting}
                 />
                 <TextareaField
                   id="workspace-setting-desc"
@@ -270,7 +268,7 @@ export default function WorkspaceSetting() {
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
                   className="min-h-90"
-                  disabled={saving || deleting || uploading}
+                  disabled={saving || deleting}
                 />
               </div>
             </div>
@@ -280,7 +278,7 @@ export default function WorkspaceSetting() {
                 variant="primary"
                 type="button"
                 onClick={onSave}
-                disabled={!name.trim() || saving || deleting || uploading}
+                disabled={!name.trim() || saving || deleting}
                 aria-label="변경사항 저장하기"
                 className="w-auto tablet:w-full"
               >
@@ -302,7 +300,7 @@ export default function WorkspaceSetting() {
               buttonVariant="dangerSoft"
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
-              buttonDisabled={saving || deleting || uploading}
+              buttonDisabled={saving || deleting}
               leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
             />
           </div>

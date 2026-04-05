@@ -15,11 +15,7 @@ import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
 import WorkspaceListError from "@/components/workspace/WorkspaceListError";
 import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
 
-import {
-  createWorkspace,
-  getMyWorkspaces,
-  uploadImage,
-} from "@/api/workspace/org";
+import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
@@ -47,12 +43,7 @@ export default function WorkspacePage() {
     mutationFn: async () => {
       const name = newName.trim();
       const description = newDesc.trim();
-      let logoUrl: string | null = null;
-
-      if (logoFile) {
-        logoUrl = await uploadImage(logoFile);
-      }
-      return createWorkspace({ name, description, logoUrl });
+      return createWorkspace({ name, description, imageFile: logoFile });
     },
 
     onSuccess: () => {
