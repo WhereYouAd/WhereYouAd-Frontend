@@ -17,7 +17,7 @@ export type TMyOrgsData = {
 export type TCreateOrgRequest = {
   name: string;
   description: string;
-  logoUrl?: string | null;
+  imageFile?: File | null;
 };
 
 export type TCreateOrgResponse = {
@@ -39,11 +39,8 @@ export type TWorkspaceDetail = TGetOrgResponse;
 export type TUpdateWorkspaceRequest = {
   name: string;
   description: string;
-  logoUrl: string | null;
-};
-
-export type TUploadImageResponse = {
-  url: string;
+  imageFile?: File | null;
+  isImageDeleted: boolean;
 };
 
 export type TWorkspaceMember = {
