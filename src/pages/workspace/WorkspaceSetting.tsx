@@ -94,6 +94,7 @@ export default function WorkspaceSetting() {
         imageFile: logoFile,
         isImageDeleted,
       });
+      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
