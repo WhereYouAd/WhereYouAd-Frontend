@@ -55,7 +55,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       seriesName: "노출수",
       labels: {
         offsetX: -10,
-        formatter: (val) => val.toLocaleString(),
+        formatter: (val) => val.toLocaleString("ko-KR"),
         style: {
           colors: "#8B8B8F",
           fontSize: "12px",
@@ -71,7 +71,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
         if (seriesIndex === 0 || seriesIndex === 1) {
           return `${val.toFixed(2)}%`;
         }
-        return val.toLocaleString();
+        return val.toLocaleString("ko-KR");
       },
     },
   },
