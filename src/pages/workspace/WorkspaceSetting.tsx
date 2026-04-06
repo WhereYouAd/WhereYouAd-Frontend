@@ -57,6 +57,7 @@ export default function WorkspaceSetting() {
     setImageError(false);
     try {
       const detail = await getWorkspace(orgId);
+      await new Promise((res) => setTimeout(res, 1500));
       setName(detail.name);
       setDesc(detail.description ?? "");
       setServerLogoUrl(detail.logoUrl ?? null);
