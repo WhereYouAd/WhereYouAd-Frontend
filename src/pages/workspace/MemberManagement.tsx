@@ -17,6 +17,7 @@ import {
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
+import MemberManagementLoading from "@/components/workspace/MemberManagementLoading";
 import PermissionTable from "@/components/workspace/PermissionTable";
 
 import {
@@ -39,19 +40,31 @@ export default function MemberManagement() {
     useState<TWorkspaceMember | null>(null);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   const memberCountQuery = useQuery<
     Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
     IApiErrorResponse
   >({
     queryKey: ["workspaceMemberCount", orgId],
-    queryFn: () => getWorkspaceMemberCount(orgId),
+    queryFn: async () => {
+      if (import.meta.env.DEV) {
+        await delay(1500);
+      }
+      return getWorkspaceMemberCount(orgId);
+    },
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
   const membersQuery = useInfiniteQuery({
     queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
-    queryFn: ({ pageParam }: { pageParam: string | null }) =>
-      getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
+    queryFn: async ({ pageParam }: { pageParam: string | null }) => {
+      if (import.meta.env.DEV) {
+        await delay(1500);
+      }
+      return getWorkspaceMembers(orgId, pageParam, PAGE_SIZE);
+    },
+
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
       if (!lastPage.hasNext) return undefined;
@@ -75,7 +88,12 @@ export default function MemberManagement() {
     IApiErrorResponse
   >({
     queryKey: ["workspacePendingMembers", orgId],
-    queryFn: () => getPendingMember(orgId),
+    queryFn: async () => {
+      if (import.meta.env.DEV) {
+        await delay(1500);
+      }
+      return getPendingMember(orgId);
+    },
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
 
@@ -239,16 +257,7 @@ export default function MemberManagement() {
     membersQuery.isLoading ||
     pendingMembersQuery.isLoading
   ) {
-    return (
-      <section className="w-full min-w-0">
-        <header className="mb-7">
-          <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-text-sub">
-            팀 구성원 정보를 불러오는 중입니다...
-          </p>
-        </header>
-      </section>
-    );
+    return <MemberManagementLoading />;
   }
 
   if (
