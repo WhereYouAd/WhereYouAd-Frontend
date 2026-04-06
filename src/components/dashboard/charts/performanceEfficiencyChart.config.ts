@@ -14,7 +14,8 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   },
   markers: {
     size: [0, 0, 6], // 막대 = 0, 점 = 6
-    strokeWidth: 0,
+    strokeWidth: 2,
+    strokeColors: "#fff",
     hover: { sizeOffset: 2 },
   },
   plotOptions: {
@@ -24,7 +25,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       borderRadiusApplication: "end",
     },
   },
-  colors: ["#0084fe", "#546171", "#22c55e"], // 블루, 레드, 그린
+  colors: ["#0a3d91", "#1485ff", "#4fc3f7"], // Chart 1(CTR), Chart 3(CVR), Chart 5(Impressions)
   xaxis: {
     categories: categories,
     labels: {

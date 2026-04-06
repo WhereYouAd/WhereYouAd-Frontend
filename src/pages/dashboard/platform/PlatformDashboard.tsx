@@ -135,9 +135,9 @@ export default function PlatformDashboard() {
               <ChartLegend
                 className="[&_div]:rounded-none"
                 items={[
-                  { label: "Google", colorClass: "bg-status-blue" },
-                  { label: "NAVER", colorClass: "bg-status-green" },
-                  { label: "Meta", colorClass: "bg-text-auth-sub" },
+                  { label: "Google", color: "#f9ab00" },
+                  { label: "NAVER", color: "#03c75a" },
+                  { label: "Meta", color: "#1877f2" },
                 ]}
               />
             }
@@ -170,9 +170,9 @@ export default function PlatformDashboard() {
             description={
               <ChartLegend
                 items={[
-                  { label: "클릭률", colorClass: "bg-status-blue" },
-                  { label: "전환율", colorClass: "bg-text-auth-sub" },
-                  { label: "노출수", colorClass: "bg-status-green" },
+                  { label: "클릭률", color: "#0a3d91" },
+                  { label: "전환율", color: "#1485ff" },
+                  { label: "노출수", color: "#4fc3f7" },
                 ]}
               />
             }

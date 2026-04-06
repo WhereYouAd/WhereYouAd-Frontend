@@ -1,12 +1,11 @@
 import { memo, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
 
 import type { IAdCount } from "@/types/dashboard/platform";
 
 const PLATFORM_COLORS: Record<string, string> = {
-  GOOGLE: "bg-status-blue",
-  NAVER: "bg-status-green",
-  META: "bg-text-auth-sub",
+  GOOGLE: "#f9ab00",
+  NAVER: "#03c75a",
+  META: "#1877f2",
 };
 
 export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
@@ -37,11 +36,11 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
         {data.map((item) => (
           <div
             key={item.provider}
-            style={{ width: `${getWidth(item.count)}%` }}
-            className={twMerge(
-              PLATFORM_COLORS[item.provider],
-              "h-full rounded-sm",
-            )}
+            style={{
+              width: `${getWidth(item.count)}%`,
+              backgroundColor: PLATFORM_COLORS[item.provider],
+            }}
+            className="h-full rounded-sm"
           />
         ))}
       </div>
