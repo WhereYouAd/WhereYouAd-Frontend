@@ -25,7 +25,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       borderRadiusApplication: "end",
     },
   },
-  colors: ["#0a3d91", "#1485ff", "#4fc3f7"], // Chart 1(CTR), Chart 3(CVR), Chart 5(Impressions)
+  colors: ["#0084fe", "#0a3d91", "#4fc3f7"], // status-blue (CTR), Chart 1 (CVR), Chart 5 (Impressions)
   xaxis: {
     categories: categories,
     labels: {

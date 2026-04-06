@@ -170,8 +170,8 @@ export default function PlatformDashboard() {
             description={
               <ChartLegend
                 items={[
-                  { label: "클릭률", color: "#0a3d91" },
-                  { label: "전환율", color: "#1485ff" },
+                  { label: "클릭률", color: "#0084fe" },
+                  { label: "전환율", color: "#0a3d91" },
                   { label: "노출수", color: "#4fc3f7" },
                 ]}
               />
