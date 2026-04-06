@@ -10,7 +10,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   },
   stroke: {
     show: true,
-    width: [0, 0, 0.01], // 선을 거의 투명하게 설정하여 렌더링 엔진에서 제외되지 않도록 함
+    width: [0, 0, 0.01],
   },
   markers: {
     size: [0, 0, 6], // 막대 = 0, 점 = 6
@@ -25,7 +25,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       borderRadiusApplication: "end",
     },
   },
-  colors: ["#0084fe", "#0a3d91", "#4fc3f7"], // status-blue (CTR), Chart 1 (CVR), Chart 5 (Impressions)
+  colors: ["#0084fe", "#0a3d91", "#4fc3f7"],
   xaxis: {
     categories: categories,
     labels: {

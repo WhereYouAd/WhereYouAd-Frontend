@@ -40,7 +40,6 @@ export default function PlatformDashboard() {
     { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
   ];
 
-  // 로딩 시뮬레이션 (태스크 요구사항)
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1600);
     return () => clearTimeout(timer);
