@@ -12,11 +12,13 @@ export function DropdownMenu({
   trigger,
   items,
   className,
+  menuClassName,
   "aria-label": ariaLabel,
 }: {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   items: TMenuItem[];
   className?: string;
+  menuClassName?: string;
   "aria-label"?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -57,7 +59,10 @@ export function DropdownMenu({
         <div
           id={menuId}
           role="menu"
-          className="absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-40px)] rounded-component-md bg-brand-200 border border-gray-100 py-3 px-1 shadow-Medium z-50 animate-modal-content origin-top-right"
+          className={twMerge(
+            "absolute right-0 top-full mt-2 w-56 max-w-[calc(100vw-40px)] rounded-component-md bg-brand-200 border border-gray-100 py-3 px-1 shadow-Medium z-50 animate-modal-content origin-top-right",
+            menuClassName,
+          )}
         >
           <div className="space-y-1">
             {items.map((it, idx) => (
