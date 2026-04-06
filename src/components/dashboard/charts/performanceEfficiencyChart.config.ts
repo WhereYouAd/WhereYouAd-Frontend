@@ -9,8 +9,8 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     selection: { enabled: false },
   },
   stroke: {
-    show: false,
-    width: 0,
+    show: true,
+    width: [0, 0, 0.01], // 선을 거의 투명하게 설정하여 렌더링 엔진에서 제외되지 않도록 함
   },
   markers: {
     size: [0, 0, 6], // 막대 = 0, 점 = 6
