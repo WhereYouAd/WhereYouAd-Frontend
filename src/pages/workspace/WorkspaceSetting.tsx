@@ -10,6 +10,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
+import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
 import {
   deleteWorkspace,
@@ -175,11 +176,7 @@ export default function WorkspaceSetting() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      {loading && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
-          <p className="font-body2 text-text-sub">불러오는중..</p>
-        </div>
-      )}
+      {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
           <p className="font-body2 text-status-red">{errorMsg}</p>

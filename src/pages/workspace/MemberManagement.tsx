@@ -17,6 +17,7 @@ import {
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
+import MemberManagementLoading from "@/components/workspace/MemberManagementLoading";
 import PermissionTable from "@/components/workspace/PermissionTable";
 
 import {
@@ -239,16 +240,7 @@ export default function MemberManagement() {
     membersQuery.isLoading ||
     pendingMembersQuery.isLoading
   ) {
-    return (
-      <section className="w-full min-w-0">
-        <header className="mb-7">
-          <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-text-sub">
-            팀 구성원 정보를 불러오는 중입니다...
-          </p>
-        </header>
-      </section>
-    );
+    return <MemberManagementLoading />;
   }
 
   if (
