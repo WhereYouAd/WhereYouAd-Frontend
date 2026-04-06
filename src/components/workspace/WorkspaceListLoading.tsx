@@ -29,7 +29,7 @@ export default function WorkspaceListLoading() {
         <Skeleton className="h-5 w-60 tablet:w-56" />
       </div>
       <div className="flex items-center justify-between gap-4 tablet:flex-col tablet:items-stretch">
-        <Skeleton className="h-15 w-full rounded-component-md tablet:" />
+        <Skeleton className="h-15 w-full rounded-component-md" />
         <Skeleton className="h-15 w-56 rounded-component-md tablet:w-full" />
       </div>
       <ul className="space-y-5">

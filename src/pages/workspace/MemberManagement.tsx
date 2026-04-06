@@ -40,31 +40,19 @@ export default function MemberManagement() {
     useState<TWorkspaceMember | null>(null);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
 
   const memberCountQuery = useQuery<
     Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
     IApiErrorResponse
   >({
     queryKey: ["workspaceMemberCount", orgId],
-    queryFn: async () => {
-      if (import.meta.env.DEV) {
-        await delay(1500);
-      }
-      return getWorkspaceMemberCount(orgId);
-    },
+    queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
   const membersQuery = useInfiniteQuery({
     queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
-    queryFn: async ({ pageParam }: { pageParam: string | null }) => {
-      if (import.meta.env.DEV) {
-        await delay(1500);
-      }
-      return getWorkspaceMembers(orgId, pageParam, PAGE_SIZE);
-    },
-
+    queryFn: ({ pageParam }: { pageParam: string | null }) =>
+      getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
       if (!lastPage.hasNext) return undefined;
@@ -88,12 +76,7 @@ export default function MemberManagement() {
     IApiErrorResponse
   >({
     queryKey: ["workspacePendingMembers", orgId],
-    queryFn: async () => {
-      if (import.meta.env.DEV) {
-        await delay(1500);
-      }
-      return getPendingMember(orgId);
-    },
+    queryFn: () => getPendingMember(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
 
