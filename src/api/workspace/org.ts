@@ -12,13 +12,28 @@ import {
   type TUpdateMemberRoleRequest,
   type TUpdateMemberRoleResponse,
   type TUpdateWorkspaceRequest,
-  type TUploadImageResponse,
   type TWorkspace,
   type TWorkspaceDetail,
   type TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
 import { axiosInstance } from "@/lib/axiosInstance";
+
+const buildWorkspaceFormData = (
+  request: Record<string, unknown>,
+  imageFile?: File | null,
+) => {
+  const formData = new FormData();
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(request)], { type: "application/json" }),
+  );
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
+  return formData;
+};
 
 export const getMyWorkspaces = async (): Promise<TWorkspace[]> => {
   const { data } =
@@ -29,9 +44,11 @@ export const getMyWorkspaces = async (): Promise<TWorkspace[]> => {
 export const createWorkspace = async (
   body: TCreateOrgRequest,
 ): Promise<TCreateOrgResponse> => {
+  const { imageFile, ...request } = body;
+  const formData = buildWorkspaceFormData(request, imageFile);
   const { data } = await axiosInstance.post<
     ICommonResponse<TCreateOrgResponse>
-  >("/api/org/create", body);
+  >("/api/org/create", formData);
   return data.data;
 };
 
@@ -49,20 +66,16 @@ export const updateWorkspace = async (
   orgId: number,
   body: TUpdateWorkspaceRequest,
 ): Promise<void> => {
-  await axiosInstance.patch<ICommonResponse<string>>(`/api/org/${orgId}`, body);
+  const { imageFile, ...request } = body;
+  const formData = buildWorkspaceFormData(request, imageFile);
+  await axiosInstance.patch<ICommonResponse<string>>(
+    `/api/org/${orgId}`,
+    formData,
+  );
 };
 
 export const deleteWorkspace = async (orgId: number): Promise<void> => {
   await axiosInstance.delete<ICommonResponse<string>>(`/api/org/${orgId}`);
-};
-
-export const uploadImage = async (file: File): Promise<string> => {
-  const formData = new FormData();
-  formData.append("image", file);
-  const { data } = await axiosInstance.post<
-    ICommonResponse<TUploadImageResponse>
-  >(`/api/images/upload`, formData);
-  return data.data.url;
 };
 
 export const getWorkspaceMembers = async (
