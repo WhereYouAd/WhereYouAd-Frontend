@@ -24,6 +24,17 @@ button {
   cursor: pointer;
 }
 
+/* Hide horizontal scrollbar for mock timeline */
+.landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
+  height: 0px;
+}
+.landing-guide-timeline .custom-scrollbar {
+  scrollbar-width: none;
+}
+.landing-guide-timeline .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 @theme {
   --color-logo-1: #2eb4ff;
   --color-logo-2: #6088fe;
@@ -525,3 +536,5 @@ button {
     animation: fade-in-up 0.2s var(--ease-out) both;
   }
 }
+
+/* (removed) react-calendar-timeline overrides — now using custom mock timeline */

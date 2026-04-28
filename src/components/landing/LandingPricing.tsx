@@ -86,7 +86,7 @@ export default function LandingPricing() {
       id="pricing"
       className="py-24 md:py-40 bg-[#F7F8FA] relative scroll-mt-20"
     >
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 24 }}
@@ -100,7 +100,7 @@ export default function LandingPricing() {
           />
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-center">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
