@@ -1,0 +1,77 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+import logo2 from "../../assets/mockup/logo_test/logo_2.png";
+
+const logo = logo2;
+
+const navItems = [
+  { label: "기능", targetId: "features" },
+  { label: "이용방법", targetId: "guide" },
+  { label: "요금제", targetId: "pricing" },
+];
+
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+}
+
+export default function LandingHeader() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setIsScrolled(window.scrollY > 8);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 py-4 md:px-12 transition-smooth ${
+        isScrolled
+          ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-transparent"
+          : "bg-brand-200/60 backdrop-blur-xl border-chart-inactive"
+      }`}
+    >
+      <div className="flex items-center">
+        <Link
+          to="/"
+          aria-label="WhereYouAd 홈"
+          className="flex items-center gap-2 text-text-main"
+        >
+          <img src={logo} alt="" aria-hidden className="h-6 w-auto" />
+        </Link>
+      </div>
+
+      <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+        {navItems.map(({ label, targetId }) => (
+          <button
+            key={targetId}
+            type="button"
+            onClick={() => scrollToSection(targetId)}
+            className="text-[15px] font-medium text-text-sub hover:text-text-main transition-colors"
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+
+      <div className="flex items-center gap-3">
+        <Link
+          to="/login"
+          className="hidden sm:inline-flex items-center justify-center h-button-small px-4 rounded-xl text-text-sub hover:text-text-main transition-smooth"
+        >
+          로그인
+        </Link>
+        <Link
+          to="/signup"
+          className="inline-flex items-center justify-center h-button-small px-4 rounded-xl bg-brand-900 text-white font-label active-scale transition-smooth hover:bg-logo-2 shadow-sm hover:shadow-card-hover"
+        >
+          무료로 시작하기
+        </Link>
+      </div>
+    </header>
+  );
+}

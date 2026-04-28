@@ -1,0 +1,182 @@
+import { motion } from "framer-motion";
+
+import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
+
+type TFeature = { text: string; enabled: boolean };
+
+type TPlan = {
+  name: string;
+  target: string;
+  price: string;
+  priceUnit?: string;
+  priceSubText?: string;
+  buttonText: string;
+  featured: boolean;
+  assurance: string;
+  features: TFeature[];
+};
+
+const plans: TPlan[] = [
+  {
+    name: "스타터",
+    target: "초기 창업가 및 소상공인",
+    price: "무료",
+    buttonText: "무료로 시작하기",
+    featured: false,
+    assurance: "카드 불필요",
+    features: [
+      { text: "광고 매체 연동 1개", enabled: true },
+      { text: "기본 대시보드 제공", enabled: true },
+      { text: "1주 데이터 보관", enabled: true },
+      { text: "AI 성과 리포트", enabled: false },
+      { text: "우선 지원 서비스", enabled: false },
+    ],
+  },
+  {
+    name: "프로",
+    target: "성장하는 B2B 마케터",
+    price: "₩39,000",
+    priceUnit: "/월",
+    priceSubText: "(부가세 별도)",
+    buttonText: "14일 무료 체험하기",
+    featured: true,
+    assurance: "무료 체험 가능 · 카드 불필요",
+    features: [
+      { text: "모든 매체 무제한 연동", enabled: true },
+      { text: "맞춤형 대시보드 커스텀", enabled: true },
+      { text: "3년 데이터 보관", enabled: true },
+      { text: "주간 AI 성과 리포트", enabled: true },
+      { text: "이메일 및 채널톡 지원", enabled: true },
+    ],
+  },
+  {
+    name: "엔터프라이즈",
+    target: "엔터프라이즈 및 에이전시",
+    price: "문의",
+    buttonText: "영업팀에 문의",
+    featured: false,
+    assurance: "맞춤 견적 · 데모 제공",
+    features: [
+      { text: "권한별 워크스페이스 관리", enabled: true },
+      { text: "전용 API 및 웹훅 제공", enabled: true },
+      { text: "데이터 보관 무제한", enabled: true },
+      { text: "전담 어카운트 매니저(AM)", enabled: true },
+      { text: "SSO(SAML) 및 보안 인증", enabled: true },
+    ],
+  },
+];
+
+function CheckIcon({ enabled }: { enabled: boolean }) {
+  return (
+    <svg
+      className={`w-5 h-5 shrink-0 ${enabled ? "text-logo-2" : "text-text-disabled"}`}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+export default function LandingPricing() {
+  return (
+    <section
+      id="pricing"
+      className="py-24 md:py-40 bg-[#F7F8FA] relative scroll-mt-20"
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <LandingSectionHeader
+            title="요금제"
+            subtitle="비즈니스 규모에 맞는 최적의 플랜을 선택하세요."
+          />
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-center">
+          {plans.map((plan, i) => (
+            <motion.div
+              key={plan.name}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{
+                duration: 0.6,
+                delay: i * 0.12,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className={`bg-white rounded-[28px] p-8 relative transition-[box-shadow,transform,border-color] duration-300 ${
+                plan.featured
+                  ? "order-first md:order-none border border-logo-2/55 shadow-[0_18px_55px_rgba(96,136,254,0.14)] -translate-y-1"
+                  : "border border-chart-inactive/70 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.06)]"
+              }`}
+            >
+              {plan.featured && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-logo-2 text-white px-4 py-1.5 rounded-[99px] text-[12px] font-semibold shadow-sm">
+                  가장 인기
+                </div>
+              )}
+
+              <h3 className="text-xl font-bold text-text-main mb-2">
+                {plan.name}
+              </h3>
+              <p className="text-text-sub text-sm mb-6">{plan.target}</p>
+
+              <div className="mb-7">
+                <div className="flex items-end gap-2">
+                  <span className="text-[40px] leading-none font-extrabold tracking-[-0.02em] text-text-main">
+                    {plan.price}
+                  </span>
+                  {plan.priceUnit && (
+                    <span className="pb-1 text-[14px] font-semibold text-text-sub">
+                      {plan.priceUnit}
+                    </span>
+                  )}
+                </div>
+                {plan.priceUnit && plan.priceSubText && (
+                  <div className="mt-2 text-[13px] text-text-sub">
+                    {plan.priceSubText}
+                  </div>
+                )}
+              </div>
+
+              <button
+                className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 ${
+                  plan.name === "엔터프라이즈"
+                    ? "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
+                    : plan.featured
+                      ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"
+                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
+                }`}
+              >
+                {plan.buttonText}
+              </button>
+
+              <p className="text-[13px] text-text-sub mb-8">{plan.assurance}</p>
+
+              <div className="h-px w-full bg-chart-inactive/70 mb-7" />
+
+              <ul
+                className={`space-y-4 text-sm font-medium ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
+              >
+                {plan.features.map((feature) => (
+                  <li key={feature.text} className="flex items-center gap-3">
+                    <CheckIcon enabled={feature.enabled} />
+                    {feature.text}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

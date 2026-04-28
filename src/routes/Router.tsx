@@ -8,6 +8,7 @@ import AuthLayout from "@/layout/auth/AuthLayout";
 import GlobalLayout from "@/layout/GlobalLayout";
 import MainLayout from "@/layout/main/MainLayout";
 import Error from "@/pages/common/Error";
+import LandingPage from "@/pages/LandingPage";
 import useAuthStore from "@/store/useAuthStore";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
     element: <GlobalLayout />,
     errorElement: <Error />,
     children: [
+      {
+        path: "/landing",
+        element: <LandingPage />,
+      },
       {
         element: <AuthLayout />,
         children: AuthRoutes,
