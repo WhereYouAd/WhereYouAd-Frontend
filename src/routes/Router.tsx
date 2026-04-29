@@ -10,7 +10,7 @@ import MainLayout from "@/layout/main/MainLayout";
 import Error from "@/pages/common/Error";
 import useAuthStore from "@/store/useAuthStore";
 
-const LandingPage = React.lazy(() => import("@/pages/LandingPage"));
+const LandingPage = React.lazy(() => import("@/pages/landing/LandingPage"));
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
