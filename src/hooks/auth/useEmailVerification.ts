@@ -2,12 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseMutationResult } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { toast } from "sonner";
 import type { z } from "zod";
 
 import type { IEmailSendRequest, IEmailSendResponse } from "@/types/auth/auth";
-import type { ICommonResponse } from "@/types/common/common";
+import type { IApiErrorResponse, ICommonResponse } from "@/types/common/common";
 
 import { signupEmailSchema } from "@/utils/validation";
 
@@ -20,7 +19,7 @@ export type TSignupEmailFormValues = z.infer<typeof signupEmailSchema>;
 
 type TSendCodeMutation = UseMutationResult<
   ICommonResponse<IEmailSendResponse>,
-  AxiosError<{ message?: string }>,
+  IApiErrorResponse,
   IEmailSendRequest
 >;
 
@@ -94,9 +93,7 @@ export const useEmailVerification = ({
           restart(data.data.expireIn);
         },
         onError: (error) => {
-          toast.error(
-            error.response?.data?.message || "메일 발송에 실패했습니다.",
-          );
+          toast.error(error.message ?? "메일 발송에 실패했습니다.");
         },
       },
     );
@@ -124,9 +121,7 @@ export const useEmailVerification = ({
           onNext();
         },
         onError: (error) => {
-          setCodeError(
-            error.response?.data?.message || "인증번호가 올바르지 않습니다.",
-          );
+          setCodeError(error.message ?? "인증번호가 올바르지 않습니다.");
         },
       },
     );

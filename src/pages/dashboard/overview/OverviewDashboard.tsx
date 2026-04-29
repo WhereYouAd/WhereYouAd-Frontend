@@ -43,17 +43,20 @@ export default function OverviewDashboard() {
     data: kpis,
     isLoading: isKpisLoading,
     isError: isKpisError,
+    error: kpisError,
     dataUpdatedAt,
   } = useOverviewMetrics();
   const {
     data: budget,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
+    error: budgetError,
   } = useOverviewBudget();
   const {
     data: roasRankingsData,
     isLoading: isRankingsLoading,
     isError: isRankingsError,
+    error: rankingsError,
   } = useOverviewRoasRankings();
 
   const currentDate = dataUpdatedAt
@@ -103,7 +106,8 @@ export default function OverviewDashboard() {
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
         {isKpisError ? (
           <div className="col-span-4 tablet:col-span-2 flex items-center justify-center py-8 rounded-[24px] bg-white/80 border border-white/40 text-status-red font-body2">
-            지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
+            {kpisError?.message ??
+              "지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
           </div>
         ) : isKpisLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
@@ -168,9 +172,13 @@ export default function OverviewDashboard() {
         >
           {isBudgetError ? (
             <div className="flex flex-1 items-center justify-center text-status-red font-body2 text-center px-4">
-              예산 데이터를 불러오지 못했습니다.
-              <br />
-              잠시 후 다시 시도해 주세요.
+              {budgetError?.message ?? (
+                <>
+                  예산 데이터를 불러오지 못했습니다.
+                  <br />
+                  잠시 후 다시 시도해 주세요.
+                </>
+              )}
             </div>
           ) : isBudgetLoading ? (
             <div className="flex flex-col flex-1 gap-4 pt-6">
@@ -216,7 +224,8 @@ export default function OverviewDashboard() {
       >
         {isRankingsError ? (
           <div className="flex items-center justify-center py-16 text-status-red font-body2">
-            플랫폼 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.
+            {rankingsError?.message ??
+              "플랫폼 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
           </div>
         ) : isRankingsLoading ? (
           <div className="flex flex-col divide-y divide-[#F2F4F6]">

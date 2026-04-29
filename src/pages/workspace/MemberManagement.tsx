@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   useInfiniteQuery,
   useMutation,
@@ -8,41 +8,32 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import {
   type TMemberRole,
   type TUpdateMemberRoleRequest,
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
-import ControlBox from "@/components/common/controlbox/ControlBox";
-import PageHeader from "@/components/common/PageHeader";
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
+import MemberManagementLoading from "@/components/workspace/MemberManagementLoading";
 import PermissionTable from "@/components/workspace/PermissionTable";
-import TransferOwnershipBlockedModal from "@/components/workspace/TransferOwnershipBlockedModal";
-import TransferOwnershipModal from "@/components/workspace/TransferOwnershipModal";
 
 import {
   deleteWorkspaceMember,
+  getPendingMember,
   getWorkspaceMemberCount,
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
-import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 const PAGE_SIZE = 20;
 
 export default function MemberManagement() {
-  const navigate = useNavigate();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
   const queryClient = useQueryClient();
-
-  const [changing, setChanging] = useState(false);
-
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  const [isBlockedModalOpen, setIsBlockedModalOpen] = useState(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDeleteMember, setSelectedDeleteMember] =
@@ -50,7 +41,10 @@ export default function MemberManagement() {
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const memberCountQuery = useQuery({
+  const memberCountQuery = useQuery<
+    Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
+    IApiErrorResponse
+  >({
     queryKey: ["workspaceMemberCount", orgId],
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
@@ -77,34 +71,43 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  // 소유권이전. 나빼고, 이미 ADMIN인 사람
-  // 기능 보류. 회의 거쳐야함.
-  const transferableCandidates = useMemo(() => {
-    return members.filter((member) => !member.isMe && member.role === "ADMIN");
-  }, [members]);
+  const pendingMembersQuery = useQuery<
+    Awaited<ReturnType<typeof getPendingMember>>,
+    IApiErrorResponse
+  >({
+    queryKey: ["workspacePendingMembers", orgId],
+    queryFn: () => getPendingMember(orgId),
+    enabled: Number.isFinite(orgId) && orgId > 0,
+  });
 
-  const updateMemberRoleMutation = useMutation({
-    mutationFn: ({
-      memberId,
-      body,
-    }: {
-      memberId: number;
-      body: TUpdateMemberRoleRequest;
-    }) => updateWorkspaceMemberPermission(orgId, memberId, body),
+  const pendingMembers = useMemo(() => {
+    const items = pendingMembersQuery.data?.pendingMembers ?? [];
+
+    return [...items].sort(
+      (a, b) =>
+        new Date(b.invitedAt).getTime() - new Date(a.invitedAt).getTime(),
+    );
+  }, [pendingMembersQuery.data]);
+
+  const updateMemberRoleMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    { memberId: number; body: TUpdateMemberRoleRequest }
+  >({
+    mutationFn: ({ memberId, body }) =>
+      updateWorkspaceMemberPermission(orgId, memberId, body),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "권한 변경에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "권한 변경에 실패했습니다.");
     },
   });
 
-  const deleteMemberMutation = useMutation({
-    mutationFn: (memberId: number) => deleteWorkspaceMember(orgId, memberId),
+  const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
+    mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
@@ -114,9 +117,7 @@ export default function MemberManagement() {
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "팀원 삭제에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "멤버 삭제에 실패했습니다.");
     },
   });
 
@@ -170,7 +171,9 @@ export default function MemberManagement() {
       targetMember.role === "ADMIN" && newRole === "MEMBER" && adminCount === 1;
 
     if (isLastAdminDemotion) {
-      toast.error("마지막 관리자는 멤버로 변경할 수 없습니다");
+      toast.error(
+        "관리자는 최소 1명 이상이어야 합니다. 다른 멤버를 먼저 관리자로 지정한 후 다시 시도해 주세요",
+      );
       return;
     }
     try {
@@ -183,34 +186,6 @@ export default function MemberManagement() {
       );
     } catch (error) {
       console.error("권한 변경 실패", error);
-    }
-  };
-
-  const openChangeModal = () => {
-    if (transferableCandidates.length === 0) {
-      setIsBlockedModalOpen(true);
-      return;
-    }
-    setIsTransferModalOpen(true);
-  };
-
-  const closeTransferModal = () => {
-    if (changing) return;
-    setIsTransferModalOpen(false);
-  };
-
-  const handleTransferOwnership = async (member: TWorkspaceMember) => {
-    setChanging(true);
-    try {
-      // TODO: 관리자 변경 API 연동
-      toast.success(`${member.name}님으로 관리자가 변경되었습니다`);
-      setIsTransferModalOpen(false);
-      navigate("/workspace");
-    } catch (error) {
-      toast.error("관리자 변경에 실패했습니다. 다시 시도해주세요");
-      console.error("관리자변경실패", error);
-    } finally {
-      setChanging(false);
     }
   };
 
@@ -260,27 +235,30 @@ export default function MemberManagement() {
     );
   }
 
-  if (memberCountQuery.isLoading || membersQuery.isLoading) {
-    return (
-      <section className="w-full min-w-0">
-        <header className="mb-7">
-          <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-text-sub">
-            팀 구성원 정보를 불러오는 중입니다...
-          </p>
-        </header>
-      </section>
-    );
+  if (
+    memberCountQuery.isLoading ||
+    membersQuery.isLoading ||
+    pendingMembersQuery.isLoading
+  ) {
+    return <MemberManagementLoading />;
   }
 
-  if (memberCountQuery.isError || membersQuery.isError) {
+  if (
+    memberCountQuery.isError ||
+    membersQuery.isError ||
+    pendingMembersQuery.isError
+  ) {
+    const errorMessage =
+      memberCountQuery.error?.message ||
+      (membersQuery.error as unknown as IApiErrorResponse)?.message ||
+      pendingMembersQuery.error?.message ||
+      "팀 구성원 정보를 불러오지 못했습니다";
+
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
           <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-status-red">
-            팀 구성원 정보를 불러오지 못했습니다
-          </p>
+          <p className="font-body1 text-status-red">{errorMessage}</p>
         </header>
       </section>
     );
@@ -288,61 +266,19 @@ export default function MemberManagement() {
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            void navigate(-1);
-          }}
-          className="inline-flex w-fit items-center gap-1 text-text-sub transition-colors hover:text-text-main"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="font-body2">뒤로 이동</span>
-        </button>
-        <PageHeader
-          title="멤버 관리"
-          description="팀 멤버를 효율적으로 관리하세요"
-        />
-      </div>
-
       <div className="flex w-full min-w-0 flex-col gap-10">
         <MemberList
           orgId={orgId}
           members={members}
+          pendingMembers={pendingMembers}
           totalCount={totalCount}
           onRoleChange={handleRoleChange}
           onDeleteClick={openDeleteMember}
           isFetchingNextPage={membersQuery.isFetchingNextPage}
           observerRef={observerRef}
         />
+
         <PermissionTable />
-        <ControlBox
-          title="관리자 변경"
-          description="이 조직의 소유권을 다른 멤버에게 양도합니다. 이 작업은 되돌릴 수 없습니다."
-          buttonText="소유권 이전"
-          onButtonClick={openChangeModal}
-          className="w-full min-w-0"
-          containerClassName="border-status-red bg-status-red/10"
-          titleClassName="text-status-red"
-          descriptionClassName="text-text-auth-sub"
-          buttonVariant="dangerSoft"
-          buttonSize="big"
-          buttonClassName="px-8 !rounded-component-md"
-          leadingSlot={<WarnIcon className="h-12 w-12 text-red-500" />}
-        />
-
-        <TransferOwnershipModal
-          isOpen={isTransferModalOpen}
-          onClose={closeTransferModal}
-          candidates={transferableCandidates}
-          onConfirm={handleTransferOwnership}
-          isLoading={changing}
-        />
-
-        <TransferOwnershipBlockedModal
-          isOpen={isBlockedModalOpen}
-          onClose={() => setIsBlockedModalOpen(false)}
-        />
 
         <DeleteMemberModal
           isOpen={isDeleteModalOpen}

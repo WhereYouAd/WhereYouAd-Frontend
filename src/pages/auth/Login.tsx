@@ -1,7 +1,6 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { AxiosError } from "axios";
 import { toast } from "sonner";
 import type { z } from "zod";
 
@@ -38,8 +37,8 @@ export default function Login() {
       onSuccess: () => {
         navigate("/", { replace: true });
       },
-      onError: (error: AxiosError<{ message?: string }>) => {
-        toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
+      onError: (error) => {
+        toast.error(error.message ?? "로그인에 실패했습니다.");
       },
     });
   };

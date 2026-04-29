@@ -9,9 +9,12 @@ const DANGER_THRESHOLD = 75;
 
 // 예산 소진 현황 조회
 export function useOverviewBudget() {
-  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  // TODO: 테스트용 - 예산 데이터가 orgId 2에만 있어서 임시 고정, 테스트 후 원래대로 복구할 예정
+  // const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  useWorkspaceStore((s) => s.selectedOrgId);
+  const orgId = 2;
 
-  return useCoreQuery(["overview", "budget", orgId], () => getBudget(orgId!), {
+  return useCoreQuery(["overview", "budget", orgId], () => getBudget(orgId), {
     enabled: !!orgId,
     select: (data) => ({
       totalBudget: data.totalBudget,

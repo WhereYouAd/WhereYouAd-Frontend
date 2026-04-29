@@ -52,3 +52,17 @@ export interface IPlatformRankingItem extends IRoasRanking {
   conversionRate?: number; // CVR (%)
   conversionDelta?: number; // CVR 전기 대비 증감 (%)
 }
+
+// 클릭 스트림 데이터 항목
+export interface IClickStreamItem {
+  timeSeriesData: {
+    minute: string; // 'YYYYMMDDHHmm' 형태
+    count: number;
+  }[];
+  mode: "real" | "dummy";
+  hasSuspect: boolean;
+  suspectDetail: {
+    message: string;
+    timestamp: string;
+  } | null;
+}

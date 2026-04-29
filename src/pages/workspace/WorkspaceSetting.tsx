@@ -3,22 +3,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+
 import Button from "@/components/common/button/Button";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
-import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
+import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
 import {
   deleteWorkspace,
   getWorkspace,
   updateWorkspace,
-  uploadImage,
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function WorkspaceSetting() {
@@ -43,8 +43,8 @@ export default function WorkspaceSetting() {
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const fetchWorkspaceDetail = async () => {
@@ -61,15 +61,13 @@ export default function WorkspaceSetting() {
       setDesc(detail.description ?? "");
       setServerLogoUrl(detail.logoUrl ?? null);
       setLogoFile(null);
+      setIsImageDeleted(false);
       setLogoPreview((prev) => {
         if (prev) URL.revokeObjectURL(prev);
         return null;
       });
     } catch (e) {
-      const message = getAxiosMessage(
-        e,
-        "워크스페이스 정보를 불러오지 못했습니다",
-      );
+      const message = (e as IApiErrorResponse).message;
       setErrorMsg(message);
       toast.error(message);
     } finally {
@@ -91,25 +89,21 @@ export default function WorkspaceSetting() {
     setSaving(true);
 
     try {
-      let nextLogoUrl = serverLogoUrl ?? null;
-
-      if (logoFile) {
-        setUploading(true);
-        nextLogoUrl = await uploadImage(logoFile);
-        setUploading(false);
-      }
       await updateWorkspace(orgId, {
         name: nextName,
         description: nextDesc,
-        logoUrl: nextLogoUrl,
+        imageFile: logoFile,
+        isImageDeleted,
       });
+      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
-      toast.error(getAxiosMessage(e, "변경사항 저장에 실패했습니다"));
+      toast.error(
+        (e as IApiErrorResponse).message ?? "변경사항 저장에 실패했습니다.",
+      );
     } finally {
       setSaving(false);
-      setUploading(false);
     }
   };
   const onDelete = async () => {
@@ -125,7 +119,9 @@ export default function WorkspaceSetting() {
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
     } catch (e) {
-      toast.error(getAxiosMessage(e, "워크스페이스 삭제에 실패했습니다"));
+      toast.error(
+        (e as IApiErrorResponse).message ?? "워크스페이스 삭제에 실패했습니다.",
+      );
     } finally {
       setDeleting(false);
     }
@@ -146,6 +142,8 @@ export default function WorkspaceSetting() {
     if (!file) return;
 
     setLogoFile(file);
+    setIsImageDeleted(false);
+
     const previewUrl = URL.createObjectURL(file);
     setLogoPreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
@@ -161,6 +159,9 @@ export default function WorkspaceSetting() {
 
   const onResetLogo = () => {
     setLogoFile(null);
+    setIsImageDeleted(true);
+    setImageError(false);
+
     setLogoPreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return null;
@@ -175,28 +176,7 @@ export default function WorkspaceSetting() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            void navigate(-1);
-          }}
-          className="inline-flex w-fit items-center gap-1 text-text-sub transition-colors hover:text-text-main"
-        >
-          <span aria-hidden="true">←</span>
-          <span className="font-body2">뒤로 이동</span>
-        </button>
-        <PageHeader
-          title="워크스페이스 관리"
-          description="워크스페이스 정보를 확인하고 관리하세요."
-        />
-      </div>
-
-      {loading && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg">
-          <p className="font-body2 text-text-sub">불러오는중..</p>
-        </div>
-      )}
+      {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
         <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
           <p className="font-body2 text-status-red">{errorMsg}</p>
@@ -212,10 +192,6 @@ export default function WorkspaceSetting() {
       {!loading && !errorMsg && (
         <>
           <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
-            <h2 className="font-heading4 text-text-main">기본 정보</h2>
-            <p className="font-body2 text-text-sub mt-2">
-              워크스페이스의 대표적인 정보를 설정합니다.
-            </p>
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
               <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
                 <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
@@ -258,7 +234,7 @@ export default function WorkspaceSetting() {
                     className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
-                    disabled={saving || deleting || uploading}
+                    disabled={saving || deleting}
                   >
                     업로드
                   </Button>
@@ -268,7 +244,7 @@ export default function WorkspaceSetting() {
                     className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
-                    disabled={saving || deleting || uploading}
+                    disabled={saving || deleting}
                   >
                     초기화
                   </Button>
@@ -280,7 +256,7 @@ export default function WorkspaceSetting() {
                   value={name}
                   placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
                   onChange={(e) => setName(e.target.value)}
-                  disabled={saving || deleting || uploading}
+                  disabled={saving || deleting}
                 />
                 <TextareaField
                   id="workspace-setting-desc"
@@ -290,30 +266,17 @@ export default function WorkspaceSetting() {
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
                   className="min-h-90"
-                  disabled={saving || deleting || uploading}
+                  disabled={saving || deleting}
                 />
               </div>
             </div>
             <div className="flex justify-end mt-6 gap-4 tablet:flex-col">
               <Button
                 size="big"
-                variant="secondary"
-                type="button"
-                onClick={() => {
-                  if (!orgId) return;
-                  void navigate(`/workspace/${orgId}/members`);
-                }}
-                aria-label="멤버 관리로 이동하기"
-                className="w-auto tablet:w-full"
-              >
-                멤버 관리로 이동
-              </Button>
-              <Button
-                size="big"
                 variant="primary"
                 type="button"
                 onClick={onSave}
-                disabled={!name.trim() || saving || deleting || uploading}
+                disabled={!name.trim() || saving || deleting}
                 aria-label="변경사항 저장하기"
                 className="w-auto tablet:w-full"
               >
@@ -335,7 +298,7 @@ export default function WorkspaceSetting() {
               buttonVariant="dangerSoft"
               buttonSize="big"
               buttonClassName="px-8 !rounded-component-md"
-              buttonDisabled={saving || deleting || uploading}
+              buttonDisabled={saving || deleting}
               leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
             />
           </div>

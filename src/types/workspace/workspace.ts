@@ -7,6 +7,7 @@ export type TWorkspace = {
   url?: string | null;
   logoUrl?: string | null;
   myRole: TMemberRole;
+  isCurrentWorkspace: boolean;
 };
 
 export type TMyOrgsData = {
@@ -16,7 +17,7 @@ export type TMyOrgsData = {
 export type TCreateOrgRequest = {
   name: string;
   description: string;
-  logoUrl?: string | null;
+  imageFile?: File | null;
 };
 
 export type TCreateOrgResponse = {
@@ -38,11 +39,8 @@ export type TWorkspaceDetail = TGetOrgResponse;
 export type TUpdateWorkspaceRequest = {
   name: string;
   description: string;
-  logoUrl: string | null;
-};
-
-export type TUploadImageResponse = {
-  url: string;
+  imageFile?: File | null;
+  isImageDeleted: boolean;
 };
 
 export type TWorkspaceMember = {
@@ -98,11 +96,31 @@ export type TInviteMemberResponse = {
   email: string;
 };
 
-export type TInviteMemberItem = {
+export type TInviteMemberItem =
+  | {
+      invitationId: number;
+      email: string;
+      invitedAt: string;
+      expireAt: string;
+      inviteStatus: "PENDING";
+    }
+  | {
+      memberId: number;
+      name: string;
+      email: string;
+      profileImageUrl: string | null;
+      role: TMemberRole;
+      inviteStatus: "ACTIVE";
+      isMe?: boolean;
+    };
+
+export type TPendingMemberData = {
+  invitationId: number;
   email: string;
-  name?: string;
-  profileImageUrl?: string | null;
-  role?: TMemberRole;
-  inviteStatus: "PENDING" | "ACTIVE";
-  isMe?: boolean;
+  invitedAt: string;
+  expireAt: string;
+};
+
+export type TPendingMemberResponse = {
+  pendingMembers: TPendingMemberData[];
 };

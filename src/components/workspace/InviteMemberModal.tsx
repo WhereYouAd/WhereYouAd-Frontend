@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import type {
   TInviteMemberItem,
   TInviteMemberRequest,
@@ -17,14 +18,12 @@ import Modal from "../common/modal/Modal";
 import { postInviteEmail } from "@/api/workspace/org";
 import CopyIcon from "@/assets/icon/common/link.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
-import { getAxiosMessage } from "@/lib/getAxiosMessage";
 
 type TInviteMemberModalProps = {
   isOpen: boolean;
   onClose: () => void;
   orgId: number;
   inviteItems: TInviteMemberItem[];
-  onInviteSuccess: (email: string) => void;
 };
 
 export default function InviteMemberModal({
@@ -32,7 +31,6 @@ export default function InviteMemberModal({
   onClose,
   orgId,
   inviteItems,
-  onInviteSuccess,
 }: TInviteMemberModalProps) {
   const queryClient = useQueryClient();
   const [form, setForm] = useState<TInviteMemberRequest>({ email: "" });
@@ -40,12 +38,19 @@ export default function InviteMemberModal({
   const emailValidation = emailSchema.safeParse(trimmedEmail);
   const isValidEmail = emailValidation.success;
 
-  const inviteMutation = useMutation({
-    mutationFn: (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
-    onSuccess: (_, variables) => {
+  const inviteMutation = useMutation<
+    unknown,
+    IApiErrorResponse,
+    TInviteMemberRequest
+  >({
+    mutationFn: (body) => postInviteEmail(orgId, body),
+    onSuccess: () => {
       toast.success("초대 이메일을 발송했습니다");
-      onInviteSuccess(variables.email);
       setForm({ email: "" });
+
+      void queryClient.invalidateQueries({
+        queryKey: ["workspacePendingMembers", orgId],
+      });
       void queryClient.invalidateQueries({
         queryKey: ["workspaceMembers", orgId],
       });
@@ -54,9 +59,7 @@ export default function InviteMemberModal({
       });
     },
     onError: (error) => {
-      toast.error(
-        getAxiosMessage(error, "초대에 실패했습니다. 다시 시도해주세요"),
-      );
+      toast.error(error.message ?? "초대 이메일 발송에 실패했습니다.");
     },
   });
 
@@ -142,12 +145,37 @@ export default function InviteMemberModal({
         <div className="min-h-0 flex-1 overflow-y-auto px-8 py-4">
           <ul>
             {inviteItems.map((item) => {
-              const isPending = item.inviteStatus === "PENDING";
-              const displayName = item.name ?? item.email;
-
+              if (item.inviteStatus === "PENDING") {
+                return (
+                  <li
+                    key={`pending-${item.invitationId}`}
+                    className="flex items-center justify-between gap-4 py-4"
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-component-lg overflow-hidden">
+                        <UserIcon className="text-text-auth-sub h-6 w-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm text-text-sub">
+                          {item.email}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center">
+                      <Badge
+                        variant="stopped"
+                        size="md"
+                        className="bg-text-placeholder/50"
+                      >
+                        가입 대기 중
+                      </Badge>
+                    </div>
+                  </li>
+                );
+              }
               return (
                 <li
-                  key={item.email}
+                  key={`active-${item.memberId}`}
                   className="flex items-center justify-between gap-4 py-4"
                 >
                   <div className="flex min-w-0 items-center gap-3">
@@ -155,7 +183,7 @@ export default function InviteMemberModal({
                       {item.profileImageUrl ? (
                         <img
                           src={item.profileImageUrl}
-                          alt={`${displayName} 프로필 이미지`}
+                          alt={`${item.name} 프로필 이미지`}
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -163,38 +191,22 @@ export default function InviteMemberModal({
                       )}
                     </div>
                     <div className="min-w-0">
-                      {isPending ? (
-                        <p className="truncate text-sm text-text-sub">
-                          {item.email}
+                      <div className="flex items-center gap-1">
+                        <p className="truncate font-body1 text-text-main">
+                          {item.name}
                         </p>
-                      ) : (
-                        <div className="flex items-center gap-1">
-                          <p className="truncate font-body1 text-text-main">
-                            {item.name}
-                          </p>
-                          {item.isMe && (
-                            <span className="font-body2 text-text-disabled">
-                              (you)
-                            </span>
-                          )}
-                        </div>
-                      )}
+                        {item.isMe && (
+                          <span className="font-body2 text-text-disabled">
+                            본인
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center">
-                    {isPending ? (
-                      <Badge
-                        variant="stopped"
-                        size="md"
-                        className="bg-text-placeholder/60"
-                      >
-                        가입 대기 중
-                      </Badge>
-                    ) : (
-                      <span className="text-text-main">
-                        {item.role === "ADMIN" ? "관리자" : "멤버"}
-                      </span>
-                    )}
+                    <span className="text-text-main">
+                      {item.role === "ADMIN" ? "관리자" : "멤버"}
+                    </span>
                   </div>
                 </li>
               );

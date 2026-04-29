@@ -43,3 +43,8 @@ export const getRoasRankings = async (
   >(`/api/dashboard/${orgId}/rankings/roas`, { params });
   return data.data;
 };
+
+// 더미 클릭 데이터 생성 토글 (테스트용)
+export const toggleDummyClicks = async (): Promise<void> => {
+  await axiosInstance.post("/api/clicks/dummy/toggle");
+};
