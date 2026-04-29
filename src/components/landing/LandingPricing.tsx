@@ -107,7 +107,7 @@ export default function LandingPricing() {
     if (planName === "프로") {
       const subject = encodeURIComponent("WhereYouAd 요금제 문의");
       const body = encodeURIComponent("문의하실 내용을 입력해 주세요.");
-      window.location.href = `mailto:contact@whereyouad.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:whereyouadofficial@gmail.com?subject=${subject}&body=${body}`;
       return;
     }
 
