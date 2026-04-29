@@ -69,20 +69,7 @@ export default function LandingHeader() {
         ))}
       </nav>
 
-      <div className="flex items-center gap-3">
-        <Link
-          to="/login"
-          className="hidden sm:inline-flex items-center justify-center h-button-small px-4 rounded-xl text-text-sub hover:text-text-main transition-smooth"
-        >
-          로그인
-        </Link>
-        <Link
-          to="/signup"
-          className="inline-flex items-center justify-center h-button-small px-4 rounded-xl bg-brand-900 text-white font-label active-scale transition-smooth hover:bg-logo-2 shadow-sm hover:shadow-card-hover"
-        >
-          무료로 시작하기
-        </Link>
-      </div>
+      <div aria-hidden className="w-8 md:w-24" />
     </header>
   );
 }

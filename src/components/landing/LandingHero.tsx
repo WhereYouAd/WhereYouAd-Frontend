@@ -5,6 +5,12 @@ import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
 import MockupTestImage from "@/assets/mockup/optimized/mockup_test.jpg";
 
 export default function LandingHero() {
+  function scrollToPricing() {
+    document
+      .getElementById("pricing")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <section className="relative w-full overflow-hidden bg-brand-300">
       <img
@@ -45,12 +51,13 @@ export default function LandingHero() {
           >
             무료로 시작하기
           </Link>
-          <Link
-            to="/login"
+          <button
+            type="button"
+            onClick={scrollToPricing}
             className="inline-flex items-center justify-center rounded-xl bg-transparent text-white active-scale transition-smooth hover:bg-white/12 font-semibold py-[14px] px-[28px] border-[1.5px] border-white/70"
           >
-            로그인
-          </Link>
+            요금제 보기
+          </button>
         </div>
       </motion.div>
 
