@@ -13,12 +13,12 @@ export const mainNav: INavItem[] = [
     id: "dashboard",
     label: "대시보드",
     icon: DashboardIcon,
-    path: "/",
+    path: "/dashboard",
     children: [
       {
         id: "dashboard-integrated",
         label: "통합 대시보드",
-        path: "/",
+        path: "/dashboard",
       },
       {
         id: "dashboard-platform",

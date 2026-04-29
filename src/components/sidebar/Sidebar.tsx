@@ -79,8 +79,8 @@ export default function Sidebar() {
               item.children?.some((c) => {
                 if (!c.path) return false;
 
-                if (c.path === "/") {
-                  return location.pathname === "/";
+                if (c.path === "/dashboard") {
+                  return location.pathname === "/dashboard";
                 }
 
                 return location.pathname.startsWith(c.path);
@@ -88,9 +88,10 @@ export default function Sidebar() {
 
             const isParentActive =
               (item.path &&
-                item.path !== "/" &&
+                item.path !== "/dashboard" &&
                 location.pathname.startsWith(item.path)) ||
-              (item.path === "/" && location.pathname === "/") ||
+              (item.path === "/dashboard" &&
+                location.pathname === "/dashboard") ||
               isChildActive;
 
             const showChevron =
