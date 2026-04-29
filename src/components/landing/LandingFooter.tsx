@@ -9,10 +9,22 @@ export default function LandingFooter() {
             </div>
           </div>
           <div className="flex items-center gap-8 font-body2">
-            <span className="text-text-disabled/70 select-none">이용약관</span>
-            <span className="text-text-disabled/70 select-none">
+            <a
+              href="https://www.notion.so/Where-you-ad-351085b3a16c8040b7bef7ac311da984?source=copy_link"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              이용약관
+            </a>
+            <a
+              href="https://www.notion.so/Where-you-ad-351085b3a16c80c3b171f97238e447ca?source=copy_link"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-white transition-colors"
+            >
               개인정보처리방침
-            </span>
+            </a>
             <a
               href="mailto:whereyouadofficial@gmail.com"
               className="hover:text-white transition-colors"
