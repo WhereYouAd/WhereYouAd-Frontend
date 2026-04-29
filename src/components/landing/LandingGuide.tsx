@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 
+import GuideOverviewChart from "@/components/landing/GuideOverviewChart";
+import GuidePlatform from "@/components/landing/GuidePlatform";
 import GuideTimeline from "@/components/landing/GuideTimeline";
 import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
 
-import OverviewDashboard from "@/assets/mockup/optimized/Overview_dashboard.jpg";
-import PlatformDashboard from "@/assets/mockup/optimized/platform_dashboard.jpg";
 import TimelineDashboard from "@/assets/mockup/optimized/timeline_dashboard.jpg";
 
 type TGuideStep = { step: number; title: string; text: string };
@@ -15,10 +15,12 @@ type TGuidePage = {
   title: string;
   description: string;
   steps: TGuideStep[];
-  image: string;
-  alt: string;
+  image?: string;
+  alt?: string;
   reverse: boolean;
+  useOverview?: boolean;
   useTimeline?: boolean;
+  usePlatform?: boolean;
 };
 
 const pages: TGuidePage[] = [
@@ -40,8 +42,7 @@ const pages: TGuidePage[] = [
         text: "채널별 성과 차트로 매체 간 효율을 비교하고 예산 재배분을 결정합니다.",
       },
     ],
-    image: OverviewDashboard,
-    alt: "Overview 대시보드 화면",
+    useOverview: true,
     reverse: false,
   },
   {
@@ -62,8 +63,7 @@ const pages: TGuidePage[] = [
         text: "예산·기간·타겟 설정을 인라인 편집으로 빠르게 수정하고 저장합니다.",
       },
     ],
-    image: PlatformDashboard,
-    alt: "Platform 대시보드 화면",
+    usePlatform: true,
     reverse: true,
   },
   {
@@ -130,8 +130,8 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
-                  page.useTimeline
+                className={`w-full md:w-3/5 rounded-component-lg overflow-hidden ${
+                  page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
                     : "bg-white shadow-[0_12px_30px_rgba(0,0,0,0.04)] border border-chart-inactive/70"
                 }`}
@@ -140,9 +140,17 @@ export default function LandingGuide() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               >
-                {page.useTimeline ? (
+                {page.useOverview ? (
+                  <div className="p-0 bg-transparent">
+                    <GuideOverviewChart />
+                  </div>
+                ) : page.useTimeline ? (
                   <div className="p-0 bg-transparent">
                     <GuideTimeline />
+                  </div>
+                ) : page.usePlatform ? (
+                  <div className="p-0 bg-transparent">
+                    <GuidePlatform />
                   </div>
                 ) : (
                   <img
@@ -187,7 +195,7 @@ export default function LandingGuide() {
                   {page.steps.map((item) => (
                     <div
                       key={item.step}
-                      className="rounded-2xl border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
+                      className="rounded-component-md border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
                         <span className="font-body1 font-bold text-text-main leading-snug break-keep text-balance">

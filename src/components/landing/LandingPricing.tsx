@@ -84,7 +84,7 @@ export default function LandingPricing() {
   return (
     <section
       id="pricing"
-      className="py-24 md:py-40 bg-[#F7F8FA] relative scroll-mt-20"
+      className="py-24 md:py-40 bg-landing-section relative scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -148,7 +148,7 @@ export default function LandingPricing() {
               </div>
 
               <button
-                className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 ${
+                className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
                   plan.name === "엔터프라이즈"
                     ? "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
                     : plan.featured
@@ -164,7 +164,7 @@ export default function LandingPricing() {
               <div className="h-px w-full bg-chart-inactive/70 mb-7" />
 
               <ul
-                className={`space-y-4 text-sm font-medium ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
+                className={`space-y-4 text-sm font-body2 ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
               >
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-3">

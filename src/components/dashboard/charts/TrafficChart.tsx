@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import type { ApexOptions } from "apexcharts";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 
@@ -89,7 +90,17 @@ const AnomalyBubble = memo(function AnomalyBubble({
   );
 });
 
-const TrafficChart = memo(function TrafficChart() {
+type TTrafficChartProps = {
+  yAxisMax?: number;
+  height?: number;
+  showAnomaly?: boolean;
+};
+
+const TrafficChart = memo(function TrafficChart({
+  yAxisMax,
+  height = 400,
+  showAnomaly = true,
+}: TTrafficChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 빨간 점의 컨테이너 기준 좌표
@@ -124,7 +135,18 @@ const TrafficChart = memo(function TrafficChart() {
   const handlePointerEnter = useCallback(() => setIsAnomalyHovered(true), []);
   const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
-  const showBubble = isAnomalyHovered || isAnomalyFocused;
+  const showBubble = showAnomaly && (isAnomalyHovered || isAnomalyFocused);
+  const options: ApexOptions = yAxisMax
+    ? {
+        ...BASE_OPTIONS,
+        yaxis: Array.isArray(BASE_OPTIONS.yaxis)
+          ? BASE_OPTIONS.yaxis
+          : {
+              ...BASE_OPTIONS.yaxis,
+              max: yAxisMax,
+            },
+      }
+    : BASE_OPTIONS;
 
   return (
     <div
@@ -138,12 +160,12 @@ const TrafficChart = memo(function TrafficChart() {
       <Suspense fallback={<div className="h-100" />}>
         <ReactApexChart
           type="area"
-          options={BASE_OPTIONS}
+          options={options}
           series={series}
-          height={400}
+          height={height}
         />
       </Suspense>
-      {markerPos && (
+      {showAnomaly && markerPos && (
         <>
           <span
             className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"

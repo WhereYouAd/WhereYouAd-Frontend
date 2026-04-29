@@ -2,10 +2,17 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
+import HeroTestImage from "@/assets/mockup/hero_test.png";
 
 export default function LandingHero() {
   return (
     <section className="relative w-full overflow-hidden bg-brand-300">
+      <img
+        src={HeroTestImage}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
       <motion.div
         className="relative min-h-[calc(100dvh-72px)] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-5 pt-45 md:pt-32 pb-24"
         initial={{ opacity: 0, y: 28 }}
@@ -16,7 +23,7 @@ export default function LandingHero() {
           <span className="inline-flex items-center rounded-full border border-chart-inactive/70 bg-white/70 px-3 py-1 text-[12px] font-semibold text-text-sub">
             WhereYouAd
           </span>
-          <span className="text-[12px] font-medium text-text-sub">
+          <span className="text-[12px] font-caption text-text-sub">
             광고 통합 대시보드
           </span>
         </div>
@@ -36,7 +43,7 @@ export default function LandingHero() {
           </Link>
           <Link
             to="/login"
-            className="inline-flex items-center justify-center rounded-xl bg-transparent text-brand-900 active-scale transition-smooth hover:bg-black/5 font-semibold py-[14px] px-[28px] border-[1.5px] border-brand-900"
+            className="inline-flex items-center justify-center rounded-xl bg-transparent text-brand-900 active-scale transition-smooth hover:bg-brand-900/5 font-semibold py-[14px] px-[28px] border-[1.5px] border-brand-900"
           >
             광고하고 사례
           </Link>

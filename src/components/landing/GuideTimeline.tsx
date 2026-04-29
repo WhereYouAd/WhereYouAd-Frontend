@@ -32,7 +32,7 @@ const cards = [
     colStart: 3.2,
     colEnd: 9,
     row: 1,
-    colorClass: "bg-[#4285F4]",
+    colorClass: "bg-status-blue",
   },
   {
     id: 2,
@@ -41,7 +41,7 @@ const cards = [
     colStart: 8.9,
     colEnd: 15.3,
     row: 2,
-    colorClass: "bg-[#8B5CF6]",
+    colorClass: "bg-logo-2",
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const cards = [
     colStart: 2.4,
     colEnd: 8,
     row: 3,
-    colorClass: "bg-[#10B981]",
+    colorClass: "bg-status-green",
   },
 ];
 
@@ -63,35 +63,35 @@ export default function GuideTimeline() {
   return (
     <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-transparent font-sans">
       {/* Top Navigation */}
-      <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-gray-100/80 bg-white/80 backdrop-blur-md z-20">
-        <div className="flex items-center bg-gray-100/60 p-0.5 rounded-[8px] border border-gray-200/50">
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-gray-500 hover:text-gray-700 transition-colors rounded-md">
+      <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-chart-inactive/80 bg-white/80 backdrop-blur-md z-20">
+        <div className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70">
+          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
             Day
           </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-gray-800 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]">
+          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]">
             Week
           </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-gray-500 hover:text-gray-700 transition-colors rounded-md">
+          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
             Month
           </button>
         </div>
 
-        <div className="flex items-center gap-4 text-[13px] font-bold text-gray-800">
-          <button className="text-gray-400 hover:text-gray-600 transition-colors">
+        <div className="flex items-center gap-4 text-[13px] font-bold text-text-main">
+          <button className="text-text-placeholder hover:text-text-sub transition-colors">
             <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
           <span>27 Dec - 4 Jan</span>
-          <button className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button className="text-text-placeholder hover:text-text-sub transition-colors">
             <ChevronRightIcon className="h-3.5 w-3.5" />
           </button>
         </div>
 
-        <div className="flex items-center gap-5 text-[12px] font-semibold text-gray-600">
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-gray-800 transition-colors">
+        <div className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub">
+          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
             <SortIcon className="h-3.5 w-3.5" />
             <span>Sort</span>
           </div>
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-gray-800 transition-colors">
+          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
             <FilterIcon className="h-3.5 w-3.5" />
             <span>Filter</span>
           </div>
@@ -105,14 +105,14 @@ export default function GuideTimeline() {
           style={{ width: totalWidth }}
         >
           {/* Header (Dates) */}
-          <div className="h-[28px] flex items-center border-b border-gray-100/80 relative bg-[#FCFCFD] z-10">
+          <div className="h-[28px] flex items-center border-b border-chart-inactive/80 relative bg-brand-300/40 z-10">
             {columns.map((c, i) => (
               <div
                 key={i}
-                className="w-[55px] flex justify-center text-[11px] font-semibold text-gray-400"
+                className="w-[55px] flex justify-center text-[11px] font-semibold text-text-placeholder"
               >
                 <span className="relative flex items-center gap-1">
-                  {c.day} <span className="text-gray-800">{c.date}</span>
+                  {c.day} <span className="text-text-main">{c.date}</span>
                 </span>
               </div>
             ))}
@@ -124,7 +124,7 @@ export default function GuideTimeline() {
             {columns.map((_, i) => (
               <div
                 key={i}
-                className="absolute top-0 bottom-0 border-r border-gray-100/80"
+                className="absolute top-0 bottom-0 border-r border-chart-inactive/80"
                 style={{ left: `${i * 55}px`, width: "55px" }}
               />
             ))}
@@ -140,7 +140,7 @@ export default function GuideTimeline() {
               return (
                 <div
                   key={card.id}
-                  className="absolute flex items-center px-3 gap-2.5 rounded-[12px] h-[52px] z-20 cursor-pointer border border-gray-200/80 bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.05)] transition-transform hover:scale-[1.01] hover:z-30"
+                  className="absolute flex items-center px-3 gap-2.5 rounded-[12px] h-[52px] z-20 cursor-pointer border border-chart-inactive/80 bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.05)] transition-transform hover:scale-[1.01] hover:z-30"
                   style={{ left: `${x}px`, top: `${y}px`, width: `${width}px` }}
                 >
                   {/* Left Indicator */}
@@ -150,17 +150,17 @@ export default function GuideTimeline() {
 
                   {/* Text */}
                   <div className="flex flex-col min-w-0 pr-2">
-                    <span className="text-[12px] font-bold truncate leading-tight tracking-tight text-gray-800">
+                    <span className="text-[12px] font-bold truncate leading-tight tracking-tight text-text-main">
                       {card.title}
                     </span>
-                    <span className="text-[10px] flex items-center gap-1.5 leading-tight mt-0.5 text-gray-500">
+                    <span className="text-[10px] flex items-center gap-1.5 leading-tight mt-0.5 text-text-sub">
                       {card.subtitle}
                     </span>
                   </div>
 
                   {/* Menu */}
                   <div className="ml-auto flex items-center gap-2 shrink-0">
-                    <button className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-black/5 transition-colors text-gray-400">
+                    <button className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-brand-900/5 transition-colors text-text-placeholder">
                       <KebabIcon className="h-3.5 w-3.5" />
                     </button>
                   </div>
