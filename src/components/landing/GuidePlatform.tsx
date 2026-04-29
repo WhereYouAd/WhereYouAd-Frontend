@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 
+import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
 import GoogleAdsPlain from "@/assets/logo/social-logo/plain/google_ads.png";
 import MetaPlain from "@/assets/logo/social-logo/plain/meta.svg?react";
 import GoogleWordmark from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
@@ -76,10 +77,16 @@ export default function GuidePlatform() {
         <button
           type="button"
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="h-11 w-full rounded-xl px-4 border border-chart-inactive/70 bg-white text-[13px] font-semibold text-text-main flex items-center justify-between"
+          aria-expanded={isMenuOpen}
+          className="h-11 w-full rounded-xl px-4 border border-chart-inactive/70 bg-white text-[13px] font-semibold text-text-main flex items-center justify-between hover:bg-brand-300/40 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/30"
         >
           <span>플랫폼 선택</span>
-          <span className="text-text-sub">{isMenuOpen ? "▲" : "▼"}</span>
+          <span
+            aria-hidden
+            className={`text-text-sub transition-transform duration-200 ${isMenuOpen ? "rotate-180" : "rotate-0"}`}
+          >
+            <ChevronDown className="w-4.5 h-4.5" />
+          </span>
         </button>
 
         {isMenuOpen && (
@@ -92,7 +99,7 @@ export default function GuidePlatform() {
                     key={platform.id}
                     type="button"
                     onClick={() => togglePlatform(platform.id)}
-                    className={`w-full h-14 px-4 flex items-center justify-start border-b last:border-b-0 transition-smooth ${
+                    className={`w-full h-14 px-4 flex items-center justify-start border-b last:border-b-0 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/25 focus-visible:ring-inset ${
                       isSelected
                         ? "bg-brand-300/22 border-chart-inactive/40"
                         : "bg-white hover:bg-brand-300/25 border-chart-inactive/40"
@@ -103,6 +110,7 @@ export default function GuidePlatform() {
                     >
                       {platform.content}
                     </div>
+                    <span className="sr-only">{platform.label}</span>
                   </button>
                 );
               })}

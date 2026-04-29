@@ -18,50 +18,69 @@ type TPlan = {
 
 const plans: TPlan[] = [
   {
-    name: "스타터",
-    target: "초기 창업가 및 소상공인",
+    name: "프리",
+    target: "서비스를 처음 체험하는 누구나",
     price: "무료",
     buttonText: "무료로 시작하기",
     featured: false,
     assurance: "카드 불필요",
     features: [
-      { text: "광고 매체 연동 1개", enabled: true },
-      { text: "기본 대시보드 제공", enabled: true },
-      { text: "1주 데이터 보관", enabled: true },
+      { text: "광고 매체 연동 최대 3개", enabled: true },
+      { text: "멤버 1명", enabled: true },
+      { text: "단일 워크스페이스", enabled: true },
       { text: "AI 성과 리포트", enabled: false },
-      { text: "우선 지원 서비스", enabled: false },
+      { text: "분석보고서 이메일 전송", enabled: false },
     ],
   },
   {
-    name: "프로",
-    target: "성장하는 B2B 마케터",
-    price: "₩39,000",
+    name: "스타터",
+    target: "1인 창업자",
+    price: "₩30,000",
+    priceUnit: "/월",
+    priceSubText: "(부가세 별도)",
+    buttonText: "시작하기",
+    featured: false,
+    assurance: "카드 필요",
+    features: [
+      { text: "광고 매체 연동 최대 10개", enabled: true },
+      { text: "멤버 1명", enabled: true },
+      { text: "워크스페이스 최대 5개", enabled: true },
+      { text: "AI 요약 기능", enabled: true },
+      { text: "분석보고서 이메일 전송", enabled: false },
+    ],
+  },
+  {
+    name: "팀",
+    target: "소규모 팀 (2~10인)",
+    price: "₩150,000",
     priceUnit: "/월",
     priceSubText: "(부가세 별도)",
     buttonText: "14일 무료 체험하기",
     featured: true,
-    assurance: "무료 체험 가능 · 카드 불필요",
+    assurance: "무료 체험 가능 · 카드 필요",
     features: [
-      { text: "모든 매체 무제한 연동", enabled: true },
-      { text: "맞춤형 대시보드 커스텀", enabled: true },
-      { text: "3년 데이터 보관", enabled: true },
-      { text: "주간 AI 성과 리포트", enabled: true },
-      { text: "이메일 및 채널톡 지원", enabled: true },
+      { text: "광고 매체 연동 최대 30개", enabled: true },
+      { text: "멤버 최대 10명", enabled: true },
+      { text: "워크스페이스 최대 10개", enabled: true },
+      { text: "AI 요약 기능", enabled: true },
+      { text: "분석보고서 이메일 전송", enabled: true },
     ],
   },
   {
-    name: "엔터프라이즈",
-    target: "엔터프라이즈 및 에이전시",
-    price: "문의",
+    name: "프로",
+    target: "성장 기업 및 에이전시",
+    price: "₩500,000",
+    priceUnit: "/월",
+    priceSubText: "(부가세 별도)",
     buttonText: "영업팀에 문의",
     featured: false,
     assurance: "맞춤 견적 · 데모 제공",
     features: [
-      { text: "권한별 워크스페이스 관리", enabled: true },
-      { text: "전용 API 및 웹훅 제공", enabled: true },
-      { text: "데이터 보관 무제한", enabled: true },
+      { text: "광고 매체 연동 무제한", enabled: true },
+      { text: "멤버 무제한", enabled: true },
+      { text: "워크스페이스 무제한", enabled: true },
+      { text: "광고 성과 변화 알림 및 실시간 대응", enabled: true },
       { text: "전담 어카운트 매니저(AM)", enabled: true },
-      { text: "SSO(SAML) 및 보안 인증", enabled: true },
     ],
   },
 ];
@@ -84,8 +103,16 @@ export default function LandingPricing() {
   return (
     <section
       id="pricing"
-      className="py-24 md:py-40 bg-landing-section relative scroll-mt-20"
+      className="py-24 md:py-40 bg-landing-section relative scroll-mt-20 overflow-hidden"
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-55"
+        style={{
+          backgroundImage:
+            "radial-gradient(900px 420px at 20% 0%, rgba(96,136,254,0.18), transparent 62%), radial-gradient(900px 420px at 85% 15%, rgba(46,180,255,0.14), transparent 60%)",
+        }}
+      />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-16"
@@ -100,7 +127,7 @@ export default function LandingPricing() {
           />
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-7 max-w-7xl mx-auto items-stretch">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -112,9 +139,9 @@ export default function LandingPricing() {
                 delay: i * 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`bg-white rounded-[28px] p-8 relative transition-[box-shadow,transform,border-color] duration-300 ${
+              className={`bg-white rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
                 plan.featured
-                  ? "order-first md:order-none border border-logo-2/55 shadow-[0_18px_55px_rgba(96,136,254,0.14)] -translate-y-1"
+                  ? "order-first md:order-0 border border-logo-2/55 shadow-[0_18px_55px_rgba(96,136,254,0.14)] -translate-y-1"
                   : "border border-chart-inactive/70 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.06)]"
               }`}
             >
@@ -127,11 +154,13 @@ export default function LandingPricing() {
               <h3 className="text-xl font-bold text-text-main mb-2">
                 {plan.name}
               </h3>
-              <p className="text-text-sub text-sm mb-6">{plan.target}</p>
+              <p className="text-text-sub text-sm mb-6 leading-relaxed break-keep">
+                {plan.target}
+              </p>
 
               <div className="mb-7">
                 <div className="flex items-end gap-2">
-                  <span className="text-[40px] leading-none font-extrabold tracking-[-0.02em] text-text-main">
+                  <span className="text-[30px] leading-none font-extrabold tracking-[-0.02em] text-text-main">
                     {plan.price}
                   </span>
                   {plan.priceUnit && (
@@ -149,11 +178,9 @@ export default function LandingPricing() {
 
               <button
                 className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
-                  plan.name === "엔터프라이즈"
-                    ? "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
-                    : plan.featured
-                      ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"
-                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
+                  plan.featured
+                    ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"
+                    : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
                 }`}
               >
                 {plan.buttonText}
@@ -164,12 +191,20 @@ export default function LandingPricing() {
               <div className="h-px w-full bg-chart-inactive/70 mb-7" />
 
               <ul
-                className={`space-y-4 text-sm font-body2 ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
+                className={`space-y-4 text-sm font-body2 flex-1 ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
               >
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-3">
                     <CheckIcon enabled={feature.enabled} />
-                    {feature.text}
+                    <span
+                      className={
+                        feature.enabled
+                          ? "text-current"
+                          : "text-text-disabled line-through decoration-text-disabled/70"
+                      }
+                    >
+                      {feature.text}
+                    </span>
                   </li>
                 ))}
               </ul>

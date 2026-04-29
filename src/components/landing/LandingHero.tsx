@@ -49,7 +49,7 @@ export default function LandingHero() {
             to="/login"
             className="inline-flex items-center justify-center rounded-xl bg-transparent text-white active-scale transition-smooth hover:bg-white/12 font-semibold py-[14px] px-[28px] border-[1.5px] border-white/70"
           >
-            광고하고 사례
+            로그인
           </Link>
         </div>
       </motion.div>

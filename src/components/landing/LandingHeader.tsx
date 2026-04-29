@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import logo2 from "../../assets/mockup/logo_test/logo_2.png";
-
-const logo = logo2;
+import LogoImage from "@/assets/mockup/logo_test/logo_2.png";
 
 const navItems = [
   { label: "기능", targetId: "features" },
@@ -19,12 +17,25 @@ export default function LandingHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    function onScroll() {
-      setIsScrolled(window.scrollY > 8);
+    let rafId: number | null = null;
+
+    function update() {
+      rafId = null;
+      const next = window.scrollY > 8;
+      setIsScrolled((prev) => (prev === next ? prev : next));
     }
-    onScroll();
+
+    function onScroll() {
+      if (rafId != null) return;
+      rafId = window.requestAnimationFrame(update);
+    }
+
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      if (rafId != null) window.cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (
@@ -41,7 +52,7 @@ export default function LandingHeader() {
           aria-label="WhereYouAd 홈"
           className="flex items-center gap-2 text-text-main"
         >
-          <img src={logo} alt="" aria-hidden className="h-6 w-auto" />
+          <img src={LogoImage} alt="" aria-hidden className="h-6 w-auto" />
         </Link>
       </div>
 

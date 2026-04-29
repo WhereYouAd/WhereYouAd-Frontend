@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
+        path: "/",
+        element: <Navigate to="/landing" replace />,
+      },
+      {
         path: "/landing",
         element: (
           <React.Suspense fallback={null}>

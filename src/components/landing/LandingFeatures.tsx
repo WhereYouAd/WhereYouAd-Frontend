@@ -138,7 +138,7 @@ function WorkspaceGraphic() {
   return (
     <div
       ref={containerRef}
-      className="bg-white rounded-component-lg shadow-[0_14px_32px_rgba(0,0,0,0.06)] w-[280px] p-4 flex flex-col gap-4 border border-chart-inactive/60"
+      className="bg-white rounded-component-lg shadow-[0_14px_32px_rgba(0,0,0,0.06)] w-70 p-4 flex flex-col gap-4 border border-chart-inactive/60"
     >
       <div className="flex gap-3">
         <div className="w-7 h-7 bg-brand-300 overflow-hidden shrink-0 mt-0.5 rounded-full flex items-center justify-center border border-chart-inactive/70">

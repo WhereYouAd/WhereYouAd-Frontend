@@ -71,17 +71,17 @@ const pages: TGuidePage[] = [
     label: "일정 관리 타임라인",
     title: "타임라인으로 캠페인 일정을 계획하세요",
     description:
-      "간트 차트 방식으로 전체 캠페인 기간을 시각화하고, 팀원 업무를 체계적으로 배분합니다.",
+      "간트 차트 방식으로 전체 캠페인 기간을 시각화하고, 기간별 성과를 비교합니다.",
     steps: [
       {
         step: 1,
-        title: "일정을 한눈에 파악",
+        title: "캠페인을 한눈에 파악",
         text: "타임라인 뷰에서 캠페인 일정을 주·월 단위로 한눈에 확인합니다.",
       },
       {
         step: 2,
-        title: "드래그로 기간 조정",
-        text: "드래그 앤 드롭으로 기간을 조정하고 마일스톤을 설정합니다.",
+        title: "기간별 성과 세부 확인",
+        text: "타임라인 바를 클릭하면 해당 기간의 클릭수, 전환 등 세부 성과 지표를 확인할 수 있습니다.",
       },
     ],
     image: TimelineDashboard,
@@ -164,7 +164,7 @@ export default function LandingGuide() {
               </motion.div>
 
               <motion.div
-                className="w-full md:w-2/5 md:max-w-[480px] flex flex-col gap-5"
+                className="w-full md:w-2/5 md:max-w-120 flex flex-col gap-5"
                 initial={{ opacity: 0, x: page.reverse ? -42 : 42 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
