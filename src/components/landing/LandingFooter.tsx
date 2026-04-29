@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 export default function LandingFooter() {
   return (
     <footer className="bg-footer-bg text-text-disabled py-16 px-6 md:px-12">
@@ -11,15 +9,16 @@ export default function LandingFooter() {
             </div>
           </div>
           <div className="flex items-center gap-8 font-body2">
-            <Link to="#" className="hover:text-white transition-colors">
-              이용약관
-            </Link>
-            <Link to="#" className="hover:text-white transition-colors">
+            <span className="text-text-disabled/70 select-none">이용약관</span>
+            <span className="text-text-disabled/70 select-none">
               개인정보처리방침
-            </Link>
-            <Link to="#" className="hover:text-white transition-colors">
+            </span>
+            <a
+              href="mailto:whereyouadofficial@gmail.com"
+              className="hover:text-white transition-colors"
+            >
               고객센터
-            </Link>
+            </a>
           </div>
         </div>
         <div className="mt-16 pt-8 border-t border-footer-border text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
