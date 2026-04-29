@@ -22,14 +22,14 @@ const PLATFORMS: TPlatform[] = [
       <img
         src={NaverWordmarkPng}
         alt="Naver"
-        className="h-[15px] w-auto object-contain"
+        className="h-[13px] w-auto object-contain"
       />
     ),
   },
   {
     id: "kakao",
     label: "Kakao",
-    content: <KakaoWordmark className="h-[20px] w-auto" />,
+    content: <KakaoWordmark className="h-[18px] w-auto" />,
   },
   {
     id: "google",

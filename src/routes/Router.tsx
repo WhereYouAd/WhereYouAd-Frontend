@@ -8,8 +8,9 @@ import AuthLayout from "@/layout/auth/AuthLayout";
 import GlobalLayout from "@/layout/GlobalLayout";
 import MainLayout from "@/layout/main/MainLayout";
 import Error from "@/pages/common/Error";
-import LandingPage from "@/pages/LandingPage";
 import useAuthStore from "@/store/useAuthStore";
+
+const LandingPage = React.lazy(() => import("@/pages/LandingPage"));
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -33,7 +34,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/landing",
-        element: <LandingPage />,
+        element: (
+          <React.Suspense fallback={null}>
+            <LandingPage />
+          </React.Suspense>
+        ),
       },
       {
         element: <AuthLayout />,
