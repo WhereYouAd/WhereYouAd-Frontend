@@ -105,7 +105,12 @@ export default function GuideOverviewChart() {
         className="h-full flex flex-col"
         title="실시간 트래픽 변화"
         description={
-          <ChartLegend items={[{ label: "클릭수", colorClass: "bg-logo-2" }]} />
+          <ChartLegend
+            items={[
+              { label: "클릭수", colorClass: "bg-logo-2" },
+              { label: "예측 클릭수", colorClass: "bg-brand-500" },
+            ]}
+          />
         }
       >
         <Suspense

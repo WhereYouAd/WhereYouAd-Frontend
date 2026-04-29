@@ -43,6 +43,8 @@ export default function Sidebar() {
     location,
   } = useSidebar();
 
+  const pathname = location.pathname.replace(/\/+$/, "") || "/";
+
   return (
     <div
       className={twMerge(
@@ -80,18 +82,17 @@ export default function Sidebar() {
                 if (!c.path) return false;
 
                 if (c.path === "/dashboard") {
-                  return location.pathname === "/dashboard";
+                  return pathname === "/dashboard";
                 }
 
-                return location.pathname.startsWith(c.path);
+                return pathname.startsWith(c.path);
               }) ?? false;
 
             const isParentActive =
               (item.path &&
                 item.path !== "/dashboard" &&
-                location.pathname.startsWith(item.path)) ||
-              (item.path === "/dashboard" &&
-                location.pathname === "/dashboard") ||
+                pathname.startsWith(item.path)) ||
+              (item.path === "/dashboard" && pathname === "/dashboard") ||
               isChildActive;
 
             const showChevron =

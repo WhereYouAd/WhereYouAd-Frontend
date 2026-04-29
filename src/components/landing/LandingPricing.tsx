@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
@@ -100,6 +101,19 @@ function CheckIcon({ enabled }: { enabled: boolean }) {
 }
 
 export default function LandingPricing() {
+  const navigate = useNavigate();
+
+  function handleCta(planName: string) {
+    if (planName === "프로") {
+      const subject = encodeURIComponent("WhereYouAd 요금제 문의");
+      const body = encodeURIComponent("문의하실 내용을 입력해 주세요.");
+      window.location.href = `mailto:contact@whereyouad.com?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    navigate("/signup", { replace: false });
+  }
+
   return (
     <section
       id="pricing"
@@ -177,6 +191,8 @@ export default function LandingPricing() {
               </div>
 
               <button
+                type="button"
+                onClick={() => handleCta(plan.name)}
                 className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
                   plan.featured
                     ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"

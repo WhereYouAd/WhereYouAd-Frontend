@@ -74,8 +74,9 @@ function IntegrationGraphic() {
 function WorkflowGraphic() {
   return (
     <div className="absolute left-0 bg-white/85 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-[0_18px_50px_rgba(0,0,0,0.08)] border border-chart-inactive/60">
-      <button
-        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-md shadow-logo-2/20 relative overflow-hidden"
+      <div
+        aria-hidden
+        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-md shadow-logo-2/20 relative overflow-hidden select-none"
         style={{
           background:
             "linear-gradient(135deg, var(--color-logo-1), var(--color-logo-2))",
@@ -103,10 +104,13 @@ function WorkflowGraphic() {
           AI로 요약하기
         </span>
         <SparkleIcon className="w-4.5 h-auto ml-0.5 text-white fill-current" />
-      </button>
-      <button className="text-text-sub text-[14px] font-body2 px-4 py-1.5 rounded-full border border-chart-inactive/70 bg-white/60 hover:bg-white transition-colors shrink-0">
+      </div>
+      <div
+        aria-hidden
+        className="text-text-sub text-[14px] font-body2 px-4 py-1.5 rounded-full border border-chart-inactive/70 bg-white/60 shrink-0 select-none"
+      >
         다운로드
-      </button>
+      </div>
     </div>
   );
 }
@@ -158,15 +162,17 @@ function WorkspaceGraphic() {
       </div>
 
       <div className="mt-1 flex items-center gap-2 bg-brand-300/70 border border-chart-inactive/70 rounded-full p-1 pl-4">
-        <input
-          readOnly
-          value={typedText}
-          className="text-[13px] text-text-sub font-medium flex-1 pt-0.5 bg-transparent border-0 outline-none"
-        />
+        <div
+          aria-hidden
+          className="text-[13px] text-text-sub font-medium flex-1 pt-0.5 bg-transparent border-0 outline-none truncate"
+        >
+          {typedText}
+        </div>
         {showCursor && (
           <span className="text-logo-2 animate-pulse font-normal -ml-1">|</span>
         )}
-        <button
+        <div
+          aria-hidden
           className="w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 shadow-sm"
           style={{
             background:
@@ -174,7 +180,7 @@ function WorkspaceGraphic() {
           }}
         >
           <ChevronUp className="text-white w-3.5 h-3.5" />
-        </button>
+        </div>
       </div>
     </div>
   );
