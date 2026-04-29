@@ -12,9 +12,6 @@ export default function LandingFooter() {
           </div>
           <div className="flex items-center gap-8 font-body2">
             <Link to="#" className="hover:text-white transition-colors">
-              회사소개
-            </Link>
-            <Link to="#" className="hover:text-white transition-colors">
               이용약관
             </Link>
             <Link to="#" className="hover:text-white transition-colors">
