@@ -108,16 +108,6 @@ export function WorkspaceSwitcher({
     [currentWorkspaceId, workspaces],
   );
 
-  if (!currentWorkspace) {
-    return (
-      <div className="relative font-body1 mb-4">
-        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
-          워크스페이스 없음
-        </div>
-      </div>
-    );
-  }
-
   const renderImage = useCallback(
     (workspace: TWorkspace) => (
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
@@ -134,6 +124,16 @@ export function WorkspaceSwitcher({
     ),
     [],
   );
+
+  if (!currentWorkspace) {
+    return (
+      <div className="relative font-body1 mb-4">
+        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
+          워크스페이스 없음
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={rootRef} className={twMerge("relative mb-4", className)}>
