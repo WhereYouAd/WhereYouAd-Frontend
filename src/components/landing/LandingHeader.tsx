@@ -62,7 +62,7 @@ export default function LandingHeader() {
             key={targetId}
             type="button"
             onClick={() => scrollToSection(targetId)}
-            className="text-[15px] font-medium text-text-sub hover:text-text-main transition-colors"
+            className="text-[16px] font-medium text-text-sub hover:text-text-main transition-colors"
           >
             {label}
           </button>

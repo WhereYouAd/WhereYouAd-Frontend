@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import { lazy, Suspense } from "react";
 
 import LandingBrandIdentity from "@/components/landing/LandingBrandIdentity";
@@ -21,14 +20,7 @@ function SectionFallback({ height = 96 }: { height?: number }) {
 
 export default function LandingPage() {
   return (
-    <div
-      className="min-h-screen bg-brand-200 text-text-main flex flex-col"
-      style={
-        {
-          ["--landing-header-height" as never]: "72px",
-        } as CSSProperties
-      }
-    >
+    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:72px] md:[--landing-header-height:80px]">
       <LandingHeader />
 
       <main className="flex-1 flex flex-col">
