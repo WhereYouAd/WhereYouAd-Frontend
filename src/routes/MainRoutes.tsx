@@ -40,7 +40,7 @@ const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const MainRoutes: RouteObject[] = [
   {
-    path: "/",
+    path: "dashboard",
     element: <OverviewDashboard />,
   },
   {

@@ -17,6 +17,13 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: env.VITE_API_TARGET_URL,
           changeOrigin: true,
+          configure(proxy) {
+            proxy.on("proxyReq", (proxyReq) => {
+              // 백엔드가 Origin 기반으로 CORS 차단하는 경우(예: "Invalid CORS request")
+              // 개발 프록시에서는 브라우저의 Origin을 전달하지 않도록 제거합니다.
+              proxyReq.removeHeader("origin");
+            });
+          },
         },
       },
     },
