@@ -18,7 +18,11 @@ export default function LandingSectionHeader({
       <h2 className="font-heading1 md:text-[40px] font-bold text-text-main leading-snug tracking-tight">
         {title}
       </h2>
-      {subtitle && <p className="mt-3 font-body1 text-text-sub">{subtitle}</p>}
+      {subtitle && (
+        <p className="mt-3 font-body1 text-text-auth-sub leading-relaxed break-keep">
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

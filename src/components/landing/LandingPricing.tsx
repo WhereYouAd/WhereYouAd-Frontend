@@ -156,7 +156,7 @@ export default function LandingPricing() {
               className={`bg-white rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
                 plan.featured
                   ? "order-first md:order-0 border border-logo-2/55 shadow-[0_18px_55px_rgba(96,136,254,0.14)] -translate-y-1"
-                  : "border border-chart-inactive/70 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.06)]"
+                  : "border border-chart-inactive/70 shadow-card hover:shadow-card-hover"
               }`}
             >
               {plan.featured && (
@@ -168,7 +168,7 @@ export default function LandingPricing() {
               <h3 className="text-xl font-bold text-text-main mb-2">
                 {plan.name}
               </h3>
-              <p className="text-text-sub text-sm mb-6 leading-relaxed break-keep">
+              <p className="font-body2 text-text-auth-sub mb-6 leading-relaxed break-keep">
                 {plan.target}
               </p>
 
@@ -184,7 +184,7 @@ export default function LandingPricing() {
                   )}
                 </div>
                 {plan.priceUnit && plan.priceSubText && (
-                  <div className="mt-2 text-[13px] text-text-sub">
+                  <div className="mt-2 font-caption text-text-sub">
                     {plan.priceSubText}
                   </div>
                 )}
@@ -197,7 +197,7 @@ export default function LandingPricing() {
                   plan.featured
                     ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"
                     : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
-                }`}
+                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
               >
                 {plan.buttonText}
               </button>

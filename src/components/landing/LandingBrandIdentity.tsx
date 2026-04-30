@@ -8,7 +8,7 @@ export default function LandingBrandIdentity() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-7 md:mb-10 text-center">
           <p className="font-caption text-text-sub">Multi-device support</p>
-          <h2 className="mt-3 text-[22px] md:text-[34px] font-bold tracking-[-0.02em] text-text-main">
+          <h2 className="mt-3 font-heading2 md:text-[34px] font-bold tracking-[-0.02em] text-text-main">
             모바일·태블릿·데스크탑에서 모두 사용 가능
           </h2>
         </div>

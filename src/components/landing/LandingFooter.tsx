@@ -13,7 +13,7 @@ export default function LandingFooter() {
               href="https://www.notion.so/Where-you-ad-351085b3a16c8040b7bef7ac311da984?source=copy_link"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-footer-bg"
             >
               이용약관
             </a>
@@ -21,13 +21,13 @@ export default function LandingFooter() {
               href="https://www.notion.so/Where-you-ad-351085b3a16c80c3b171f97238e447ca?source=copy_link"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-footer-bg"
             >
               개인정보처리방침
             </a>
             <a
               href="mailto:whereyouadofficial@gmail.com"
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-footer-bg"
             >
               고객센터
             </a>

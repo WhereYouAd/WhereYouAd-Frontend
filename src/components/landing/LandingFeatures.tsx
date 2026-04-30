@@ -241,8 +241,10 @@ export default function LandingFeatures() {
               <div className="w-full aspect-4/3 bg-landing-surface rounded-4xl flex items-center justify-center mb-8 relative overflow-hidden group">
                 <Graphic />
               </div>
-              <h3 className="text-lg font-bold text-text-main mb-3">{title}</h3>
-              <p className="text-landing-muted text-[15px] leading-relaxed max-w-70">
+              <h3 className="font-heading4 font-bold! text-text-main mb-3">
+                {title}
+              </h3>
+              <p className="font-body2 text-text-auth-sub leading-relaxed max-w-70">
                 {description}
               </p>
             </motion.div>

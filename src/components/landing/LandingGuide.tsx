@@ -133,7 +133,7 @@ export default function LandingGuide() {
                 className={`w-full md:w-3/5 rounded-component-lg overflow-hidden ${
                   page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
-                    : "bg-white shadow-[0_12px_30px_rgba(0,0,0,0.04)] border border-chart-inactive/70"
+                    : "bg-white shadow-card border border-chart-inactive/70"
                 }`}
                 initial={{ opacity: 0, x: page.reverse ? 42 : -42 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -198,7 +198,7 @@ export default function LandingGuide() {
                       className="rounded-component-md border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="font-body1 font-bold text-text-main leading-snug break-keep text-balance">
+                        <span className="font-body1 font-semibold text-text-main leading-snug break-keep text-balance">
                           {item.title}
                         </span>
                       </div>

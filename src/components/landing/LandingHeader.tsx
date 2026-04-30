@@ -50,7 +50,7 @@ export default function LandingHeader() {
         <Link
           to="/"
           aria-label="WhereYouAd 홈"
-          className="flex items-center gap-2 text-text-main"
+          className="flex items-center gap-2 text-text-main rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           <img src={LogoImage} alt="" aria-hidden className="h-6 w-auto" />
         </Link>
@@ -62,7 +62,7 @@ export default function LandingHeader() {
             key={targetId}
             type="button"
             onClick={() => scrollToSection(targetId)}
-            className="text-[16px] font-medium text-text-sub hover:text-text-main transition-colors"
+            className="text-[16px] font-medium text-text-sub hover:text-text-main transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             {label}
           </button>
