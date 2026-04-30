@@ -9,7 +9,6 @@ import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
-import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 // import Logo from "@/assets/logo/symbol-color.svg?react";
 
@@ -34,22 +33,16 @@ function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
 }
 
 export default function Sidebar() {
-  const {
-    isCollapsed,
-    openId,
-    setOpenId,
-    toggleSidebar,
-    handleItemClick,
-    location,
-  } = useSidebar();
+  const { isCollapsed, openId, setOpenId, handleItemClick, location } =
+    useSidebar();
 
   const pathname = location.pathname.replace(/\/+$/, "") || "/";
 
   return (
     <div
       className={twMerge(
-        "relative z-20 flex h-full flex-col bg-white rounded-component-lg shadow-Soft transition-all duration-200 ease-in-out",
-        isCollapsed ? "w-25" : "w-64",
+        "relative z-20 flex h-full flex-col bg-white border-r border-bg-surface transition-all duration-200 ease-in-out",
+        isCollapsed ? "w-22" : "w-64",
       )}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col">
@@ -57,20 +50,6 @@ export default function Sidebar() {
         <div className="gap-1 px-2">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
-
-        <button
-          type="button"
-          aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
-          onClick={toggleSidebar}
-          className="absolute -right-3 top-2 flex h-6 w-6 items-center justify-center rounded-component-sm bg-white border border-bg-surface transition hover:bg-bg-surface"
-        >
-          <CollapseIcon
-            className={twMerge(
-              "h-2 w-2 transition-transform duration-200",
-              isCollapsed ? "rotate-180" : "",
-            )}
-          />
-        </button>
 
         {/* Main */}
         <nav className="flex flex-1 flex-col gap-1 px-2">

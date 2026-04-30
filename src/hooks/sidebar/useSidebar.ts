@@ -3,10 +3,13 @@ import { useLocation } from "react-router-dom";
 
 import { mainNav } from "@/constants/sidebarNav";
 
+import useSidebarStore from "@/store/useSidebarStore";
+
 export const useSidebar = () => {
   const location = useLocation();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const isCollapsed = useSidebarStore((s) => s.isCollapsed);
+  const setIsCollapsed = useSidebarStore((s) => s.setIsCollapsed);
 
   const lastPathRef = useRef("");
 
@@ -23,11 +26,8 @@ export const useSidebar = () => {
   }, [location.pathname, isCollapsed]);
 
   const toggleSidebar = () => {
-    setIsCollapsed((prev) => {
-      const next = !prev;
-      if (next) lastPathRef.current = "";
-      return next;
-    });
+    setIsCollapsed(!isCollapsed);
+    if (!isCollapsed) lastPathRef.current = "";
     setOpenId(null);
   };
 
