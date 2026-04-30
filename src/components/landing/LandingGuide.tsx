@@ -28,8 +28,8 @@ const pages: TGuidePage[] = [
     number: "01",
     label: "통합 대시보드",
     title: "광고 현황을 한눈에 파악하세요",
-    description:
-      "주요 KPI부터 채널별 성과, 실시간 알림까지 모든 정보를 하나의 화면에서 확인할 수 있습니다.",
+    description: `주요 KPI부터 채널별 성과, 실시간 알림까지
+모든 정보를 하나의 화면에서 확인할 수 있습니다.`,
     steps: [
       {
         step: 1,
@@ -49,8 +49,8 @@ const pages: TGuidePage[] = [
     number: "02",
     label: "매체 통합 관리",
     title: "플랫폼별 캠페인을 한 곳에서 관리하세요",
-    description:
-      "다수의 광고 매체를 별도 로그인 없이 통합 관리하고, 캠페인 설정부터 소재 심사까지 원스톱으로 처리합니다.",
+    description: `다수의 광고 매체를 별도 로그인 없이 통합 관리하고
+캠페인 설정부터 소재 심사까지 원스톱으로 처리합니다.`,
     steps: [
       {
         step: 1,
@@ -70,8 +70,8 @@ const pages: TGuidePage[] = [
     number: "03",
     label: "일정 관리 타임라인",
     title: "타임라인으로 캠페인 일정을 계획하세요",
-    description:
-      "간트 차트 방식으로 전체 캠페인 기간을 시각화하고, 기간별 성과를 비교합니다.",
+    description: `간트 차트 방식으로 전체 캠페인 기간을 시각화하고
+기간별 성과를 비교합니다.`,
     steps: [
       {
         step: 1,
@@ -187,7 +187,7 @@ export default function LandingGuide() {
                   {page.title}
                 </h3>
 
-                <p className="font-body1 text-text-auth-sub leading-relaxed break-keep">
+                <p className="font-body1 text-text-auth-sub leading-relaxed break-keep whitespace-pre-line">
                   {page.description}
                 </p>
 
