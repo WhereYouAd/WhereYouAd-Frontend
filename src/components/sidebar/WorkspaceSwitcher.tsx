@@ -12,7 +12,13 @@ import { getMyWorkspaces, saveSelectedWorkspace } from "@/api/workspace/org";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
+export function WorkspaceSwitcher({
+  isCollapsed,
+  className,
+}: {
+  isCollapsed: boolean;
+  className?: string;
+}) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -92,7 +98,7 @@ export function WorkspaceSwitcher({ isCollapsed }: { isCollapsed: boolean }) {
   );
 
   return (
-    <div className="relative mb-4">
+    <div className={twMerge("relative mb-4", className)}>
       <button
         type="button"
         aria-expanded={isOpen}

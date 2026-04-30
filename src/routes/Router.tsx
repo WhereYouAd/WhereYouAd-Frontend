@@ -13,11 +13,6 @@ import useAuthStore from "@/store/useAuthStore";
 const LandingPage = React.lazy(() => import("@/pages/landing/LandingPage"));
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  // TEMP: 대시보드 접근 테스트용 (로그인 가드 비활성화)
-  // 필요 시 false로 되돌리거나, 아래 로직을 원복하세요.
-  const TEMP_DISABLE_AUTH_GUARD = true;
-  if (TEMP_DISABLE_AUTH_GUARD) return <>{children}</>;
-
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isTokenInitialized = useAuthStore((state) => state.isTokenInitialized);
 

@@ -8,7 +8,6 @@ import type { TWorkspace } from "@/types/workspace/workspace";
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
-import PageHeader from "@/components/common/PageHeader";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceCard from "@/components/workspace/WorkspaceCard";
 import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
@@ -164,10 +163,6 @@ export default function WorkspacePage() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <PageHeader
-        title="워크스페이스 관리"
-        description="워크스페이스 정보를 확인하고 관리하세요."
-      />
       <div className="flex items-center justify-between gap-4 tablet:flex-col tablet:items-stretch">
         <div className="flex-1 tablet:w-full">
           <Input

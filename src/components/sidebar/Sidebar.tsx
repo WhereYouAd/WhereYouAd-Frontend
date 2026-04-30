@@ -9,6 +9,7 @@ import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
+import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 // import Logo from "@/assets/logo/symbol-color.svg?react";
 
@@ -33,21 +34,27 @@ function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
 }
 
 export default function Sidebar() {
-  const { isCollapsed, openId, setOpenId, handleItemClick, location } =
-    useSidebar();
+  const {
+    isCollapsed,
+    openId,
+    setOpenId,
+    handleItemClick,
+    location,
+    toggleSidebar,
+  } = useSidebar();
 
   const pathname = location.pathname.replace(/\/+$/, "") || "/";
 
   return (
     <div
       className={twMerge(
-        "relative z-20 flex h-full flex-col bg-white border-r border-bg-surface transition-all duration-200 ease-in-out",
+        "relative z-40 flex h-full flex-col bg-white border-r border-bg-surface transition-all duration-200 ease-in-out",
         isCollapsed ? "w-22" : "w-64",
       )}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col">
         {/* Top */}
-        <div className="gap-1 px-2">
+        <div className="px-2">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
@@ -138,7 +145,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className={twMerge("py-2 mb-3", isCollapsed ? "" : "px-2")}>
+        <div className={twMerge("mt-2 pb-3", isCollapsed ? "" : "px-2")}>
           {footerNav.map((item) => {
             const isActive = item.path
               ? location.pathname === item.path
@@ -160,6 +167,35 @@ export default function Sidebar() {
               </div>
             );
           })}
+
+          <div className="mt-2 pt-2 border-t border-bg-surface">
+            <button
+              type="button"
+              aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
+              onClick={toggleSidebar}
+              className={twMerge(
+                "w-full h-[55px] rounded-component-md text-sm transition-all duration-200 inline-flex items-center",
+                isCollapsed ? "justify-center px-0" : "gap-4 px-3",
+                "text-text-auth-sub hover:text-chart-3 hover:bg-bg-surface",
+              )}
+            >
+              <CollapseIcon
+                className={twMerge(
+                  "h-5 w-5 shrink-0 transition-transform duration-200",
+                  isCollapsed ? "rotate-180" : "",
+                  isCollapsed ? "" : "ml-2",
+                )}
+              />
+              <span
+                className={twMerge(
+                  "whitespace-nowrap transition-opacity duration-200",
+                  isCollapsed ? "opacity-0 w-0 invisible" : "opacity-100 ml-0",
+                )}
+              >
+                {isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

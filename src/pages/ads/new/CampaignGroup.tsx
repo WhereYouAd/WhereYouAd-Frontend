@@ -7,7 +7,6 @@ import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
-import PageHeader from "@/components/common/PageHeader";
 import DropdownSelect from "@/components/common/select/DropdownSelect";
 import TextareaField from "@/components/common/textarea/TextareaField";
 
@@ -41,11 +40,6 @@ export default function CampaignGroup() {
   return (
     <section className="flex flex-col items-center w-full pt-0 pb-20 min-h-screen bg-bg-surface/30">
       <div className="flex flex-col gap-8 w-full max-w-4xl">
-        <PageHeader
-          title="캠페인 그룹 정보 설정"
-          description="각 플랫폼의 동일한 캠페인들을 그룹으로 묶어, 플랫폼 경계 없이 하나의 통합 캠페인으로 관리하세요."
-        />
-
         {/* 캠페인 기본 정보 */}
         <Card className="flex flex-col gap-8 p-10 shadow-sm bg-white">
           <div className="border-l-3 border-text-auth-sub pl-4 py-1">

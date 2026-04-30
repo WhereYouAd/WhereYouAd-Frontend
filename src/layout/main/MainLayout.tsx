@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { mainNav } from "@/constants/sidebarNav";
+import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -9,15 +9,12 @@ import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
-import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
-import useSidebarStore from "@/store/useSidebarStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function MainLayout() {
   useCoreQuery(["myInfo"], getMyInfo);
   const location = useLocation();
-  const isCollapsed = useSidebarStore((s) => s.isCollapsed);
-  const toggleSidebar = useSidebarStore((s) => s.toggleSidebar);
+  const [headerRight, setHeaderRight] = useState<ReactNode | null>(null);
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
@@ -74,6 +71,12 @@ export default function MainLayout() {
         return { parentLabel: parent.label, currentLabel: parent.label };
       }
     }
+
+    const exactFooter = footerNav.find((item) => item.path === pathname);
+    if (exactFooter) {
+      return { parentLabel: "", currentLabel: exactFooter.label };
+    }
+
     return { parentLabel: "", currentLabel: "" };
   }, [pathname]);
 
@@ -81,39 +84,29 @@ export default function MainLayout() {
     <div className="fixed inset-0 box-border flex overflow-hidden bg-gray-50">
       <Sidebar />
       <main className="flex-1 min-w-0 min-h-0 overflow-y-auto">
-        <header className="sticky top-0 z-30 bg-gray-50/85 backdrop-blur-sm border-b border-bg-surface">
+        <header className="sticky top-0 z-30 bg-white border-b border-bg-surface">
           <div className="h-14 px-6 tablet:px-4 flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <button
-                type="button"
-                aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
-                onClick={toggleSidebar}
-                className="h-10 w-10 inline-flex items-center justify-center rounded-xl bg-white border border-bg-surface shadow-Soft hover:bg-bg-surface transition-smooth active-scale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-50 shrink-0"
-              >
-                <CollapseIcon
-                  className={`h-3 w-3 transition-transform duration-200 ${isCollapsed ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              <div className="flex flex-col min-w-0">
-                {parentLabel && currentLabel ? (
-                  <p className="font-caption text-text-sub truncate">
-                    {parentLabel} / {currentLabel}
-                  </p>
-                ) : (
-                  <p className="font-caption text-text-sub truncate"> </p>
-                )}
-                <p className="font-body1 text-text-main font-semibold truncate">
-                  {currentLabel || parentLabel || " "}
-                </p>
-              </div>
+            <div className="min-w-0 flex items-center gap-2">
+              {parentLabel ? (
+                <>
+                  <span className="font-body1 text-text-sub truncate">
+                    {parentLabel}
+                  </span>
+                  <span className="text-text-placeholder" aria-hidden="true">
+                    /
+                  </span>
+                </>
+              ) : null}
+              <span className="font-body1 text-[18px] text-text-main font-semibold truncate">
+                {currentLabel || parentLabel || " "}
+              </span>
             </div>
 
-            <div />
+            <div className="flex items-center gap-2">{headerRight}</div>
           </div>
         </header>
         <div className="mx-auto w-full max-w-400 min-w-0 py-6 px-lg tablet:px-6">
-          <Outlet />
+          <Outlet context={{ setHeaderRight }} />
         </div>
       </main>
     </div>
