@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
@@ -21,6 +22,7 @@ export function WorkspaceSwitcher({
 }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
@@ -31,10 +33,13 @@ export function WorkspaceSwitcher({
     getMyWorkspaces,
   );
 
-  const currentWorkspace =
-    workspaces.find((w) => w.orgId === selectedOrgId) ||
-    workspaces.find((w) => w.isCurrentWorkspace) ||
-    workspaces[0];
+  const currentWorkspace = useMemo(
+    () =>
+      workspaces.find((w) => w.orgId === selectedOrgId) ||
+      workspaces.find((w) => w.isCurrentWorkspace) ||
+      workspaces[0],
+    [selectedOrgId, workspaces],
+  );
 
   useEffect(() => {
     if (selectedOrgId === null || workspaces.length === 0) return;
@@ -70,6 +75,39 @@ export function WorkspaceSwitcher({
     }
   }, [isCollapsed]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
+      const root = rootRef.current;
+      if (!root) return;
+      if (!root.contains(e.target as Node)) setIsOpen(false);
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+
+    window.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("touchstart", onPointerDown, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("touchstart", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen]);
+
+  const currentWorkspaceId = currentWorkspace?.orgId;
+  const otherWorkspaces = useMemo(
+    () =>
+      currentWorkspaceId
+        ? workspaces.filter((w) => w.orgId !== currentWorkspaceId)
+        : [],
+    [currentWorkspaceId, workspaces],
+  );
+
   if (!currentWorkspace) {
     return (
       <div className="relative font-body1 mb-4">
@@ -79,26 +117,26 @@ export function WorkspaceSwitcher({
       </div>
     );
   }
-  const otherWorkspaces = workspaces.filter(
-    (w) => w.orgId !== currentWorkspace.orgId,
-  );
 
-  const renderImage = (workspace: TWorkspace) => (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
-      {workspace?.logoUrl ? (
-        <img
-          src={workspace.logoUrl}
-          className="w-full h-full object-cover"
-          alt={`${workspace.name} 로고`}
-        />
-      ) : (
-        workspace?.name?.[0] || "W"
-      )}
-    </div>
+  const renderImage = useCallback(
+    (workspace: TWorkspace) => (
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
+        {workspace?.logoUrl ? (
+          <img
+            src={workspace.logoUrl}
+            className="w-full h-full object-cover"
+            alt={`${workspace.name} 로고`}
+          />
+        ) : (
+          workspace?.name?.[0] || "W"
+        )}
+      </div>
+    ),
+    [],
   );
 
   return (
-    <div className={twMerge("relative mb-4", className)}>
+    <div ref={rootRef} className={twMerge("relative mb-4", className)}>
       <button
         type="button"
         aria-expanded={isOpen}
@@ -135,63 +173,83 @@ export function WorkspaceSwitcher({
       </button>
 
       {/* dropdown */}
-      {isOpen && (
-        <div
-          id="workspace-list"
-          className={twMerge(
-            "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface",
-            // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
-            isCollapsed
-              ? "left-full top-0 ml-2 w-58"
-              : "left-1 -right-5 top-full mt-1",
-          )}
-        >
-          {/* 워크스페이스 목록 */}
-          <div className="flex-1 overflow-y-auto max-h-100">
-            {otherWorkspaces.map((org, index) => (
-              <div key={org.orgId}>
-                {index !== 0 && (
-                  <div className="my-1 border-t border-bg-surface" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    saveWorkspace(org.orgId);
-                  }}
-                  className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
-                >
-                  {renderImage(org)}
-                  <div className="flex flex-col flex-1 min-w-0 items-start">
-                    <span className="truncate w-full text-left font-body2 text-text-main">
-                      {org.name}
-                    </span>
-                    <span className="font-caption text-text-disabled mt-0.5">
-                      {org.myRole === "ADMIN" ? "관리자" : "멤버"}
-                    </span>
-                  </div>
-                </button>
-              </div>
-            ))}
-          </div>
+      <AnimatePresence initial={false}>
+        {isOpen ? (
+          <motion.div
+            id="workspace-list"
+            className={twMerge(
+              "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface origin-top",
+              // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
+              isCollapsed
+                ? "left-full top-0 ml-2 w-58"
+                : "left-1 -right-5 top-full mt-1",
+            )}
+            initial={
+              isCollapsed
+                ? { opacity: 0, x: -10, scale: 0.98 }
+                : { opacity: 0, y: -6, scale: 0.98 }
+            }
+            animate={
+              isCollapsed
+                ? { opacity: 1, x: 0, scale: 1 }
+                : { opacity: 1, y: 0, scale: 1 }
+            }
+            exit={
+              isCollapsed
+                ? { opacity: 0, x: -10, scale: 0.98 }
+                : { opacity: 0, y: -6, scale: 0.98 }
+            }
+            transition={{ type: "spring", stiffness: 420, damping: 34 }}
+          >
+            {/* 워크스페이스 목록 */}
+            <div className="flex-1 overflow-y-auto max-h-100">
+              {otherWorkspaces.map((org, index) => (
+                <div key={org.orgId}>
+                  {index !== 0 && (
+                    <div className="my-1 border-t border-bg-surface" />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      saveWorkspace(org.orgId);
+                    }}
+                    className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
+                  >
+                    {renderImage(org)}
+                    <div className="flex flex-col flex-1 min-w-0 items-start">
+                      <span className="truncate w-full text-left font-body2 text-text-main">
+                        {org.name}
+                      </span>
+                      <span className="font-caption text-text-disabled mt-0.5">
+                        {org.myRole === "ADMIN" ? "관리자" : "멤버"}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </div>
 
-          {/* + 새 워크스페이스 */}
-          <div className="mt-1 pt-1 border-t border-bg-surface">
-            <button
-              type="button"
-              onClick={() => {
-                setIsOpen(false);
-                navigate("/workspace");
-              }}
-              className="flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-text-sub/50">
-                +
-              </div>
-              <span className="font-body2 text-text-sub">새 워크스페이스</span>
-            </button>
-          </div>
-        </div>
-      )}
+            {/* + 새 워크스페이스 */}
+            <div className="mt-1 pt-1 border-t border-bg-surface">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate("/workspace");
+                }}
+                className="flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-text-sub/50">
+                  +
+                </div>
+                <span className="font-body2 text-text-sub">
+                  새 워크스페이스
+                </span>
+              </button>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

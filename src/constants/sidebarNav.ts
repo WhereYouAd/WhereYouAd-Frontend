@@ -72,7 +72,6 @@ export const footerNav: INavItem[] = [
   {
     id: "settings",
     label: "설정",
-    path: "/setting",
     icon: SettingsIcon,
   },
 ];

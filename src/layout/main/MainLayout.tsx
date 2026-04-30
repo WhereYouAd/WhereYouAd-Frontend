@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { footerNav, mainNav } from "@/constants/sidebarNav";
+import { mainNav } from "@/constants/sidebarNav";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -72,12 +72,11 @@ export default function MainLayout() {
       }
     }
 
-    const exactFooter = footerNav.find((item) => item.path === pathname);
-    if (exactFooter) {
-      return { parentLabel: "", currentLabel: exactFooter.label };
-    }
-
     return { parentLabel: "", currentLabel: "" };
+  }, [pathname]);
+
+  useEffect(() => {
+    setHeaderRight(null);
   }, [pathname]);
 
   return (

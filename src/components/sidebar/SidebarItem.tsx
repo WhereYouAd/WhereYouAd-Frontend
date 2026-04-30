@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -11,7 +12,7 @@ interface ISidebarItemProps {
   onClick: (id: string, hasChildren: boolean) => void;
 }
 
-export function SidebarItem({
+export const SidebarItem = memo(function SidebarItem({
   item,
   isCollapsed,
   isOpen,
@@ -75,4 +76,4 @@ export function SidebarItem({
       {content}
     </button>
   );
-}
+});

@@ -1,7 +1,9 @@
-// import { NavLink } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
+
+import { isPathMatch, normalizePathname } from "@/utils/navigation/pathMatch";
 
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
@@ -39,18 +41,21 @@ export default function Sidebar() {
     openId,
     setOpenId,
     handleItemClick,
+    getItemActiveState,
     location,
     toggleSidebar,
   } = useSidebar();
 
-  const pathname = location.pathname.replace(/\/+$/, "") || "/";
+  const pathname = normalizePathname(location.pathname);
 
   return (
-    <div
+    <motion.div
       className={twMerge(
-        "relative z-40 flex h-full flex-col bg-white border-r border-bg-surface transition-all duration-200 ease-in-out",
-        isCollapsed ? "w-22" : "w-64",
+        "relative z-40 flex h-full flex-col bg-white border-r border-bg-surface",
       )}
+      initial={false}
+      animate={{ width: isCollapsed ? 88 : 256 }}
+      transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col">
         {/* Top */}
@@ -62,38 +67,12 @@ export default function Sidebar() {
         <nav className="flex flex-1 flex-col gap-1 px-2">
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
-
-            const isChildActive =
-              item.children?.some((c) => {
-                if (!c.path) return false;
-
-                if (c.path === "/dashboard") {
-                  return pathname === "/dashboard";
-                }
-
-                return pathname.startsWith(c.path);
-              }) ?? false;
-
-            const isParentActive =
-              (item.path &&
-                item.path !== "/dashboard" &&
-                pathname.startsWith(item.path)) ||
-              (item.path === "/dashboard" && pathname === "/dashboard") ||
-              isChildActive;
+            const { isParentActive } = getItemActiveState(item);
 
             const showChevron =
               !isCollapsed &&
               !!item.children?.length &&
               (isOpen || isParentActive);
-
-            // const isChildActive =
-            //   item.children?.some((c) => c.path === location.pathname) ?? false;
-            // const isParentActive =
-            //   (item.path && location.pathname === item.path) || isChildActive;
-            // const showChevron =
-            //   !isCollapsed &&
-            //   !!item.children?.length &&
-            //   (isOpen || isParentActive);
 
             return (
               <div
@@ -101,6 +80,18 @@ export default function Sidebar() {
                 className="relative flex flex-col"
                 onMouseEnter={() => isCollapsed && setOpenId(item.id)}
                 onMouseLeave={() => isCollapsed && setOpenId(null)}
+                onFocusCapture={() => {
+                  if (!isCollapsed) return;
+                  if (!item.children?.length) return;
+                  setOpenId(item.id);
+                }}
+                onBlurCapture={(e) => {
+                  if (!isCollapsed) return;
+                  if (!item.children?.length) return;
+                  if (e.currentTarget.contains(e.relatedTarget as Node | null))
+                    return;
+                  setOpenId(null);
+                }}
               >
                 <div className={getMainItemClass(isParentActive, isCollapsed)}>
                   <SidebarItem
@@ -108,9 +99,7 @@ export default function Sidebar() {
                     isCollapsed={isCollapsed}
                     isOpen={isOpen}
                     className="flex-1 h-full"
-                    onClick={() =>
-                      handleItemClick(item.id, !!item.children?.length)
-                    }
+                    onClick={handleItemClick}
                   />
                   {showChevron && (
                     <button
@@ -136,9 +125,16 @@ export default function Sidebar() {
                 </div>
 
                 {/* SubMenu */}
-                {isOpen && item.children && (
-                  <SubMenu items={item.children} isCollapsed={isCollapsed} />
-                )}
+                <AnimatePresence initial={false}>
+                  {isOpen && item.children ? (
+                    <SubMenu
+                      key={item.id}
+                      items={item.children}
+                      isCollapsed={isCollapsed}
+                      parentLabel={item.label}
+                    />
+                  ) : null}
+                </AnimatePresence>
               </div>
             );
           })}
@@ -147,9 +143,8 @@ export default function Sidebar() {
         {/* Footer */}
         <div className={twMerge("mt-2 pb-3", isCollapsed ? "" : "px-2")}>
           {footerNav.map((item) => {
-            const isActive = item.path
-              ? location.pathname === item.path
-              : false;
+            const isActive =
+              item.path != null ? isPathMatch(pathname, item.path) : false;
 
             return (
               <div
@@ -160,9 +155,7 @@ export default function Sidebar() {
                   item={item}
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
-                  onClick={() =>
-                    handleItemClick(item.id, !!item.children?.length)
-                  }
+                  onClick={handleItemClick}
                 />
               </div>
             );
@@ -198,6 +191,6 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
