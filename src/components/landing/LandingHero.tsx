@@ -24,7 +24,7 @@ export default function LandingHero() {
       />
       <div className="absolute inset-0 bg-black/35" aria-hidden />
       <motion.div
-        className="relative z-10 min-h-[calc(100dvh-72px)] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-5 pt-45 md:pt-32 pb-24"
+        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,72px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-5 pt-45 md:pt-32 pb-24"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

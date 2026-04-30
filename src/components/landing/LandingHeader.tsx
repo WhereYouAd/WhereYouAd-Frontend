@@ -40,7 +40,7 @@ export default function LandingHeader() {
 
   return (
     <header
-      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 py-4 md:px-12 transition-smooth ${
+      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-smooth h-[var(--landing-header-height,72px)] ${
         isScrolled
           ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-transparent"
           : "bg-brand-200/60 backdrop-blur-xl border-chart-inactive"
