@@ -55,7 +55,6 @@ export function WorkspaceSwitcher({
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
     onSuccess: async (_data, orgId) => {
-      // 서버 저장 성공 시에만 UI 상태 업데이트
       setSelectedOrgId(orgId);
       setIsOpen(false);
       await Promise.all([
@@ -149,7 +148,6 @@ export function WorkspaceSwitcher({
             : "w-full py-1.5 px-2 gap-3",
         )}
       >
-        {/* image */}
         {renderImage(currentWorkspace)}
 
         {!isCollapsed && (
@@ -172,14 +170,12 @@ export function WorkspaceSwitcher({
         )}
       </button>
 
-      {/* dropdown */}
       <AnimatePresence initial={false}>
         {isOpen ? (
           <motion.div
             id="workspace-list"
             className={twMerge(
               "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface origin-top",
-              // 축소 상태: 오른쪽 옆으로(SubMenu와 동일), 확장 상태: 버튼 아래로
               isCollapsed
                 ? "left-full top-0 ml-2 w-58"
                 : "left-1 -right-5 top-full mt-1",
@@ -201,7 +197,6 @@ export function WorkspaceSwitcher({
             }
             transition={{ type: "spring", stiffness: 420, damping: 34 }}
           >
-            {/* 워크스페이스 목록 */}
             <div className="flex-1 overflow-y-auto max-h-100">
               {otherWorkspaces.map((org, index) => (
                 <div key={org.orgId}>
@@ -229,7 +224,6 @@ export function WorkspaceSwitcher({
               ))}
             </div>
 
-            {/* + 새 워크스페이스 */}
             <div className="mt-1 pt-1 border-t border-bg-surface">
               <button
                 type="button"

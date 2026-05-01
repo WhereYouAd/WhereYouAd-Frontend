@@ -45,7 +45,6 @@ export const SidebarItem = memo(function SidebarItem({
     </div>
   );
 
-  // path 있는 단일 메뉴
   if (item.path) {
     return (
       <NavLink
@@ -61,7 +60,6 @@ export const SidebarItem = memo(function SidebarItem({
     );
   }
 
-  // path 없는 메뉴
   return (
     <button
       type="button"

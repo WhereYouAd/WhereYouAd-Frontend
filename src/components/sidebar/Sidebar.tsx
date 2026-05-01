@@ -13,7 +13,6 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
-// import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
@@ -58,12 +57,10 @@ export default function Sidebar() {
       transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col">
-        {/* Top */}
         <div className="px-2">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
-        {/* Main */}
         <nav className="flex flex-1 flex-col gap-1 px-2">
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
@@ -124,7 +121,6 @@ export default function Sidebar() {
                   )}
                 </div>
 
-                {/* SubMenu */}
                 <AnimatePresence initial={false}>
                   {isOpen && item.children ? (
                     <SubMenu
@@ -140,7 +136,6 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* Footer */}
         <div className={twMerge("mt-2 pb-3", isCollapsed ? "" : "px-2")}>
           {footerNav.map((item) => {
             const isActive =
