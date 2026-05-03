@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 
-import LandingBrandIdentity from "@/components/landing/LandingBrandIdentity";
 import LandingFooter from "@/components/landing/LandingFooter";
 import LandingHeader from "@/components/landing/LandingHeader";
 import LandingHero from "@/components/landing/LandingHero";
+import LandingMultiDevice from "@/components/landing/LandingMultiDevice";
 
 const LandingFeatures = lazy(
   () => import("@/components/landing/LandingFeatures"),
@@ -39,7 +39,7 @@ export default function LandingPage() {
         </Suspense>
       </main>
 
-      <LandingBrandIdentity />
+      <LandingMultiDevice />
       <LandingFooter />
     </div>
   );
