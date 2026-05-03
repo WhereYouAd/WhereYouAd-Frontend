@@ -1,16 +1,41 @@
-import { useState } from "react";
+import type React from "react";
 
 import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 
 import CameraIcon from "@/assets/icon/common/camera.svg?react";
+import CheckIcon from "@/assets/icon/common/check.svg?react";
 import UserProfileCircleIcon from "@/assets/icon/common/userProfileCircle.svg?react";
 
-export default function ProfileSection() {
-  const [name, setName] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [position, setPosition] = useState("");
-  const [email] = useState("");
+type TProfileSectionProps = {
+  name: string;
+  setName: (v: string) => void;
+  organization: string;
+  setOrganization: (v: string) => void;
+  position: string;
+  setPosition: (v: string) => void;
+  email: string;
+
+  fileRef: React.RefObject<HTMLInputElement | null>;
+  preview: string | null;
+  openFilePicker: () => void;
+  onPickFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  resetImage: () => void;
+};
+export default function ProfileSection({
+  name,
+  setName,
+  organization,
+  setOrganization,
+  position,
+  setPosition,
+  email,
+  fileRef,
+  preview,
+  onPickFile,
+  openFilePicker,
+  resetImage,
+}: TProfileSectionProps) {
   return (
     <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
       <header className="mb-7 flex items-start justify-between gap-4">
@@ -21,31 +46,52 @@ export default function ProfileSection() {
           </h2>
         </div>
       </header>
-      <div className="flex gap-7">
-        <div className="flex flex-col items-center w-40 tablet:w-full shrink-0">
-          <div className="w-full items-start text-text-main mb-3 ml-1 select-none tablet:text-center">
+      <div className="flex flex-col tablet:flex-row gap-10">
+        <div className="flex flex-col items-center shrink-0">
+          <div className="w-full text-text-main mb-4 tablet:text-center select-none">
             프로필 이미지
           </div>
           <input
+            ref={fileRef}
             type="file"
             accept="image/jpeg,image/jpg,image/png,image/webp"
             className="hidden"
+            onChange={onPickFile}
           />
-          <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-component-md border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
-            <CameraIcon className="text-text-disabled" />
+          <div className="relative h-40 w-40 overflow-hidden rounded-full border border-gray-100 bg-gray-100 shadow-sm flex items-center justify-center">
+            {preview ? (
+              <img
+                src={preview}
+                alt="프로필 이미지 미리보기"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <CameraIcon className="text-text-disabled w-10 h-10" />
+            )}
           </div>
-          <div className="mt-2 items-center">
+          <div className="mt-5 flex gap-3">
             <Button
               variant="custom"
               type="button"
+              onClick={openFilePicker}
               className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
               aria-label="프로필 이미지 변경 버튼"
             >
               변경
             </Button>
+            <Button
+              variant="custom"
+              type="button"
+              onClick={resetImage}
+              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-40"
+              aria-label="프로필 이미지 초기화 버튼"
+              disabled={!preview}
+            >
+              초기화
+            </Button>
           </div>
         </div>
-        <div className="flex flex-col w-full gap-3">
+        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 gap-y-5 w-full">
           <Input
             label="이름"
             value={name}
@@ -63,8 +109,13 @@ export default function ProfileSection() {
               onChange={(e) => setPosition(e.target.value)}
             />
             <div className="group relative w-full">
-              <Input label="이메일" value={email} disabled={true} />
-              <div className="pointer-events-none absolute -bottom-5 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              <Input
+                label="이메일"
+                value={email}
+                disabled={true}
+                rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+              />
+              <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                 이메일은 변경할 수 없습니다.
               </div>
             </div>

@@ -1,9 +1,67 @@
+import { useState } from "react";
+
+import { useImageUploader } from "@/hooks/common/useImageUploader";
+
 import Button from "@/components/common/button/Button";
 import PageHeader from "@/components/common/PageHeader";
 import PasswordSection from "@/components/setting/PasswordSection";
 import ProfileSection from "@/components/setting/ProfileSection";
 
 export default function Setting() {
+  const [name, setName] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [position, setPosition] = useState("");
+  const email = "";
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const { fileRef, file, preview, openFilePicker, onPickFile, resetImage } =
+    useImageUploader();
+
+  const [passwordErrors, setPasswordErrors] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+  const validatePassword = () => {
+    const errors = {
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    };
+    if (!currentPassword) {
+      errors.currentPassword = "현재 비밀번호를 입력해주세요";
+    }
+    if (
+      !newPassword.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,16}$/)
+    ) {
+      errors.newPassword =
+        "영문, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요";
+    }
+    if (newPassword !== confirmNewPassword) {
+      errors.confirmNewPassword = "새 비밀번호가 일치하지 않습니다";
+    }
+    return errors;
+  };
+
+  const handleSave = () => {
+    const errors = validatePassword();
+    setPasswordErrors(errors);
+    const hasError = Object.values(errors).some((v) => v);
+    if (hasError) return;
+    console.log({
+      name,
+      organization,
+      position,
+      email,
+      image: file,
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    });
+  };
   return (
     <section className="w-full flex flex-col gap-8">
       <PageHeader
@@ -11,8 +69,29 @@ export default function Setting() {
         description="개인 프로필 정보와 비밀번호를 이곳에서 통합하여 관리할 수 있습니다"
       />
       <div className="flex flex-col gap-6">
-        <ProfileSection />
-        <PasswordSection />
+        <ProfileSection
+          name={name}
+          setName={setName}
+          organization={organization}
+          setOrganization={setOrganization}
+          position={position}
+          setPosition={setPosition}
+          email={email}
+          fileRef={fileRef}
+          preview={preview}
+          onPickFile={onPickFile}
+          openFilePicker={openFilePicker}
+          resetImage={resetImage}
+        />
+        <PasswordSection
+          currentPassword={currentPassword}
+          setCurrentPassword={setCurrentPassword}
+          newPassword={newPassword}
+          setNewPassword={setNewPassword}
+          confirmNewPassword={confirmNewPassword}
+          setConfirmNewPassword={setConfirmNewPassword}
+          errors={passwordErrors}
+        />
       </div>
       <div className="flex justify-end">
         <Button
@@ -20,6 +99,7 @@ export default function Setting() {
           type="button"
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
+          onClick={handleSave}
         >
           변경사항 저장하기
         </Button>
