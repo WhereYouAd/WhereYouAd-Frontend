@@ -1,3 +1,4 @@
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import {
   Skeleton,
   SkeletonCircle,
@@ -5,7 +6,7 @@ import {
 
 export default function LoginPageSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-130 px-6 py-12">
+    <AuthFormShell variant="page">
       <div className="mb-10 flex justify-center">
         <Skeleton className="h-8 w-32" />
       </div>
@@ -46,6 +47,6 @@ export default function LoginPageSkeleton() {
           <Skeleton className="h-4 w-32" />
         </div>
       </div>
-    </div>
+    </AuthFormShell>
   );
 }

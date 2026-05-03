@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { maskEmail } from "@/utils/maskEmail";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import Button from "@/components/common/button/Button";
 
 import useAuthStore from "@/store/useAuthStore";
@@ -11,7 +12,7 @@ export default function ShowEmailResultStep() {
   const { email } = useAuthStore();
 
   return (
-    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+    <AuthFormShell variant="step">
       <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">입력하신 정보로</span>
         <span className="block">WYA에 가입된 계정을 찾았어요</span>
@@ -43,6 +44,6 @@ export default function ShowEmailResultStep() {
       >
         로그인으로 돌아가기
       </Button>
-    </div>
+    </AuthFormShell>
   );
 }

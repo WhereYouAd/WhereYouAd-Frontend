@@ -5,6 +5,7 @@ import type { z } from "zod";
 
 import { signupPasswordSchema } from "@/utils/validation";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -37,7 +38,7 @@ export default function PasswordForm({
   };
 
   return (
-    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+    <AuthFormShell variant="step">
       <h1 className="text-start font-heading2 text-text-main mb-10">{title}</h1>
 
       <form
@@ -73,6 +74,6 @@ export default function PasswordForm({
           </Button>
         </div>
       </form>
-    </div>
+    </AuthFormShell>
   );
 }

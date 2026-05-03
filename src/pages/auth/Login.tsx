@@ -9,6 +9,7 @@ import { loginSchema } from "@/utils/validation";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -44,8 +45,8 @@ export default function Login() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-130 px-6 py-12">
-      <h1 className="text-start font-heading2 text-text-main mb-10">로그인</h1>
+    <AuthFormShell variant="page">
+      <h1 className="text-center font-heading2 text-text-main mb-10">로그인</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
         <CommonAuthInput
@@ -125,6 +126,6 @@ export default function Login() {
           이메일로 회원가입
         </Link>
       </div>
-    </div>
+    </AuthFormShell>
   );
 }

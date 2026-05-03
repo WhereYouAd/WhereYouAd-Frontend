@@ -11,7 +11,6 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
-// import Logo from "@/assets/logo/symbol-color.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(

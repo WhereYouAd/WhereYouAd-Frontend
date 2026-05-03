@@ -78,7 +78,6 @@ export default function LandingHeader() {
         </Link>
         <Link
           to="/signup"
-          state={{ step: 1 }}
           className="text-[13px] md:text-[14px] font-semibold text-white rounded-xl px-3 py-2 md:px-3.5 bg-logo-2 hover:bg-logo-2-dark transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           회원가입

@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import { useStepNavigation } from "@/hooks/common/useStepNavigation";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import Step01Email from "@/components/auth/flows/signup/EnterEmailStep";
 import Step02Password from "@/components/auth/flows/signup/PasswordSetupStep";
 import Step03Profile from "@/components/auth/flows/signup/ProfileSetupStep";
@@ -49,7 +50,7 @@ export default function Signup() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-130 flex-col items-center px-6">
+    <AuthFormShell variant="social">
       <div className="flex w-full flex-col gap-10">
         <Button
           fullWidth
@@ -105,6 +106,6 @@ export default function Signup() {
           로그인하기
         </Link>
       </div>
-    </div>
+    </AuthFormShell>
   );
 }

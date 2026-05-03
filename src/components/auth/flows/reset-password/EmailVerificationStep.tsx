@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useEmailVerification } from "@/hooks/auth/useEmailVerification";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -31,7 +32,7 @@ export default function EmailVerificationStep({
   } = useEmailVerification({ onNext, sendMutation: useRequestPasswordReset });
 
   return (
-    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+    <AuthFormShell variant="step">
       <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">비밀번호 찾기를 위해</span>
         <span className="block">이메일 인증을 진행할게요</span>
@@ -121,6 +122,6 @@ export default function EmailVerificationStep({
           </button>
         </div>
       )}
-    </div>
+    </AuthFormShell>
   );
 }

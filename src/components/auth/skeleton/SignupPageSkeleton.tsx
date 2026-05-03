@@ -1,8 +1,9 @@
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 export default function SignupPageSkeleton() {
   return (
-    <div className="mx-auto flex w-full max-w-130 flex-col items-center px-6">
+    <AuthFormShell variant="social">
       <div className="flex w-full flex-col gap-10">
         <Skeleton className="h-16 w-full rounded-component-md" />
         <Skeleton className="h-16 w-full rounded-component-md" />
@@ -10,9 +11,9 @@ export default function SignupPageSkeleton() {
         <Skeleton className="h-16 w-full rounded-component-md" />
       </div>
 
-      <div className="mt-15 flex justify-center gap-2">
+      <div className="mt-15 flex gap-2">
         <Skeleton className="h-4 w-40" />
       </div>
-    </div>
+    </AuthFormShell>
   );
 }

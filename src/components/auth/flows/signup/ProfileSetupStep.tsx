@@ -10,6 +10,7 @@ import { signupProfileSchema } from "@/utils/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -69,7 +70,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+    <AuthFormShell variant="step">
       <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">사용자의</span>
         <span className="block">기본 정보를 입력해 주세요</span>
@@ -143,6 +144,6 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
           </Button>
         </div>
       </form>
-    </div>
+    </AuthFormShell>
   );
 }
