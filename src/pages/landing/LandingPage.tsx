@@ -20,7 +20,7 @@ function SectionFallback({ height = 96 }: { height?: number }) {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:72px] md:[--landing-header-height:80px]">
+    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:68px] md:[--landing-header-height:76px]">
       <LandingHeader />
 
       <main className="flex-1 flex flex-col">

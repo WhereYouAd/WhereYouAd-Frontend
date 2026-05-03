@@ -1,16 +1,9 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
 import MockupTestImage from "@/assets/mockup/optimized/mockup_test.jpg";
 
 export default function LandingHero() {
-  function scrollToPricing() {
-    document
-      .getElementById("pricing")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
   return (
     <section className="relative w-full overflow-hidden bg-brand-300">
       <img
@@ -23,16 +16,16 @@ export default function LandingHero() {
         className="absolute inset-0 z-0 h-full w-full object-cover object-center"
       />
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-black/52"
+        className="pointer-events-none absolute inset-0 z-[1] bg-black/60"
         aria-hidden
       />
       <motion.div
-        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,72px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-5 pt-45 md:pt-32 pb-24"
+        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,68px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-4 pt-36 md:pt-24 pb-24"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="flex items-center gap-2 mb-5">
+        <div className="flex items-center gap-2 mb-3">
           <span className="inline-flex items-center rounded-full border border-white/35 bg-black/25 px-3 py-1 text-[12px] font-semibold text-white">
             WhereYouAd
           </span>
@@ -46,23 +39,6 @@ export default function LandingHero() {
         <p className="text-[15px] text-white/85 font-normal break-keep max-w-2xl">
           Google·Meta 파트너 서비스로 광고 데이터를 한 곳에서 관리하세요.
         </p>
-
-        <div className="pt-5 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-          <Link
-            to="/signup"
-            state={{ step: 1 }}
-            className="inline-flex items-center justify-center rounded-xl bg-[#3182F6] text-white active-scale transition-smooth hover:bg-[#2563EB] shadow-[0_10px_30px_rgba(49,130,246,0.35)] font-semibold py-[14px] px-[28px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
-          >
-            무료로 시작하기
-          </Link>
-          <button
-            type="button"
-            onClick={scrollToPricing}
-            className="inline-flex items-center justify-center rounded-xl bg-transparent text-white active-scale transition-smooth hover:bg-white/12 font-semibold py-[14px] px-[28px] border-[1.5px] border-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
-          >
-            요금제 보기
-          </button>
-        </div>
       </motion.div>
 
       <motion.div

@@ -40,7 +40,7 @@ export default function LandingHeader() {
 
   return (
     <header
-      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-smooth h-[var(--landing-header-height,72px)] ${
+      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-smooth h-[var(--landing-header-height,68px)] ${
         isScrolled
           ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-transparent"
           : "bg-brand-200/60 backdrop-blur-xl border-chart-inactive"
@@ -79,7 +79,7 @@ export default function LandingHeader() {
         <Link
           to="/signup"
           state={{ step: 1 }}
-          className="text-[14px] md:text-[15px] font-semibold text-white rounded-lg px-3.5 py-2 md:px-4 bg-[#3182F6] hover:bg-[#2563EB] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3182F6]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="text-[14px] md:text-[15px] font-semibold text-white rounded-lg px-3.5 py-2 md:px-4 bg-logo-2 hover:bg-logo-2-dark transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           회원가입
         </Link>
