@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import LogoImage from "@/assets/mockup/logo_test/logo_2.png";
+import logoSvg from "@/assets/logo/service-logo/logo.svg";
 
 const navItems = [
   { label: "기능", targetId: "features" },
@@ -52,7 +52,7 @@ export default function LandingHeader() {
           aria-label="WhereYouAd 홈"
           className="flex items-center gap-2 text-text-main rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
-          <img src={LogoImage} alt="" aria-hidden className="h-6 w-auto" />
+          <img src={logoSvg} alt="" aria-hidden className="h-6 w-auto" />
         </Link>
       </div>
 
