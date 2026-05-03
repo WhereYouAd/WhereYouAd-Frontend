@@ -3,6 +3,8 @@ import { Outlet, useLocation } from "react-router-dom";
 
 import { mainNav } from "@/constants/sidebarNav";
 
+import { isPathMatch, normalizePathname } from "@/utils/navigation/pathMatch";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import Sidebar from "@/components/sidebar/Sidebar";
@@ -51,32 +53,30 @@ export default function MainLayout() {
     selectedOrgId,
   ]);
 
-  const pathname = location.pathname.replace(/\/+$/, "") || "/";
+  const pathname = normalizePathname(location.pathname);
   const { parentLabel, currentLabel } = useMemo(() => {
     for (const parent of mainNav) {
       const children = parent.children ?? [];
-      const exactChild = children.find((c) => c.path === pathname);
+      const exactChild = children.find((c) =>
+        c.path ? normalizePathname(c.path) === pathname : false,
+      );
       if (exactChild) {
         return { parentLabel: parent.label, currentLabel: exactChild.label };
       }
 
       const matchChild = children.find((c) =>
-        c.path ? pathname.startsWith(c.path) : false,
+        c.path ? isPathMatch(pathname, c.path) : false,
       );
       if (matchChild) {
         return { parentLabel: parent.label, currentLabel: matchChild.label };
       }
 
-      if (parent.path && pathname.startsWith(parent.path)) {
+      if (parent.path && isPathMatch(pathname, parent.path)) {
         return { parentLabel: parent.label, currentLabel: parent.label };
       }
     }
 
     return { parentLabel: "", currentLabel: "" };
-  }, [pathname]);
-
-  useEffect(() => {
-    setHeaderRight(null);
   }, [pathname]);
 
   return (

@@ -1,9 +1,11 @@
+import type { Dispatch, FocusEvent, SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
-import { isPathMatch, normalizePathname } from "@/utils/navigation/pathMatch";
+import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
+import { isPathMatch } from "@/utils/navigation/pathMatch";
 
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
@@ -34,18 +36,33 @@ function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   );
 }
 
+function collapsedSubmenuInteractionProps(
+  enabled: boolean,
+  itemId: string,
+  setOpenId: Dispatch<SetStateAction<string | null>>,
+) {
+  if (!enabled) return {};
+  return {
+    onMouseEnter: () => setOpenId(itemId),
+    onMouseLeave: () => setOpenId(null),
+    onFocusCapture: () => setOpenId(itemId),
+    onBlurCapture: (e: FocusEvent<HTMLDivElement>) => {
+      if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+      setOpenId(null);
+    },
+  };
+}
+
 export default function Sidebar() {
   const {
     isCollapsed,
     openId,
     setOpenId,
     handleItemClick,
-    getItemActiveState,
-    location,
+    pathname,
     toggleSidebar,
+    toggleOpenId,
   } = useSidebar();
-
-  const pathname = normalizePathname(location.pathname);
 
   return (
     <motion.div
@@ -64,7 +81,10 @@ export default function Sidebar() {
         <nav className="flex flex-1 flex-col gap-1 px-2">
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
-            const { isParentActive } = getItemActiveState(item);
+            const { isParentActive } = mainNavSidebar.getItemActiveState(
+              pathname,
+              item,
+            );
 
             const showChevron =
               !isCollapsed &&
@@ -75,20 +95,11 @@ export default function Sidebar() {
               <div
                 key={item.id}
                 className="relative flex flex-col"
-                onMouseEnter={() => isCollapsed && setOpenId(item.id)}
-                onMouseLeave={() => isCollapsed && setOpenId(null)}
-                onFocusCapture={() => {
-                  if (!isCollapsed) return;
-                  if (!item.children?.length) return;
-                  setOpenId(item.id);
-                }}
-                onBlurCapture={(e) => {
-                  if (!isCollapsed) return;
-                  if (!item.children?.length) return;
-                  if (e.currentTarget.contains(e.relatedTarget as Node | null))
-                    return;
-                  setOpenId(null);
-                }}
+                {...collapsedSubmenuInteractionProps(
+                  isCollapsed && !!item.children?.length,
+                  item.id,
+                  setOpenId,
+                )}
               >
                 <div className={getMainItemClass(isParentActive, isCollapsed)}>
                   <SidebarItem
@@ -105,9 +116,7 @@ export default function Sidebar() {
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        setOpenId((prev) =>
-                          prev === item.id ? null : item.id,
-                        );
+                        toggleOpenId(item.id);
                       }}
                       className="ml-auto p-2 hover:bg-black/5 rounded-lg transition-colors"
                     >
