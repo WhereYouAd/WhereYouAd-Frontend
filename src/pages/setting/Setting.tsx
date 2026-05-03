@@ -15,7 +15,12 @@ export default function Setting() {
         <PasswordSection />
       </div>
       <div className="flex justify-end">
-        <Button variant="primary" size="big">
+        <Button
+          variant="primary"
+          type="button"
+          size="big"
+          aria-label="개인 설정 변경사항 저장 버튼"
+        >
           변경사항 저장하기
         </Button>
       </div>
