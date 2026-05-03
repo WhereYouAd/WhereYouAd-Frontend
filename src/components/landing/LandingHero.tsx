@@ -20,7 +20,7 @@ export default function LandingHero() {
         aria-hidden
       />
       <motion.div
-        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,68px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-4 pt-36 md:pt-24 pb-24"
+        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,64px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-4 pt-36 md:pt-24 pb-24"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

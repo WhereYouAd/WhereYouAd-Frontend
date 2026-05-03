@@ -33,7 +33,7 @@ export default function LandingFooter() {
             </a>
           </div>
         </div>
-        <div className="mt-16 pt-8 border-t border-chart-inactive/80 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-16 pt-8 border-t border-chart-inactive/90 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-caption text-text-main">
             © 2026 WhereYouAd. All rights reserved.
           </p>
