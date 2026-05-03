@@ -28,7 +28,7 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
 
   return (
     <div className="mx-auto w-full max-w-130 px-6 pb-12">
-      <h1 className="text-center font-heading2 text-text-main mb-10">
+      <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">회원가입을 위해</span>
         <span className="block">이메일 인증을 진행할게요</span>
       </h1>

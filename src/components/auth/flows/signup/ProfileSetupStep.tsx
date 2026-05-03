@@ -70,7 +70,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
 
   return (
     <div className="mx-auto w-full max-w-130 px-6 pb-12">
-      <h1 className="text-center font-heading2 text-text-main mb-10">
+      <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">사용자의</span>
         <span className="block">기본 정보를 입력해 주세요</span>
       </h1>
