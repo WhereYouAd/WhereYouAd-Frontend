@@ -69,7 +69,21 @@ export default function LandingHeader() {
         ))}
       </nav>
 
-      <div aria-hidden className="w-8 md:w-24" />
+      <div className="ml-auto flex items-center gap-2 md:gap-3 shrink-0">
+        <Link
+          to="/login"
+          className="text-[14px] md:text-[15px] font-medium text-text-sub hover:text-text-main transition-colors rounded-lg px-2 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        >
+          로그인
+        </Link>
+        <Link
+          to="/signup"
+          state={{ step: 1 }}
+          className="text-[14px] md:text-[15px] font-semibold text-white rounded-lg px-3.5 py-2 md:px-4 bg-[#3182F6] hover:bg-[#2563EB] transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3182F6]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        >
+          회원가입
+        </Link>
+      </div>
     </header>
   );
 }
