@@ -11,8 +11,8 @@ export default function ShowEmailResultStep() {
   const { email } = useAuthStore();
 
   return (
-    <div className="w-full max-w-130 px-6 pb-12">
-      <h1 className="text-start font-heading2 text-text-main mb-10">
+    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+      <h1 className="text-center font-heading2 text-text-main mb-10">
         <span className="block">입력하신 정보로</span>
         <span className="block">WYA에 가입된 계정을 찾았어요</span>
       </h1>

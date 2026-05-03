@@ -5,7 +5,7 @@ import {
 
 export default function LoginPageSkeleton() {
   return (
-    <div className="w-full max-w-130 px-6 py-12">
+    <div className="mx-auto w-full max-w-130 px-6 py-12">
       <div className="mb-10 flex justify-center">
         <Skeleton className="h-8 w-32" />
       </div>

@@ -37,8 +37,10 @@ export default function PasswordForm({
   };
 
   return (
-    <div className="w-full max-w-130 px-6 pb-12">
-      <h1 className="text-start font-heading2 text-text-main mb-10">{title}</h1>
+    <div className="mx-auto w-full max-w-130 px-6 pb-12">
+      <h1 className="text-center font-heading2 text-text-main mb-10">
+        {title}
+      </h1>
 
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
