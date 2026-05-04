@@ -31,3 +31,6 @@ storybook-static
 .claude/
 .claude/skills
 .claude/agents
+
+# Local: Cursor commit message trailer stripper (keep on machine only)
+scripts/strip-cursor-attribution.mjs

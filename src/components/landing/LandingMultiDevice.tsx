@@ -2,7 +2,7 @@ import IosAppDockImage from "@/assets/mockup/iOS app dock.png";
 import IpadMockupImage from "@/assets/mockup/iPad Air mockup.png";
 import LaptopMockupImage from "@/assets/mockup/laptop_mockup.png";
 
-export default function LandingBrandIdentity() {
+export default function LandingMultiDevice() {
   return (
     <section className="bg-brand-200 py-20 md:py-40">
       <div className="max-w-6xl mx-auto px-6">
@@ -18,7 +18,7 @@ export default function LandingBrandIdentity() {
             <img
               src={IosAppDockImage}
               alt="모바일에서 WhereYouAd를 사용하는 화면"
-              className="absolute inset-0 h-full w-full object-cover object-[58%_70%]"
+              className="absolute inset-0 h-full w-full object-cover object-[80%_100%]"
               loading="lazy"
               decoding="async"
             />

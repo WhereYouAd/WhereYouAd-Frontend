@@ -195,7 +195,7 @@ export default function LandingPricing() {
                 onClick={() => handleCta(plan.name)}
                 className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
                   plan.featured
-                    ? "bg-logo-2 text-white hover:bg-logo-1 shadow-[0_10px_24px_rgba(96,136,254,0.18)]"
+                    ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
                     : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
                 } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
               >
