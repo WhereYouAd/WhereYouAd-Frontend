@@ -34,13 +34,13 @@ const SnapshotRow = memo(function SnapshotRow({
     <button
       type="button"
       onClick={() => onOpen(campaign.projectId)}
-      className="flex w-full min-w-0 items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-bg-surface/80"
+      className="flex w-full min-w-0 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-bg-surface/80"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="truncate font-body2 font-semibold text-text-main">
           {campaign.name}
         </span>
-        <span className="font-caption text-text-placeholder">
+        <span className="text-[10px] font-medium uppercase tracking-wide text-text-placeholder">
           {campaign.providers.length > 0
             ? campaign.providers.map((p) => platformShort[p] ?? p).join(" · ")
             : "플랫폼 미지정"}
@@ -69,14 +69,12 @@ export default memo(function OverviewCampaignSnapshotCard({
     error,
   } = useOverviewCampaignList();
 
-  const { ongoingCount, totalVisible, topByBudgetUsage } = useMemo(() => {
+  const { totalVisible, topByBudgetUsage } = useMemo(() => {
     const visible = visibleCampaigns(campaigns);
-    const ongoing = visible.filter((c) => c.status === "ON_GOING");
     const top = [...visible]
       .sort((a, b) => b.budgetUsageRate - a.budgetUsageRate)
       .slice(0, 2);
     return {
-      ongoingCount: ongoing.length,
       totalVisible: visible.length,
       topByBudgetUsage: top,
     };
@@ -95,8 +93,7 @@ export default memo(function OverviewCampaignSnapshotCard({
       description={
         isPending ? undefined : (
           <span className="font-caption text-text-placeholder">
-            진행 중 {ongoingCount}개
-            {totalVisible > 0 ? ` · 총 ${totalVisible}개` : ""}
+            예산 소진 상위
           </span>
         )
       }
@@ -131,9 +128,6 @@ export default memo(function OverviewCampaignSnapshotCard({
           </p>
         ) : (
           <div className="flex flex-col pt-0.5">
-            <p className="mb-1.5 shrink-0 font-caption font-medium text-text-placeholder">
-              예산 소진 상위
-            </p>
             <div className="flex flex-col divide-y divide-bg-disabled/60 overflow-hidden rounded-lg border border-bg-disabled/25">
               {topByBudgetUsage.map((c) => (
                 <SnapshotRow
