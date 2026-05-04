@@ -78,7 +78,14 @@ export default function PasswordSection({
           error={!!errors.newPassword}
           helperText={errors.newPassword}
           rightElement={
-            <button type="button" onClick={() => setShowNew((p) => !p)}>
+            <button
+              type="button"
+              aria-label={
+                showCurrent ? "현재 비밀번호 숨기기" : "현재 비밀번호 보기"
+              }
+              aria-pressed={showCurrent}
+              onClick={() => setShowNew((p) => !p)}
+            >
               {showNew ? <EyeOffIcon /> : <EyeIcon />}
             </button>
           }

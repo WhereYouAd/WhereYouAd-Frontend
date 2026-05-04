@@ -15,8 +15,8 @@ export default function Setting() {
       { name: "SMU창업팀", position: "팀장" },
       { name: "상명대학교", position: "학생" },
     ],
-    email: "",
-    phoneNumber: "",
+    email: "whereyouadofficial@gmail.com",
+    phoneNumber: "010-1234-5678",
     image: null as File | null,
   });
   const [draftProfile, setDraftProfile] = useState(savedProfile);
@@ -27,9 +27,12 @@ export default function Setting() {
   const { fileRef, /*file,*/ preview, openFilePicker, onPickFile, resetImage } =
     useImageUploader();
 
+  const hasPasswordChanges =
+    !!currentPassword || !!newPassword || !!confirmNewPassword;
+
   const hasChanges = useMemo(() => {
-    return savedProfile.image !== draftProfile.image;
-  }, [savedProfile, draftProfile]);
+    return savedProfile.image !== draftProfile.image || hasPasswordChanges;
+  }, [savedProfile, draftProfile, hasPasswordChanges]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -61,10 +64,17 @@ export default function Setting() {
   };
 
   const handleSave = () => {
-    const errors = validatePassword();
-    setPasswordErrors(errors);
-    const hasError = Object.values(errors).some((v) => v);
-    if (hasError) return;
+    if (hasPasswordChanges) {
+      const errors = validatePassword();
+      setPasswordErrors(errors);
+      if (Object.values(errors).some(Boolean)) return;
+    } else {
+      setPasswordErrors({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+    }
     console.log(draftProfile);
     setSavedProfile(draftProfile);
   };

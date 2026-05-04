@@ -115,6 +115,7 @@ export default function ProfileSection({
                           disabled
                           inputClassName="text-text-main"
                           containerClassName="bg-gray-100"
+                          readOnly
                         />
                       </div>
                       <div className="flex-1">
@@ -123,6 +124,7 @@ export default function ProfileSection({
                           disabled
                           inputClassName="text-text-sub"
                           containerClassName="bg-gray-100"
+                          readOnly
                         />
                       </div>
                     </div>
@@ -141,6 +143,7 @@ export default function ProfileSection({
               value={email}
               disabled={true}
               rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+              readOnly
             />
             <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
               이메일은 변경할 수 없습니다.
@@ -152,6 +155,7 @@ export default function ProfileSection({
               value={phoneNumber}
               disabled={true}
               rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+              readOnly
             />
             <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
               전화번호는 변경할 수 없습니다.
