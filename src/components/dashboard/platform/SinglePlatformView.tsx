@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.png";
 import { performanceEfficiencyMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<

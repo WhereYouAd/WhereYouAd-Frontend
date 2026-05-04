@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import type { ApexOptions } from "apexcharts";
 
 import { useClickStream } from "@/hooks/dashboard/useClickStream";
 
@@ -92,7 +93,17 @@ const AnomalyBubble = memo(function AnomalyBubble({
   );
 });
 
-const TrafficChart = memo(function TrafficChart() {
+type TTrafficChartProps = {
+  yAxisMax?: number;
+  height?: number;
+  showAnomaly?: boolean;
+};
+
+const TrafficChart = memo(function TrafficChart({
+  yAxisMax,
+  height = 400,
+  showAnomaly = true,
+}: TTrafficChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { data, suspectDetail, isError } = useClickStream("dummy");
 
@@ -190,7 +201,30 @@ const TrafficChart = memo(function TrafficChart() {
   const handlePointerEnter = useCallback(() => setIsAnomalyHovered(true), []);
   const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
-  const showBubble = isAnomalyHovered || isAnomalyFocused;
+  const showBubble = showAnomaly && (isAnomalyHovered || isAnomalyFocused);
+  const apexOptions: ApexOptions = useMemo(() => {
+    if (!yAxisMax) return chartOptions;
+
+    const yaxis = chartOptions.yaxis;
+    if (Array.isArray(yaxis)) {
+      return {
+        ...chartOptions,
+        yaxis: yaxis.map((axis) =>
+          typeof axis === "object" && axis !== null
+            ? { ...axis, max: yAxisMax }
+            : axis,
+        ),
+      };
+    }
+
+    return {
+      ...chartOptions,
+      yaxis:
+        typeof yaxis === "object" && yaxis !== null
+          ? { ...yaxis, max: yAxisMax }
+          : yaxis,
+    };
+  }, [chartOptions, yAxisMax]);
 
   if (isError && !data) {
     return (
@@ -226,12 +260,13 @@ const TrafficChart = memo(function TrafficChart() {
         <Suspense fallback={<div className="h-100" />}>
           <ReactApexChart
             type="area"
-            options={chartOptions}
+            options={apexOptions}
             series={series}
-            height={400}
+            height={height}
           />
         </Suspense>
-        {markerPos && (
+
+        {showAnomaly && markerPos && (
           <>
             <span
               className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"

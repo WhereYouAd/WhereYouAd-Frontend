@@ -31,7 +31,7 @@ export default function RedirectPage() {
       setAccessToken(accessToken);
 
       toast.success("소셜 로그인되었습니다.");
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     } else {
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
       navigate("/login", { replace: true });

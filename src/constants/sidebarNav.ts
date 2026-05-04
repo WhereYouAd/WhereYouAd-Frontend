@@ -2,8 +2,6 @@ import type { INavItem } from "@/types/navigation/navItem";
 
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
-import LogoutIcon from "@/assets/icon/sidebar/logout.svg?react";
-import MapIcon from "@/assets/icon/sidebar/map.svg?react";
 import NotificationIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SettingsIcon from "@/assets/icon/sidebar/setting.svg?react";
 import WorkspaceIcon from "@/assets/icon/sidebar/workspace.svg?react";
@@ -13,12 +11,12 @@ export const mainNav: INavItem[] = [
     id: "dashboard",
     label: "대시보드",
     icon: DashboardIcon,
-    path: "/",
+    path: "/dashboard",
     children: [
       {
         id: "dashboard-integrated",
         label: "통합 대시보드",
-        path: "/",
+        path: "/dashboard",
       },
       {
         id: "dashboard-platform",
@@ -51,12 +49,6 @@ export const mainNav: INavItem[] = [
     ],
   },
   {
-    id: "map",
-    label: "지도",
-    icon: MapIcon,
-    // path: "/map",
-  },
-  {
     id: "workspace",
     label: "워크스페이스",
     icon: WorkspaceIcon,
@@ -80,12 +72,6 @@ export const footerNav: INavItem[] = [
   {
     id: "settings",
     label: "설정",
-    path: "/setting",
     icon: SettingsIcon,
-  },
-  {
-    id: "logout",
-    label: "로그아웃",
-    icon: LogoutIcon,
   },
 ];
