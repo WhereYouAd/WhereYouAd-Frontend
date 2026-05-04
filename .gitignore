@@ -24,3 +24,13 @@ dist-ssr
 *.sw?
 .env
 node_modules/
+*storybook.log
+storybook-static
+
+# Claude Code
+.claude/
+.claude/skills
+.claude/agents
+
+# Local: Cursor commit message trailer stripper (keep on machine only)
+scripts/strip-cursor-attribution.mjs

@@ -1,7 +1,9 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import pluginJs from "@eslint/js";
 import typescriptParser from "@typescript-eslint/parser";
 import prettierPluginRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
 import defaultConfig from "./eslint/default.mjs";
 import importConfig from "./eslint/import.mjs";
@@ -37,4 +39,8 @@ export default [
   importConfig,
   reactConfig,
   prettierPluginRecommended,
+  {
+    files: ["**/*.{js,mjs,cjs}"],
+    ...tseslint.configs.disableTypeChecked,
+  },
 ];
