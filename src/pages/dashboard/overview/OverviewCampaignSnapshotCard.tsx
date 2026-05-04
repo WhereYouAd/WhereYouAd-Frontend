@@ -80,14 +80,15 @@ export default memo(function OverviewCampaignSnapshotCard({
     };
   }, [campaigns]);
 
-  if (!orgId) return null;
-
   const openCampaign = useCallback(
     (projectId: number) => {
+      if (orgId == null) return;
       navigate(`/ads/${orgId}/${projectId}`);
     },
     [navigate, orgId],
   );
+
+  if (!orgId) return null;
 
   return (
     <Card

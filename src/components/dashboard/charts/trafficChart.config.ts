@@ -126,13 +126,17 @@ export function buildChartOptions(params: {
     },
 
     xaxis: {
-      // numeric: tickAmount = 구간 수 → 4구간이면 틱 5개
       type: "numeric",
       min: xMin,
       max: xMax,
       tickAmount: 4,
       labels: {
-        formatter: (val: string, timestamp?: number) => {
+        formatter: (
+          val: string | number,
+          timestamp?: number,
+          opts?: unknown,
+        ) => {
+          void opts;
           const ts = timestamp ?? Number(val);
           if (labelEndAs24h && ts >= xMax - 500) return "24:00";
           const d = new Date(ts);

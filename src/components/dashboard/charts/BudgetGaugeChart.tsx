@@ -38,14 +38,11 @@ const statusPointClasses: Record<TBudgetStatus, string> = {
   위험: "bg-status-red",
 };
 
-/** 첫 문장(상태) / 이후(안내) — 글자색 위계용 */
 function splitInsightHeadTail(text: string): { head: string; tail?: string } {
-  const idx = text.indexOf(". ");
-  if (idx === -1) return { head: text };
-  return {
-    head: text.slice(0, idx + 1),
-    tail: text.slice(idx + 2).trim(),
-  };
+  const trimmed = text.trim();
+  const m = /^(.+?\.)(\s+)(.+)$/s.exec(trimmed);
+  if (!m) return { head: trimmed };
+  return { head: m[1], tail: m[3].trim() };
 }
 
 const BudgetGaugeChart = memo(function BudgetGaugeChart({
