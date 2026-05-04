@@ -42,7 +42,7 @@ export default function ProfileSection({
       </header>
       <div className="flex tablet:flex-row gap-10">
         <div className="flex flex-col items-center basis-1/4 shrink-0">
-          <div className="w-full text-text-main mb-4 tablet:text-center select-none">
+          <div className="w-full text-text-main mb-4 select-none">
             프로필 이미지
           </div>
           <input
