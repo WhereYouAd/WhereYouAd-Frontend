@@ -80,15 +80,18 @@ export default function MainLayout() {
   }, [pathname]);
 
   return (
-    <div className="fixed inset-0 box-border flex overflow-hidden bg-gray-50">
-      <Sidebar />
-      <main className="flex-1 min-w-0 min-h-0 overflow-y-auto">
-        <header className="sticky top-0 z-30 bg-white border-b border-bg-surface">
-          <div className="h-14 px-6 tablet:px-4 flex items-center justify-between">
-            <div className="min-w-0 flex items-center gap-2">
+    <div className="flex min-h-dvh w-full items-start bg-gray-50">
+      {/* 뷰포트 높이에 고정 + sticky: 본문은 문서 스크롤(전체 페이지 캡처·DevTools와 호환) */}
+      <div className="sticky top-0 z-40 flex h-dvh shrink-0">
+        <Sidebar />
+      </div>
+      <main className="flex min-h-dvh min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-30 border-b border-bg-surface bg-white">
+          <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
+            <div className="flex min-w-0 items-center gap-2">
               {parentLabel ? (
                 <>
-                  <span className="font-body1 text-text-sub truncate">
+                  <span className="truncate font-body1 text-text-sub">
                     {parentLabel}
                   </span>
                   <span className="text-text-placeholder" aria-hidden="true">
@@ -96,7 +99,7 @@ export default function MainLayout() {
                   </span>
                 </>
               ) : null}
-              <span className="font-body1 text-[18px] text-text-main font-semibold truncate">
+              <span className="truncate font-body1 text-[18px] font-semibold text-text-main">
                 {currentLabel || parentLabel || " "}
               </span>
             </div>
@@ -104,7 +107,7 @@ export default function MainLayout() {
             <div className="flex items-center gap-2">{headerRight}</div>
           </div>
         </header>
-        <div className="mx-auto w-full max-w-400 min-w-0 py-6 px-lg tablet:px-6">
+        <div className="mx-auto w-full max-w-400 min-w-0 flex-1 px-lg py-6 tablet:px-6">
           <Outlet context={{ setHeaderRight }} />
         </div>
       </main>
