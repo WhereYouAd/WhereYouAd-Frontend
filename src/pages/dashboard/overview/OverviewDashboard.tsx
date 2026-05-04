@@ -12,9 +12,7 @@ import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
-import ChartLegend, {
-  type IChartLegendItem,
-} from "@/components/common/chart/ChartLegend";
+import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
 import {
   Skeleton,
@@ -38,12 +36,6 @@ import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import OverviewCampaignSnapshotCard from "@/pages/dashboard/overview/OverviewCampaignSnapshotCard";
 
 const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
-
-const budgetStatusLegendItems: IChartLegendItem[] = [
-  { label: "안정", colorClass: "bg-status-green" },
-  { label: "주의", colorClass: "bg-status-yellow" },
-  { label: "위험", colorClass: "bg-status-red" },
-];
 
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
@@ -181,12 +173,6 @@ export default function OverviewDashboard() {
             <Card
               className="flex h-full min-h-0 min-w-0 flex-col !pb-4"
               title="예산 소진 현황"
-              description={
-                <ChartLegend
-                  className="flex-wrap gap-x-4 gap-y-1 [&_span]:font-medium [&_span]:text-text-placeholder"
-                  items={budgetStatusLegendItems}
-                />
-              }
               RightElement={
                 budgetStatus ? (
                   <Badge
