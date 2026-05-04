@@ -5,6 +5,7 @@ import Button from "@/components/common/button/Button";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import PageHeader from "@/components/common/PageHeader";
 import AllPlatformView from "@/components/dashboard/platform/AllPlatformView";
+import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformView";
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
@@ -83,9 +84,7 @@ export default function PlatformDashboard() {
       {isAllView ? (
         <AllPlatformView isLoading={isLoading} />
       ) : (
-        <div className="flex flex-col gap-8">
-          <h2>{selectedPlatform}</h2>
-        </div>
+        <SinglePlatformView platform={selectedPlatform} isLoading={isLoading} />
       )}
     </section>
   );
