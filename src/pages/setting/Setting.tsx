@@ -16,18 +16,19 @@ export default function Setting() {
       { name: "상명대학교", position: "학생" },
     ],
     email: "",
-    Image: null as File | null,
+    phoneNumber: "",
+    image: null as File | null,
   });
   const [draftProfile, setDraftProfile] = useState(savedProfile);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const { fileRef, file, preview, openFilePicker, onPickFile, resetImage } =
+  const { fileRef, /*file,*/ preview, openFilePicker, onPickFile, resetImage } =
     useImageUploader();
 
   const hasChanges = useMemo(() => {
-    return JSON.stringify(savedProfile) !== JSON.stringify(draftProfile);
+    return savedProfile.image !== draftProfile.image;
   }, [savedProfile, draftProfile]);
 
   const [passwordErrors, setPasswordErrors] = useState({
@@ -49,6 +50,9 @@ export default function Setting() {
     ) {
       errors.newPassword =
         "영문, 숫자, 특수문자를 포함하여 8~16자로 입력해주세요";
+    }
+    if (currentPassword && newPassword && currentPassword === newPassword) {
+      errors.newPassword = "현재 비밀번호와 다른 비밀번호를 입력해주세요";
     }
     if (newPassword !== confirmNewPassword) {
       errors.confirmNewPassword = "새 비밀번호가 일치하지 않습니다";
@@ -76,6 +80,7 @@ export default function Setting() {
           setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
           organizations={draftProfile.organizations}
           email={draftProfile.email}
+          phoneNumber={draftProfile.phoneNumber}
           fileRef={fileRef}
           preview={preview}
           onPickFile={onPickFile}

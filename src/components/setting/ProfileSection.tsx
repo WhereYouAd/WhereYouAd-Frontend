@@ -12,7 +12,7 @@ type TProfileSectionProps = {
   setName: (v: string) => void;
   organizations: { name: string; position: string }[];
   email: string;
-
+  phoneNumber: string;
   fileRef: React.RefObject<HTMLInputElement | null>;
   preview: string | null;
   openFilePicker: () => void;
@@ -24,6 +24,7 @@ export default function ProfileSection({
   setName,
   organizations,
   email,
+  phoneNumber,
   fileRef,
   preview,
   onPickFile,
@@ -143,6 +144,17 @@ export default function ProfileSection({
             />
             <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
               이메일은 변경할 수 없습니다.
+            </div>
+          </div>
+          <div className="col-span-2 group relative w-full">
+            <Input
+              label="전화번호"
+              value={phoneNumber}
+              disabled={true}
+              rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+            />
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              전화번호는 변경할 수 없습니다.
             </div>
           </div>
         </div>
