@@ -104,33 +104,50 @@ export default function OverviewDashboard() {
     };
   }, [setHeaderRight]);
 
+  const kpiList = kpis ?? [];
+  const kpiSkeletonCard = (key: string | number) => (
+    <div
+      key={key}
+      className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
+    >
+      <Skeleton className="h-4 w-16" />
+      <Skeleton className="h-8 w-24" />
+      <Skeleton className="h-6 w-14 rounded-full" />
+    </div>
+  );
+
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
-      <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
+      <div className="w-full min-w-0">
         {isKpisError ? (
-          <div className="col-span-4 tablet:col-span-2 flex items-center justify-center py-8 rounded-[24px] bg-white/80 border border-white/40 text-status-red font-body2">
+          <div className="flex items-center justify-center py-8 rounded-[24px] bg-white/80 border border-white/40 text-status-red font-body2">
             {kpisError?.message ??
               "지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
           </div>
-        ) : isKpisLoading ? (
-          Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
-            >
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-8 w-24" />
-              <Skeleton className="h-6 w-14 rounded-full" />
-            </div>
-          ))
         ) : (
-          (kpis ?? []).map((kpi) => <StatCard key={kpi.title} {...kpi} />)
+          <>
+            {/* 데스크톱: KPI 4열 균등 → 아래 실시간 트래픽(3) + 예산(1) 동일 트랙 */}
+            <div className="grid grid-cols-4 gap-6 tablet:hidden w-full min-w-0">
+              {isKpisLoading
+                ? [0, 1, 2, 3].map((i) => kpiSkeletonCard(`d-${i}`))
+                : kpiList.map((kpi) => (
+                    <StatCard key={`d-${kpi.title}`} {...kpi} />
+                  ))}
+            </div>
+            <div className="hidden tablet:grid tablet:grid-cols-2 tablet:gap-4 w-full">
+              {isKpisLoading
+                ? [0, 1, 2, 3].map((i) => kpiSkeletonCard(`t-${i}`))
+                : kpiList.map((kpi) => (
+                    <StatCard key={`t-${kpi.title}`} {...kpi} />
+                  ))}
+            </div>
+          </>
         )}
       </div>
 
-      <div className="grid grid-cols-7 tablet:grid-cols-1 gap-6">
+      <div className="grid grid-cols-4 gap-6 tablet:grid-cols-1 tablet:gap-6 w-full min-w-0">
         <Card
-          className="col-span-5 tablet:col-span-1 flex flex-col min-h-120"
+          className="col-span-3 tablet:col-span-1 flex flex-col min-h-120 min-w-0"
           title="실시간 트래픽 변화"
           description={
             <ChartLegend
@@ -150,7 +167,7 @@ export default function OverviewDashboard() {
         </Card>
 
         <Card
-          className="col-span-2 tablet:col-span-1 flex flex-col min-h-120"
+          className="col-span-1 tablet:col-span-1 flex flex-col min-h-120 min-w-0"
           title="예산 소진 현황"
           description={
             <ChartLegend
