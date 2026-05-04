@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
@@ -8,17 +8,27 @@ import PasswordSection from "@/components/setting/PasswordSection";
 import ProfileSection from "@/components/setting/ProfileSection";
 
 export default function Setting() {
-  const [name, setName] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [position, setPosition] = useState("");
-  const email = "";
-
+  const [savedProfile, setSavedProfile] = useState({
+    name: "",
+    organizations: [
+      { name: "CJ", position: "FE developer" },
+      { name: "SMU창업팀", position: "팀장" },
+      { name: "상명대학교", position: "학생" },
+    ],
+    email: "",
+    Image: null as File | null,
+  });
+  const [draftProfile, setDraftProfile] = useState(savedProfile);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const { fileRef, file, preview, openFilePicker, onPickFile, resetImage } =
     useImageUploader();
+
+  const hasChanges = useMemo(() => {
+    return JSON.stringify(savedProfile) !== JSON.stringify(draftProfile);
+  }, [savedProfile, draftProfile]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -51,16 +61,8 @@ export default function Setting() {
     setPasswordErrors(errors);
     const hasError = Object.values(errors).some((v) => v);
     if (hasError) return;
-    console.log({
-      name,
-      organization,
-      position,
-      email,
-      image: file,
-      currentPassword,
-      newPassword,
-      confirmNewPassword,
-    });
+    console.log(draftProfile);
+    setSavedProfile(draftProfile);
   };
   return (
     <section className="w-full flex flex-col gap-8">
@@ -70,13 +72,10 @@ export default function Setting() {
       />
       <div className="flex flex-col gap-6">
         <ProfileSection
-          name={name}
-          setName={setName}
-          organization={organization}
-          setOrganization={setOrganization}
-          position={position}
-          setPosition={setPosition}
-          email={email}
+          name={draftProfile.name}
+          setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
+          organizations={draftProfile.organizations}
+          email={draftProfile.email}
           fileRef={fileRef}
           preview={preview}
           onPickFile={onPickFile}
@@ -100,6 +99,7 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
+          disabled={!hasChanges}
         >
           변경사항 저장하기
         </Button>

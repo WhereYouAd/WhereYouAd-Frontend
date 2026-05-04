@@ -10,10 +10,7 @@ import UserProfileCircleIcon from "@/assets/icon/common/userProfileCircle.svg?re
 type TProfileSectionProps = {
   name: string;
   setName: (v: string) => void;
-  organization: string;
-  setOrganization: (v: string) => void;
-  position: string;
-  setPosition: (v: string) => void;
+  organizations: { name: string; position: string }[];
   email: string;
 
   fileRef: React.RefObject<HTMLInputElement | null>;
@@ -25,10 +22,7 @@ type TProfileSectionProps = {
 export default function ProfileSection({
   name,
   setName,
-  organization,
-  setOrganization,
-  position,
-  setPosition,
+  organizations,
   email,
   fileRef,
   preview,
@@ -46,8 +40,8 @@ export default function ProfileSection({
           </h2>
         </div>
       </header>
-      <div className="flex flex-col tablet:flex-row gap-10">
-        <div className="flex flex-col items-center shrink-0">
+      <div className="flex tablet:flex-row gap-10">
+        <div className="flex flex-col items-center basis-1/4 shrink-0">
           <div className="w-full text-text-main mb-4 tablet:text-center select-none">
             프로필 이미지
           </div>
@@ -58,7 +52,7 @@ export default function ProfileSection({
             className="hidden"
             onChange={onPickFile}
           />
-          <div className="relative h-40 w-40 overflow-hidden rounded-full border border-gray-100 bg-gray-100 shadow-sm flex items-center justify-center">
+          <div className="relative h-60 w-60 overflow-hidden rounded-full border border-gray-100 bg-gray-100 shadow-sm flex items-center justify-center">
             {preview ? (
               <img
                 src={preview}
@@ -91,33 +85,64 @@ export default function ProfileSection({
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 gap-y-5 w-full">
-          <Input
-            label="이름"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Input
-            label="조직명"
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-          />
-          <div className="flex gap-7">
+        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 basis-3/4 gap-y-5 w-full">
+          <div className="col-span-2">
             <Input
-              label="직책"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
+              label="이름"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-            <div className="group relative w-full">
-              <Input
-                label="이메일"
-                value={email}
-                disabled={true}
-                rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
-              />
-              <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                이메일은 변경할 수 없습니다.
+          </div>
+          <div className="col-span-2">
+            <div className="text-text-main mb-2 ml-1">소속 조직</div>
+            {organizations.length === 0 ? (
+              <div className="text-text-disabled font-body2 ml-1">
+                소속된 조직이 없습니다.
               </div>
+            ) : (
+              <>
+                <div className="flex gap-4 px-1 mb-1 text-text-sub">
+                  <div className="flex-1 font-body2">조직</div>
+                  <div className="flex-1 font-body2">직책</div>
+                </div>
+                <div className="group relative flex flex-col gap-4">
+                  {organizations.map((org, idx) => (
+                    <div key={idx} className="flex gap-4 ">
+                      <div className="flex-1">
+                        <Input
+                          value={org.name}
+                          disabled
+                          inputClassName="text-text-main"
+                          containerClassName="bg-gray-100"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          value={org.position}
+                          disabled
+                          inputClassName="text-text-sub"
+                          containerClassName="bg-gray-100"
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    조직 정보는 별도 조직페이지에서 수정할 수 있습니다.
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="col-span-2 group relative w-full">
+            <Input
+              label="이메일"
+              value={email}
+              disabled={true}
+              rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+            />
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              이메일은 변경할 수 없습니다.
             </div>
           </div>
         </div>
