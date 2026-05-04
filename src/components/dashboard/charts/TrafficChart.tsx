@@ -242,13 +242,15 @@ const TrafficChart = memo(function TrafficChart({
   return (
     <>
       {/* TODO: 테스트용 - 개발 완료 후 제거 */}
-      <button
-        type="button"
-        onClick={toggleDummyClicks}
-        className="mb-2 px-3 py-1 text-xs bg-gray-200 rounded"
-      >
-        더미 데이터 토글
-      </button>
+      <div className="flex justify-end w-full mb-1">
+        <button
+          type="button"
+          onClick={toggleDummyClicks}
+          className="shrink-0 px-1.5 py-0.5 text-[10px] leading-tight font-medium text-text-placeholder rounded-md border border-bg-disabled/70 bg-bg-surface/50 hover:bg-bg-surface transition-colors"
+        >
+          더미 데이터 토글
+        </button>
+      </div>
       <div
         id={CHART_CONTAINER_ID}
         ref={containerRef}

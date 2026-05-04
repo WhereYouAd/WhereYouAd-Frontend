@@ -91,12 +91,25 @@ export function buildChartOptions(params: {
 
     stroke: {
       curve: "smooth",
-      width: 1.5,
+      width: 2,
     },
 
     fill: {
-      type: "solid",
-      opacity: 0.1,
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "vertical",
+        shadeIntensity: 0.2,
+        opacityFrom: 0.38,
+        opacityTo: 0.03,
+        stops: [0, 100],
+      },
+    },
+
+    plotOptions: {
+      area: {
+        fillTo: "origin",
+      },
     },
 
     colors: ["#0084fe"],
