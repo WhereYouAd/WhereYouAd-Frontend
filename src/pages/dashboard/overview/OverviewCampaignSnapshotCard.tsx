@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -82,16 +82,19 @@ export default memo(function OverviewCampaignSnapshotCard({
 
   if (!orgId) return null;
 
-  const openCampaign = (projectId: number) => {
-    navigate(`/ads/${orgId}/${projectId}`);
-  };
+  const openCampaign = useCallback(
+    (projectId: number) => {
+      navigate(`/ads/${orgId}/${projectId}`);
+    },
+    [navigate, orgId],
+  );
 
   return (
     <Card
-      className={twMerge("flex w-full min-w-0 flex-col !pb-3", className)}
+      className={twMerge("flex w-full min-w-0 flex-col pb-3!", className)}
       title="캠페인 스냅샷"
       description={
-        isPending ? undefined : (
+        isPending || isError ? undefined : (
           <span className="font-caption text-text-placeholder">
             예산 소진 상위
           </span>

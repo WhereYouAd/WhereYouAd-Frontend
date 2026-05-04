@@ -35,12 +35,16 @@ export const DOWNLOAD_ITEMS = [
 
 // 차트 옵션 생성
 export function buildChartOptions(params: {
-  categories: string[];
+  xMin: number;
+  xMax: number;
+  /** 우측 끝 틱을 24:00으로 표시 (종일 구간일 때만 true) */
+  labelEndAs24h: boolean;
   maxCount: number;
-  anomalyCategory?: string; // 이상 징후 x 좌표 ("HH:mm")
-  anomalyY?: number; // 이상 징후 y 좌표
+  anomalyTimestamp?: number; // 이상 징후 unix ms
+  anomalyY?: number;
 }): ApexOptions {
-  const { categories, maxCount, anomalyCategory, anomalyY } = params;
+  const { xMin, xMax, labelEndAs24h, maxCount, anomalyTimestamp, anomalyY } =
+    params;
   const yMax = (() => {
     if (maxCount <= 0) return 1000;
     const magnitude = Math.pow(10, Math.floor(Math.log10(maxCount)));
@@ -91,25 +95,12 @@ export function buildChartOptions(params: {
 
     stroke: {
       curve: "smooth",
-      width: 2,
+      width: 1.5,
     },
 
     fill: {
-      type: "gradient",
-      gradient: {
-        shade: "light",
-        type: "vertical",
-        shadeIntensity: 0.2,
-        opacityFrom: 0.38,
-        opacityTo: 0.03,
-        stops: [0, 100],
-      },
-    },
-
-    plotOptions: {
-      area: {
-        fillTo: "origin",
-      },
+      type: "solid",
+      opacity: 0.1,
     },
 
     colors: ["#0084fe"],
@@ -118,10 +109,10 @@ export function buildChartOptions(params: {
 
     annotations: {
       points:
-        anomalyCategory !== undefined && anomalyY !== undefined
+        anomalyTimestamp !== undefined && anomalyY !== undefined
           ? [
               {
-                x: anomalyCategory,
+                x: anomalyTimestamp,
                 y: anomalyY,
                 marker: {
                   size: 3,
@@ -135,11 +126,20 @@ export function buildChartOptions(params: {
     },
 
     xaxis: {
-      type: "category",
-      categories,
-      tickAmount: 6,
+      // numeric: tickAmount = 구간 수 → 4구간이면 틱 5개
+      type: "numeric",
+      min: xMin,
+      max: xMax,
+      tickAmount: 4,
       labels: {
-        formatter: (val: string) => val,
+        formatter: (val: string, timestamp?: number) => {
+          const ts = timestamp ?? Number(val);
+          if (labelEndAs24h && ts >= xMax - 500) return "24:00";
+          const d = new Date(ts);
+          const h = String(d.getHours()).padStart(2, "0");
+          const m = String(d.getMinutes()).padStart(2, "0");
+          return `${h}:${m}`;
+        },
         style: { colors: "#8b8b8f", fontSize: "12px" },
         rotate: 0,
         rotateAlways: false,
@@ -168,7 +168,7 @@ export function buildChartOptions(params: {
       borderColor: "#f2f4f6",
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
-      padding: { left: 16, right: 8 },
+      padding: { left: 16, right: 24 },
     },
 
     tooltip: {
