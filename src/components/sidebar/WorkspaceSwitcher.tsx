@@ -28,29 +28,31 @@ export function WorkspaceSwitcher({
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
-  const { data: workspaces = [] } = useCoreQuery(
+  const { data: workspaces, isPending } = useCoreQuery(
     ["my-workspaces"],
     getMyWorkspaces,
   );
 
+  const workspaceList = workspaces ?? [];
+
   const currentWorkspace = useMemo(
     () =>
-      workspaces.find((w) => w.orgId === selectedOrgId) ||
-      workspaces.find((w) => w.isCurrentWorkspace) ||
-      workspaces[0],
-    [selectedOrgId, workspaces],
+      workspaceList.find((w) => w.orgId === selectedOrgId) ||
+      workspaceList.find((w) => w.isCurrentWorkspace) ||
+      workspaceList[0],
+    [selectedOrgId, workspaceList],
   );
 
   useEffect(() => {
-    if (selectedOrgId === null || workspaces.length === 0) return;
+    if (selectedOrgId === null || workspaceList.length === 0) return;
 
-    const exists = workspaces.some((w) => w.orgId === selectedOrgId);
+    const exists = workspaceList.some((w) => w.orgId === selectedOrgId);
     if (exists) return;
 
     const fallback =
-      workspaces.find((w) => w.isCurrentWorkspace) || workspaces[0];
+      workspaceList.find((w) => w.isCurrentWorkspace) || workspaceList[0];
     setSelectedOrgId(fallback.orgId);
-  }, [selectedOrgId, workspaces, setSelectedOrgId]);
+  }, [selectedOrgId, workspaceList, setSelectedOrgId]);
 
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
@@ -102,9 +104,9 @@ export function WorkspaceSwitcher({
   const otherWorkspaces = useMemo(
     () =>
       currentWorkspaceId
-        ? workspaces.filter((w) => w.orgId !== currentWorkspaceId)
+        ? workspaceList.filter((w) => w.orgId !== currentWorkspaceId)
         : [],
-    [currentWorkspaceId, workspaces],
+    [currentWorkspaceId, workspaceList],
   );
 
   const renderImage = useCallback(
@@ -124,11 +126,50 @@ export function WorkspaceSwitcher({
     [],
   );
 
+  const switcherShellClass = twMerge(
+    "flex items-center rounded-component-md",
+    isCollapsed
+      ? "h-[55px] w-[55px] justify-center py-1.5 px-2 mx-auto"
+      : "w-full py-1.5 px-2 gap-3",
+  );
+
+  if (isPending) {
+    return (
+      <div className={twMerge("relative mb-4", className)}>
+        <div
+          className={twMerge(switcherShellClass, "bg-bg-disabled/20")}
+          aria-busy
+          aria-label="워크스페이스 불러오는 중"
+        >
+          <div className="h-10 w-10 shrink-0 rounded-component-sm bg-bg-disabled/60 animate-pulse" />
+          {!isCollapsed && (
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+              <div className="h-4 max-w-40 w-[55%] rounded bg-bg-disabled/60 animate-pulse" />
+              <div className="h-3 w-14 rounded bg-bg-disabled/50 animate-pulse" />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (!currentWorkspace) {
     return (
-      <div className="relative font-body1 mb-4">
-        <div className="flex items-center p-3 text-text-sub bg-bg-disabled/20 rounded-component-md">
-          워크스페이스 없음
+      <div className={twMerge("relative mb-4", className)}>
+        <div className={twMerge(switcherShellClass, "text-text-sub")}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-component-sm bg-bg-disabled/80 font-bold text-text-sub">
+            —
+          </div>
+          {!isCollapsed && (
+            <div className="flex min-w-0 flex-1 flex-col items-start">
+              <span className="w-full truncate text-left font-label text-text-sub">
+                워크스페이스 없음
+              </span>
+              <span className="font-caption w-full truncate text-text-disabled">
+                {"\u00A0"}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -142,10 +183,8 @@ export function WorkspaceSwitcher({
         aria-controls="workspace-list"
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
-          "flex items-center rounded-component-md transition-colors hover:bg-bg-surface",
-          isCollapsed
-            ? "h-[55px] w-[55px] justify-center py-1.5 px-2 mx-auto"
-            : "w-full py-1.5 px-2 gap-3",
+          switcherShellClass,
+          "transition-colors hover:bg-bg-surface",
         )}
       >
         {renderImage(currentWorkspace)}
