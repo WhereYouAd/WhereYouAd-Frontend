@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import Badge from "@/components/common/badge/Badge";
@@ -6,7 +7,6 @@ import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
-import PageHeader from "@/components/common/PageHeader";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
 import PlatformDetailCard from "@/components/dashboard/platform/PlatformDetailCard";
@@ -28,78 +28,88 @@ import {
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
+type TDashboardHeaderContext = {
+  setHeaderRight?: (node: ReactNode | null) => void;
+};
+
 export default function PlatformDashboard() {
   const [selectedPlatform, setSelectedPlatform] = useState("전체");
   const [isLoading, setIsLoading] = useState(true);
+  const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
 
   const isAllView = selectedPlatform === "전체";
 
-  const platformItems = [
-    { label: "Google", onClick: () => setSelectedPlatform("Google") },
-    { label: "NAVER", onClick: () => setSelectedPlatform("NAVER") },
-    { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
-  ];
+  const platformItems = useMemo(
+    () => [
+      { label: "Google", onClick: () => setSelectedPlatform("Google") },
+      { label: "NAVER", onClick: () => setSelectedPlatform("NAVER") },
+      { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
+    ],
+    [],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1600);
     return () => clearTimeout(timer);
   }, []);
 
-  return (
-    <section className="flex flex-col gap-8 w-full min-w-0">
-      <PageHeader
-        title="플랫폼 대시보드"
-        description="데이터 기준 · 2026. 04. 03. 오전 09:13"
-        actions={
-          <div className="flex items-center gap-5">
+  useEffect(() => {
+    if (!setHeaderRight) return;
+
+    setHeaderRight(
+      <div className="flex items-center gap-3">
+        <Button
+          type="button"
+          size="small"
+          variant={isAllView ? "primary" : "custom"}
+          onClick={() => setSelectedPlatform("전체")}
+          className={twMerge(
+            "w-28 py-5 font-body1 rounded-component-md",
+            !isAllView &&
+              "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
+          )}
+        >
+          전체보기
+        </Button>
+        <DropdownMenu
+          menuClassName="w-34"
+          trigger={
             <Button
               type="button"
               size="small"
-              variant={isAllView ? "primary" : "custom"}
-              onClick={() => setSelectedPlatform("전체")}
+              variant={!isAllView ? "primary" : "custom"}
               className={twMerge(
-                "w-34 py-6 font-body1 rounded-component-md",
-                !isAllView &&
+                "flex items-center w-34 py-5 rounded-component-md",
+                isAllView &&
                   "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
               )}
             >
-              전체보기
+              <span
+                className={twMerge(
+                  "font-body1",
+                  isAllView ? "text-text-sub" : "text-white",
+                )}
+              >
+                {isAllView ? "플랫폼 선택" : selectedPlatform}
+              </span>
+              <ChevronDownIcon
+                className={twMerge(
+                  "w-3 h-3 rotate-180 ml-2 transition-transform",
+                  isAllView ? "text-text-sub" : "text-white",
+                )}
+              />
             </Button>
-            <DropdownMenu
-              menuClassName="w-34"
-              trigger={
-                <Button
-                  type="button"
-                  size="small"
-                  variant={!isAllView ? "primary" : "custom"}
-                  className={twMerge(
-                    "flex items-center w-34 py-6 rounded-component-md",
-                    isAllView &&
-                      "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
-                  )}
-                >
-                  <span
-                    className={twMerge(
-                      "font-body1",
-                      isAllView ? "text-text-sub" : "text-white",
-                    )}
-                  >
-                    {isAllView ? "플랫폼 선택" : selectedPlatform}
-                  </span>
-                  <ChevronDownIcon
-                    className={twMerge(
-                      "w-3 h-3 rotate-180 ml-2 transition-transform",
-                      isAllView ? "text-text-sub" : "text-white",
-                    )}
-                  />
-                </Button>
-              }
-              items={platformItems}
-            />
-          </div>
-        }
-      />
+          }
+          items={platformItems}
+        />
+      </div>,
+    );
 
+    return () => setHeaderRight(null);
+  }, [isAllView, platformItems, selectedPlatform, setHeaderRight]);
+
+  return (
+    <section className="flex flex-col gap-8 w-full min-w-0">
       <div className="flex flex-col gap-8">
         <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
           {/* 성과 우수 플랫폼 */}
