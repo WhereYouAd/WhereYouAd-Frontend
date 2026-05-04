@@ -107,7 +107,7 @@ export default function MainLayout() {
             <div className="flex items-center gap-2">{headerRight}</div>
           </div>
         </header>
-        <div className="mx-auto w-full max-w-400 min-w-0 flex-1 px-lg py-6 tablet:px-6">
+        <div className="mx-auto w-full max-w-400 min-w-0 flex-1 px-8 py-6 tablet:px-6">
           <Outlet context={{ setHeaderRight }} />
         </div>
       </main>
