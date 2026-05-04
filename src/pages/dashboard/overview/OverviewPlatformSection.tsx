@@ -8,7 +8,9 @@ import {
   Skeleton,
   SkeletonCircle,
 } from "@/components/common/skeleton/Skeleton";
-import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
+import PlatformRoasTable, {
+  PLATFORM_ROAS_TABLE_COL,
+} from "@/components/dashboard/platform/PlatformRoasTable";
 
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
@@ -19,18 +21,25 @@ function PlatformRankingSkeleton() {
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
-          className="grid min-h-20 grid-cols-[32px_1.5fr_2.5fr_1.5fr] items-center gap-x-4 px-4 py-4"
+          className={`grid min-h-20 items-stretch gap-x-4 px-4 py-4 @2xl:gap-x-6 ${PLATFORM_ROAS_TABLE_COL}`}
         >
-          <Skeleton className="mx-auto h-4 w-4" />
-          <div className="flex items-center gap-3">
+          <div className="flex min-h-0 items-center justify-center">
+            <Skeleton className="mx-auto h-4 w-4" />
+          </div>
+          <div className="flex min-h-0 min-w-0 items-center gap-3">
             <SkeletonCircle className="h-7 w-7 shrink-0" />
             <Skeleton className="h-4 w-16" />
           </div>
-          <div className="flex flex-col gap-2 pr-4">
-            <Skeleton className="h-6 w-20" />
-            <Skeleton className="h-1.5 w-full rounded-full" />
+          <div className="flex h-full min-h-0 min-w-0 items-center justify-center px-2 @2xl:px-3">
+            <Skeleton className="h-6 w-16" />
           </div>
-          <div className="flex flex-col items-end gap-2">
+          <div className="hidden min-w-0 justify-center pl-1 @2xl:flex @2xl:pl-0">
+            <Skeleton className="h-8 w-14" />
+          </div>
+          <div className="hidden min-w-0 justify-center @2xl:flex">
+            <Skeleton className="h-8 w-14" />
+          </div>
+          <div className="flex min-w-0 flex-col items-end gap-2">
             <Skeleton className="h-5 w-24" />
             <Skeleton className="h-4 w-16" />
           </div>
