@@ -14,6 +14,8 @@ export interface IStatCardProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   value: string | number;
   trend?: ITrend;
+  /** 수치·트렌드 배지를 기본보다 한 단계 작게 (제목은 동일) */
+  compact?: boolean;
 }
 
 const trendClasses: Record<ITrend["direction"], string> = {
@@ -24,19 +26,29 @@ const trendClasses: Record<ITrend["direction"], string> = {
 export const TrendBadge = memo(function TrendBadge({
   direction,
   value,
-}: ITrend) {
+  compact = false,
+}: ITrend & { compact?: boolean }) {
   return (
     <span
       aria-label={`${value} ${direction === "up" ? "상승" : "하락"}`}
       className={twMerge(
-        "inline-flex items-center gap-1 px-2 py-1 rounded-full font-caption w-fit",
+        "inline-flex items-center rounded-full w-fit font-semibold",
+        compact
+          ? "gap-0.5 px-2 py-0.5 font-caption leading-snug"
+          : "gap-1 px-2 py-1 font-caption",
         trendClasses[direction],
       )}
     >
       {direction === "up" ? (
-        <TrendUpIcon aria-hidden className="w-4 h-4" />
+        <TrendUpIcon
+          aria-hidden
+          className={compact ? "h-3.5 w-3.5 shrink-0" : "h-4 w-4"}
+        />
       ) : (
-        <TrendDownIcon aria-hidden className="w-4 h-4" />
+        <TrendDownIcon
+          aria-hidden
+          className={compact ? "h-3.5 w-3.5 shrink-0" : "h-4 w-4"}
+        />
       )}
       {value}
     </span>
@@ -48,6 +60,7 @@ const StatCard = memo(function StatCard({
   value,
   trend,
   className,
+  compact = false,
   ...rest
 }: IStatCardProps) {
   return (
@@ -59,10 +72,15 @@ const StatCard = memo(function StatCard({
       {...rest}
     >
       <p className="font-body2 text-text-sub font-medium">{title}</p>
-      <p className="font-heading1 text-text-main font-extrabold tracking-tight">
+      <p
+        className={twMerge(
+          "text-text-main font-extrabold tracking-tight",
+          compact ? "font-heading2" : "font-heading1",
+        )}
+      >
         {value}
       </p>
-      {trend && <TrendBadge {...trend} />}
+      {trend && <TrendBadge {...trend} compact={compact} />}
     </div>
   );
 });
