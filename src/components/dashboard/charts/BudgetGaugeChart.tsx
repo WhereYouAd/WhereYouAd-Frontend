@@ -36,11 +36,15 @@ export const statusBadgeVariant: Record<TBudgetStatus, TBadgeVariant> = {
   위험: "inactive",
 };
 
-const statusPointClasses: Record<TBudgetStatus, string> = {
-  안정: "bg-status-green",
-  주의: "bg-status-yellow",
-  위험: "bg-status-red",
+/** 게이지 채움 베이스 — 위에 그라데이션 오버레이를 얹음 */
+const statusFillColorVar: Record<TBudgetStatus, string> = {
+  안정: "var(--color-status-green)",
+  주의: "var(--color-status-yellow)",
+  위험: "var(--color-status-red)",
 };
+
+const gaugeFillOverlayGradient =
+  "linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0) 44%, rgba(0,0,0,0.1) 100%)";
 
 const BudgetGaugeChart = memo(function BudgetGaugeChart({
   totalBudget,
@@ -126,26 +130,32 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             aria-valuemax={100}
             aria-valuetext={progressAriaValueText}
             className={twMerge(
-              "relative w-full overflow-hidden rounded-full bg-bg-disabled/35",
+              "relative isolate w-full overflow-hidden rounded-full bg-bg-disabled/45",
+              "shadow-[inset_0_1px_3px_rgb(15_23_42/0.11)] ring-1 ring-inset ring-black/[0.05]",
               compact ? "h-2" : "h-2.5",
             )}
           >
+            {/* 트랙에만 보이는 구간선 — 채움(z-2) 아래라 소진 구간은 연속적으로 보임 */}
             <div
-              className="absolute top-0 bottom-0 z-10 w-px bg-white/70"
-              style={{ left: `${warningThreshold}%` }}
-            />
-            <div
-              className="absolute top-0 bottom-0 z-10 w-px bg-white/70"
-              style={{ left: `${dangerThreshold}%` }}
-            />
+              className="pointer-events-none absolute inset-0 z-[1]"
+              aria-hidden
+            >
+              <div
+                className="absolute top-0 bottom-0 w-px bg-black/[0.12]"
+                style={{ left: `${warningThreshold}%` }}
+              />
+              <div
+                className="absolute top-0 bottom-0 w-px bg-black/[0.12]"
+                style={{ left: `${dangerThreshold}%` }}
+              />
+            </div>
 
             <div
-              className={twMerge(
-                "absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-1000 ease-smooth origin-left",
-                statusPointClasses[status],
-              )}
+              className="absolute top-0 left-0 z-[2] h-full w-full origin-left rounded-full transition-transform duration-1000 ease-smooth"
               style={{
                 transform: `scaleX(${mounted ? Math.min(percentage, 100) / 100 : 0})`,
+                backgroundImage: `${gaugeFillOverlayGradient}`,
+                backgroundColor: statusFillColorVar[status],
               }}
             />
           </div>
