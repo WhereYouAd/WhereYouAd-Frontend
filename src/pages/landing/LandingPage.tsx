@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
 
-import LandingBrandIdentity from "@/components/landing/LandingBrandIdentity";
 import LandingFooter from "@/components/landing/LandingFooter";
 import LandingHeader from "@/components/landing/LandingHeader";
 import LandingHero from "@/components/landing/LandingHero";
+import LandingMultiDevice from "@/components/landing/LandingMultiDevice";
 
 const LandingFeatures = lazy(
   () => import("@/components/landing/LandingFeatures"),
@@ -20,7 +20,7 @@ function SectionFallback({ height = 96 }: { height?: number }) {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:72px] md:[--landing-header-height:80px]">
+    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:64px] md:[--landing-header-height:72px]">
       <LandingHeader />
 
       <main className="flex-1 flex flex-col">
@@ -39,7 +39,7 @@ export default function LandingPage() {
         </Suspense>
       </main>
 
-      <LandingBrandIdentity />
+      <LandingMultiDevice />
       <LandingFooter />
     </div>
   );

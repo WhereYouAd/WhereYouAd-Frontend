@@ -1,5 +1,6 @@
 import { useEmailVerification } from "@/hooks/auth/useEmailVerification";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -27,7 +28,7 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
   } = useEmailVerification({ onNext });
 
   return (
-    <div className="w-full max-w-130 px-6 pb-12">
+    <AuthFormShell variant="step">
       <h1 className="text-start font-heading2 text-text-main mb-10">
         <span className="block">회원가입을 위해</span>
         <span className="block">이메일 인증을 진행할게요</span>
@@ -116,6 +117,6 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
           </button>
         </div>
       )}
-    </div>
+    </AuthFormShell>
   );
 }
