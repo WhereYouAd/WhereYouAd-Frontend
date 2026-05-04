@@ -1,5 +1,5 @@
-import { lazy, Suspense, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { lazy, type ReactNode, Suspense, useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
 
 import { printAsPdf } from "@/utils/download";
@@ -14,7 +14,6 @@ import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
-import PageHeader from "@/components/common/PageHeader";
 import {
   Skeleton,
   SkeletonCircle,
@@ -28,6 +27,7 @@ import TrafficChart, {
 } from "@/components/dashboard/charts/TrafficChart";
 import PlatformRoasTable from "@/components/dashboard/platform/PlatformRoasTable";
 
+import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
 import ChevronDoubleRightIcon from "@/assets/icon/chevron/chervon-double-right.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
@@ -36,15 +36,19 @@ import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 const OverviewAiReportPanel = lazy(() => import("./OverviewAiReportPanel"));
 
+type TDashboardHeaderContext = {
+  setHeaderRight?: (node: ReactNode | null) => void;
+};
+
 export default function OverviewDashboard() {
   const navigate = useNavigate();
+  const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
   const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const {
     data: kpis,
     isLoading: isKpisLoading,
     isError: isKpisError,
     error: kpisError,
-    dataUpdatedAt,
   } = useOverviewMetrics();
   const {
     data: budget,
@@ -58,16 +62,6 @@ export default function OverviewDashboard() {
     isError: isRankingsError,
     error: rankingsError,
   } = useOverviewRoasRankings();
-
-  const currentDate = dataUpdatedAt
-    ? new Date(dataUpdatedAt).toLocaleString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
 
   // 예산 상태 계산 - 카드 헤더 배지
   const budgetPct =
@@ -83,26 +77,35 @@ export default function OverviewDashboard() {
         )
       : null;
 
+  useEffect(() => {
+    if (!setHeaderRight) return;
+
+    setHeaderRight(
+      <button
+        type="button"
+        onClick={() => setIsAiPanelOpen(true)}
+        className="group relative h-8 px-1 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden inline-flex items-center justify-center focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        aria-label="AI 요약하기"
+      >
+        <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full group-hover:animate-[shimmer_1.2s_ease-out] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
+        <div className="relative z-10">
+          <span className="sm:hidden">
+            <SparkleCircleIcon className="w-5 h-5 text-logo-1 fill-current" />
+          </span>
+          <span className="hidden sm:block">
+            <AiButtonSvg className="h-6 w-auto [&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
+          </span>
+        </div>
+      </button>,
+    );
+
+    return () => {
+      setHeaderRight(null);
+    };
+  }, [setHeaderRight]);
+
   return (
     <section className="flex flex-col gap-8 w-full min-w-0">
-      <PageHeader
-        title="통합 대시보드"
-        description={currentDate ? `데이터 기준 · ${currentDate}` : undefined}
-        actions={
-          <button
-            type="button"
-            onClick={() => setIsAiPanelOpen(true)}
-            className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
-            aria-label="AI 요약하기"
-          >
-            <div className="absolute inset-0 z-20 pointer-events-none -translate-x-full group-hover:animate-[shimmer_1.2s_ease-out] bg-linear-to-r from-transparent via-white/80 to-transparent skew-x-12 mix-blend-overlay" />
-            <div className="relative z-10">
-              <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
-            </div>
-          </button>
-        }
-      />
-
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
         {isKpisError ? (
           <div className="col-span-4 tablet:col-span-2 flex items-center justify-center py-8 rounded-[24px] bg-white/80 border border-white/40 text-status-red font-body2">

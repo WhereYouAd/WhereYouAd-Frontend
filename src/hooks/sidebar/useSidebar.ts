@@ -1,47 +1,49 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { mainNav } from "@/constants/sidebarNav";
+import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
+import { normalizePathname } from "@/utils/navigation/pathMatch";
+
+import useSidebarStore from "@/store/useSidebarStore";
 
 export const useSidebar = () => {
   const location = useLocation();
   const [openId, setOpenId] = useState<string | null>(null);
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const isCollapsed = useSidebarStore((s) => s.isCollapsed);
+  const setIsCollapsed = useSidebarStore((s) => s.setIsCollapsed);
 
   const lastPathRef = useRef("");
+  const pathname = normalizePathname(location.pathname);
+
+  const { childIdToParentId } = mainNavSidebar;
 
   useEffect(() => {
     if (isCollapsed) return;
-    const activeParent = mainNav.find((item) =>
-      item.children?.some((c) => c.path === location.pathname),
-    );
+    const parentId = mainNavSidebar.resolveParentId(pathname);
 
-    if (activeParent && location.pathname !== lastPathRef.current) {
-      setOpenId(activeParent.id);
-      lastPathRef.current = location.pathname;
+    if (pathname !== lastPathRef.current) {
+      setOpenId(parentId ?? null);
+      lastPathRef.current = pathname;
     }
-  }, [location.pathname, isCollapsed]);
+  }, [pathname, isCollapsed]);
 
   const toggleSidebar = () => {
-    setIsCollapsed((prev) => {
-      const next = !prev;
-      if (next) lastPathRef.current = "";
-      return next;
-    });
+    setIsCollapsed(!isCollapsed);
+    if (!isCollapsed) lastPathRef.current = "";
     setOpenId(null);
   };
 
+  const toggleOpenId = useCallback((id: string) => {
+    setOpenId((prev) => (prev === id ? null : id));
+  }, []);
+
   const handleItemClick = (id: string, hasChildren: boolean) => {
     if (hasChildren) {
-      if (openId !== id) {
-        setOpenId(id);
-      }
+      toggleOpenId(id);
     } else {
-      const parentOfClicked = mainNav.find((item) =>
-        item.children?.some((child) => child.id === id),
-      );
+      const parentId = childIdToParentId.get(id) ?? null;
 
-      if (!parentOfClicked || parentOfClicked.id !== openId) {
+      if (!parentId || parentId !== openId) {
         setOpenId(null);
       }
     }
@@ -51,8 +53,9 @@ export const useSidebar = () => {
     isCollapsed,
     openId,
     setOpenId,
-    location,
+    pathname,
     toggleSidebar,
     handleItemClick,
+    toggleOpenId,
   };
 };
