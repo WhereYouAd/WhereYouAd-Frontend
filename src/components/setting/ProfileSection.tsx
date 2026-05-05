@@ -102,31 +102,16 @@ export default function ProfileSection({
               </div>
             ) : (
               <>
-                <div className="flex gap-4 px-1 mb-1 text-text-sub">
-                  <div className="flex-1 font-body2">조직</div>
-                  <div className="flex-1 font-body2">직책</div>
-                </div>
                 <div className="group relative flex flex-col gap-4">
                   {organizations.map((org, idx) => (
-                    <div key={idx} className="flex gap-4 ">
-                      <div className="flex-1">
-                        <Input
-                          value={org.name}
-                          disabled
-                          inputClassName="text-text-main"
-                          containerClassName="bg-gray-100"
-                          readOnly
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <Input
-                          value={org.position}
-                          disabled
-                          inputClassName="text-text-sub"
-                          containerClassName="bg-gray-100"
-                          readOnly
-                        />
-                      </div>
+                    <div key={idx}>
+                      <Input
+                        value={`${org.name}  (${org.position})`}
+                        disabled
+                        inputClassName="text-text-main"
+                        containerClassName="bg-gray-100"
+                        readOnly
+                      />
                     </div>
                   ))}
 
