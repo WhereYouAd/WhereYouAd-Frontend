@@ -38,6 +38,8 @@ const MemberManagement = loadable(
 );
 const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
+const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
+
 const MainRoutes: RouteObject[] = [
   {
     path: "dashboard",
@@ -79,6 +81,10 @@ const MainRoutes: RouteObject[] = [
   {
     path: "workspace/billing",
     element: <Billing />,
+  },
+  {
+    path: "setting",
+    element: <Setting />,
   },
 ];
 

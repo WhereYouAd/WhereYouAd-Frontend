@@ -54,7 +54,8 @@ export const signUp = async ({
 export const reissueToken = async (): Promise<
   ICommonResponse<ITokenRefreshResponse>
 > => {
-  const { data } = await axiosInstance.post("/api/auth/reissue");
+  // refreshToken 쿠키 기반 재발급은 credentials가 필요한 authInstance로 요청합니다.
+  const { data } = await authInstance.post("/api/auth/reissue");
   return data;
 };
 
