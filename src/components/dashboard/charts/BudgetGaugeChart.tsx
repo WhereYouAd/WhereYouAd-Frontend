@@ -127,7 +127,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex-1 flex flex-col gap-3">
         <div className="flex flex-col gap-1 rounded-2xl border border-bg-disabled/25 bg-bg-surface/50 p-4">
           <span className="font-caption font-medium text-text-sub">
             남은 예산
@@ -142,7 +142,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
+        <div className="mt-auto flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
           <WarnCircleIcon
             className="block size-5 shrink-0 text-text-sub"
             aria-hidden="true"

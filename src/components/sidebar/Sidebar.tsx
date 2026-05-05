@@ -95,7 +95,10 @@ export default function Sidebar() {
 
         <nav
           aria-label="사이드바 내비게이션"
-          className="flex flex-1 flex-col gap-1 px-2 overflow-y-auto min-h-0"
+          className={twMerge(
+            "flex flex-1 flex-col gap-1 px-2 min-h-0",
+            isCollapsed ? "overflow-visible" : "overflow-y-auto",
+          )}
         >
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
