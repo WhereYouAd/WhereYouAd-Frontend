@@ -198,7 +198,7 @@ export interface IClickStreamResponse {
 
 /** 실시간 트래픽 데이터 생성 (최근 60분) */
 const generateRealTimeTraffic = (
-  platform: string,
+  _platform: string,
   baseCount: number,
 ): IClickStreamResponse => {
   const timeSeriesData: ITimeSeriesData[] = [];
