@@ -11,6 +11,7 @@ import BudgetGaugeChart, {
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
+import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
 
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
@@ -20,6 +21,7 @@ import {
   budgetStatusMock,
   performanceEfficiencyMock,
   platformDailyPerformanceMock,
+  platformTrafficMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
@@ -121,6 +123,15 @@ export default function SinglePlatformView({
     return allData.slice(0, viewRange);
   }, [platform, viewRange]);
 
+  const PLATFORM_THEME_COLORS: Record<string, string> = {
+    GOOGLE: "#f9ab00",
+    NAVER: "#03c75a",
+    META: "#1877f2",
+  };
+
+  const platformColor =
+    PLATFORM_THEME_COLORS[platform.toUpperCase()] || "#1877f2";
+
   return (
     <div className="flex flex-col gap-8">
       {/* platform header */}
@@ -171,19 +182,26 @@ export default function SinglePlatformView({
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
         <Card
           title="실시간 트래픽 변화"
-          className="col-span-2 tablet:col-span-1 min-h-125 flex flex-col"
+          className="col-span-2 tablet:col-span-1 h-120 flex-col"
+          description={
+            <ChartLegend
+              items={[
+                { label: "클릭수", color: platformColor },
+                { label: "이상 클릭 탐지", colorClass: "bg-status-red" },
+              ]}
+            />
+          }
         >
-          <div className="flex flex-1 flex-col items-center justify-center gap-3">
-            <Badge variant="running">Coming Soon</Badge>
-            <p className="text-text-sub font-caption text-center">
-              실시간 클릭 트래픽 모니터링 기능을 준비하고 있습니다.
-            </p>
-          </div>
+          <PlatformTrafficChart
+            data={platformTrafficMock[platform.toUpperCase()] || null}
+            platform={platform.toUpperCase()}
+            isLoading={isLoading}
+          />
         </Card>
 
         <Card
           title="예산 소진 현황"
-          className="col-span-1 tablet:col-span-1 h-full min-h-125 flex flex-col"
+          className="col-span-1 tablet:col-span-1 h-120 flex flex-col"
           description={
             <ChartLegend
               items={[
@@ -206,7 +224,7 @@ export default function SinglePlatformView({
           }
         >
           {budget ? (
-            <div className="-mt-6 flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col">
               <BudgetGaugeChart {...budget} />
             </div>
           ) : (
