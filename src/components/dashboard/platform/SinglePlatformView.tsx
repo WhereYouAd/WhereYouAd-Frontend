@@ -171,9 +171,14 @@ export default function SinglePlatformView({
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
         <Card
           title="실시간 트래픽 변화"
-          className="col-span-2 tablet:col-span-1 min-h-125"
+          className="col-span-2 tablet:col-span-1 min-h-125 flex flex-col"
         >
-          <div className="text-text-sub" />
+          <div className="flex flex-1 flex-col items-center justify-center gap-3">
+            <Badge variant="running">Coming Soon</Badge>
+            <p className="text-text-sub font-caption text-center">
+              실시간 클릭 트래픽 모니터링 기능을 준비하고 있습니다.
+            </p>
+          </div>
         </Card>
 
         <Card
