@@ -8,6 +8,7 @@ import AllPlatformView from "@/components/dashboard/platform/AllPlatformView";
 import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformView";
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
@@ -45,7 +46,7 @@ export default function PlatformDashboard() {
           variant={isAllView ? "primary" : "custom"}
           onClick={() => setSelectedPlatform("전체")}
           className={twMerge(
-            "w-28 py-5 font-body1 rounded-component-md",
+            "w-28 py-4 font-body1 rounded-component-md",
             !isAllView &&
               "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
           )}
@@ -60,7 +61,7 @@ export default function PlatformDashboard() {
               size="small"
               variant={!isAllView ? "primary" : "custom"}
               className={twMerge(
-                "flex items-center w-34 py-5 rounded-component-md",
+                "flex items-center w-34 py-4 rounded-component-md",
                 isAllView &&
                   "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
               )}
@@ -83,6 +84,13 @@ export default function PlatformDashboard() {
           }
           items={platformItems}
         />
+        <button
+          type="button"
+          aria-label="AI 요약 보기"
+          className="ml-4 p-2 -mr-2 outline-none cursor-pointer"
+        >
+          <AiButtonSvg className="h-6 w-auto" />
+        </button>
       </div>,
     );
 

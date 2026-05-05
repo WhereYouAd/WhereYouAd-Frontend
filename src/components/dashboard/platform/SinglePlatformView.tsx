@@ -13,7 +13,6 @@ import BudgetGaugeChart, {
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
 
-import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
@@ -145,14 +144,6 @@ export default function SinglePlatformView({
             <h2 className="text-3xl font-bold text-text-main">{platform}</h2>
           )}
         </div>
-
-        <button
-          type="button"
-          aria-label="AI 요약 보기"
-          className="p-2 -mr-2 outline-none cursor-pointer"
-        >
-          <AiButtonSvg className="h-6 w-auto" />
-        </button>
       </div>
 
       {/* top */}
