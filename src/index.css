@@ -15,10 +15,6 @@ body,
   padding: 0;
 }
 
-body {
-  min-height: 100dvh;
-}
-
 button {
   cursor: pointer;
 }
