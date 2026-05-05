@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant tablet (@media (max-width: 1024px));
+@custom-variant tablet (@media (max-width: 1280px));
 
 * {
   font-family: "Pretendard";
