@@ -6,19 +6,22 @@ import useAuthStore from "@/store/useAuthStore";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// 개발 환경에서는 Vite proxy(`/api` → `VITE_API_TARGET_URL`)를 활용하기 위해
-// baseURL이 없어도 상대경로 요청이 가능하도록 허용합니다.
 if (import.meta.env.PROD && !BASE_URL) {
   throw new Error("API 서버 주소(VITE_API_BASE_URL)가 설정되지 않았습니다.");
 }
 
-const axiosConfig: AxiosRequestConfig = {
+const baseConfig: AxiosRequestConfig = {
   baseURL: BASE_URL || undefined,
-  withCredentials: true,
 };
 
-export const axiosInstance = axios.create(axiosConfig);
-export const authInstance = axios.create(axiosConfig);
+// 일반 API 요청용 인스턴스
+export const axiosInstance = axios.create(baseConfig);
+
+// 인증 전용 인스턴스 (쿠키 필요)
+export const authInstance = axios.create({
+  ...baseConfig,
+  withCredentials: true,
+});
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -67,6 +70,14 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401) {
+      // AccessToken이 없는 상태라면 재발급을 시도할 근거가 없습니다.
+      // (refreshToken 쿠키가 없을 경우 reissue 루프가 쉽게 발생)
+      if (!useAuthStore.getState().accessToken) {
+        return Promise.reject(
+          (error.response?.data as IApiErrorResponse) ?? error,
+        );
+      }
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           addRefreshSubscriber(
