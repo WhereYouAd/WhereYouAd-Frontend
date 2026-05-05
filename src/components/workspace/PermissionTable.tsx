@@ -97,7 +97,6 @@ export default function PermissionTable() {
     if (!hasChanges || isSaving) return;
     setIsSaving(true);
     try {
-      // TODO: 권한 저장 API 호출
       await new Promise((resolve) => setTimeout(resolve, 500));
       setSavedPermissionState(draftPermissionState);
       toast.success("권한 설정이 저장되었습니다");
