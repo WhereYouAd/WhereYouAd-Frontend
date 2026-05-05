@@ -97,7 +97,9 @@ export default function Sidebar() {
           aria-label="사이드바 내비게이션"
           className={twMerge(
             "flex flex-1 flex-col gap-1 px-2 min-h-0",
-            isCollapsed ? "overflow-visible" : "overflow-y-auto",
+            isCollapsed
+              ? "overflow-visible"
+              : "overflow-y-auto overflow-x-hidden",
           )}
         >
           {mainNav.map((item) => {
