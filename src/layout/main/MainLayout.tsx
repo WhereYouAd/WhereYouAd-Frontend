@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 
-import { mainNav } from "@/constants/sidebarNav";
+import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import { isPathMatch, normalizePathname } from "@/utils/navigation/pathMatch";
 
@@ -17,6 +17,8 @@ export default function MainLayout() {
   useCoreQuery(["myInfo"], getMyInfo);
   const location = useLocation();
   const [headerRight, setHeaderRight] = useState<ReactNode | null>(null);
+
+  const allNav = [...mainNav, ...footerNav];
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
@@ -55,7 +57,7 @@ export default function MainLayout() {
 
   const pathname = normalizePathname(location.pathname);
   const { parentLabel, currentLabel } = useMemo(() => {
-    for (const parent of mainNav) {
+    for (const parent of allNav) {
       const children = parent.children ?? [];
       const exactChild = children.find((c) =>
         c.path ? normalizePathname(c.path) === pathname : false,
