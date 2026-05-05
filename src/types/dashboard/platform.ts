@@ -48,3 +48,12 @@ export interface IPlatformEfficiencyData {
   status: string;
   data: IPlatformPerformance[];
 }
+
+// 예산 소진 현황
+export interface IBudgetStatus {
+  providerType: string;
+  usagePercentage: number;
+  totalBudget: number;
+  totalSpend: number;
+  remainingBudget: number;
+}

@@ -1,5 +1,6 @@
 import type {
   IAdStatusData,
+  IBudgetStatus,
   IPlatformPerformance,
   IRoasRanking,
 } from "@/types/dashboard/platform";
@@ -76,5 +77,30 @@ export const performanceEfficiencyMock: IPlatformPerformance[] = [
     cvrChangeRate: 0.08,
     ROAS: 10.98,
     ROASChangeRate: 0.05,
+  },
+];
+
+// 예산 소진 현황
+export const budgetStatusMock: IBudgetStatus[] = [
+  {
+    providerType: "GOOGLE",
+    usagePercentage: 0.75,
+    totalBudget: 10000000,
+    totalSpend: 7500000,
+    remainingBudget: 2500000,
+  },
+  {
+    providerType: "NAVER",
+    usagePercentage: 0.42,
+    totalBudget: 10000000,
+    totalSpend: 4200000,
+    remainingBudget: 5800000,
+  },
+  {
+    providerType: "META",
+    usagePercentage: 0.92,
+    totalBudget: 10000000,
+    totalSpend: 9200000,
+    remainingBudget: 800000,
   },
 ];

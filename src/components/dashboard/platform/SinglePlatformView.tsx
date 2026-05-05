@@ -1,15 +1,24 @@
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
+import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
+import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
+import BudgetGaugeChart, {
+  getBudgetStatus,
+  statusBadgeVariant,
+} from "@/components/dashboard/charts/BudgetGaugeChart";
 
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.png";
-import { performanceEfficiencyMock } from "@/pages/dashboard/platform/platformDashboard.mock";
+import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
+import {
+  budgetStatusMock,
+  performanceEfficiencyMock,
+} from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
   string,
@@ -76,6 +85,32 @@ export default function SinglePlatformView({
 
   const logoInfo = PLATFORM_LOGOS[platform.toUpperCase()];
 
+  const budget = useMemo(() => {
+    const data = budgetStatusMock.find(
+      (b) => b.providerType.toUpperCase() === platform.toUpperCase(),
+    );
+    if (!data) return null;
+
+    return {
+      totalBudget: data.totalBudget,
+      spent: data.totalSpend,
+      warningThreshold: 50,
+      dangerThreshold: 75,
+    };
+  }, [platform]);
+
+  const budgetPct = budget
+    ? Math.round((budget.spent / budget.totalBudget) * 100)
+    : 0;
+
+  const budgetStatus = budget
+    ? getBudgetStatus(
+        budgetPct,
+        budget.warningThreshold,
+        budget.dangerThreshold,
+      )
+    : null;
+
   return (
     <div className="flex flex-col gap-8">
       {/* platform header */}
@@ -90,11 +125,8 @@ export default function SinglePlatformView({
           )}
         </div>
 
-        <button
-          type="button"
-          className="group relative p-2 -mr-2 rounded-2xl outline-none cursor-pointer overflow-hidden"
-        >
-          <AiButtonSvg className="[&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
+        <button type="button" className="p-2 -mr-2 outline-none cursor-pointer">
+          <AiButtonSvg className="h-6 w-auto" />
         </button>
       </div>
 
@@ -123,19 +155,53 @@ export default function SinglePlatformView({
 
       {/* mid */}
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-        <Card title="실시간 트래픽 변화" className="col-span-2 min-h-110">
+        <Card
+          title="실시간 트래픽 변화"
+          className="col-span-2 tablet:col-span-1 min-h-125"
+        >
           <div className="text-text-sub">라인 차트</div>
         </Card>
 
-        <Card title="예산 소진 현황" className="col-span-1 min-h-110">
-          <div className="text-text-sub">게이지 차트</div>
+        <Card
+          title="예산 소진 현황"
+          className="col-span-1 tablet:col-span-1 h-full min-h-125 flex flex-col"
+          description={
+            <ChartLegend
+              items={[
+                { label: "안정", colorClass: "bg-status-green" },
+                { label: "주의", colorClass: "bg-status-yellow" },
+                { label: "위험", colorClass: "bg-status-red" },
+              ]}
+            />
+          }
+          RightElement={
+            budgetStatus && (
+              <Badge
+                variant={statusBadgeVariant[budgetStatus]}
+                size="sm"
+                className="px-2"
+              >
+                {budgetStatus}
+              </Badge>
+            )
+          }
+        >
+          {budget ? (
+            <div className="-mt-6 flex-1 flex flex-col">
+              <BudgetGaugeChart {...budget} />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full text-text-sub">
+              데이터가 없습니다.
+            </div>
+          )}
         </Card>
       </div>
 
       {/* bottom */}
       <Card
         title="실시간 트래픽 변화"
-        className="min-h-100"
+        className="min-h-150"
         RightElement={
           <div className="flex border border-bg-disabled rounded-lg overflow-hidden">
             <button className="px-4 py-2 bg-brand-main text-text-sub font-body2">
