@@ -1,4 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
+import { useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -7,6 +8,7 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 
+import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import { SidebarItem } from "./SidebarItem";
@@ -63,6 +65,19 @@ export default function Sidebar() {
     toggleSidebar,
     toggleOpenId,
   } = useSidebar();
+
+  const { showComingSoon } = useComingSoon();
+
+  const handleFooterItemClick = useCallback(
+    (id: string, hasChildren: boolean) => {
+      if (id === "notifications") {
+        showComingSoon("알림 기능은 준비 중이에요. 나중에 다시 확인해 주세요.");
+        return;
+      }
+      handleItemClick(id, hasChildren);
+    },
+    [handleItemClick, showComingSoon],
+  );
 
   return (
     <motion.div
@@ -159,7 +174,7 @@ export default function Sidebar() {
                   item={item}
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
-                  onClick={handleItemClick}
+                  onClick={handleFooterItemClick}
                 />
               </div>
             );
