@@ -10,6 +10,7 @@ import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
+import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 
 import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
@@ -18,6 +19,7 @@ import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?rea
 import {
   budgetStatusMock,
   performanceEfficiencyMock,
+  platformDailyPerformanceMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
@@ -38,6 +40,8 @@ export default function SinglePlatformView({
   platform,
   isLoading,
 }: ISinglePlatformViewProps) {
+  const [viewRange, setViewRange] = React.useState<7 | 30>(7);
+
   const platformData = useMemo(() => {
     return performanceEfficiencyMock.find(
       (p) => p.provider.toUpperCase() === platform.toUpperCase(),
@@ -111,6 +115,12 @@ export default function SinglePlatformView({
       )
     : null;
 
+  const dailyData = useMemo(() => {
+    const key = platform?.toUpperCase();
+    const allData = key ? platformDailyPerformanceMock[key] || [] : [];
+    return allData.slice(0, viewRange);
+  }, [platform, viewRange]);
+
   return (
     <div className="flex flex-col gap-8">
       {/* platform header */}
@@ -159,7 +169,7 @@ export default function SinglePlatformView({
           title="실시간 트래픽 변화"
           className="col-span-2 tablet:col-span-1 min-h-125"
         >
-          <div className="text-text-sub">라인 차트</div>
+          <div className="text-text-sub" />
         </Card>
 
         <Card
@@ -200,20 +210,38 @@ export default function SinglePlatformView({
 
       {/* bottom */}
       <Card
-        title="실시간 트래픽 변화"
+        title="광고 현황 상세"
         className="min-h-150"
         RightElement={
           <div className="flex border border-bg-disabled rounded-lg overflow-hidden">
-            <button className="px-4 py-2 bg-brand-main text-text-sub font-body2">
+            <button
+              type="button"
+              onClick={() => setViewRange(7)}
+              className={twMerge(
+                "px-4 py-2 font-body2 transition-all duration-200",
+                viewRange === 7
+                  ? "bg-status-blue text-white shadow-sm"
+                  : "bg-white text-text-sub hover:bg-bg-surface",
+              )}
+            >
               최근 7일
             </button>
-            <button className="px-4 py-2 bg-white text-text-sub font-body2 border-l border-bg-disabled">
+            <button
+              type="button"
+              onClick={() => setViewRange(30)}
+              className={twMerge(
+                "px-4 py-2 font-body2 border-l border-bg-disabled transition-all duration-200",
+                viewRange === 30
+                  ? "bg-status-blue text-white shadow-sm"
+                  : "bg-white text-text-sub hover:bg-bg-surface",
+              )}
+            >
               최근 30일
             </button>
           </div>
         }
       >
-        <div className="text-text-sub mt-6">테이블</div>
+        <PlatformDetailTable data={dailyData} />
       </Card>
     </div>
   );
