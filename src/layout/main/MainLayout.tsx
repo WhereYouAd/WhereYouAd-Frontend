@@ -80,12 +80,11 @@ export default function MainLayout() {
   }, [pathname]);
 
   return (
-    <div className="flex min-h-dvh w-full items-start bg-gray-50">
-      {/* 뷰포트 높이에 고정 + sticky: 본문은 문서 스크롤(전체 페이지 캡처·DevTools와 호환) */}
-      <div className="sticky top-0 z-40 flex h-dvh shrink-0">
+    <div className="flex h-dvh w-full overflow-hidden bg-gray-50">
+      <div className="flex h-full shrink-0">
         <Sidebar />
       </div>
-      <main className="flex min-h-dvh min-w-0 flex-1 flex-col">
+      <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="sticky top-0 z-30 border-b border-bg-surface bg-white">
           <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
             <div className="flex min-w-0 items-center gap-2">
