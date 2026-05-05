@@ -103,8 +103,17 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
       </div>
 
       {/* 실시간 트래픽 변화 */}
-      <Card title="실시간 트래픽 변화" className="min-h-125">
-        {isLoading ? <TrafficChartSkeleton /> : null}
+      <Card title="실시간 트래픽 변화" className="min-h-125 flex flex-col">
+        {isLoading ? (
+          <TrafficChartSkeleton />
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center gap-3">
+            <Badge variant="running">Coming Soon</Badge>
+            <p className="text-text-sub font-caption text-center">
+              실시간 클릭 트래픽 모니터링 기능을 준비하고 있습니다.
+            </p>
+          </div>
+        )}
       </Card>
 
       {/* 개별 플랫폼 상세 */}
