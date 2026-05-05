@@ -135,7 +135,11 @@ export default function SinglePlatformView({
           )}
         </div>
 
-        <button type="button" className="p-2 -mr-2 outline-none cursor-pointer">
+        <button
+          type="button"
+          aria-label="AI 요약 보기"
+          className="p-2 -mr-2 outline-none cursor-pointer"
+        >
           <AiButtonSvg className="h-6 w-auto" />
         </button>
       </div>

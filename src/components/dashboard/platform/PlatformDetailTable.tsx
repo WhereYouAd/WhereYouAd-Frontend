@@ -10,15 +10,28 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
   // 합계 계산
   const total = useMemo(() => {
     if (!data.length) return null;
-    const count = data.length;
+    const totalSpend = data.reduce((acc, curr) => acc + curr.spend, 0);
+    const totalImpressions = data.reduce(
+      (acc, curr) => acc + curr.impressions,
+      0,
+    );
+    const totalClicks = data.reduce((acc, curr) => acc + curr.clicks, 0);
+    const totalConversions = data.reduce(
+      (acc, curr) => acc + curr.conversions,
+      0,
+    );
     return {
-      spend: data.reduce((acc, curr) => acc + curr.spend, 0),
-      impressions: data.reduce((acc, curr) => acc + curr.impressions, 0),
-      clicks: data.reduce((acc, curr) => acc + curr.clicks, 0),
-      ctr: data.reduce((acc, curr) => acc + curr.ctr, 0) / count,
-      cpc: data.reduce((acc, curr) => acc + curr.cpc, 0) / count,
-      conversions: data.reduce((acc, curr) => acc + curr.conversions, 0),
-      roas: data.reduce((acc, curr) => acc + curr.roas, 0) / count,
+      spend: totalSpend,
+      impressions: totalImpressions,
+      clicks: totalClicks,
+      ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
+      cpc: totalClicks > 0 ? totalSpend / totalClicks : 0,
+      conversions: totalConversions,
+      roas:
+        totalSpend > 0
+          ? data.reduce((acc, curr) => acc + curr.roas * curr.spend, 0) /
+            totalSpend
+          : 0,
     };
   }, [data]);
 
