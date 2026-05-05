@@ -1,4 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
+import { useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -7,6 +8,7 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 
+import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import { SidebarItem } from "./SidebarItem";
@@ -64,6 +66,19 @@ export default function Sidebar() {
     toggleOpenId,
   } = useSidebar();
 
+  const { showComingSoon } = useComingSoon();
+
+  const handleFooterItemClick = useCallback(
+    (id: string, hasChildren: boolean) => {
+      if (id === "notifications") {
+        showComingSoon("알림 기능은 준비 중이에요. 나중에 다시 확인해 주세요.");
+        return;
+      }
+      handleItemClick(id, hasChildren);
+    },
+    [handleItemClick, showComingSoon],
+  );
+
   return (
     <motion.div
       className={twMerge(
@@ -73,12 +88,15 @@ export default function Sidebar() {
       animate={{ width: isCollapsed ? 88 : 256 }}
       transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
-      <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col">
+      <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col min-h-0">
         <div className="px-2">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 px-2">
+        <nav
+          aria-label="사이드바 내비게이션"
+          className="flex flex-1 flex-col gap-1 px-2 overflow-y-auto min-h-0"
+        >
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
             const { isParentActive } = mainNavSidebar.getItemActiveState(
@@ -145,7 +163,9 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <div className={twMerge("mt-2 pb-3", isCollapsed ? "" : "px-2")}>
+        <div
+          className={twMerge("mt-2 pb-3 shrink-0", isCollapsed ? "" : "px-2")}
+        >
           {footerNav.map((item) => {
             const isActive =
               item.path != null ? isPathMatch(pathname, item.path) : false;
@@ -159,7 +179,7 @@ export default function Sidebar() {
                   item={item}
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
-                  onClick={handleItemClick}
+                  onClick={handleFooterItemClick}
                 />
               </div>
             );
@@ -171,7 +191,7 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "w-full h-[55px] rounded-component-md text-sm transition-all duration-200 inline-flex items-center",
+                "w-full h-button-big rounded-component-md text-sm transition-all duration-200 inline-flex items-center",
                 isCollapsed ? "justify-center px-0" : "gap-4 px-3",
                 "text-text-auth-sub hover:text-chart-3 hover:bg-bg-surface",
               )}
