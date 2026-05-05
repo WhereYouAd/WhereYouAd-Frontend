@@ -35,10 +35,15 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
         },
         signal: controller.signal,
         onopen: async (response) => {
-          if (response.ok) {
-            retryCountRef.current = 0;
-            setIsError(false);
+          const contentType = response.headers.get("content-type") ?? "";
+          const isSse = contentType.includes("text/event-stream");
+          if (!response.ok || !isSse) {
+            throw new Error(
+              `Invalid SSE response: status=${response.status}, content-type=${contentType}`,
+            );
           }
+          retryCountRef.current = 0;
+          setIsError(false);
         },
         onmessage(event) {
           if (event.event === "org-click-update") {
