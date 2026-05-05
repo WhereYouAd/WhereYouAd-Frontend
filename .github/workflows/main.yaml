@@ -13,15 +13,17 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # Node 버전을 고정해서 팀/CI 환경 차이 방지
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      # Node 버전을 고정해서 팀/CI 환경 차이 방지 (pnpm 선행 시 cache: pnpm 안정)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install pnpm
-        run: npm install -g pnpm
 
       - name: Create .env file
         run: |
