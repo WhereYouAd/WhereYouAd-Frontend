@@ -19,7 +19,6 @@ button {
   cursor: pointer;
 }
 
-/* Hide horizontal scrollbar for mock timeline */
 .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
   height: 0px;
 }
@@ -33,7 +32,6 @@ button {
 @theme {
   --color-logo-1: #2eb4ff;
   --color-logo-2: #6088fe;
-  /* logo-2와 동일 hue, 살짝만 어두운 톤 (solid CTA 호버용) */
   --color-logo-2-dark: #4d67e5;
 
   --color-brand-900: #000000;
@@ -110,7 +108,7 @@ button {
 
 @font-face {
   font-family: "Pretendard";
-  src: url("/fonts/PretendardVariable.woff2") format("font-woff2");
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
   font-display: swap;
   font-weight: 45 920;
 }
