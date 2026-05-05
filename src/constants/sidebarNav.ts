@@ -61,12 +61,6 @@ export const mainNav: INavItem[] = [
       },
     ],
   },
-  {
-    id: "settings",
-    label: "개인 설정",
-    icon: SettingsIcon,
-    path: "/setting",
-  },
 ];
 
 export const footerNav: INavItem[] = [
