@@ -42,7 +42,7 @@ const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
 
 const MainRoutes: RouteObject[] = [
   {
-    path: "/",
+    path: "dashboard",
     element: <OverviewDashboard />,
   },
   {

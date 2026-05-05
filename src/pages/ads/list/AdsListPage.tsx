@@ -1,19 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import type { ICampaign } from "@/types/ads/campaign";
-
 import { useControlModal } from "@/hooks/ads/useControlModal";
-import { useCoreQuery } from "@/hooks/customQuery";
+import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
 import Card from "@/components/common/card/Card";
 import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
-import PageHeader from "@/components/common/PageHeader";
 
-import { getCampaignList, updateAllCampaignStatus } from "@/api/ads/ads";
+import { updateAllCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -22,11 +19,7 @@ export default function AdsListPage() {
   const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  const { data: campaigns = [], isLoading } = useCoreQuery<ICampaign[]>(
-    ["campaigns", orgId],
-    () => getCampaignList(orgId!),
-    { enabled: !!orgId },
-  );
+  const { data: campaigns = [], isLoading } = useOverviewCampaignList();
 
   const invalidateCampaigns = () => {
     queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
@@ -67,10 +60,6 @@ export default function AdsListPage() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <PageHeader
-        title="광고 운영 관리"
-        description="연결된 캠페인 및 광고 소재의 상세 운영 설정을 확인하고 제어할 수 있습니다."
-      />
       {/* 테이블 */}
       <Card>
         <CampaignTable

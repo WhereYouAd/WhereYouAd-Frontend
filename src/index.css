@@ -9,24 +9,32 @@
 html,
 body,
 #root {
-  height: 100dvh;
+  min-height: 100dvh;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
-}
-
-body {
-  min-height: 100dvh;
-  height: 100%;
 }
 
 button {
   cursor: pointer;
 }
 
+/* Hide horizontal scrollbar for mock timeline */
+.landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
+  height: 0px;
+}
+.landing-guide-timeline .custom-scrollbar {
+  scrollbar-width: none;
+}
+.landing-guide-timeline .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
 @theme {
   --color-logo-1: #2eb4ff;
   --color-logo-2: #6088fe;
+  /* logo-2와 동일 hue, 살짝만 어두운 톤 (solid CTA 호버용) */
+  --color-logo-2-dark: #4d67e5;
 
   --color-brand-900: #000000;
   --color-brand-800: #001f5b;
@@ -56,6 +64,15 @@ button {
   --color-text-disabled: #b0b8c1;
   --color-bg-disabled: #e5e8eb;
   --color-bg-surface: #f6f6f6;
+
+  /* Landing (legacy 디자인 컬러를 토큰화) */
+  --color-landing-surface: #f5f5f7;
+  --color-landing-section: #f8f9fc;
+  --color-landing-pricing: #fafafa;
+  --color-landing-dark: #1e1e1e;
+  --color-footer-bg: #121212;
+  --color-footer-border: #2a2a2a;
+  --color-landing-muted: #6e6e73;
 
   --color-social-kakao: #fee500;
   --color-social-naver: #03c75a;
@@ -254,7 +271,7 @@ button {
 
   .checkbox:checked {
     background-color: #0084fe;
-    background-image: url("/src/assets/icon/check-white.svg");
+    background-image: url("./assets/icon/common/check-white.svg");
     background-size: 60% 60%;
     background-position: center;
     background-repeat: no-repeat;
@@ -351,6 +368,23 @@ button {
   .animate-slide-fade-up {
     animation: slide-fade-up 350ms var(--ease-out) both;
     animation-delay: 100ms;
+  }
+
+  /* 준비 중 플레이스홀더 — 자식 순차 진입 (인라인 delay 제거) */
+  .coming-soon-stagger > * {
+    animation: slide-fade-up 350ms var(--ease-out) both;
+  }
+  .coming-soon-stagger > :nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .coming-soon-stagger > :nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .coming-soon-stagger > :nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .coming-soon-stagger > :nth-child(4) {
+    animation-delay: 150ms;
   }
 
   /* 그래프 상승 애니메이션 */
@@ -460,6 +494,12 @@ button {
       transform: none;
     }
 
+    .coming-soon-stagger > * {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+
     /* 인트로 캐러셀 — 위치 이동 중단 */
     .animate-scroll {
       animation: none;
@@ -516,3 +556,5 @@ button {
     animation: fade-in-up 0.2s var(--ease-out) both;
   }
 }
+
+/* (removed) react-calendar-timeline overrides — now using custom mock timeline */

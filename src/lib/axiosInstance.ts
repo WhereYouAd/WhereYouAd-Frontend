@@ -6,12 +6,14 @@ import useAuthStore from "@/store/useAuthStore";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-if (!BASE_URL) {
+// 개발 환경에서는 Vite proxy(`/api` → `VITE_API_TARGET_URL`)를 활용하기 위해
+// baseURL이 없어도 상대경로 요청이 가능하도록 허용합니다.
+if (import.meta.env.PROD && !BASE_URL) {
   throw new Error("API 서버 주소(VITE_API_BASE_URL)가 설정되지 않았습니다.");
 }
 
 const axiosConfig: AxiosRequestConfig = {
-  baseURL: BASE_URL,
+  baseURL: BASE_URL || undefined,
   withCredentials: true,
 };
 

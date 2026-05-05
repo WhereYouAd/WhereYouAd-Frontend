@@ -9,6 +9,7 @@ import { loginSchema } from "@/utils/validation";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 
+import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
@@ -35,7 +36,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
       onSuccess: () => {
-        navigate("/", { replace: true });
+        navigate("/dashboard", { replace: true });
       },
       onError: (error) => {
         toast.error(error.message ?? "로그인에 실패했습니다.");
@@ -44,7 +45,7 @@ export default function Login() {
   };
 
   return (
-    <div className="w-full max-w-130 px-6 py-12">
+    <AuthFormShell variant="page">
       <h1 className="text-center font-heading2 text-text-main mb-10">로그인</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
@@ -125,6 +126,6 @@ export default function Login() {
           이메일로 회원가입
         </Link>
       </div>
-    </div>
+    </AuthFormShell>
   );
 }

@@ -1,5 +1,9 @@
-import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+
+import { mainNav } from "@/constants/sidebarNav";
+
+import { isPathMatch, normalizePathname } from "@/utils/navigation/pathMatch";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -11,6 +15,8 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function MainLayout() {
   useCoreQuery(["myInfo"], getMyInfo);
+  const location = useLocation();
+  const [headerRight, setHeaderRight] = useState<ReactNode | null>(null);
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
@@ -46,12 +52,62 @@ export default function MainLayout() {
     setSelectedOrgId,
     selectedOrgId,
   ]);
+
+  const pathname = normalizePathname(location.pathname);
+  const { parentLabel, currentLabel } = useMemo(() => {
+    for (const parent of mainNav) {
+      const children = parent.children ?? [];
+      const exactChild = children.find((c) =>
+        c.path ? normalizePathname(c.path) === pathname : false,
+      );
+      if (exactChild) {
+        return { parentLabel: parent.label, currentLabel: exactChild.label };
+      }
+
+      const matchChild = children.find((c) =>
+        c.path ? isPathMatch(pathname, c.path) : false,
+      );
+      if (matchChild) {
+        return { parentLabel: parent.label, currentLabel: matchChild.label };
+      }
+
+      if (parent.path && isPathMatch(pathname, parent.path)) {
+        return { parentLabel: parent.label, currentLabel: parent.label };
+      }
+    }
+
+    return { parentLabel: "", currentLabel: "" };
+  }, [pathname]);
+
   return (
-    <div className="fixed inset-0 box-border flex overflow-hidden p-5 bg-gray-50 tablet:p-3">
-      <Sidebar />
-      <main className="flex-1 min-w-0 min-h-0 overflow-y-auto">
-        <div className="mx-auto w-full max-w-400 min-w-0 py-6 px-lg tablet:px-6">
-          <Outlet />
+    <div className="flex h-dvh w-full overflow-hidden bg-gray-50">
+      <div className="flex h-full shrink-0">
+        <Sidebar />
+      </div>
+      <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+        <header className="sticky top-0 z-30 border-b border-bg-surface bg-white">
+          <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
+            <div className="flex min-w-0 items-center gap-2">
+              {parentLabel ? (
+                <>
+                  <span className="truncate font-body1 text-text-sub">
+                    {parentLabel}
+                  </span>
+                  <span className="text-text-placeholder" aria-hidden="true">
+                    /
+                  </span>
+                </>
+              ) : null}
+              <span className="truncate font-body1 text-[18px] font-semibold text-text-main">
+                {currentLabel || parentLabel || " "}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">{headerRight}</div>
+          </div>
+        </header>
+        <div className="mx-auto w-full max-w-400 min-w-0 flex-1 px-8 py-6 tablet:px-6">
+          <Outlet context={{ setHeaderRight }} />
         </div>
       </main>
     </div>

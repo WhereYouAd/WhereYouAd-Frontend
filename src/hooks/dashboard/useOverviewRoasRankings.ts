@@ -17,9 +17,12 @@ export function useOverviewRoasRankings() {
   return useCoreQuery(
     ["overview", "roasRankings", orgId],
     async (): Promise<IPlatformRankingItem[]> => {
-      // ROAS 순위 + 각 플랫폼 지표 병렬 호출
       const [rankingsRes, ...metricsResults] = await Promise.all([
-        getRoasRankings(orgId!),
+        // TODO: 백엔드 빈 배열 이슈 확인용 임시 날짜 범위 — 정상화 후 제거
+        getRoasRankings(orgId!, {
+          startDate: "2026-01-22",
+          endDate: "2026-03-22",
+        }),
         ...PROVIDERS.map((p) => getOverview(orgId!, p).catch(() => null)),
       ]);
 
