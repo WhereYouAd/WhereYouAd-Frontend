@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import type { ApexOptions } from "apexcharts";
 
 import { useClickStream } from "@/hooks/dashboard/useClickStream";
 
@@ -27,27 +26,36 @@ import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 const ReactApexChart = lazy(() => import("react-apexcharts"));
 
-// 차트 우측 상단 다운로드 버튼
+// 차트 우측 상단 다운로드 버튼 + 더미 토글
 export function TrafficChartDownload() {
   return (
-    <DropdownMenu
-      aria-label="차트 다운로드"
-      trigger={
-        <button
-          type="button"
-          className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-fast"
-          aria-label="다운로드 메뉴 열기"
-        >
-          <MoreIcon
-            width={16}
-            height={16}
-            aria-hidden="true"
-            className="text-text-auth-sub"
-          />
-        </button>
-      }
-      items={DOWNLOAD_ITEMS}
-    />
+    <div className="flex flex-col items-end gap-1">
+      <DropdownMenu
+        aria-label="차트 다운로드"
+        trigger={
+          <button
+            type="button"
+            className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-fast"
+            aria-label="다운로드 메뉴 열기"
+          >
+            <MoreIcon
+              width={16}
+              height={16}
+              aria-hidden="true"
+              className="text-text-auth-sub"
+            />
+          </button>
+        }
+        items={DOWNLOAD_ITEMS}
+      />
+      <button
+        type="button"
+        onClick={toggleDummyClicks}
+        className="shrink-0 px-1.5 py-0.5 text-[10px] leading-tight font-medium text-text-placeholder rounded border border-bg-disabled/50 hover:bg-bg-surface transition-colors"
+      >
+        더미 토글
+      </button>
+    </div>
   );
 }
 
@@ -93,34 +101,79 @@ const AnomalyBubble = memo(function AnomalyBubble({
   );
 });
 
-type TTrafficChartProps = {
-  yAxisMax?: number;
-  height?: number;
-  showAnomaly?: boolean;
-};
-
-const TrafficChart = memo(function TrafficChart({
-  yAxisMax,
-  height = 400,
-  showAnomaly = true,
-}: TTrafficChartProps) {
+const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { data, suspectDetail, isError } = useClickStream("dummy");
 
-  // timeSeriesData → 차트 series 및 카테고리 변환
-  const { series, categories, anomalyCategory, anomalyY } = useMemo(() => {
+  // timeSeriesData → datetime 기반 차트 series 변환
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  const {
+    series,
+    xAxisMin,
+    xAxisMax,
+    labelEndAs24h,
+    anomalyTimestamp,
+    anomalyY,
+  } = useMemo(() => {
     const items = data?.timeSeriesData ?? [];
-    const cats = items.map((d) => {
-      const hh = d.minute.slice(8, 10);
-      const mm = d.minute.slice(10, 12);
-      return `${hh}:${mm}`;
-    });
-    const chartData = items.map((d) => d.count);
+    const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    ).getTime();
+
+    const chartData = items
+      .filter((d) => (d.minute?.length ?? 0) >= 12)
+      .map((d) => {
+        const year = parseInt(d.minute.slice(0, 4), 10);
+        const month = parseInt(d.minute.slice(4, 6), 10) - 1;
+        const day = parseInt(d.minute.slice(6, 8), 10);
+        const hour = parseInt(d.minute.slice(8, 10), 10);
+        const min = parseInt(d.minute.slice(10, 12), 10);
+        const x = new Date(year, month, day, hour, min).getTime();
+        return { x, y: d.count, minute: d.minute };
+      })
+      .filter((p) => !Number.isNaN(p.x));
+
+    // 해당 일 00:00 (데이터 없으면 오늘)
+    let ds = todayStart;
+    if (chartData.length > 0) {
+      const minX = Math.min(...chartData.map((p) => p.x));
+      const d0 = new Date(minX);
+      ds = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate()).getTime();
+    }
+
+    // SSE는 보통 1시간 등 슬라이딩 윈도만 줌 → X축을 데이터 구간에 춤. 거의 하루일 때만 00~24h.
+    let xMin = ds;
+    let xMax = ds + DAY_MS;
+    let endTickAs24h = true;
+    if (chartData.length > 0) {
+      const dataMin = Math.min(...chartData.map((p) => p.x));
+      const dataMax = Math.max(...chartData.map((p) => p.x));
+      let spanMs = dataMax - dataMin;
+      if (spanMs <= 0) {
+        const pad = 30 * 60 * 1000;
+        xMin = dataMin - pad;
+        xMax = dataMax + pad;
+        endTickAs24h = false;
+      } else if (spanMs >= DAY_MS * 0.9) {
+        xMin = ds;
+        xMax = ds + DAY_MS;
+        endTickAs24h = true;
+      } else {
+        const pad = Math.max(60 * 1000, Math.round(spanMs * 0.08));
+        xMin = dataMin - pad;
+        xMax = dataMax + pad;
+        endTickAs24h = false;
+      }
+    }
 
     // 이상 징후 발생 시 suspectDetail.timestamp로 해당 분 단위 지점을 마커로 표시
-    let anomCat: string | undefined;
+    let anomTs: number | undefined;
     let anomY: number | undefined;
-    if (data?.hasSuspect && items.length > 0) {
+    if (data?.hasSuspect && chartData.length > 0) {
       let matchIdx = -1;
 
       if (suspectDetail?.timestamp) {
@@ -132,26 +185,33 @@ const TrafficChart = memo(function TrafficChart({
             String(ts.getDate()).padStart(2, "0") +
             String(ts.getHours()).padStart(2, "0") +
             String(ts.getMinutes()).padStart(2, "0");
-          matchIdx = items.findIndex((d) => d.minute === minute);
+          matchIdx = chartData.findIndex((p) => p.minute === minute);
         }
       }
 
       // timestamp 매칭 실패 시 최대 클릭 지점으로 fallback
       if (matchIdx === -1) {
-        matchIdx = items.reduce(
-          (maxI, cur, i, arr) => (cur.count > arr[maxI].count ? i : maxI),
+        matchIdx = chartData.reduce(
+          (maxI, cur, i, arr) => (cur.y > arr[maxI].y ? i : maxI),
           0,
         );
       }
 
-      anomCat = cats[matchIdx];
-      anomY = items[matchIdx].count;
+      anomTs = chartData[matchIdx]?.x;
+      anomY = chartData[matchIdx]?.y;
     }
 
     return {
-      series: [{ name: "클릭수", data: chartData }],
-      categories: cats,
-      anomalyCategory: anomCat,
+      series: [
+        {
+          name: "클릭수",
+          data: chartData.map(({ x, y }) => ({ x, y })),
+        },
+      ],
+      xAxisMin: xMin,
+      xAxisMax: xMax,
+      labelEndAs24h: endTickAs24h,
+      anomalyTimestamp: anomTs,
       anomalyY: anomY,
     };
   }, [data, suspectDetail]);
@@ -159,18 +219,20 @@ const TrafficChart = memo(function TrafficChart({
   const chartOptions = useMemo(
     () =>
       buildChartOptions({
-        categories,
+        xMin: xAxisMin,
+        xMax: xAxisMax,
+        labelEndAs24h,
         maxCount: Math.max(
           ...(data?.timeSeriesData?.map((d) => d.count) ?? [0]),
         ),
-        anomalyCategory,
+        anomalyTimestamp,
         anomalyY,
       }),
-    [categories, data, anomalyCategory, anomalyY],
+    [xAxisMin, xAxisMax, labelEndAs24h, data, anomalyTimestamp, anomalyY],
   );
 
-  // 빨간 점의 컨테이너 기준 좌표 (anomalyCategory 변경 시 재계산)
-  const markerPos = useAnomalyMarkerPos(containerRef, anomalyCategory);
+  // 빨간 점의 컨테이너 기준 좌표 (anomalyTimestamp 변경 시 재계산)
+  const markerPos = useAnomalyMarkerPos(containerRef, anomalyTimestamp);
   const [isAnomalyHovered, setIsAnomalyHovered] = useState(false);
   const [isAnomalyFocused, setIsAnomalyFocused] = useState(false);
 
@@ -201,30 +263,7 @@ const TrafficChart = memo(function TrafficChart({
   const handlePointerEnter = useCallback(() => setIsAnomalyHovered(true), []);
   const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
 
-  const showBubble = showAnomaly && (isAnomalyHovered || isAnomalyFocused);
-  const apexOptions: ApexOptions = useMemo(() => {
-    if (!yAxisMax) return chartOptions;
-
-    const yaxis = chartOptions.yaxis;
-    if (Array.isArray(yaxis)) {
-      return {
-        ...chartOptions,
-        yaxis: yaxis.map((axis) =>
-          typeof axis === "object" && axis !== null
-            ? { ...axis, max: yAxisMax }
-            : axis,
-        ),
-      };
-    }
-
-    return {
-      ...chartOptions,
-      yaxis:
-        typeof yaxis === "object" && yaxis !== null
-          ? { ...yaxis, max: yAxisMax }
-          : yaxis,
-    };
-  }, [chartOptions, yAxisMax]);
+  const showBubble = isAnomalyHovered || isAnomalyFocused;
 
   if (isError && !data) {
     return (
@@ -241,14 +280,6 @@ const TrafficChart = memo(function TrafficChart({
 
   return (
     <>
-      {/* TODO: 테스트용 - 개발 완료 후 제거 */}
-      <button
-        type="button"
-        onClick={toggleDummyClicks}
-        className="mb-2 px-3 py-1 text-xs bg-gray-200 rounded"
-      >
-        더미 데이터 토글
-      </button>
       <div
         id={CHART_CONTAINER_ID}
         ref={containerRef}
@@ -260,13 +291,12 @@ const TrafficChart = memo(function TrafficChart({
         <Suspense fallback={<div className="h-100" />}>
           <ReactApexChart
             type="area"
-            options={apexOptions}
+            options={chartOptions}
             series={series}
-            height={height}
+            height={400}
           />
         </Suspense>
-
-        {showAnomaly && markerPos && (
+        {markerPos && (
           <>
             <span
               className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"

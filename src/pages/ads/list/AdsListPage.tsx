@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import type { ICampaign } from "@/types/ads/campaign";
-
 import { useControlModal } from "@/hooks/ads/useControlModal";
-import { useCoreQuery } from "@/hooks/customQuery";
+import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
 import Card from "@/components/common/card/Card";
@@ -12,7 +10,7 @@ import ControlBox from "@/components/common/controlbox/ControlBox";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { getCampaignList, updateAllCampaignStatus } from "@/api/ads/ads";
+import { updateAllCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -21,11 +19,7 @@ export default function AdsListPage() {
   const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  const { data: campaigns = [], isLoading } = useCoreQuery<ICampaign[]>(
-    ["campaigns", orgId],
-    () => getCampaignList(orgId!),
-    { enabled: !!orgId },
-  );
+  const { data: campaigns = [], isLoading } = useOverviewCampaignList();
 
   const invalidateCampaigns = () => {
     queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
