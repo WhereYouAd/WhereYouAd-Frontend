@@ -78,7 +78,10 @@ export default function Sidebar() {
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
-        <nav className="flex flex-1 flex-col gap-1 px-2 overflow-y-auto min-h-0">
+        <nav
+          aria-label="사이드바 내비게이션"
+          className="flex flex-1 flex-col gap-1 px-2 overflow-y-auto min-h-0"
+        >
           {mainNav.map((item) => {
             const isOpen = openId === item.id;
             const { isParentActive } = mainNavSidebar.getItemActiveState(
