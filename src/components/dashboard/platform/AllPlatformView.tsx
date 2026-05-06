@@ -3,6 +3,7 @@ import Card from "@/components/common/card/Card";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
+import AllPlatformTrafficChart from "@/components/dashboard/platform/AllPlatformTrafficChart";
 import PlatformDetailCard from "@/components/dashboard/platform/PlatformDetailCard";
 import {
   AdStatusChartSkeleton,
@@ -10,7 +11,6 @@ import {
   PerformanceEfficiencyChartSkeleton,
   PlatformDetailCardSkeleton,
   TopPerformanceListSkeleton,
-  TrafficChartSkeleton,
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
@@ -102,18 +102,23 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
         </Card>
       </div>
 
-      {/* 실시간 트래픽 변화 */}
-      <Card title="실시간 트래픽 변화" className="min-h-125 flex flex-col">
-        {isLoading ? (
-          <TrafficChartSkeleton />
-        ) : (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3">
-            <Badge variant="running">Coming Soon</Badge>
-            <p className="text-text-sub font-caption text-center">
-              실시간 클릭 트래픽 모니터링 기능을 준비하고 있습니다.
-            </p>
-          </div>
-        )}
+      {/* 플랫폼별 실시간 클릭수 비교 */}
+      <Card
+        title="플랫폼별 실시간 클릭수 비교"
+        className="h-120 flex flex-col"
+        description={
+          <ChartLegend
+            items={[
+              { label: "Google", color: "#f9ab00" },
+              { label: "NAVER", color: "#03c75a" },
+              { label: "Meta", color: "#1877f2" },
+            ]}
+          />
+        }
+      >
+        <div className="flex-1 min-h-0">
+          <AllPlatformTrafficChart isLoading={isLoading} />
+        </div>
       </Card>
 
       {/* 개별 플랫폼 상세 */}
