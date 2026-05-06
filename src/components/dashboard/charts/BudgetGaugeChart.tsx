@@ -142,7 +142,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           </span>
         </div>
 
-        <div className="mt-auto flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
+        <div className="flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
           <WarnCircleIcon
             className="block size-5 shrink-0 text-text-sub"
             aria-hidden="true"
