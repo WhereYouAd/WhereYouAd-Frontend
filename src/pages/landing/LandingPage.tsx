@@ -15,7 +15,13 @@ const LandingPricing = lazy(
 const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ"));
 
 function SectionFallback({ height = 96 }: { height?: number }) {
-  return <div className="w-full" style={{ height }} aria-hidden />;
+  return (
+    <div className="w-full" style={{ height }} aria-hidden>
+      <div className="h-full w-full rounded-[28px] border border-chart-inactive/60 bg-white/55 backdrop-blur-sm shadow-card overflow-hidden">
+        <div className="h-full w-full animate-pulse bg-linear-to-r from-brand-300/40 via-white/40 to-brand-300/40" />
+      </div>
+    </div>
+  );
 }
 
 export default function LandingPage() {

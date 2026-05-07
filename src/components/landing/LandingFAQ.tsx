@@ -42,7 +42,7 @@ export default function LandingFAQ() {
         <div className="mt-10 divide-y divide-chart-inactive rounded-component-md border border-chart-inactive overflow-hidden bg-white shadow-card">
           {FAQ_ITEMS.map(({ q, a }) => (
             <details key={q} className="group px-5 md:px-6 py-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-logo-2/35 focus-visible:outline-offset-[-2px]">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white">
                 <span className="font-body1 text-text-main">{q}</span>
                 <span className="text-text-sub shrink-0">
                   <ChevronDown className="w-5 h-5 group-open:hidden" />

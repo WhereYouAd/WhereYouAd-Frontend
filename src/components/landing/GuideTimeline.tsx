@@ -65,36 +65,59 @@ export default function GuideTimeline() {
       {/* Top Navigation */}
       <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-chart-inactive/80 bg-white/80 backdrop-blur-md z-20">
         <div className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70">
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
+          <button
+            type="button"
+            className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md"
+          >
             Day
           </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]">
+          <button
+            type="button"
+            className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]"
+          >
             Week
           </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
+          <button
+            type="button"
+            className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md"
+          >
             Month
           </button>
         </div>
 
         <div className="flex items-center gap-4 text-[13px] font-bold text-text-main">
-          <button className="text-text-placeholder hover:text-text-sub transition-colors">
+          <button
+            type="button"
+            aria-label="이전 기간"
+            className="text-text-placeholder hover:text-text-sub transition-colors"
+          >
             <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
           <span>27 Dec - 4 Jan</span>
-          <button className="text-text-placeholder hover:text-text-sub transition-colors">
+          <button
+            type="button"
+            aria-label="다음 기간"
+            className="text-text-placeholder hover:text-text-sub transition-colors"
+          >
             <ChevronRightIcon className="h-3.5 w-3.5" />
           </button>
         </div>
 
         <div className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub">
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
+          <button
+            type="button"
+            className="flex items-center gap-1.5 hover:text-text-main transition-colors"
+          >
             <SortIcon className="h-3.5 w-3.5" />
             <span>Sort</span>
-          </div>
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
+          </button>
+          <button
+            type="button"
+            className="flex items-center gap-1.5 hover:text-text-main transition-colors"
+          >
             <FilterIcon className="h-3.5 w-3.5" />
             <span>Filter</span>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -160,7 +183,11 @@ export default function GuideTimeline() {
 
                   {/* Menu */}
                   <div className="ml-auto flex items-center gap-2 shrink-0">
-                    <button className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-brand-900/5 transition-colors text-text-placeholder">
+                    <button
+                      type="button"
+                      aria-label="캠페인 메뉴"
+                      className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-brand-900/5 transition-colors text-text-placeholder"
+                    >
                       <KebabIcon className="h-3.5 w-3.5" />
                     </button>
                   </div>

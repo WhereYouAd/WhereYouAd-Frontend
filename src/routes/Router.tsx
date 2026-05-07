@@ -30,17 +30,17 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: (
+      <React.Suspense fallback={null}>
+        <LandingPage />
+      </React.Suspense>
+    ),
     errorElement: <Error />,
   },
   {
     element: <GlobalLayout />,
     errorElement: <Error />,
     children: [
-      {
-        path: "/",
-        element: <Navigate to="/landing" replace />,
-      },
       {
         path: "/landing",
         element: (
