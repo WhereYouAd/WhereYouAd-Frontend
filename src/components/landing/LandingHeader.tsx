@@ -10,7 +10,15 @@ const navItems = [
 ];
 
 function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLElement)) return;
+
+  el.scrollIntoView({ behavior: "smooth" });
+
+  // 섹션으로 이동한 뒤 키보드 사용자도 맥락을 잃지 않도록 포커스를 함께 이동
+  window.setTimeout(() => {
+    el.focus({ preventScroll: true });
+  }, 300);
 }
 
 export default function LandingHeader() {

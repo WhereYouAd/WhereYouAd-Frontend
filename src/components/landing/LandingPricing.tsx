@@ -36,7 +36,8 @@ export default function LandingPricing() {
   return (
     <section
       id="pricing"
-      className="py-24 md:py-40 bg-landing-section relative scroll-mt-20 overflow-hidden"
+      tabIndex={-1}
+      className="py-24 md:py-40 bg-landing-section relative scroll-mt-20 overflow-hidden focus-visible:outline-none"
     >
       <div
         aria-hidden

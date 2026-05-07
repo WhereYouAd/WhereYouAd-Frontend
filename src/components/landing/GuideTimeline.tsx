@@ -64,25 +64,20 @@ export default function GuideTimeline() {
     <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-transparent font-sans">
       {/* Top Navigation */}
       <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-chart-inactive/80 bg-white/80 backdrop-blur-md z-20">
-        <div className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70">
-          <button
-            type="button"
-            className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md"
-          >
+        <div
+          aria-label="보기 모드(목업)"
+          className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70"
+          role="group"
+        >
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-sub rounded-md select-none opacity-60">
             Day
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]"
-          >
+          </span>
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px] select-none">
             Week
-          </button>
-          <button
-            type="button"
-            className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md"
-          >
+          </span>
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-sub rounded-md select-none opacity-60">
             Month
-          </button>
+          </span>
         </div>
 
         <div className="flex items-center gap-4 text-[13px] font-bold text-text-main">
