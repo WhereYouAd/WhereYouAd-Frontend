@@ -113,6 +113,10 @@ export default function GuideOverviewChart() {
           />
         }
       >
+        <p className="sr-only">
+          {"실시간 트래픽 변화 차트(목업). 클릭수와 예측 클릭수를 시간 흐름에 따라 비교합니다. " +
+            "오후 12시 기준 클릭수 48,500, 전시간 대비 +1.9%로 표시됩니다."}
+        </p>
         <Suspense
           fallback={
             <div className="flex-1 w-full rounded-component-md bg-brand-300/50" />

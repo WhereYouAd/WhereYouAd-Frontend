@@ -22,16 +22,13 @@ function CheckIcon({ enabled }: { enabled: boolean }) {
 export default function LandingPricing() {
   const navigate = useNavigate();
 
-  function handleCta(planName: string) {
-    if (planName === "프로") {
-      const subject = encodeURIComponent("WhereYouAd 요금제 문의");
-      const body = encodeURIComponent("문의하실 내용을 입력해 주세요.");
-      window.location.href = `mailto:whereyouadofficial@gmail.com?subject=${subject}&body=${body}`;
-      return;
-    }
-
+  function handleCta() {
     navigate("/signup", { replace: false });
   }
+
+  const proMailtoHref = `mailto:whereyouadofficial@gmail.com?subject=${encodeURIComponent(
+    "WhereYouAd 요금제 문의",
+  )}&body=${encodeURIComponent("문의하실 내용을 입력해 주세요.")}`;
 
   return (
     <section
@@ -110,17 +107,30 @@ export default function LandingPricing() {
                 )}
               </div>
 
-              <button
-                type="button"
-                onClick={() => handleCta(plan.name)}
-                className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
-                  plan.featured
-                    ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
-                    : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
-                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
-              >
-                {plan.buttonText}
-              </button>
+              {plan.name === "프로" ? (
+                <a
+                  href={proMailtoHref}
+                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 inline-flex items-center justify-center ${
+                    plan.featured
+                      ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
+                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                >
+                  {plan.buttonText}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleCta}
+                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
+                    plan.featured
+                      ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
+                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                >
+                  {plan.buttonText}
+                </button>
+              )}
 
               <p className="text-[13px] text-text-sub mb-8">{plan.assurance}</p>
 
