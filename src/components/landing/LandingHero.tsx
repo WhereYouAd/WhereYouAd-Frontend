@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 
 import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
+import HeroBg1280Avif from "@/assets/mockup/optimized/landing/hero-bg-1280.avif";
+import HeroBg1280Webp from "@/assets/mockup/optimized/landing/hero-bg-1280.webp";
 import MockupTestImage from "@/assets/mockup/optimized/mockup_test.jpg";
 
 function scrollToSection(id: string) {
@@ -27,15 +29,19 @@ function scrollToSection(id: string) {
 export default function LandingHero() {
   return (
     <section className="relative w-full overflow-hidden bg-brand-300">
-      <img
-        src={MockupTestImage}
-        alt=""
-        aria-hidden
-        fetchPriority="high"
-        loading="eager"
-        decoding="async"
-        className="absolute inset-0 z-0 h-full w-full object-cover object-center"
-      />
+      <picture>
+        <source type="image/avif" srcSet={HeroBg1280Avif} />
+        <source type="image/webp" srcSet={HeroBg1280Webp} />
+        <img
+          src={MockupTestImage}
+          alt=""
+          aria-hidden
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
+        />
+      </picture>
       <div
         className="pointer-events-none absolute inset-0 z-[1] bg-black/60"
         aria-hidden

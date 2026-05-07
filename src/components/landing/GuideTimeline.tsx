@@ -1,64 +1,19 @@
+import {
+  LANDING_TIMELINE_CARDS,
+  LANDING_TIMELINE_COLUMNS,
+} from "@/constants/landing/timeline";
+
 import ChevronLeftIcon from "@/assets/icon/timeline/chevron-left.svg?react";
 import ChevronRightIcon from "@/assets/icon/timeline/chevron-right.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
-const columns = [
-  { day: "M", date: 30, isWeekend: false },
-  { day: "T", date: 31, isWeekend: false },
-  { day: "W", date: 1, isWeekend: false },
-  { day: "T", date: 2, isWeekend: false, isToday: true },
-  { day: "F", date: 3, isWeekend: false },
-  { day: "S", date: 4, isWeekend: true },
-  { day: "S", date: 5, isWeekend: true },
-  { day: "M", date: 6, isWeekend: false },
-  { day: "T", date: 7, isWeekend: false },
-  { day: "W", date: 8, isWeekend: false },
-  { day: "T", date: 9, isWeekend: false },
-  { day: "F", date: 10, isWeekend: false },
-  { day: "S", date: 11, isWeekend: true },
-  { day: "S", date: 12, isWeekend: true },
-  { day: "M", date: 13, isWeekend: false },
-  { day: "T", date: 14, isWeekend: false },
-  { day: "W", date: 15, isWeekend: false },
-];
-
-const cards = [
-  {
-    id: 1,
-    title: "봄 프로모션 캠페인",
-    subtitle: "Google Ads · 전환",
-    colStart: 3.2,
-    colEnd: 9,
-    row: 1,
-    colorClass: "bg-status-blue",
-  },
-  {
-    id: 2,
-    title: "리타겟팅 캠페인",
-    subtitle: "Meta · 트래픽",
-    colStart: 8.9,
-    colEnd: 15.3,
-    row: 2,
-    colorClass: "bg-logo-2",
-  },
-  {
-    id: 3,
-    title: "브랜드 검색 캠페인",
-    subtitle: "Naver · 검색",
-    colStart: 2.4,
-    colEnd: 8,
-    row: 3,
-    colorClass: "bg-status-green",
-  },
-];
-
 export default function GuideTimeline() {
   const colWidth = 55;
   const rowHeight = 92;
   const rowOffset = 24;
-  const totalWidth = columns.length * colWidth;
+  const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
 
   return (
     <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-transparent font-sans">
@@ -124,7 +79,7 @@ export default function GuideTimeline() {
         >
           {/* Header (Dates) */}
           <div className="h-[28px] flex items-center border-b border-chart-inactive/80 relative bg-brand-300/40 z-10">
-            {columns.map((c, i) => (
+            {LANDING_TIMELINE_COLUMNS.map((c, i) => (
               <div
                 key={i}
                 className="w-[55px] flex justify-center text-[11px] font-semibold text-text-placeholder"
@@ -139,7 +94,7 @@ export default function GuideTimeline() {
           {/* Timeline Body Grid */}
           <div className="relative flex-1">
             {/* Columns Background */}
-            {columns.map((_, i) => (
+            {LANDING_TIMELINE_COLUMNS.map((_, i) => (
               <div
                 key={i}
                 className="absolute top-0 bottom-0 border-r border-chart-inactive/80"
@@ -150,7 +105,7 @@ export default function GuideTimeline() {
             {/* Today Line removed for cleaner mock */}
 
             {/* Cards */}
-            {cards.map((card) => {
+            {LANDING_TIMELINE_CARDS.map((card) => {
               const x = (card.colStart - 1) * colWidth;
               const width = (card.colEnd - card.colStart) * colWidth;
               const y = rowOffset + (card.row - 1) * rowHeight;
