@@ -31,7 +31,6 @@ export default function MainLayout() {
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   useEffect(() => {
-    // 모두 완료되었을 때 시작
     if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
     if (selectedOrgId !== null) return;
 
