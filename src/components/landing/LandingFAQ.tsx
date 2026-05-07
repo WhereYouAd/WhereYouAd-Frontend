@@ -1,36 +1,17 @@
+import { LANDING_FAQ_ITEMS } from "@/constants/landing/faq";
+
 import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
 
 import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
 import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
 
-type TFAQItem = { q: string; a: string };
-
-const FAQ_ITEMS: TFAQItem[] = [
-  {
-    q: "무료로 시작할 수 있나요?",
-    a: "네. 스타터 플랜으로 주요 기능을 바로 체험할 수 있습니다.",
-  },
-  {
-    q: "어떤 광고 채널을 연동할 수 있나요?",
-    a: "Google, Meta, 카카오, 네이버 등 주요 채널을 지원합니다. (추가 채널은 순차 확대 예정입니다.)",
-  },
-  {
-    q: "요금은 언제부터 결제되나요?",
-    a: "프로 플랜은 무료 체험 이후에 결제가 시작됩니다. 자세한 내용은 요금제에서 확인하세요.",
-  },
-  {
-    q: "엔터프라이즈는 어떤 기능이 포함되나요?",
-    a: "조직/권한 관리, 보안 옵션, 전용 지원 등 규모에 맞춘 기능을 제공합니다.",
-  },
-  {
-    q: "데모를 받을 수 있나요?",
-    a: "네. 엔터프라이즈 문의를 통해 데모 일정을 조율할 수 있습니다.",
-  },
-];
-
 export default function LandingFAQ() {
   return (
-    <section className="py-24 md:py-32 bg-brand-200">
+    <section
+      id="faq"
+      tabIndex={-1}
+      className="py-24 md:py-32 bg-brand-200 scroll-mt-[calc(var(--landing-header-height,64px)+16px)] focus-visible:outline-none"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           <LandingSectionHeader
@@ -40,9 +21,9 @@ export default function LandingFAQ() {
         </div>
 
         <div className="mt-10 divide-y divide-chart-inactive rounded-component-md border border-chart-inactive overflow-hidden bg-white shadow-card">
-          {FAQ_ITEMS.map(({ q, a }) => (
+          {LANDING_FAQ_ITEMS.map(({ q, a }) => (
             <details key={q} className="group px-5 md:px-6 py-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-logo-2/35 focus-visible:outline-offset-[-2px]">
+              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white">
                 <span className="font-body1 text-text-main">{q}</span>
                 <span className="text-text-sub shrink-0">
                   <ChevronDown className="w-5 h-5 group-open:hidden" />

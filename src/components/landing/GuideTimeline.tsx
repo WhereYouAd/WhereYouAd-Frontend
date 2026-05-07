@@ -1,99 +1,72 @@
+import {
+  LANDING_TIMELINE_CARDS,
+  LANDING_TIMELINE_COLUMNS,
+} from "@/constants/landing/timeline";
+
 import ChevronLeftIcon from "@/assets/icon/timeline/chevron-left.svg?react";
 import ChevronRightIcon from "@/assets/icon/timeline/chevron-right.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
-const columns = [
-  { day: "M", date: 30, isWeekend: false },
-  { day: "T", date: 31, isWeekend: false },
-  { day: "W", date: 1, isWeekend: false },
-  { day: "T", date: 2, isWeekend: false, isToday: true },
-  { day: "F", date: 3, isWeekend: false },
-  { day: "S", date: 4, isWeekend: true },
-  { day: "S", date: 5, isWeekend: true },
-  { day: "M", date: 6, isWeekend: false },
-  { day: "T", date: 7, isWeekend: false },
-  { day: "W", date: 8, isWeekend: false },
-  { day: "T", date: 9, isWeekend: false },
-  { day: "F", date: 10, isWeekend: false },
-  { day: "S", date: 11, isWeekend: true },
-  { day: "S", date: 12, isWeekend: true },
-  { day: "M", date: 13, isWeekend: false },
-  { day: "T", date: 14, isWeekend: false },
-  { day: "W", date: 15, isWeekend: false },
-];
-
-const cards = [
-  {
-    id: 1,
-    title: "봄 프로모션 캠페인",
-    subtitle: "Google Ads · 전환",
-    colStart: 3.2,
-    colEnd: 9,
-    row: 1,
-    colorClass: "bg-status-blue",
-  },
-  {
-    id: 2,
-    title: "리타겟팅 캠페인",
-    subtitle: "Meta · 트래픽",
-    colStart: 8.9,
-    colEnd: 15.3,
-    row: 2,
-    colorClass: "bg-logo-2",
-  },
-  {
-    id: 3,
-    title: "브랜드 검색 캠페인",
-    subtitle: "Naver · 검색",
-    colStart: 2.4,
-    colEnd: 8,
-    row: 3,
-    colorClass: "bg-status-green",
-  },
-];
-
 export default function GuideTimeline() {
   const colWidth = 55;
   const rowHeight = 92;
   const rowOffset = 24;
-  const totalWidth = columns.length * colWidth;
+  const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
 
   return (
     <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-transparent font-sans">
       {/* Top Navigation */}
       <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-chart-inactive/80 bg-white/80 backdrop-blur-md z-20">
-        <div className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70">
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
+        <div
+          aria-label="보기 모드(목업)"
+          className="flex items-center bg-brand-300/70 p-0.5 rounded-[8px] border border-chart-inactive/70"
+          role="group"
+        >
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-sub rounded-md select-none opacity-60">
             Day
-          </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px]">
+          </span>
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-main bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] rounded-[6px] select-none">
             Week
-          </button>
-          <button className="px-3 py-1.5 text-[12px] font-semibold text-text-sub hover:text-text-auth-sub transition-colors rounded-md">
+          </span>
+          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-sub rounded-md select-none opacity-60">
             Month
-          </button>
+          </span>
         </div>
 
         <div className="flex items-center gap-4 text-[13px] font-bold text-text-main">
-          <button className="text-text-placeholder hover:text-text-sub transition-colors">
+          <button
+            type="button"
+            aria-label="이전 기간"
+            className="text-text-placeholder hover:text-text-sub transition-colors"
+          >
             <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
           <span>27 Dec - 4 Jan</span>
-          <button className="text-text-placeholder hover:text-text-sub transition-colors">
+          <button
+            type="button"
+            aria-label="다음 기간"
+            className="text-text-placeholder hover:text-text-sub transition-colors"
+          >
             <ChevronRightIcon className="h-3.5 w-3.5" />
           </button>
         </div>
 
         <div className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub">
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
-            <SortIcon className="h-3.5 w-3.5" />
-            <span>Sort</span>
-          </div>
-          <div className="flex items-center gap-1.5 cursor-pointer hover:text-text-main transition-colors">
-            <FilterIcon className="h-3.5 w-3.5" />
-            <span>Filter</span>
+          <div
+            aria-label="정렬/필터(목업)"
+            className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub select-none"
+            role="group"
+          >
+            <span className="flex items-center gap-1.5 opacity-70">
+              <SortIcon className="h-3.5 w-3.5" />
+              <span>Sort</span>
+            </span>
+            <span className="flex items-center gap-1.5 opacity-70">
+              <FilterIcon className="h-3.5 w-3.5" />
+              <span>Filter</span>
+            </span>
           </div>
         </div>
       </div>
@@ -106,7 +79,7 @@ export default function GuideTimeline() {
         >
           {/* Header (Dates) */}
           <div className="h-[28px] flex items-center border-b border-chart-inactive/80 relative bg-brand-300/40 z-10">
-            {columns.map((c, i) => (
+            {LANDING_TIMELINE_COLUMNS.map((c, i) => (
               <div
                 key={i}
                 className="w-[55px] flex justify-center text-[11px] font-semibold text-text-placeholder"
@@ -121,7 +94,7 @@ export default function GuideTimeline() {
           {/* Timeline Body Grid */}
           <div className="relative flex-1">
             {/* Columns Background */}
-            {columns.map((_, i) => (
+            {LANDING_TIMELINE_COLUMNS.map((_, i) => (
               <div
                 key={i}
                 className="absolute top-0 bottom-0 border-r border-chart-inactive/80"
@@ -132,7 +105,7 @@ export default function GuideTimeline() {
             {/* Today Line removed for cleaner mock */}
 
             {/* Cards */}
-            {cards.map((card) => {
+            {LANDING_TIMELINE_CARDS.map((card) => {
               const x = (card.colStart - 1) * colWidth;
               const width = (card.colEnd - card.colStart) * colWidth;
               const y = rowOffset + (card.row - 1) * rowHeight;
@@ -160,7 +133,11 @@ export default function GuideTimeline() {
 
                   {/* Menu */}
                   <div className="ml-auto flex items-center gap-2 shrink-0">
-                    <button className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-brand-900/5 transition-colors text-text-placeholder">
+                    <button
+                      type="button"
+                      aria-label="캠페인 메뉴"
+                      className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-brand-900/5 transition-colors text-text-placeholder"
+                    >
                       <KebabIcon className="h-3.5 w-3.5" />
                     </button>
                   </div>

@@ -10,7 +10,23 @@ const navItems = [
 ];
 
 function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLElement)) return;
+
+  const prefersReducedMotion =
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+
+  el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+
+  if (prefersReducedMotion) {
+    el.focus({ preventScroll: true });
+    return;
+  }
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      el.focus({ preventScroll: true });
+    });
+  });
 }
 
 export default function LandingHeader() {

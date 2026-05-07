@@ -1,20 +1,47 @@
 import { motion } from "framer-motion";
 
 import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
+import HeroBg1280Avif from "@/assets/mockup/optimized/landing/hero-bg-1280.avif";
+import HeroBg1280Webp from "@/assets/mockup/optimized/landing/hero-bg-1280.webp";
 import MockupTestImage from "@/assets/mockup/optimized/mockup_test.jpg";
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLElement)) return;
+
+  const prefersReducedMotion =
+    window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+
+  el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
+
+  if (prefersReducedMotion) {
+    el.focus({ preventScroll: true });
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      el.focus({ preventScroll: true });
+    });
+  });
+}
 
 export default function LandingHero() {
   return (
     <section className="relative w-full overflow-hidden bg-brand-300">
-      <img
-        src={MockupTestImage}
-        alt=""
-        aria-hidden
-        fetchPriority="high"
-        loading="eager"
-        decoding="async"
-        className="absolute inset-0 z-0 h-full w-full object-cover object-center"
-      />
+      <picture>
+        <source type="image/avif" srcSet={HeroBg1280Avif} />
+        <source type="image/webp" srcSet={HeroBg1280Webp} />
+        <img
+          src={MockupTestImage}
+          alt=""
+          aria-hidden
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
+        />
+      </picture>
       <div
         className="pointer-events-none absolute inset-0 z-[1] bg-black/60"
         aria-hidden
@@ -42,18 +69,21 @@ export default function LandingHero() {
       </motion.div>
 
       <motion.div
-        aria-hidden="true"
         className="absolute z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/75"
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.6, ease: "easeOut" }}
       >
-        <motion.div
+        <motion.button
+          type="button"
+          aria-label="다음 섹션(기능)으로 이동"
+          onClick={() => scrollToSection("features")}
+          className="rounded-full p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30"
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown className="w-15 h-auto" focusable="false" />
-        </motion.div>
+        </motion.button>
       </motion.div>
     </section>
   );

@@ -34,3 +34,5 @@ storybook-static
 
 # Local: Cursor commit message trailer stripper (keep on machine only)
 scripts/strip-cursor-attribution.mjs
+scripts/strip-cursor-attribution 2.mjs
+scripts/optimize-landing-images.mjs

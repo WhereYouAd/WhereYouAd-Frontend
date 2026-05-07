@@ -126,18 +126,34 @@ function WorkspaceGraphic() {
     if (!isInView) return;
 
     setShowCursor(true);
-    let index = 0;
-    const timer = setInterval(() => {
-      index += 1;
-      setTypedText(fullText.slice(0, index));
-      if (index >= fullText.length) {
-        clearInterval(timer);
-        setShowCursor(false);
-      }
-    }, 40);
+    setTypedText("");
 
-    return () => clearInterval(timer);
-  }, [isInView]);
+    const msPerChar = 40;
+    const startAt = performance.now();
+    let rafId = 0;
+
+    const tick = (now: number) => {
+      const nextIndex = Math.min(
+        fullText.length,
+        Math.floor((now - startAt) / msPerChar),
+      );
+
+      setTypedText((prev) => {
+        const next = fullText.slice(0, nextIndex);
+        return prev === next ? prev : next;
+      });
+
+      if (nextIndex >= fullText.length) {
+        setShowCursor(false);
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(tick);
+    };
+
+    rafId = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(rafId);
+  }, [isInView, fullText]);
 
   return (
     <div
@@ -211,7 +227,8 @@ export default function LandingFeatures() {
   return (
     <section
       id="features"
-      className="py-24 md:py-40 bg-brand-200 relative scroll-mt-20"
+      tabIndex={-1}
+      className="py-24 md:py-40 bg-brand-200 relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] focus-visible:outline-none"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
