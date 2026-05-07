@@ -7,7 +7,10 @@ import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
 
 export default function LandingFAQ() {
   return (
-    <section className="py-24 md:py-32 bg-brand-200">
+    <section
+      tabIndex={-1}
+      className="py-24 md:py-32 bg-brand-200 focus-visible:outline-none"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="max-w-4xl mx-auto">
           <LandingSectionHeader

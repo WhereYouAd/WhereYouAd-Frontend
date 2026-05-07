@@ -99,20 +99,20 @@ export default function GuideTimeline() {
         </div>
 
         <div className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub">
-          <button
-            type="button"
-            className="flex items-center gap-1.5 hover:text-text-main transition-colors"
+          <div
+            aria-label="정렬/필터(목업)"
+            className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub select-none"
+            role="group"
           >
-            <SortIcon className="h-3.5 w-3.5" />
-            <span>Sort</span>
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-1.5 hover:text-text-main transition-colors"
-          >
-            <FilterIcon className="h-3.5 w-3.5" />
-            <span>Filter</span>
-          </button>
+            <span className="flex items-center gap-1.5 opacity-70">
+              <SortIcon className="h-3.5 w-3.5" />
+              <span>Sort</span>
+            </span>
+            <span className="flex items-center gap-1.5 opacity-70">
+              <FilterIcon className="h-3.5 w-3.5" />
+              <span>Filter</span>
+            </span>
+          </div>
         </div>
       </div>
 
