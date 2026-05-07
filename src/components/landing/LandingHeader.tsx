@@ -18,13 +18,10 @@ function scrollToSection(id: string) {
 
   el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
 
-  // 섹션으로 이동한 뒤 키보드 사용자도 맥락을 잃지 않도록 포커스를 함께 이동
   if (prefersReducedMotion) {
     el.focus({ preventScroll: true });
     return;
   }
-
-  // smooth 스크롤은 완료 시점을 알기 어려워, 다음 페인트 이후 포커스 이동
   window.requestAnimationFrame(() => {
     window.requestAnimationFrame(() => {
       el.focus({ preventScroll: true });

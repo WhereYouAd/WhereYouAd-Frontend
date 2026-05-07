@@ -228,7 +228,7 @@ export default function LandingFeatures() {
     <section
       id="features"
       tabIndex={-1}
-      className="py-24 md:py-40 bg-brand-200 relative scroll-mt-20 focus-visible:outline-none"
+      className="py-24 md:py-40 bg-brand-200 relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] focus-visible:outline-none"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
