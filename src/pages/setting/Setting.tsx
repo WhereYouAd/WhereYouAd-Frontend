@@ -122,34 +122,34 @@ export default function Setting() {
     }
   };
 
-  const fetchMyInfo = async () => {
-    try {
-      const res = await getMyInfo();
-
-      const profileData = {
-        name: res.data.name,
-        // organizations: res.data.organizations?.map((org) => ({
-        //   name: org.organizationName,
-        //   position: org.position,
-        // })) ?? [],
-        organizations: [],
-        email: res.data.email,
-        phoneNumber: res.data.phoneNumber,
-      };
-      setSavedProfile({
-        name: res.data.name,
-        profileImageUrl: res.data.profileImageUrl,
-      });
-      setDraftProfile(profileData);
-      setPreview(res.data.profileImageUrl);
-    } catch (error) {
-      toast.error("회원 정보를 불러오는데 실패했습니다");
-      console.log(error);
-    }
-  };
   useEffect(() => {
+    const fetchMyInfo = async () => {
+      try {
+        const res = await getMyInfo();
+
+        const profileData = {
+          name: res.data.name,
+          // organizations: res.data.organizations?.map((org) => ({
+          //   name: org.organizationName,
+          //   position: org.position,
+          // })) ?? [],
+          organizations: [],
+          email: res.data.email,
+          phoneNumber: res.data.phoneNumber,
+        };
+        setSavedProfile({
+          name: res.data.name,
+          profileImageUrl: res.data.profileImageUrl,
+        });
+        setDraftProfile(profileData);
+        setPreview(res.data.profileImageUrl);
+      } catch (error) {
+        toast.error("회원 정보를 불러오는데 실패했습니다");
+        console.error(error);
+      }
+    };
     fetchMyInfo();
-  }, []);
+  }, [setPreview]);
   return (
     <section className="w-full flex flex-col gap-8">
       <div className="flex flex-col gap-6">

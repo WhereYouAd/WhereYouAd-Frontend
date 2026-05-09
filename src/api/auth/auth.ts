@@ -127,7 +127,7 @@ export const getMyInfo = async (): Promise<
 
 const buildMyInfoFormData = (
   request: IUpdateMyInfoRequest,
-  imagefile?: File | null,
+  imageFile?: File | null,
 ) => {
   const formData = new FormData();
 
@@ -137,8 +137,8 @@ const buildMyInfoFormData = (
       type: "application/json",
     }),
   );
-  if (imagefile) {
-    formData.append("image", imagefile);
+  if (imageFile) {
+    formData.append("image", imageFile);
   }
 
   return formData;
