@@ -13,6 +13,8 @@ import type {
   ISmsVerifyRequest,
   ISmsVerifyResponse,
   ITokenRefreshResponse,
+  IUpdateMyInfoRequest,
+  IUpdateMyInfoResponse,
 } from "@/types/auth/auth";
 import type { ICommonResponse } from "@/types/common/common";
 
@@ -120,5 +122,35 @@ export const getMyInfo = async (): Promise<
   ICommonResponse<IMyPageInfoResponse>
 > => {
   const { data } = await axiosInstance.get("/api/users/my");
+  return data;
+};
+
+const buildMyInfoFormData = (
+  request: IUpdateMyInfoRequest,
+  imagefile?: File | null,
+) => {
+  const formData = new FormData();
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    }),
+  );
+  if (imagefile) {
+    formData.append("image", imagefile);
+  }
+
+  return formData;
+};
+
+export const updateMyInfo = async (
+  body: IUpdateMyInfoRequest & {
+    imageFile?: File | null;
+  },
+): Promise<ICommonResponse<IUpdateMyInfoResponse>> => {
+  const { imageFile, ...request } = body;
+  const formData = buildMyInfoFormData(request, imageFile);
+  const { data } = await axiosInstance.patch("/api/users/my", formData);
   return data;
 };

@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+
+import type { IApiErrorResponse } from "@/types/common/common";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
@@ -7,7 +9,7 @@ import Button from "@/components/common/button/Button";
 import PasswordSection from "@/components/setting/PasswordSection";
 import ProfileSection from "@/components/setting/ProfileSection";
 
-import { getMyInfo } from "@/api/auth/auth";
+import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 
 export default function Setting() {
   const [savedProfile, setSavedProfile] = useState({
@@ -26,22 +28,33 @@ export default function Setting() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
   const {
     fileRef,
-    /*file,*/ preview,
+    file,
+    preview,
     setPreview,
     openFilePicker,
     onPickFile,
     resetImage,
   } = useImageUploader();
 
+  const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsImageDeleted(false);
+    onPickFile(e);
+  };
+
   const hasPasswordChanges =
     !!currentPassword || !!newPassword || !!confirmNewPassword;
 
   const hasChanges = useMemo(() => {
-    return savedProfile.image !== draftProfile.image || hasPasswordChanges;
-  }, [savedProfile, draftProfile, hasPasswordChanges]);
+    return (
+      savedProfile.name !== draftProfile.name ||
+      !!file ||
+      hasPasswordChanges ||
+      preview === null //preview 이미지가 삭제된 경우도 삭제로 처리.(초기화버튼)
+    );
+  }, [savedProfile, draftProfile, file, hasPasswordChanges]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -72,7 +85,7 @@ export default function Setting() {
     return errors;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (hasPasswordChanges) {
       const errors = validatePassword();
       setPasswordErrors(errors);
@@ -84,8 +97,32 @@ export default function Setting() {
         confirmNewPassword: "",
       });
     }
-    console.log(draftProfile);
-    setSavedProfile(draftProfile);
+    try {
+      const res = await updateMyInfo({
+        name: draftProfile.name,
+        oldPassword: currentPassword || undefined,
+        newPassword: newPassword || undefined,
+        isImageDeleted,
+        imageFile: file,
+      });
+      setSavedProfile((prev) => ({
+        ...prev,
+        name: res.data.name,
+      }));
+      setDraftProfile((prev) => ({
+        ...prev,
+        name: res.data.name,
+      }));
+      setPreview(res.data.profileImageUrl);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      toast.success("회원정보가 수정되었습니다");
+      setIsImageDeleted(false);
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "회원정보수정에 실패했습니다");
+    }
   };
 
   const fetchMyInfo = async () => {
@@ -125,9 +162,12 @@ export default function Setting() {
           phoneNumber={draftProfile.phoneNumber}
           fileRef={fileRef}
           preview={preview}
-          onPickFile={onPickFile}
+          onPickFile={handlePickFile}
           openFilePicker={openFilePicker}
-          resetImage={resetImage}
+          resetImage={() => {
+            resetImage();
+            setIsImageDeleted(true);
+          }}
         />
         <PasswordSection
           currentPassword={currentPassword}

@@ -90,3 +90,16 @@ export interface IMyPageInfoResponse {
   //   position: string;
   // };
 }
+
+export interface IUpdateMyInfoRequest {
+  name?: string;
+  oldPassword?: string;
+  newPassword?: string;
+  isImageDeleted?: boolean;
+}
+
+export interface IUpdateMyInfoResponse {
+  userId: number;
+  name: string;
+  profileImageUrl: string | null;
+}

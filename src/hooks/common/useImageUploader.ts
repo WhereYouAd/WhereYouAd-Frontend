@@ -31,7 +31,7 @@ export function useImageUploader() {
         URL.revokeObjectURL(preview);
       }
     };
-  });
+  }, [preview]);
   return {
     fileRef,
     file,
