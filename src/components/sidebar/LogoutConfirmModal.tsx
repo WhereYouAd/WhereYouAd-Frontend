@@ -6,7 +6,7 @@ import LogoutIcon from "@/assets/icon/sidebar/logout.svg?react";
 interface ILogoutConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   isLoading?: boolean;
 }
 

@@ -8,6 +8,7 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 
+import { useLogout } from "@/hooks/auth/useLogout";
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
@@ -58,6 +59,8 @@ function collapsedSubmenuInteractionProps(
 
 export default function Sidebar() {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
+  const { handleLogout } = useLogout();
 
   const {
     isCollapsed,
@@ -230,10 +233,16 @@ export default function Sidebar() {
       <LogoutConfirmModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
-        onConfirm={() => {
-          setIsLogoutModalOpen(false);
+        onConfirm={async () => {
+          try {
+            setIsLogoutLoading(true);
+            await handleLogout();
+            setIsLogoutModalOpen(false);
+          } finally {
+            setIsLogoutLoading(false);
+          }
         }}
-        isLoading={false}
+        isLoading={isLogoutLoading}
       />
     </motion.div>
   );
