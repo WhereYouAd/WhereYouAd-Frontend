@@ -14,17 +14,14 @@ import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 export default function Setting() {
   const [savedProfile, setSavedProfile] = useState({
     name: "",
-    // organizations: [
-    //   { name: "CJ", position: "FE developer" },
-    //   { name: "SMU창업팀", position: "팀장" },
-    //   { name: "상명대학교", position: "학생" },
-    // ],
-    organizations: [],
-    email: "whereyouadofficial@gmail.com",
-    phoneNumber: "010-1234-5678",
-    image: null as File | null,
+    profileImageUrl: null as string | null,
   });
-  const [draftProfile, setDraftProfile] = useState(savedProfile);
+  const [draftProfile, setDraftProfile] = useState({
+    name: "",
+    organizations: [],
+    email: "",
+    phoneNumber: "",
+  });
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -50,11 +47,11 @@ export default function Setting() {
   const hasChanges = useMemo(() => {
     return (
       savedProfile.name !== draftProfile.name ||
+      savedProfile.profileImageUrl !== preview ||
       !!file ||
-      hasPasswordChanges ||
-      preview === null //preview 이미지가 삭제된 경우도 삭제로 처리.(초기화버튼)
+      hasPasswordChanges
     );
-  }, [savedProfile, draftProfile, file, hasPasswordChanges]);
+  }, [savedProfile, draftProfile, preview, file, hasPasswordChanges]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -105,10 +102,10 @@ export default function Setting() {
         isImageDeleted,
         imageFile: file,
       });
-      setSavedProfile((prev) => ({
-        ...prev,
+      setSavedProfile({
         name: res.data.name,
-      }));
+        profileImageUrl: res.data.profileImageUrl,
+      });
       setDraftProfile((prev) => ({
         ...prev,
         name: res.data.name,
@@ -138,9 +135,11 @@ export default function Setting() {
         organizations: [],
         email: res.data.email,
         phoneNumber: res.data.phoneNumber,
-        image: null,
       };
-      setSavedProfile(profileData);
+      setSavedProfile({
+        name: res.data.name,
+        profileImageUrl: res.data.profileImageUrl,
+      });
       setDraftProfile(profileData);
       setPreview(res.data.profileImageUrl);
     } catch (error) {
