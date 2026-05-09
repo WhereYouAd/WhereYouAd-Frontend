@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
@@ -6,14 +7,17 @@ import Button from "@/components/common/button/Button";
 import PasswordSection from "@/components/setting/PasswordSection";
 import ProfileSection from "@/components/setting/ProfileSection";
 
+import { getMyInfo } from "@/api/auth/auth";
+
 export default function Setting() {
   const [savedProfile, setSavedProfile] = useState({
     name: "",
-    organizations: [
-      { name: "CJ", position: "FE developer" },
-      { name: "SMU창업팀", position: "팀장" },
-      { name: "상명대학교", position: "학생" },
-    ],
+    // organizations: [
+    //   { name: "CJ", position: "FE developer" },
+    //   { name: "SMU창업팀", position: "팀장" },
+    //   { name: "상명대학교", position: "학생" },
+    // ],
+    organizations: [],
     email: "whereyouadofficial@gmail.com",
     phoneNumber: "010-1234-5678",
     image: null as File | null,
@@ -23,8 +27,14 @@ export default function Setting() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const { fileRef, /*file,*/ preview, openFilePicker, onPickFile, resetImage } =
-    useImageUploader();
+  const {
+    fileRef,
+    /*file,*/ preview,
+    setPreview,
+    openFilePicker,
+    onPickFile,
+    resetImage,
+  } = useImageUploader();
 
   const hasPasswordChanges =
     !!currentPassword || !!newPassword || !!confirmNewPassword;
@@ -77,6 +87,33 @@ export default function Setting() {
     console.log(draftProfile);
     setSavedProfile(draftProfile);
   };
+
+  const fetchMyInfo = async () => {
+    try {
+      const res = await getMyInfo();
+
+      const profileData = {
+        name: res.data.name,
+        // organizations: res.data.organizations?.map((org) => ({
+        //   name: org.organizationName,
+        //   position: org.position,
+        // })) ?? [],
+        organizations: [],
+        email: res.data.email,
+        phoneNumber: res.data.phoneNumber,
+        image: null,
+      };
+      setSavedProfile(profileData);
+      setDraftProfile(profileData);
+      setPreview(res.data.profileImageUrl);
+    } catch (error) {
+      toast.error("회원 정보를 불러오는데 실패했습니다");
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchMyInfo();
+  }, []);
   return (
     <section className="w-full flex flex-col gap-8">
       <div className="flex flex-col gap-6">

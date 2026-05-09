@@ -84,4 +84,9 @@ export interface IMyPageInfoResponse {
   phoneNumber: string;
   isEmailVerified: boolean;
   providerType: TLoginProvider;
+  // organizations: {
+  //   organizationId: number;
+  //   organizationName: string;
+  //   position: string;
+  // };
 }
