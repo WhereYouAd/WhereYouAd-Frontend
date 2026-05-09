@@ -17,6 +17,17 @@ export default function GuideTimeline() {
 
   return (
     <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-transparent font-sans">
+      <style>{`
+        .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
+          height: 0px;
+        }
+        .landing-guide-timeline .custom-scrollbar {
+          scrollbar-width: none;
+        }
+        .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: transparent;
+        }
+      `}</style>
       {/* Top Navigation */}
       <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-chart-inactive/80 bg-white/80 backdrop-blur-md z-20">
         <div

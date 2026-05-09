@@ -1,0 +1,76 @@
+@theme {
+  --color-logo-1: #2eb4ff;
+  --color-logo-2: #6088fe;
+  --color-logo-2-dark: #4d67e5;
+
+  --color-brand-900: #000000;
+  --color-brand-800: #001f5b;
+  --color-brand-700: #213e68;
+  --color-brand-600: #466a9c;
+  --color-brand-500: #88c1ff;
+  --color-brand-400: #dce7f2;
+  --color-brand-300: #f9fafb;
+  --color-brand-200: #ffffff;
+
+  --color-chart-1: #0a3d91;
+  --color-chart-2: #0056b3;
+  --color-chart-3: #1485ff;
+  --color-chart-4: #00aeef;
+  --color-chart-5: #4fc3f7;
+  --color-chart-inactive: #f2f4f6;
+
+  --color-status-red: #ff2a4b;
+  --color-status-blue: #0084fe;
+  --color-status-green: #22c55e;
+  --color-status-yellow: #facc15;
+
+  --color-text-main: #212121;
+  --color-text-auth-sub: #546171;
+  --color-text-sub: #8b8b8f;
+  --color-text-placeholder: #c3c3c3;
+  --color-text-disabled: #b0b8c1;
+  --color-bg-disabled: #e5e8eb;
+  --color-bg-surface: #f6f6f6;
+
+  /* Landing (legacy 디자인 컬러를 토큰화) */
+  --color-landing-surface: #f5f5f7;
+  --color-landing-section: #f8f9fc;
+  --color-landing-pricing: #fafafa;
+  --color-landing-dark: #1e1e1e;
+  --color-footer-bg: #121212;
+  --color-footer-border: #2a2a2a;
+  --color-landing-muted: #6e6e73;
+
+  --color-social-kakao: #fee500;
+  --color-social-naver: #03c75a;
+  --color-social-google: #ffffff;
+  --color-social-text-kakao: #3a1d1d;
+
+  --height-input: 56px;
+  --height-button-big: 55px;
+  --height-button-small: 40px;
+
+  --radius-component-sm: 0.5rem;
+  --radius-component-md: 1rem;
+  --radius-component-lg: 1.5rem;
+
+  --padding-none: 0;
+  --padding-sm: 1rem;
+  --padding-md: 1.5rem;
+  --padding-lg: 2rem;
+
+  --max-width-sm: 384px;
+  --max-width-md: 512px;
+  --max-width-lg: 672px;
+  --max-width-xl: 896px;
+
+  /* 애니메이션 이징 */
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 애니메이션 속도 */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+}
