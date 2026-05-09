@@ -1,0 +1,27 @@
+/* AI 리포트 인쇄 — 드로어 패널 외 모든 요소 숨김 */
+@media print {
+  body.ai-report-printing > *:not([data-drawer-portal]) {
+    display: none !important;
+  }
+
+  body.ai-report-printing [data-drawer-portal] {
+    position: static !important;
+    display: block !important;
+  }
+
+  body.ai-report-printing [data-print-hide] {
+    display: none !important;
+  }
+
+  body.ai-report-printing [data-drawer-portal] > div:last-child {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}
