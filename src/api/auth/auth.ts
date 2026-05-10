@@ -19,6 +19,7 @@ import type {
 import type { ICommonResponse } from "@/types/common/common";
 
 import { authInstance, axiosInstance } from "@/lib/axiosInstance";
+import useAuthStore from "@/store/useAuthStore";
 
 export const sendEmail = async ({
   email,
