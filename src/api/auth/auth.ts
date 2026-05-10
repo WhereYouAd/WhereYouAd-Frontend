@@ -17,6 +17,7 @@ import type {
 import type { ICommonResponse } from "@/types/common/common";
 
 import { authInstance, axiosInstance } from "@/lib/axiosInstance";
+import useAuthStore from "@/store/useAuthStore";
 
 export const sendEmail = async ({
   email,
@@ -121,4 +122,18 @@ export const getMyInfo = async (): Promise<
 > => {
   const { data } = await axiosInstance.get("/api/users/my");
   return data;
+};
+
+export const postLogout = async () => {
+  const accessToken = useAuthStore.getState().accessToken;
+  const response = await authInstance.post(
+    "/api/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  return response.data;
 };
