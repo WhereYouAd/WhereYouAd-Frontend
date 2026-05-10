@@ -11,12 +11,28 @@ import ProfileSection from "@/components/setting/ProfileSection";
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 
+interface IDraftOrganization {
+  name: string;
+  position: string;
+}
+interface IDraftProfile {
+  name: string;
+  organizations: IDraftOrganization[];
+  email: string;
+  phoneNumber: string;
+}
+
+interface ISavedProfile {
+  name: string;
+  profileImageUrl: string | null;
+}
+
 export default function Setting() {
-  const [savedProfile, setSavedProfile] = useState({
+  const [savedProfile, setSavedProfile] = useState<ISavedProfile>({
     name: "",
-    profileImageUrl: null as string | null,
+    profileImageUrl: null,
   });
-  const [draftProfile, setDraftProfile] = useState({
+  const [draftProfile, setDraftProfile] = useState<IDraftProfile>({
     name: "",
     organizations: [],
     email: "",
@@ -129,11 +145,11 @@ export default function Setting() {
 
         const profileData = {
           name: res.data.name,
-          // organizations: res.data.organizations?.map((org) => ({
-          //   name: org.organizationName,
-          //   position: org.position,
-          // })) ?? [],
-          organizations: [],
+          organizations:
+            res.data.organizations?.map((org) => ({
+              name: org.orgName,
+              position: org.myRole,
+            })) ?? [],
           email: res.data.email,
           phoneNumber: res.data.phoneNumber,
         };

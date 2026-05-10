@@ -84,11 +84,11 @@ export interface IMyPageInfoResponse {
   phoneNumber: string;
   isEmailVerified: boolean;
   providerType: TLoginProvider;
-  // organizations: {
-  //   organizationId: number;
-  //   organizationName: string;
-  //   position: string;
-  // };
+  organizations: {
+    orgId: number;
+    orgName: string;
+    myRole: string;
+  }[];
 }
 
 export interface IUpdateMyInfoRequest {
