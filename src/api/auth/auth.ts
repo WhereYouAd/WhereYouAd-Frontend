@@ -155,3 +155,17 @@ export const updateMyInfo = async (
   const { data } = await axiosInstance.patch("/api/users/my", formData);
   return data;
 };
+
+export const postLogout = async () => {
+  const accessToken = useAuthStore.getState().accessToken;
+  const response = await authInstance.post(
+    "/api/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  return response.data;
+};
