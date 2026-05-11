@@ -32,7 +32,7 @@ export default function ProfileSection({
   resetImage,
 }: TProfileSectionProps) {
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
@@ -69,7 +69,7 @@ export default function ProfileSection({
               variant="custom"
               type="button"
               onClick={openFilePicker}
-              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
               aria-label="프로필 이미지 변경 버튼"
             >
               변경
@@ -78,7 +78,7 @@ export default function ProfileSection({
               variant="custom"
               type="button"
               onClick={resetImage}
-              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-40"
+              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="프로필 이미지 초기화 버튼"
               disabled={!preview}
             >

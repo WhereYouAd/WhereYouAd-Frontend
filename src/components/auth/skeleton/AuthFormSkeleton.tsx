@@ -11,14 +11,14 @@ export default function AuthFormSkeleton() {
 
       <div className="flex flex-col gap-6">
         <div className="flex gap-2">
-          <Skeleton className="h-14 flex-1 rounded-component-md" />
-          <Skeleton className="h-14 w-28 rounded-component-md" />
+          <Skeleton className="h-14 flex-1 rounded-2xl" />
+          <Skeleton className="h-14 w-28 rounded-2xl" />
         </div>
 
-        <Skeleton className="h-14 w-full rounded-component-md" />
+        <Skeleton className="h-14 w-full rounded-2xl" />
 
         <div className="mt-4">
-          <Skeleton className="h-14 w-full rounded-component-md" />
+          <Skeleton className="h-14 w-full rounded-2xl" />
         </div>
       </div>
     </AuthFormShell>

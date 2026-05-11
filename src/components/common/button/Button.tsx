@@ -29,9 +29,9 @@ export default function Button({
   ...rest
 }: IButtonProps) {
   const sizeClasses = {
-    big: "h-button-big px-6 rounded-component-md font-heading4 transition-colors duration-normal ease-out",
+    big: "h-14 px-6 rounded-2xl font-heading4 transition-colors duration-normal ease-out",
     small:
-      "h-button-small px-4 rounded-component-sm font-body1 transition-colors duration-normal ease-out",
+      "h-10 px-4 rounded-lg font-body1 transition-colors duration-normal ease-out",
   };
 
   const variantClasses = {
@@ -48,7 +48,7 @@ export default function Button({
     gradient:
       "bg-linear-to-r from-logo-1 to-logo-2 text-white hover:opacity-90 shadow-brand-500/30 disabled:bg-bg-disabled disabled:text-text-disabled disabled:shadow-none disabled:hover:opacity-50",
     tertiary:
-      "!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out",
+      "!h-7 border border-gray-200 text-text-auth-sub px-5 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out",
     custom: "",
   };
 

@@ -111,7 +111,7 @@ export function WorkspaceSwitcher({
 
   const renderImage = useCallback(
     (workspace: TWorkspace) => (
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
         {workspace?.logoUrl ? (
           <img
             src={workspace.logoUrl}
@@ -127,7 +127,7 @@ export function WorkspaceSwitcher({
   );
 
   const switcherShellClass = twMerge(
-    "flex items-center rounded-component-md",
+    "flex items-center rounded-2xl",
     isCollapsed
       ? "h-[55px] w-[55px] justify-center py-1.5 px-2 mx-auto"
       : "w-full py-1.5 px-2 gap-3",
@@ -141,7 +141,7 @@ export function WorkspaceSwitcher({
           aria-busy
           aria-label="워크스페이스 불러오는 중"
         >
-          <div className="h-10 w-10 shrink-0 rounded-component-sm bg-bg-disabled/60 animate-pulse" />
+          <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-disabled/60 animate-pulse" />
           {!isCollapsed && (
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">
               <div className="h-4 max-w-40 w-[55%] rounded bg-bg-disabled/60 animate-pulse" />
@@ -157,7 +157,7 @@ export function WorkspaceSwitcher({
     return (
       <div className={twMerge("relative mb-4", className)}>
         <div className={twMerge(switcherShellClass, "text-text-sub")}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-component-sm bg-bg-disabled/80 font-bold text-text-sub">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-bg-disabled/80 font-bold text-text-sub">
             —
           </div>
           {!isCollapsed && (
@@ -214,7 +214,7 @@ export function WorkspaceSwitcher({
           <motion.div
             id="workspace-list"
             className={twMerge(
-              "absolute z-50 flex flex-col rounded-component-md bg-white p-2 shadow-Soft border border-bg-surface origin-top",
+              "absolute z-50 flex flex-col rounded-2xl bg-white p-2 shadow-Soft border border-bg-surface origin-top",
               isCollapsed
                 ? "left-full top-0 ml-2 w-58"
                 : "left-1 -right-5 top-full mt-1",
@@ -247,7 +247,7 @@ export function WorkspaceSwitcher({
                     onClick={() => {
                       saveWorkspace(org.orgId);
                     }}
-                    className="group flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
+                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
                   >
                     {renderImage(org)}
                     <div className="flex flex-col flex-1 min-w-0 items-start">
@@ -270,9 +270,9 @@ export function WorkspaceSwitcher({
                   setIsOpen(false);
                   navigate("/workspace");
                 }}
-                className="flex w-full items-center gap-3 rounded-component-md px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
+                className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-component-sm border-2 border-dashed border-bg-disabled text-text-sub/50">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-bg-disabled text-text-sub/50">
                   +
                 </div>
                 <span className="font-body2 text-text-sub">

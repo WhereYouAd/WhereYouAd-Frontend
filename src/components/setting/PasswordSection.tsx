@@ -34,7 +34,7 @@ export default function PasswordSection({
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <div className="flex gap-4 items-center">

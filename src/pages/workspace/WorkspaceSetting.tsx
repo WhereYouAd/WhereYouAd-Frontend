@@ -178,7 +178,7 @@ export default function WorkspaceSetting() {
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
+        <div className="bg-white p-10 text-center border border-gray-100 rounded-3xl space-y-4">
           <p className="font-body2 text-status-red">{errorMsg}</p>
           <Button
             type="button"
@@ -191,7 +191,7 @@ export default function WorkspaceSetting() {
       )}
       {!loading && !errorMsg && (
         <>
-          <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+          <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
               <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
                 <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
@@ -204,18 +204,18 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-component-sm border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
+                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-lg border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
                       alt={"새 로고 미리보기"}
-                      className="w-full h-full object-cover rounded-component-sm"
+                      className="w-full h-full object-cover rounded-lg"
                     />
                   ) : resolvedLogoUrl ? (
                     <img
                       src={resolvedLogoUrl}
                       alt={`${name || "워크스페이스"} 로고`}
-                      className="w-full h-full object-cover rounded-component-sm"
+                      className="w-full h-full object-cover rounded-lg"
                       onError={() => {
                         setImageError(true);
                       }}
@@ -231,7 +231,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={saving || deleting}
@@ -241,7 +241,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={saving || deleting}
@@ -297,7 +297,7 @@ export default function WorkspaceSetting() {
               descriptionClassName="text-text-auth-sub"
               buttonVariant="dangerSoft"
               buttonSize="big"
-              buttonClassName="px-8 !rounded-component-md"
+              buttonClassName="px-8 !rounded-2xl"
               buttonDisabled={saving || deleting}
               leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
             />

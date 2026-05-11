@@ -2,28 +2,28 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 const radiusTokens = [
   {
-    className: "rounded-component-sm",
-    label: "Component SM",
+    className: "rounded-lg",
+    label: "rounded-lg",
     value: "0.5rem (8px)",
-    usage: "이미지, 소형 버튼, 뱃지",
+    usage: "아바타·썸네일 등 소형 라운드",
   },
   {
-    className: "rounded-component-md",
-    label: "Component MD",
+    className: "rounded-2xl",
+    label: "rounded-2xl",
     value: "1rem (16px)",
-    usage: "버튼, 인풋, 모달, 드롭다운, 네비 아이템",
+    usage: "버튼, 인풋, 모달, 드롭다운",
   },
   {
-    className: "rounded-component-lg",
-    label: "Component LG",
+    className: "rounded-3xl",
+    label: "rounded-3xl",
     value: "1.5rem (24px)",
     usage: "카드, 패널, 알럿",
   },
   {
     className: "rounded-full",
-    label: "Full",
+    label: "rounded-full",
     value: "9999px",
-    usage: "아바타, 소셜 버튼, 뱃지 pill",
+    usage: "아바타, pill 버튼",
   },
 ];
 
@@ -36,12 +36,17 @@ function BorderRadiusDoc() {
         <span>Value</span>
         <span>Usage</span>
       </div>
-      {radiusTokens.map(({ className, value, usage }) => (
+      {radiusTokens.map(({ className, label, value, usage }) => (
         <div
           key={className}
           className="grid grid-cols-[180px_1fr_120px_1fr] gap-x-4 items-center py-4 border-b border-gray-100"
         >
-          <span className="text-xs text-gray-400 font-mono">.{className}</span>
+          <span className="text-xs text-gray-700 font-mono">
+            .{className}
+            <span className="mt-0.5 block text-[10px] font-sans text-gray-400">
+              {label}
+            </span>
+          </span>
           <div
             className={`w-20 h-12 bg-brand-400 border border-brand-500 ${className}`}
           />

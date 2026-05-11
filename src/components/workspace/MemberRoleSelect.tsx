@@ -45,7 +45,7 @@ export default function MemberRoleSelect({
       className={disabled ? "pointer-events-none opacity-50" : undefined}
       trigger={(open) => (
         <div
-          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-component-lg px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
+          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-3xl px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
         >
           <span>{ROLE_LABEL_MAP[role]}</span>
           <ChevonIcon

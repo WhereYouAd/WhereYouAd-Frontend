@@ -77,7 +77,7 @@ export default function CampaignDetail() {
   }
 
   return (
-    <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
+    <section className="flex flex-col justify-start bg-white rounded-3xl min-h-[90vh] overflow-x-auto">
       <div className="flex-1 py-10 px-20 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}

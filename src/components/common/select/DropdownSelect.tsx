@@ -51,7 +51,7 @@ export default function DropdownSelect<T>({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
-          "flex items-center justify-between w-full h-14 px-5 bg-white border border-bg-disabled rounded-component-md text-body1 transition-all outline-none",
+          "flex items-center justify-between w-full h-14 px-5 bg-white border border-bg-disabled rounded-2xl text-body1 transition-all outline-none",
           isOpen
             ? "border-status-blue ring-1 ring-status-blue"
             : "hover:border-text-disabled focus:border-status-blue focus:ring-1 focus:ring-status-blue",
@@ -70,7 +70,7 @@ export default function DropdownSelect<T>({
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-full overflow-hidden rounded-component-md border border-bg-disabled bg-white shadow-lg animate-fade-in">
+        <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-full overflow-hidden rounded-2xl border border-bg-disabled bg-white shadow-lg animate-fade-in">
           <ul className="max-h-60 overflow-y-auto">
             {options.map((option) => {
               const key = getOptionKey(option);

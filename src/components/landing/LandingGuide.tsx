@@ -47,7 +47,7 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-3/5 rounded-component-lg overflow-hidden ${
+                className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
                   page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
                     : "bg-white shadow-card border border-chart-inactive/70"
@@ -112,7 +112,7 @@ export default function LandingGuide() {
                   {page.steps.map((item) => (
                     <div
                       key={item.step}
-                      className="rounded-component-md border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
+                      className="rounded-2xl border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
                         <span className="font-body1 font-semibold text-text-main leading-snug break-keep text-balance">

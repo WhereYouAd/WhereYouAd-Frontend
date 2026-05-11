@@ -20,7 +20,7 @@ import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex items-center rounded-component-md px-3 text-sm cursor-pointer transition-colors duration-200",
+    "flex items-center rounded-2xl px-3 text-sm cursor-pointer transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
@@ -32,7 +32,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex w-full h-[55px] items-center rounded-component-md px-3 text-sm cursor-pointer transition-all duration-200",
+    "flex w-full h-[55px] items-center rounded-2xl px-3 text-sm cursor-pointer transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
   );
@@ -196,7 +196,7 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "w-full h-button-big rounded-component-md text-sm transition-all duration-200 inline-flex items-center",
+                "w-full h-14 rounded-2xl text-sm transition-all duration-200 inline-flex items-center",
                 isCollapsed ? "justify-center px-0" : "gap-4 px-3",
                 "text-text-auth-sub hover:text-chart-3 hover:bg-bg-surface",
               )}

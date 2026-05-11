@@ -14,7 +14,7 @@ import TrafficChart, {
 
 function KpiSkeletonCard() {
   return (
-    <div className="flex flex-col gap-3 rounded-component-lg border border-white/40 bg-white/80 px-7 py-5 shadow-card backdrop-blur-sm">
+    <div className="flex flex-col gap-3 rounded-3xl border border-white/40 bg-white/80 px-7 py-5 shadow-card backdrop-blur-sm">
       <Skeleton className="h-4 w-16" />
       <Skeleton className="h-6 w-24" />
       <Skeleton className="h-6 w-14 rounded-full" />

@@ -32,7 +32,7 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
       </div>
 
       {/* 세그먼트 바 */}
-      <div className="flex w-full h-10 rounded-component-sm gap-1.5">
+      <div className="flex w-full h-10 rounded-lg gap-1.5">
         {data.map((item) => (
           <div
             key={item.provider}

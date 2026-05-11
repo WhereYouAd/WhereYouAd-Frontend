@@ -212,7 +212,7 @@ export default function WorkspacePage() {
                 type="button"
                 aria-label="로고 이미지 업로드"
                 onClick={openFile}
-                className={`relative flex h-40 w-40 flex-col items-center justify-center overflow-hidden rounded-component-lg border-2 transition-all duration-300 group focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none ${
+                className={`relative flex h-40 w-40 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 transition-all duration-300 group focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none ${
                   logoPreview
                     ? "border-transparent shadow-sm"
                     : "border-dashed border-gray-300 bg-gray-50 hover:border-chart-3 hover:bg-chart-3/5"

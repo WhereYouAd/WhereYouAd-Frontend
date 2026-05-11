@@ -23,7 +23,7 @@ export default function MemberItem({
   return (
     <li className="flex items-center justify-between py-5 gap-4 tablet:items-start">
       <div className="flex items-center gap-4 w-full min-w-0">
-        <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-component-lg overflow-hidden">
+        <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
           {member.profileImageUrl ? (
             <img
               src={member.profileImageUrl}
@@ -45,7 +45,7 @@ export default function MemberItem({
       <div className="flex items-center gap-4">
         {member.isMe ? (
           <span
-            className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-component-lg px-4 font-body2 ${
+            className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${
               member.role === "ADMIN"
                 ? "bg-status-blue/80 text-white shadow-sm"
                 : "bg-chart-3/15 text-text-auth-sub"

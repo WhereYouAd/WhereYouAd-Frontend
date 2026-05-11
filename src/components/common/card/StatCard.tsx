@@ -66,7 +66,7 @@ const StatCard = memo(function StatCard({
   return (
     <div
       className={twMerge(
-        "bg-white/80 backdrop-blur-sm rounded-component-lg shadow-card p-7 flex flex-col gap-4 border border-white/40 transition-shadow duration-300 hover:shadow-card-hover",
+        "bg-white/80 backdrop-blur-sm rounded-3xl shadow-card p-7 flex flex-col gap-4 border border-white/40 transition-shadow duration-300 hover:shadow-card-hover",
         className,
       )}
       {...rest}

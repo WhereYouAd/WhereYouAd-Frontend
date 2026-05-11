@@ -64,7 +64,7 @@ const initialMemberPermissionState: TMemberPermissionState =
 
 function AdminCheckBadge() {
   return (
-    <div className="inline-flex w-8 h-8 bg-chart-5/15 justify-center items-center rounded-component-lg">
+    <div className="inline-flex w-8 h-8 bg-chart-5/15 justify-center items-center rounded-3xl">
       <CheckIcon className="w-5 h-5 text-chart-3 stroke-2" />
       <span className="sr-only">가능</span>
     </div>
@@ -109,7 +109,7 @@ export default function PermissionTable() {
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
       <header className="mb-7">
         <h2 className="font-heading4 text-text-main font-semibold!">
           권한 설정
@@ -172,7 +172,7 @@ export default function PermissionTable() {
           size="big"
           onClick={handleResetChange}
           disabled={!hasChanges || isSaving}
-          className="rounded-component-md"
+          className="rounded-2xl"
         >
           변경 취소
         </Button>
@@ -182,7 +182,7 @@ export default function PermissionTable() {
           size="big"
           onClick={handleSaveChanges}
           disabled={!hasChanges || isSaving}
-          className="rounded-component-md"
+          className="rounded-2xl"
         >
           {isSaving ? "저장 중..." : "변경사항 저장하기"}
         </Button>
