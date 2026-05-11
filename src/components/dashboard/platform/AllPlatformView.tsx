@@ -18,8 +18,6 @@ import {
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
-import { performanceEfficiencyMock } from "@/pages/dashboard/platform/platformDashboard.mock";
-
 interface IAllPlatformViewProps {
   isLoading: boolean;
 }
@@ -165,13 +163,23 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
 
       {/* 개별 플랫폼 상세 */}
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-        {isLoading
-          ? Array.from({ length: 3 }).map((_, i) => (
-              <PlatformDetailCardSkeleton key={i} />
-            ))
-          : performanceEfficiencyMock.map((platform) => (
-              <PlatformDetailCard key={platform.provider} data={platform} />
-            ))}
+        {isLoading || isPerformanceLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <PlatformDetailCardSkeleton key={i} />
+          ))
+        ) : isPerformanceError || !platformPerformance ? (
+          <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
+            데이터를 불러오지 못했습니다.
+          </div>
+        ) : platformPerformance.length === 0 ? (
+          <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
+            표시할 플랫폼 데이터가 없습니다.
+          </div>
+        ) : (
+          platformPerformance.map((platform) => (
+            <PlatformDetailCard key={platform.provider} data={platform} />
+          ))
+        )}
       </div>
     </div>
   );
