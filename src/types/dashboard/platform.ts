@@ -26,8 +26,16 @@ export interface IAdCount {
 
 // 광고 소재 현황
 export interface IAdStatusData {
+  startDate: string;
+  endDate: string;
   totalCount: number;
   providerCount: IAdCount[];
+}
+
+//광고 소재 현황 조회 요청 파라미터
+export interface IAdCountParams {
+  startDate?: string;
+  endDate?: string;
 }
 
 // 플랫폼별 성과

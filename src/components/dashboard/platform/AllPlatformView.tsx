@@ -1,3 +1,4 @@
+import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
 import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
 
 import Badge from "@/components/common/badge/Badge";
@@ -16,10 +17,7 @@ import {
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
-import {
-  adStatusMock,
-  performanceEfficiencyMock,
-} from "@/pages/dashboard/platform/platformDashboard.mock";
+import { performanceEfficiencyMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 interface IAllPlatformViewProps {
   isLoading: boolean;
@@ -31,6 +29,12 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
     isLoading: isRankingsLoading,
     isError: isRankingsError,
   } = usePlatformRoasRankings();
+
+  const {
+    data: adStatus,
+    isLoading: isAdStatusLoading,
+    isError: isAdStatusError,
+  } = usePlatformAdCount();
 
   return (
     <div className="flex flex-col gap-8">
@@ -78,20 +82,28 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             />
           }
           RightElement={
-            isLoading ? (
+            isLoading || isAdStatusLoading ? (
               <BadgeSkeleton className="w-14" />
-            ) : (
+            ) : adStatus ? (
               <Badge variant="stopped" size="sm" className="text-text-auth-sub">
-                총 {adStatusMock.totalCount}개
+                총 {adStatus.totalCount}개
               </Badge>
-            )
+            ) : null
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isLoading ? (
+          {isLoading || isAdStatusLoading ? (
             <AdStatusChartSkeleton />
+          ) : isAdStatusError || !adStatus ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              데이터를 불러오지 못했습니다.
+            </div>
+          ) : adStatus.providerCount.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              표시할 광고 소재가 없습니다.
+            </div>
           ) : (
-            <AdStatusChart data={adStatusMock.providerCount} />
+            <AdStatusChart data={adStatus.providerCount} />
           )}
         </Card>
 
