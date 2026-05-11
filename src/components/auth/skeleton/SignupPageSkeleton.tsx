@@ -5,10 +5,10 @@ export default function SignupPageSkeleton() {
   return (
     <AuthFormShell variant="social">
       <div className="flex w-full flex-col gap-10">
-        <Skeleton className="h-16 w-full rounded-component-md" />
-        <Skeleton className="h-16 w-full rounded-component-md" />
-        <Skeleton className="h-16 w-full rounded-component-md" />
-        <Skeleton className="h-16 w-full rounded-component-md" />
+        <Skeleton className="h-16 w-full rounded-2xl" />
+        <Skeleton className="h-16 w-full rounded-2xl" />
+        <Skeleton className="h-16 w-full rounded-2xl" />
+        <Skeleton className="h-16 w-full rounded-2xl" />
       </div>
 
       <div className="mt-15 flex gap-2">

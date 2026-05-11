@@ -110,7 +110,7 @@ export default function LandingPricing() {
               {plan.name === "프로" ? (
                 <a
                   href={proMailtoHref}
-                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 inline-flex items-center justify-center ${
+                  className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 inline-flex items-center justify-center ${
                     plan.featured
                       ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
                       : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
@@ -122,7 +122,7 @@ export default function LandingPricing() {
                 <button
                   type="button"
                   onClick={handleCta}
-                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
+                  className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 ${
                     plan.featured
                       ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
                       : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"

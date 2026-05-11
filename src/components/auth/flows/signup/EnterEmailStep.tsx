@@ -62,7 +62,7 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
               type="text"
               value={watchedEmail || ""}
               readOnly
-              className="w-full h-13.5 px-5 border rounded-component-md text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+              className="w-full h-13.5 px-5 border rounded-2xl text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
             />
             <button
               type="button"

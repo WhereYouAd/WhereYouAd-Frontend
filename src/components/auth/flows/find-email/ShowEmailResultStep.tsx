@@ -18,7 +18,7 @@ export default function ShowEmailResultStep() {
         <span className="block">WYA에 가입된 계정을 찾았어요</span>
       </h1>
 
-      <div className="w-full h-24 bg-gray-50 rounded-component-md flex items-center justify-between px-5 mb-10">
+      <div className="w-full h-24 bg-gray-50 rounded-2xl flex items-center justify-between px-5 mb-10">
         <div className="flex items-center gap-3 min-w-0">
           <span className="font-caption text-text-placeholder shrink-0">
             이메일 ID
@@ -29,7 +29,7 @@ export default function ShowEmailResultStep() {
         </div>
         <button
           type="button"
-          className="shrink-0 h-8 px-2 border border-gray-200 bg-white rounded-component-sm text-xs text-text-sub hover:bg-gray-50 transition-colors"
+          className="shrink-0 h-8 px-2 border border-gray-200 bg-white rounded-lg text-xs text-text-sub hover:bg-gray-50 transition-colors"
           onClick={() => navigate("/find-pw")}
         >
           비밀번호 재설정

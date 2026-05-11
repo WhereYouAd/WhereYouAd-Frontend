@@ -91,7 +91,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
           {rankings.map((item) => (
             <div
               key={item.provider}
-              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-component-sm transition-colors duration-300 hover:bg-[#F2F4F6]`}
+              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-lg transition-colors duration-300 hover:bg-[#F2F4F6]`}
             >
               {/* 순위 */}
               <div className="flex min-h-0 min-w-0 items-center justify-center">

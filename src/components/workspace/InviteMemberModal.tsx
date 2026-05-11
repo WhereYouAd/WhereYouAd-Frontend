@@ -113,7 +113,7 @@ export default function InviteMemberModal({
             type="button"
             aria-label="팀원 초대 링크 복사 버튼"
             onClick={handleCopyLink}
-            className="flex items-center gap-2 rounded-component-sm px-2 py-1 text-chart-3 transition-opacity hover:opacity-80"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 text-chart-3 transition-opacity hover:opacity-80"
           >
             <CopyIcon />
             <span className="font-body1">링크 복사</span>
@@ -152,7 +152,7 @@ export default function InviteMemberModal({
                     className="flex items-center justify-between gap-4 py-4"
                   >
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-component-lg overflow-hidden">
+                      <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
                         <UserIcon className="text-text-auth-sub h-6 w-6" />
                       </div>
                       <div className="min-w-0">
@@ -179,7 +179,7 @@ export default function InviteMemberModal({
                   className="flex items-center justify-between gap-4 py-4"
                 >
                   <div className="flex min-w-0 items-center gap-3">
-                    <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-component-lg overflow-hidden">
+                    <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
                       {item.profileImageUrl ? (
                         <img
                           src={item.profileImageUrl}

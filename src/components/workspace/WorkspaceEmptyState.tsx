@@ -6,7 +6,7 @@ export default function WorkspaceEmptyState({
   message,
 }: IWorkspaceEmptyStateProps) {
   return (
-    <div className="rounded-component-lg bg-white p-10 text-center border border-gray-100">
+    <div className="rounded-3xl bg-white p-10 text-center border border-gray-100">
       <p className="font-body2 text-text-sub">{message}</p>
     </div>
   );

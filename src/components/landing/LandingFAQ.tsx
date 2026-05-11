@@ -20,7 +20,7 @@ export default function LandingFAQ() {
           />
         </div>
 
-        <div className="mt-10 divide-y divide-chart-inactive rounded-component-md border border-chart-inactive overflow-hidden bg-white shadow-card">
+        <div className="mt-10 divide-y divide-chart-inactive rounded-2xl border border-chart-inactive overflow-hidden bg-white shadow-card">
           {LANDING_FAQ_ITEMS.map(({ q, a }) => (
             <details key={q} className="group px-5 md:px-6 py-5">
               <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white">

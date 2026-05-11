@@ -15,7 +15,7 @@ export default function InfoCard({
   return (
     <div
       className={twMerge(
-        "flex flex-col gap-4 p-5 h-40 w-full border-bg-disabled rounded-component-md border bg-white transition-all duration-normal",
+        "flex flex-col gap-4 p-5 h-40 w-full border-bg-disabled rounded-2xl border bg-white transition-all duration-normal",
 
         className,
       )}

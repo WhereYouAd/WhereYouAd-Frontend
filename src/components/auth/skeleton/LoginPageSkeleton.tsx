@@ -14,11 +14,11 @@ export default function LoginPageSkeleton() {
       <div className="flex flex-col gap-7">
         <div className="flex flex-col gap-2">
           <Skeleton className="h-5 w-16" />
-          <Skeleton className="h-12 w-full rounded-component-md" />
+          <Skeleton className="h-12 w-full rounded-2xl" />
         </div>
         <div className="flex flex-col gap-2">
           <Skeleton className="h-5 w-20" />
-          <Skeleton className="h-12 w-full rounded-component-md" />
+          <Skeleton className="h-12 w-full rounded-2xl" />
         </div>
 
         <div className="mt-3 flex justify-center">
@@ -26,7 +26,7 @@ export default function LoginPageSkeleton() {
         </div>
 
         <div className="mt-10">
-          <Skeleton className="h-14 w-full rounded-component-md" />
+          <Skeleton className="h-14 w-full rounded-2xl" />
         </div>
       </div>
 

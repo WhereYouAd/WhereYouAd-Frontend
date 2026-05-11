@@ -28,7 +28,7 @@ function IntegrationGraphic() {
       viewport={{ once: true, amount: 0.45 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <motion.div className="flex items-center justify-between px-4 py-3 bg-white/80 rounded-component-md border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
+      <motion.div className="flex items-center justify-between px-4 py-3 bg-white/80 rounded-2xl border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
         <div className="flex items-center gap-3">
           <NaverLogo className="w-8 h-8 rounded-full shadow-sm" />
           <div className="flex flex-col text-left">
@@ -40,7 +40,7 @@ function IntegrationGraphic() {
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-white rounded-component-md shadow-[0_18px_40px_rgba(0,0,0,0.10)] border border-chart-inactive/60 relative z-20 scale-[1.02]">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-white rounded-2xl shadow-[0_18px_40px_rgba(0,0,0,0.10)] border border-chart-inactive/60 relative z-20 scale-[1.02]">
         <div className="flex items-center gap-3">
           <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center shrink-0 shadow-sm overflow-hidden border border-chart-inactive/70">
             <GoogleAdsLogo className="w-full h-full object-cover" />
@@ -56,7 +56,7 @@ function IntegrationGraphic() {
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-white/80 rounded-component-md border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-white/80 rounded-2xl border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
         <div className="flex items-center gap-3">
           <KakaoLogo className="w-8 h-8 rounded-full shadow-sm" />
           <div className="flex flex-col text-left">
@@ -158,7 +158,7 @@ function WorkspaceGraphic() {
   return (
     <div
       ref={containerRef}
-      className="bg-white rounded-component-lg shadow-[0_14px_32px_rgba(0,0,0,0.06)] w-70 p-4 flex flex-col gap-4 border border-chart-inactive/60"
+      className="bg-white rounded-3xl shadow-[0_14px_32px_rgba(0,0,0,0.06)] w-70 p-4 flex flex-col gap-4 border border-chart-inactive/60"
     >
       <div className="flex gap-3">
         <div className="w-7 h-7 bg-brand-300 overflow-hidden shrink-0 mt-0.5 rounded-full flex items-center justify-center border border-chart-inactive/70">

@@ -152,13 +152,13 @@ export default function Drawer({
                     <DropdownMenu
                       trigger={<MoreIcon className="text-text-disabled" />}
                       aria-label="더보기"
-                      className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
+                      className="h-10 w-10 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center"
                       items={dropdownItems}
                     />
                   )}
                   <button
                     onClick={onClose}
-                    className="tablet:hidden h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
+                    className="tablet:hidden h-10 w-10 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
                     aria-label="닫기"
                   >
                     <CloseIcon className="text-text-disabled" />
@@ -169,7 +169,7 @@ export default function Drawer({
               <>
                 <button
                   onClick={onClose}
-                  className="tablet:hidden h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
+                  className="tablet:hidden h-10 w-10 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
                   aria-label="닫기"
                 >
                   <CloseIcon className="text-text-disabled" />
@@ -179,7 +179,7 @@ export default function Drawer({
                     <DropdownMenu
                       trigger={<MoreIcon className="text-text-disabled" />}
                       aria-label="더보기"
-                      className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
+                      className="h-10 w-10 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center"
                       items={dropdownItems}
                     />
                   </div>

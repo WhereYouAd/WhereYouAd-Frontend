@@ -31,11 +31,11 @@ export default function GuideOverviewChart() {
         </p>
         <Suspense
           fallback={
-            <div className="flex-1 w-full rounded-component-md bg-brand-300/50" />
+            <div className="flex-1 w-full rounded-2xl bg-brand-300/50" />
           }
         >
           <div className="relative flex-1 pt-12">
-            <div className="absolute right-2 top-0 z-20 rounded-component-md border border-chart-inactive/80 bg-white/95 px-4 py-3 shadow-sm">
+            <div className="absolute right-2 top-0 z-20 rounded-2xl border border-chart-inactive/80 bg-white/95 px-4 py-3 shadow-sm">
               <p className="text-[12px] font-semibold text-text-main">
                 광고 클릭수 추이
               </p>

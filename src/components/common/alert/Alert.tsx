@@ -17,7 +17,7 @@ export default function Alert({
   children,
   ...rest
 }: IAlertProps) {
-  const base = "w-full rounded-component-lg px-5 py-4";
+  const base = "w-full rounded-3xl px-5 py-4";
 
   const variantClasses: Record<TAlertVariant, string> = {
     info: "text-brand-700",

@@ -52,7 +52,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         )}
         <div
           className={twMerge(
-            "flex items-center w-full h-input bg-white ring-1 ring-logo-1/30 rounded-component-md transition-colors duration-200 ease-out overflow-hidden",
+            "flex items-center w-full h-14 bg-white ring-1 ring-logo-1/30 rounded-2xl transition-colors duration-200 ease-out overflow-hidden",
             disabled
               ? "bg-gray-100 cursor-not-allowed"
               : error

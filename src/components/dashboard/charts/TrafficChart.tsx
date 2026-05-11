@@ -81,7 +81,7 @@ const AnomalyBubble = memo(function AnomalyBubble({
         transform: "translateX(-50%) translateY(-100%)",
       }}
     >
-      <div className="relative bg-white border border-bg-disabled rounded-component-sm px-5 py-4 min-w-40">
+      <div className="relative bg-white border border-bg-disabled rounded-lg px-5 py-4 min-w-40">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <span className="inline-block w-2 h-2 rounded-full bg-status-red shrink-0" />
           <p className="font-body2 text-text-main font-semibold! tracking-tight">

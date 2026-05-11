@@ -31,7 +31,7 @@ export const PlatformDetailCard = memo(
     } = data;
 
     const innerCardClass =
-      "shadow-none! hover:shadow-none! rounded-component-md! p-2! gap-2!";
+      "shadow-none! hover:shadow-none! !rounded-2xl p-2! gap-2!";
 
     return (
       <Card className="flex-1 p-7 bg-white/80 backdrop-blur-sm">

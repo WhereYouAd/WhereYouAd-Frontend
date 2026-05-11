@@ -42,7 +42,7 @@ export default function ControlBox({
   return (
     <div
       className={twMerge(
-        "flex w-full min-w-0 items-center justify-between gap-6 px-7 py-6  border-[0.5px] border-chart-3/7 rounded-component-lg",
+        "flex w-full min-w-0 items-center justify-between gap-6 px-7 py-6  border-[0.5px] border-chart-3/7 rounded-3xl",
         "tablet:flex-col tablet:items-start tablet:px-5 tablet:py-5",
         containerClassName,
         className,
@@ -78,7 +78,7 @@ export default function ControlBox({
           onClick={onButtonClick}
           disabled={buttonDisabled}
           className={twMerge(
-            "shrink-0 px-8 rounded-component-md! tablet:w-full tablet:justify-center",
+            "shrink-0 px-8 !rounded-2xl tablet:w-full tablet:justify-center",
             buttonClassName,
           )}
         >

@@ -1,68 +1,71 @@
 @theme {
-  --color-logo-1: #2eb4ff;
-  --color-logo-2: #6088fe;
-  --color-logo-2-dark: #4d67e5;
 
-  --color-brand-900: #000000;
-  --color-brand-800: #001f5b;
-  --color-brand-700: #213e68;
-  --color-brand-600: #466a9c;
-  --color-brand-500: #88c1ff;
-  --color-brand-400: #dce7f2;
-  --color-brand-300: #f9fafb;
-  --color-brand-200: #ffffff;
+  /* PRIMARY — 원시 팔레트 (100 밝음 → 500 진함) */
+  --palette-primary-100: #e8effe; /* Blue Tint */
+  --palette-primary-200: #b8ccfc; /* Light Blue */
+  --palette-primary-300: #7a9bf8; /* Mid Blue */
+  --palette-primary-400: #4b74f5; /* CTA Blue */
+  --palette-primary-500: #2f5bea; /* Brand Blue */
 
-  --color-chart-1: #0a3d91;
-  --color-chart-2: #0056b3;
-  --color-chart-3: #1485ff;
-  --color-chart-4: #00aeef;
-  --color-chart-5: #4fc3f7;
-  --color-chart-inactive: #f2f4f6;
 
-  --color-status-red: #ff2a4b;
-  --color-status-blue: #0084fe;
-  --color-status-green: #22c55e;
-  --color-status-yellow: #facc15;
+  /* SURFACE */
+  --color-surface-100: #ffffff;
+  --color-surface-200: #f4f6fb;
+  --color-surface-300: #edf0f8;
+  --color-surface-400: #dde3f0;
+  --color-surface-500: #1b2b6b;
 
-  --color-text-main: #212121;
-  --color-text-auth-sub: #546171;
-  --color-text-sub: #8b8b8f;
-  --color-text-placeholder: #c3c3c3;
-  --color-text-disabled: #b0b8c1;
-  --color-bg-disabled: #e5e8eb;
-  --color-bg-surface: #f6f6f6;
 
-  /* Landing (legacy 디자인 컬러를 토큰화) */
-  --color-landing-surface: #f5f5f7;
-  --color-landing-section: #f8f9fc;
-  --color-landing-pricing: #fafafa;
-  --color-landing-dark: #1e1e1e;
-  --color-footer-bg: #121212;
-  --color-footer-border: #2a2a2a;
-  --color-landing-muted: #6e6e73;
+  /* TEXT — 밝기 순 (100 가장 밝음 → 400 가장 진함), 쿨 그레이 */
+  --color-text-100: #e4e7ec;
+  --color-text-200: #9ca3af;
+  --color-text-300: #374151;
+  --color-text-400: #111827;
 
-  --color-social-kakao: #fee500;
-  --color-social-naver: #03c75a;
-  --color-social-google: #ffffff;
-  --color-social-text-kakao: #3a1d1d;
+  /* text 역할 기준 고정 값 */
+  --color-text-title: var(--color-text-400);
+  --color-text-body: var(--color-text-300);
+  --color-text-muted: var(--color-text-200);
+  --color-text-placeholder: var(--color-text-200);
+  --color-text-disabled: var(--color-text-100);
 
-  --height-input: 56px;
-  --height-button-big: 55px;
-  --height-button-small: 40px;
 
-  --radius-component-sm: 0.5rem;
-  --radius-component-md: 1rem;
-  --radius-component-lg: 1.5rem;
+  /* 타이포 스케일 — 유틸(.font-*)은 여기 값만 참조 */
+  --type-hero-size: 54px;
+  --type-hero-weight: 700;
+  --type-hero-leading: 140%;
 
-  --padding-none: 0;
-  --padding-sm: 1rem;
-  --padding-md: 1.5rem;
-  --padding-lg: 2rem;
+  --type-heading1-size: 32px;
+  --type-heading1-weight: 600;
+  --type-heading1-leading: 130%;
 
-  --max-width-sm: 384px;
-  --max-width-md: 512px;
-  --max-width-lg: 672px;
-  --max-width-xl: 896px;
+  --type-heading2-size: 28px;
+  --type-heading2-weight: 600;
+  --type-heading2-leading: 130%;
+
+  --type-heading3-size: 24px;
+  --type-heading3-weight: 500;
+  --type-heading3-leading: 130%;
+
+  --type-heading4-size: 18px;
+  --type-heading4-weight: 500;
+  --type-heading4-leading: 130%;
+
+  --type-body1-size: 16px;
+  --type-body1-weight: 500;
+  --type-body1-leading: 140%;
+
+  --type-body2-size: 14px;
+  --type-body2-weight: 500;
+  --type-body2-leading: 140%;
+
+  --type-caption-size: 12px;
+  --type-caption-weight: 500;
+  --type-caption-leading: 130%;
+
+  --type-label-size: 14px;
+  --type-label-weight: 600;
+  --type-label-leading: 140%;
 
   /* 애니메이션 이징 */
   --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);

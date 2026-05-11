@@ -53,7 +53,7 @@ export default function PlatformDashboard() {
           variant={isAllView ? "primary" : "custom"}
           onClick={() => setSelectedPlatform("전체")}
           className={twMerge(
-            "w-28 py-5 font-body1 rounded-component-md",
+            "w-28 py-5 font-body1 rounded-2xl",
             !isAllView &&
               "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
           )}
@@ -68,7 +68,7 @@ export default function PlatformDashboard() {
               size="small"
               variant={!isAllView ? "primary" : "custom"}
               className={twMerge(
-                "flex items-center w-34 py-5 rounded-component-md",
+                "flex items-center w-34 py-5 rounded-2xl",
                 isAllView &&
                   "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
               )}

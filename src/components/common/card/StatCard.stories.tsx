@@ -34,7 +34,7 @@ export const WithTrendDown: TStatCardStory = {
 
 export const KpiGroup: TStatCardStory = {
   render: () => (
-    <div className="flex bg-white rounded-component-md border border-chart-inactive w-200">
+    <div className="flex bg-white rounded-2xl border border-chart-inactive w-200">
       {[
         {
           title: "클릭수(CTR)",

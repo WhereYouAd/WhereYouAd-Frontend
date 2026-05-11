@@ -28,7 +28,7 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
       <button
         type="button"
         className={twMerge(
-          "w-full text-left flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none",
+          "w-full text-left flex items-center justify-between rounded-2xl bg-white px-6 py-5 shadow-Soft border tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none",
           onClick &&
             "cursor-pointer hover:bg-chart-3/5 hover:-translate-y-1 hover:shadow-Medium hover:border-chart-3/30 active:scale-[0.98] transition-all duration-300 ease-out",
           isSelected
@@ -38,7 +38,7 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
         onClick={onClick}
       >
         <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
-          <div className="w-24 h-24 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
+          <div className="w-24 h-24 bg-gray-100 shrink-0 rounded-lg tablet:h-16 tablet:w-16">
             {showPlaceholder ? (
               <div className="w-full h-full flex items-center justify-center">
                 <BuildingIcon className="w-8 h-8 text-text-placeholder" />
@@ -47,7 +47,7 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
               <img
                 src={imageSrc}
                 alt={`${w.name} 로고`}
-                className="w-full h-full object-cover rounded-component-sm pointer-events-none"
+                className="w-full h-full object-cover rounded-lg pointer-events-none"
                 onError={() => {
                   setImageError(true);
                 }}

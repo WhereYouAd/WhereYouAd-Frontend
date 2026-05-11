@@ -2,7 +2,7 @@ import { Skeleton, SkeletonCircle } from "../common/skeleton/Skeleton";
 
 function MemberRowSkeleton() {
   return (
-    <div className="flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border border-gray-100 tablet:px-4 tablet:py-4">
+    <div className="flex items-center justify-between rounded-2xl bg-white px-6 py-5 shadow-Soft border border-gray-100 tablet:px-4 tablet:py-4">
       <div className="flex items-center gap-4 min-w-0">
         <SkeletonCircle className="w-12 h-12 shrink-0 tablet:w-10 tablet:h-10" />
         <div className="flex flex-col gap-2 min-w-0">
@@ -11,8 +11,8 @@ function MemberRowSkeleton() {
         </div>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <Skeleton className="h-9 w-22 rounded-component-md" />
-        <Skeleton className="h-9 w-9 rounded-component-md" />
+        <Skeleton className="h-9 w-22 rounded-2xl" />
+        <Skeleton className="h-9 w-9 rounded-2xl" />
       </div>
     </div>
   );
@@ -38,14 +38,14 @@ export default function MemberManagementLoading() {
       className="w-full min-w-0 flex flex-col gap-8"
     >
       <div className="flex w-full min-w-0 flex-col gap-10">
-        <div className="rounded-component-lg border border-gray-100 bg-white p-6 shadow-Soft">
+        <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-Soft">
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
                 <Skeleton className="h-7 w-28" />
                 <Skeleton className="h-4 w-40" />
               </div>
-              <Skeleton className="h-10 w-28 rounded-component-md" />
+              <Skeleton className="h-10 w-28 rounded-2xl" />
             </div>
             <div className="space-y-4">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -54,7 +54,7 @@ export default function MemberManagementLoading() {
             </div>
           </div>
         </div>
-        <div className="rounded-component-lg border border-gray-100 bg-white p-6 shadow-Soft">
+        <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-Soft">
           <div className="space-y-2 mb-6">
             <Skeleton className="h-6 w-28" />
             <Skeleton className="h-4 w-56" />
