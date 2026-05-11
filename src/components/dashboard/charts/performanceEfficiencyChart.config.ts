@@ -40,7 +40,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   },
   yaxis: [
     {
-      seriesName: "클릭률",
+      seriesName: "클릭률(CTR)",
       labels: {
         formatter: (val) => `${val.toFixed(1)}%`,
         style: {
@@ -49,7 +49,10 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
         },
       },
     },
-    { show: false, seriesName: "전환율" },
+    {
+      seriesName: "클릭률(CTR)",
+      show: false,
+    },
     {
       opposite: true,
       seriesName: "노출수",
