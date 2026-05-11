@@ -1,4 +1,5 @@
 import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
+import { usePlatformPerformance } from "@/hooks/dashboard/usePlatformPerformance";
 import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
 
 import Badge from "@/components/common/badge/Badge";
@@ -35,6 +36,12 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
     isLoading: isAdStatusLoading,
     isError: isAdStatusError,
   } = usePlatformAdCount();
+
+  const {
+    data: platformPerformance,
+    isLoading: isPerformanceLoading,
+    isError: isPerformanceError,
+  } = usePlatformPerformance();
 
   return (
     <div className="flex flex-col gap-8">
@@ -121,10 +128,18 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             />
           }
         >
-          {isLoading ? (
+          {isLoading || isPerformanceLoading ? (
             <PerformanceEfficiencyChartSkeleton />
+          ) : isPerformanceError || !platformPerformance ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              데이터를 불러오지 못했습니다.
+            </div>
+          ) : platformPerformance.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              표시할 성과 데이터가 없습니다.
+            </div>
           ) : (
-            <PerformanceEfficiencyChart data={performanceEfficiencyMock} />
+            <PerformanceEfficiencyChart data={platformPerformance} />
           )}
         </Card>
       </div>
