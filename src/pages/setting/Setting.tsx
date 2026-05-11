@@ -1,4 +1,7 @@
-import { useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+
+import type { IApiErrorResponse } from "@/types/common/common";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
@@ -6,32 +9,65 @@ import Button from "@/components/common/button/Button";
 import PasswordSection from "@/components/setting/PasswordSection";
 import ProfileSection from "@/components/setting/ProfileSection";
 
+import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
+
+interface IDraftOrganization {
+  name: string;
+  position: string;
+}
+interface IDraftProfile {
+  name: string;
+  organizations: IDraftOrganization[];
+  email: string;
+  phoneNumber: string;
+}
+
+interface ISavedProfile {
+  name: string;
+  profileImageUrl: string | null;
+}
+
 export default function Setting() {
-  const [savedProfile, setSavedProfile] = useState({
+  const [savedProfile, setSavedProfile] = useState<ISavedProfile>({
     name: "",
-    organizations: [
-      { name: "CJ", position: "FE developer" },
-      { name: "SMU창업팀", position: "팀장" },
-      { name: "상명대학교", position: "학생" },
-    ],
-    email: "whereyouadofficial@gmail.com",
-    phoneNumber: "010-1234-5678",
-    image: null as File | null,
+    profileImageUrl: null,
   });
-  const [draftProfile, setDraftProfile] = useState(savedProfile);
+  const [draftProfile, setDraftProfile] = useState<IDraftProfile>({
+    name: "",
+    organizations: [],
+    email: "",
+    phoneNumber: "",
+  });
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
+  const {
+    fileRef,
+    file,
+    preview,
+    setPreview,
+    openFilePicker,
+    onPickFile,
+    resetImage,
+  } = useImageUploader();
 
-  const { fileRef, /*file,*/ preview, openFilePicker, onPickFile, resetImage } =
-    useImageUploader();
+  const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsImageDeleted(false);
+    onPickFile(e);
+  };
 
   const hasPasswordChanges =
     !!currentPassword || !!newPassword || !!confirmNewPassword;
 
   const hasChanges = useMemo(() => {
-    return savedProfile.image !== draftProfile.image || hasPasswordChanges;
-  }, [savedProfile, draftProfile, hasPasswordChanges]);
+    return (
+      savedProfile.name !== draftProfile.name ||
+      savedProfile.profileImageUrl !== preview ||
+      !!file ||
+      hasPasswordChanges
+    );
+  }, [savedProfile, draftProfile, preview, file, hasPasswordChanges]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -62,7 +98,7 @@ export default function Setting() {
     return errors;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (hasPasswordChanges) {
       const errors = validatePassword();
       setPasswordErrors(errors);
@@ -74,9 +110,62 @@ export default function Setting() {
         confirmNewPassword: "",
       });
     }
-    console.log(draftProfile);
-    setSavedProfile(draftProfile);
+    try {
+      const res = await updateMyInfo({
+        name: draftProfile.name,
+        oldPassword: currentPassword || undefined,
+        newPassword: newPassword || undefined,
+        isImageDeleted,
+        imageFile: file,
+      });
+      setSavedProfile({
+        name: res.data.name,
+        profileImageUrl: res.data.profileImageUrl,
+      });
+      setDraftProfile((prev) => ({
+        ...prev,
+        name: res.data.name,
+      }));
+      setPreview(res.data.profileImageUrl);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      toast.success("회원정보가 수정되었습니다");
+      setIsImageDeleted(false);
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "회원정보수정에 실패했습니다");
+    }
   };
+
+  useEffect(() => {
+    const fetchMyInfo = async () => {
+      try {
+        const res = await getMyInfo();
+
+        const profileData = {
+          name: res.data.name,
+          organizations:
+            res.data.organizations?.map((org) => ({
+              name: org.orgName,
+              position: org.myRole,
+            })) ?? [],
+          email: res.data.email,
+          phoneNumber: res.data.phoneNumber,
+        };
+        setSavedProfile({
+          name: res.data.name,
+          profileImageUrl: res.data.profileImageUrl,
+        });
+        setDraftProfile(profileData);
+        setPreview(res.data.profileImageUrl);
+      } catch (error) {
+        toast.error("회원 정보를 불러오는데 실패했습니다");
+        console.error(error);
+      }
+    };
+    fetchMyInfo();
+  }, [setPreview]);
   return (
     <section className="w-full flex flex-col gap-8">
       <div className="flex flex-col gap-6">
@@ -88,9 +177,12 @@ export default function Setting() {
           phoneNumber={draftProfile.phoneNumber}
           fileRef={fileRef}
           preview={preview}
-          onPickFile={onPickFile}
+          onPickFile={handlePickFile}
           openFilePicker={openFilePicker}
-          resetImage={resetImage}
+          resetImage={() => {
+            resetImage();
+            setIsImageDeleted(true);
+          }}
         />
         <PasswordSection
           currentPassword={currentPassword}

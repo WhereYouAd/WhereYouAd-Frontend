@@ -13,10 +13,13 @@ import type {
   ISmsVerifyRequest,
   ISmsVerifyResponse,
   ITokenRefreshResponse,
+  IUpdateMyInfoRequest,
+  IUpdateMyInfoResponse,
 } from "@/types/auth/auth";
 import type { ICommonResponse } from "@/types/common/common";
 
 import { authInstance, axiosInstance } from "@/lib/axiosInstance";
+import useAuthStore from "@/store/useAuthStore";
 
 export const sendEmail = async ({
   email,
@@ -121,4 +124,48 @@ export const getMyInfo = async (): Promise<
 > => {
   const { data } = await axiosInstance.get("/api/users/my");
   return data;
+};
+
+const buildMyInfoFormData = (
+  request: IUpdateMyInfoRequest,
+  imageFile?: File | null,
+) => {
+  const formData = new FormData();
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(request)], {
+      type: "application/json",
+    }),
+  );
+  if (imageFile) {
+    formData.append("image", imageFile);
+  }
+
+  return formData;
+};
+
+export const updateMyInfo = async (
+  body: IUpdateMyInfoRequest & {
+    imageFile?: File | null;
+  },
+): Promise<ICommonResponse<IUpdateMyInfoResponse>> => {
+  const { imageFile, ...request } = body;
+  const formData = buildMyInfoFormData(request, imageFile);
+  const { data } = await axiosInstance.patch("/api/users/my", formData);
+  return data;
+};
+
+export const postLogout = async () => {
+  const accessToken = useAuthStore.getState().accessToken;
+  const response = await authInstance.post(
+    "/api/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+  return response.data;
 };

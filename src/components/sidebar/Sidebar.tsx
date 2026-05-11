@@ -1,5 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -8,9 +8,11 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 
+import { useLogout } from "@/hooks/auth/useLogout";
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
+import LogoutConfirmModal from "./LogoutConfirmModal";
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
@@ -56,6 +58,10 @@ function collapsedSubmenuInteractionProps(
 }
 
 export default function Sidebar() {
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
+  const { handleLogout } = useLogout();
+
   const {
     isCollapsed,
     openId,
@@ -72,6 +78,10 @@ export default function Sidebar() {
     (id: string, hasChildren: boolean) => {
       if (id === "notifications") {
         showComingSoon("알림 기능은 준비 중이에요. 나중에 다시 확인해 주세요.");
+        return;
+      }
+      if (id === "logout") {
+        setIsLogoutModalOpen(true);
         return;
       }
       handleItemClick(id, hasChildren);
@@ -220,6 +230,20 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={async () => {
+          try {
+            setIsLogoutLoading(true);
+            await handleLogout();
+            setIsLogoutModalOpen(false);
+          } finally {
+            setIsLogoutLoading(false);
+          }
+        }}
+        isLoading={isLogoutLoading}
+      />
     </motion.div>
   );
 }

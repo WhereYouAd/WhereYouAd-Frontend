@@ -26,9 +26,20 @@ export function useImageUploader() {
     setPreview(null);
   };
   useEffect(() => {
+    const currentPreview = preview;
     return () => {
-      if (preview) URL.revokeObjectURL(preview);
+      if (currentPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(currentPreview);
+      }
     };
-  });
-  return { fileRef, file, preview, openFilePicker, onPickFile, resetImage };
+  }, [preview]);
+  return {
+    fileRef,
+    file,
+    preview,
+    setPreview,
+    openFilePicker,
+    onPickFile,
+    resetImage,
+  };
 }
