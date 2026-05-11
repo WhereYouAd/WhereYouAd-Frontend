@@ -1,3 +1,5 @@
+import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
+
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import ChartLegend from "@/components/common/chart/ChartLegend";
@@ -17,7 +19,6 @@ import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceLi
 import {
   adStatusMock,
   performanceEfficiencyMock,
-  roasRankingMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 interface IAllPlatformViewProps {
@@ -25,6 +26,12 @@ interface IAllPlatformViewProps {
 }
 
 export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
+  const {
+    data: roasRankings,
+    isLoading: isRankingsLoading,
+    isError: isRankingsError,
+  } = usePlatformRoasRankings();
+
   return (
     <div className="flex flex-col gap-8">
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
@@ -42,10 +49,18 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isLoading ? (
+          {isLoading || isRankingsLoading ? (
             <TopPerformanceListSkeleton />
+          ) : isRankingsError || !roasRankings ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              데이터를 불러오지 못했습니다.
+            </div>
+          ) : roasRankings.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+              표시할 순위 데이터가 없습니다.
+            </div>
           ) : (
-            <TopPerformanceList rankings={roasRankingMock} />
+            <TopPerformanceList rankings={roasRankings} />
           )}
         </Card>
 
