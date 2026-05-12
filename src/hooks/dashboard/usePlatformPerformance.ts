@@ -22,17 +22,26 @@ export function usePlatformPerformance() {
   return useCoreQuery(
     ["platform", "performance", orgId],
     async (): Promise<IPlatformPerformance[]> => {
-      const results = await Promise.all(
+      const settled = await Promise.allSettled(
         PROVIDERS.map((provider) =>
-          getOverview(orgId!, provider)
-            .then((metrics) => ({
-              ...metrics,
-              provider: normalizeProvider(provider),
-            }))
-            .catch(() => null),
+          getOverview(orgId!, provider).then((metrics) => ({
+            ...metrics,
+            provider: normalizeProvider(provider),
+          })),
         ),
       );
-      return results.filter((r): r is IPlatformPerformance => r !== null);
+
+      const success = settled
+        .filter(
+          (r): r is PromiseFulfilledResult<IPlatformPerformance> =>
+            r.status === "fulfilled",
+        )
+        .map((r) => r.value);
+
+      if (success.length !== PROVIDERS.length) {
+        throw new Error("일부 플랫폼 성과 데이터를 불러오지 못했습니다.");
+      }
+      return success;
     },
     { enabled: !!orgId },
   );
