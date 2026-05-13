@@ -116,8 +116,8 @@ export function DropdownMenu({
                       ) : null}
                       <span
                         className={twMerge(
-                          "whitespace-nowrap",
-                          it.active ? "font-semibold" : "font-medium",
+                          "whitespace-nowrap font-body2",
+                          it.active && "font-label",
                         )}
                       >
                         {it.label}

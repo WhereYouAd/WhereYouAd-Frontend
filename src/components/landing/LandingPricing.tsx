@@ -73,25 +73,25 @@ export default function LandingPricing() {
               }`}
             >
               {plan.featured && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-400 text-surface-100 px-4 py-1.5 rounded-[99px] text-[12px] font-semibold shadow-landing-pill">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[99px] bg-primary-400 px-4 py-1.5 font-caption text-surface-100 shadow-landing-pill">
                   인기 플랜
                 </div>
               )}
 
-              <h3 className="text-xl font-bold text-text-title mb-2">
+              <h3 className="mb-2 font-heading4 text-text-title">
                 {plan.name}
               </h3>
-              <p className="font-body2 text-text-auth-sub mb-6 leading-relaxed break-keep">
+              <p className="mb-6 break-keep font-body2 text-text-auth-sub">
                 {plan.target}
               </p>
 
               <div className="mb-7">
                 <div className="flex items-end gap-2">
-                  <span className="text-[30px] leading-none font-extrabold tracking-[-0.02em] text-text-title">
+                  <span className="font-heading2 text-text-title tabular-nums leading-none">
                     {plan.price}
                   </span>
                   {plan.priceUnit && (
-                    <span className="pb-1 text-[14px] font-semibold text-text-muted">
+                    <span className="pb-1 font-body2 text-text-muted">
                       {plan.priceUnit}
                     </span>
                   )}
@@ -106,7 +106,7 @@ export default function LandingPricing() {
               {plan.name === "프로" ? (
                 <a
                   href={proMailtoHref}
-                  className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 inline-flex items-center justify-center ${
+                  className={`mb-4 inline-flex h-12 w-full items-center justify-center rounded-2xl font-heading4 transition-colors ${
                     plan.featured
                       ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
                       : "bg-text-disabled text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
@@ -118,7 +118,7 @@ export default function LandingPricing() {
                 <button
                   type="button"
                   onClick={handleCta}
-                  className={`w-full h-12 rounded-2xl font-semibold transition-colors mb-4 ${
+                  className={`mb-4 h-12 w-full rounded-2xl font-heading4 transition-colors ${
                     plan.featured
                       ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
                       : "bg-text-disabled/50 text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
@@ -128,14 +128,14 @@ export default function LandingPricing() {
                 </button>
               )}
 
-              <p className="text-[13px] text-text-muted mb-8">
+              <p className="mb-8 font-body2 text-text-muted">
                 {plan.assurance}
               </p>
 
               <div className="h-px w-full bg-surface-400/70 mb-7" />
 
               <ul
-                className={`space-y-4 text-sm font-body2 flex-1 ${plan.featured ? "text-text-title" : "text-text-auth-sub"}`}
+                className={`flex-1 space-y-4 font-body2 ${plan.featured ? "text-text-title" : "text-text-auth-sub"}`}
               >
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-3">

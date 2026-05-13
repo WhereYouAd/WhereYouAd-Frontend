@@ -111,9 +111,7 @@ export default function PermissionTable() {
   return (
     <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
       <header className="mb-7">
-        <h2 className="font-heading4 font-semibold! text-text-title">
-          권한 설정
-        </h2>
+        <h2 className="font-heading4 text-text-title">권한 설정</h2>
         <p className="mt-2 font-body2 text-text-muted">
           역할별 권한을 확인하고 설정할 수 있습니다
         </p>
@@ -140,7 +138,7 @@ export default function PermissionTable() {
               >
                 <td className="py-5">
                   <div className="flex flex-col">
-                    <p className="font-semibold text-text-title">{row.label}</p>
+                    <p className="font-label text-text-title">{row.label}</p>
                     <p className="text-text-auth-sub font-body2">
                       {row.description}
                     </p>

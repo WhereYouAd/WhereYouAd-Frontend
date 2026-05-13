@@ -38,7 +38,7 @@ export const PlatformDetailCard = memo(
         {/* 로고 + 이름 */}
         <div className="flex items-center gap-2 mb-8">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
-          <h3 className="font-heading4 font-semibold! text-text-title truncate">
+          <h3 className="font-heading4 text-text-title truncate">
             {PLATFORM_MAP[provider]}
           </h3>
         </div>

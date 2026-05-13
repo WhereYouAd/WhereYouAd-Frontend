@@ -4,7 +4,7 @@ export default function LandingFooter() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-10">
           <div className="flex flex-col items-center md:items-start gap-6">
-            <div className="text-sm text-text-auth-sub text-center md:text-left leading-relaxed">
+            <div className="text-center font-body2 text-text-auth-sub md:text-left">
               <p>Where You Ad</p>
             </div>
           </div>

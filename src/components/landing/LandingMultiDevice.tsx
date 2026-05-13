@@ -16,10 +16,8 @@ export default function LandingMultiDevice() {
     <section className="bg-surface-100 py-20 md:py-40">
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-7 md:mb-10 text-center">
-          <p className="font-caption text-primary-500 font-semibold">
-            Multi-device support
-          </p>
-          <h2 className="mt-3 font-heading2 md:text-[34px] font-bold tracking-[-0.02em] text-text-title">
+          <p className="font-label text-primary-500">Multi-device support</p>
+          <h2 className="mt-3 font-heading2 text-text-title">
             모바일·태블릿·데스크탑에서 모두 사용 가능
           </h2>
         </div>
@@ -39,9 +37,7 @@ export default function LandingMultiDevice() {
             </picture>
             <div className={MOCKUP_OVERLAY_CLASS} />
             <div className="relative z-10 p-6 flex flex-col justify-end h-full">
-              <p className="text-surface-100/80 text-[12px] font-semibold">
-                Mobile
-              </p>
+              <p className="font-caption text-surface-100/80">Mobile</p>
             </div>
           </article>
 
@@ -59,9 +55,7 @@ export default function LandingMultiDevice() {
             </picture>
             <div className={MOCKUP_OVERLAY_CLASS} />
             <div className="relative z-10 p-6 flex flex-col justify-end h-full">
-              <p className="text-surface-100/80 text-[12px] font-semibold">
-                Tablet
-              </p>
+              <p className="font-caption text-surface-100/80">Tablet</p>
             </div>
           </article>
 
@@ -79,9 +73,7 @@ export default function LandingMultiDevice() {
             </picture>
             <div className={MOCKUP_OVERLAY_CLASS} />
             <div className="relative z-10 p-6 flex flex-col justify-end h-full">
-              <p className="text-surface-100/80 text-[12px] font-semibold">
-                Desktop
-              </p>
+              <p className="font-caption text-surface-100/80">Desktop</p>
             </div>
           </article>
         </div>

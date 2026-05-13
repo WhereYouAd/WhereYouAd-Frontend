@@ -30,9 +30,7 @@ const Card = memo(function Card({
         <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
           <div className="flex flex-col gap-1">
             {title && (
-              <h3 className="font-heading4 font-semibold! text-text-title">
-                {title}
-              </h3>
+              <h3 className="font-heading4 text-text-title">{title}</h3>
             )}
             {description && (
               <div className="font-caption text-text-muted">{description}</div>

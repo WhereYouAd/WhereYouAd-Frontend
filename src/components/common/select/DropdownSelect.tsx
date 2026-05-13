@@ -51,7 +51,7 @@ export default function DropdownSelect<T>({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
-          "flex h-14 w-full items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-5 text-body1 transition-all outline-none",
+          "flex h-14 w-full items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-5 font-body1 text-text-title transition-all outline-none",
           isOpen
             ? "border-info-blue ring-1 ring-info-blue"
             : "hover:border-surface-400 focus:border-info-blue focus:ring-1 focus:ring-info-blue",
@@ -83,9 +83,9 @@ export default function DropdownSelect<T>({
                     type="button"
                     onClick={() => handleSelect(option)}
                     className={twMerge(
-                      "w-full px-5 py-3 text-left text-body1 transition-colors hover:bg-surface-200",
+                      "w-full px-5 py-3 text-left font-body1 text-text-title transition-colors hover:bg-surface-200",
                       isSelected
-                        ? "bg-info-blue/5 font-bold text-info-blue"
+                        ? "bg-info-blue/5 font-body1 text-info-blue"
                         : "text-text-title",
                     )}
                   >

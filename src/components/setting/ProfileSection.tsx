@@ -36,9 +36,7 @@ export default function ProfileSection({
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
-          <h2 className="font-heading4 font-semibold! text-text-title">
-            프로필
-          </h2>
+          <h2 className="font-heading4 text-text-title">프로필</h2>
         </div>
       </header>
       <div className="flex tablet:flex-row gap-10">
@@ -115,7 +113,7 @@ export default function ProfileSection({
                     </div>
                   ))}
 
-                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 text-xs text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
                     조직 정보는 별도 조직페이지에서 수정할 수 있습니다.
                   </div>
                 </div>
@@ -130,7 +128,7 @@ export default function ProfileSection({
               rightElement={<CheckIcon className="h-6 w-6 text-primary-500" />}
               readOnly
             />
-            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 text-xs text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
               이메일은 변경할 수 없습니다.
             </div>
           </div>
@@ -142,7 +140,7 @@ export default function ProfileSection({
               rightElement={<CheckIcon className="h-6 w-6 text-primary-500" />}
               readOnly
             />
-            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 text-xs text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
               전화번호는 변경할 수 없습니다.
             </div>
           </div>

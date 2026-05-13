@@ -225,9 +225,9 @@ export default function WorkspacePage() {
                       alt="새 로고 미리 보기"
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <UpLoadImgIcon className="mb-1 h-6 w-6 text-white transition-transform duration-300" />
-                      <span className="text-white font-caption font-semibold">
+                    <div className="absolute inset-0 bg-text-400/40 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                      <UpLoadImgIcon className="mb-1 h-6 w-6 text-surface-100 transition-transform duration-300" />
+                      <span className="font-caption text-surface-100">
                         사진 변경
                       </span>
                     </div>

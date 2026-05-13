@@ -68,9 +68,7 @@ export default function MemberList({
     <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
-          <h2 className="font-heading4 font-semibold! text-text-title">
-            팀 구성원
-          </h2>
+          <h2 className="font-heading4 text-text-title">팀 구성원</h2>
           <p className="mt-2 font-body2 text-text-muted">
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>

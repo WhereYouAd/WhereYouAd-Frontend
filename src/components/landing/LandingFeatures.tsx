@@ -32,7 +32,7 @@ function IntegrationGraphic() {
         <div className="flex items-center gap-3">
           <NaverLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
           <div className="flex flex-col text-left">
-            <span className="text-[13px] text-text-muted">Naver</span>
+            <span className="font-body2 text-text-muted">Naver</span>
           </div>
         </div>
         <div className="w-7 h-7 rounded-xl border border-surface-400/70 bg-surface-100/70 flex items-center justify-center shrink-0">
@@ -46,7 +46,7 @@ function IntegrationGraphic() {
             <GoogleAdsLogo className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-[13.5px] font-bold text-text-title tracking-wide">
+            <span className="font-body2 tracking-wide text-text-title">
               Google Ads
             </span>
           </div>
@@ -60,7 +60,7 @@ function IntegrationGraphic() {
         <div className="flex items-center gap-3">
           <KakaoLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
           <div className="flex flex-col text-left">
-            <span className="text-[13px] text-text-muted">Kakao</span>
+            <span className="font-body2 text-text-muted">Kakao</span>
           </div>
         </div>
         <div className="w-7 h-7 rounded-xl border border-surface-400/70 bg-surface-100/70 flex items-center justify-center shrink-0">
@@ -100,14 +100,12 @@ function WorkflowGraphic() {
             repeatDelay: 1.1,
           }}
         />
-        <span className="text-surface-100 text-[14.5px] font-semibold">
-          AI로 요약하기
-        </span>
+        <span className="font-body1 text-surface-100">AI로 요약하기</span>
         <SparkleIcon className="w-4.5 h-auto ml-0.5 text-surface-100 fill-current" />
       </div>
       <div
         aria-hidden
-        className="text-text-muted text-[14px] font-body2 px-4 py-1.5 rounded-full border border-surface-400/70 bg-surface-100/60 shrink-0 select-none"
+        className="shrink-0 select-none rounded-full border border-surface-400/70 bg-surface-100/60 px-4 py-1.5 font-body2 text-text-muted"
       >
         다운로드
       </div>
@@ -166,12 +164,10 @@ function WorkspaceGraphic() {
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-[14px] font-bold text-text-title">You</span>
-            <span className="text-[10px] font-medium text-text-muted">
-              Team JSON
-            </span>
+            <span className="font-body2 text-text-title">You</span>
+            <span className="font-caption text-text-muted">Team JSON</span>
           </div>
-          <p className="text-[13px] text-text-auth-sub leading-relaxed font-medium">
+          <p className="font-body2 text-text-auth-sub">
             새로운 멤버를 초대하세요!
           </p>
         </div>
@@ -180,12 +176,12 @@ function WorkspaceGraphic() {
       <div className="mt-1 flex items-center gap-2 bg-color-primary-100 border border-surface-400/70 rounded-full p-1 pl-4">
         <div
           aria-hidden
-          className="text-[13px] text-text-muted font-medium flex-1 pt-0.5 bg-transparent border-0 outline-none truncate"
+          className="flex-1 truncate border-0 bg-transparent pt-0.5 font-body2 text-text-muted outline-none"
         >
           {typedText}
         </div>
         {showCursor && (
-          <span className="text-primary-400 animate-pulse font-normal -ml-1">
+          <span className="-ml-1 animate-pulse font-body2 text-primary-400">
             |
           </span>
         )}
@@ -256,10 +252,8 @@ export default function LandingFeatures() {
               <div className="w-full aspect-4/3 bg-surface-200 rounded-4xl flex items-center justify-center mb-8 relative overflow-hidden group">
                 <Graphic />
               </div>
-              <h3 className="font-heading4 font-bold! text-text-title mb-3">
-                {title}
-              </h3>
-              <p className="font-body2 text-text-auth-sub leading-relaxed max-w-70">
+              <h3 className="mb-3 font-heading4 text-text-title">{title}</h3>
+              <p className="max-w-70 font-body2 text-text-auth-sub">
                 {description}
               </p>
             </motion.div>

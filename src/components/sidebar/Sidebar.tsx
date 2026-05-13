@@ -22,7 +22,7 @@ import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex items-center rounded-2xl px-3 text-sm cursor-pointer transition-colors duration-200",
+    "flex cursor-pointer items-center rounded-2xl px-3 font-body2 transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
@@ -34,7 +34,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex w-full h-[55px] items-center rounded-2xl px-3 text-sm cursor-pointer transition-all duration-200",
+    "flex h-[55px] w-full cursor-pointer items-center rounded-2xl px-3 font-body2 transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
     isActive ? "text-primary-400" : "text-text-auth-sub hover:text-primary-400",
   );
@@ -151,7 +151,7 @@ export default function Sidebar() {
                         e.preventDefault();
                         toggleOpenId(item.id);
                       }}
-                      className="ml-auto p-2 hover:bg-black/5 rounded-lg transition-colors"
+                      className="ml-auto p-2 hover:bg-surface-200 rounded-lg transition-colors"
                     >
                       <ChevronIcon
                         className={twMerge(
@@ -206,7 +206,7 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "w-full h-14 rounded-2xl text-sm transition-all duration-200 inline-flex items-center",
+                "inline-flex h-14 w-full items-center rounded-2xl font-body2 transition-all duration-200",
                 isCollapsed ? "justify-center px-0" : "gap-4 px-3",
                 "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}

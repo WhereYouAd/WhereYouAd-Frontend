@@ -53,17 +53,17 @@ export default function LandingHero() {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="flex items-center gap-2 mb-3">
-          <span className="inline-flex items-center rounded-full border border-surface-100/35 bg-surface-500/25 px-3 py-1 text-[12px] font-semibold text-surface-100">
+          <span className="inline-flex items-center rounded-full border border-surface-100/35 bg-surface-500/25 px-3 py-1 font-caption text-surface-100">
             WhereYouAd
           </span>
-          <span className="text-[12px] font-caption text-surface-100/80">
+          <span className="font-caption text-surface-100/80">
             광고 통합 대시보드
           </span>
         </div>
-        <h1 className="text-surface-100 tracking-[-0.03em] leading-[1.15] break-keep font-bold whitespace-pre-line text-[26px] sm:text-[36px] md:text-[64px]">
+        <h1 className="break-keep whitespace-pre-line font-heading2 text-surface-100 sm:font-heading1 md:font-hero">
           광고 성과를 실시간으로{"\n"}한 화면에서 관리하세요
         </h1>
-        <p className="text-[15px] text-surface-100/85 font-normal break-keep max-w-2xl">
+        <p className="max-w-2xl break-keep font-body1 text-surface-100/85">
           Google·Meta 파트너 서비스로 광고 데이터를 한 곳에서 관리하세요.
         </p>
       </motion.div>

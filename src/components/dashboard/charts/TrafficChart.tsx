@@ -51,7 +51,7 @@ export function TrafficChartDownload() {
       <button
         type="button"
         onClick={toggleDummyClicks}
-        className="shrink-0 px-1.5 py-0.5 text-[10px] leading-tight font-medium text-text-placeholder rounded border border-surface-400/50 hover:bg-surface-200 transition-colors"
+        className="shrink-0 rounded border border-surface-400/50 px-1.5 py-0.5 font-caption text-text-placeholder transition-colors hover:bg-surface-200"
       >
         더미 토글
       </button>
@@ -84,18 +84,12 @@ const AnomalyBubble = memo(function AnomalyBubble({
       <div className="relative bg-surface-100 border border-surface-400 rounded-lg px-5 py-4 min-w-40">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <span className="inline-block w-2 h-2 rounded-full bg-info-red shrink-0" />
-          <p className="font-body2 text-text-title font-semibold! tracking-tight">
-            클릭 이상 징후 감지
-          </p>
+          <p className="font-label text-text-title">클릭 이상 징후 감지</p>
         </div>
         <div className="text-center">
-          {message && (
-            <p className="text-text-muted font-caption leading-5">{message}</p>
-          )}
+          {message && <p className="font-caption text-text-muted">{message}</p>}
           {timestamp && (
-            <p className="text-text-muted font-caption leading-5">
-              {timestamp}
-            </p>
+            <p className="font-caption text-text-muted">{timestamp}</p>
           )}
         </div>
       </div>

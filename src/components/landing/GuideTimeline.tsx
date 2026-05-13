@@ -16,7 +16,7 @@ export default function GuideTimeline() {
   const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
 
   return (
-    <div className="landing-guide-timeline w-full h-[360px] md:h-[420px] overflow-hidden flex flex-col bg-surface-100 font-sans">
+    <div className="landing-guide-timeline flex h-[360px] w-full flex-col overflow-hidden bg-surface-100 md:h-[420px]">
       <style>{`
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
           height: 0px;
@@ -35,18 +35,18 @@ export default function GuideTimeline() {
           className="flex items-center bg-surface-100 p-0.5 rounded-[8px] border border-surface-400/70"
           role="group"
         >
-          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-muted rounded-md select-none opacity-60">
+          <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
             Day
           </span>
-          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-title bg-surface-100 shadow-landing-pill rounded-[6px] select-none">
+          <span className="rounded-[6px] bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-landing-pill select-none">
             Week
           </span>
-          <span className="px-3 py-1.5 text-[12px] font-semibold text-text-muted rounded-md select-none opacity-60">
+          <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
             Month
           </span>
         </div>
 
-        <div className="flex items-center gap-4 text-[13px] font-bold text-text-title">
+        <div className="flex items-center gap-4 font-body2 text-text-title">
           <button
             type="button"
             aria-label="이전 기간"
@@ -64,10 +64,10 @@ export default function GuideTimeline() {
           </button>
         </div>
 
-        <div className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub">
+        <div className="flex items-center gap-5 font-caption text-text-auth-sub">
           <div
             aria-label="정렬/필터(목업)"
-            className="flex items-center gap-5 text-[12px] font-semibold text-text-auth-sub select-none"
+            className="flex select-none items-center gap-5 font-caption text-text-auth-sub"
             role="group"
           >
             <span className="flex items-center gap-1.5 opacity-70">
@@ -93,7 +93,7 @@ export default function GuideTimeline() {
             {LANDING_TIMELINE_COLUMNS.map((c, i) => (
               <div
                 key={i}
-                className="w-[55px] flex justify-center text-[11px] font-semibold text-text-placeholder"
+                className="flex w-[55px] justify-center font-caption text-text-placeholder"
               >
                 <span className="relative flex items-center gap-1">
                   {c.day} <span className="text-text-title">{c.date}</span>
@@ -134,10 +134,10 @@ export default function GuideTimeline() {
 
                   {/* Text */}
                   <div className="flex flex-col min-w-0 pr-2">
-                    <span className="text-[12px] font-bold truncate leading-tight tracking-tight text-text-title">
+                    <span className="truncate font-body2 text-text-title">
                       {card.title}
                     </span>
-                    <span className="text-[10px] flex items-center gap-1.5 leading-tight mt-0.5 text-text-muted">
+                    <span className="mt-0.5 flex items-center gap-1.5 font-caption text-text-muted">
                       {card.subtitle}
                     </span>
                   </div>

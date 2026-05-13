@@ -37,16 +37,16 @@ const SnapshotRow = memo(function SnapshotRow({
       className="flex w-full min-w-0 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-surface-200/80"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-body2 font-semibold text-text-title">
+        <span className="truncate font-body1 text-text-title">
           {campaign.name}
         </span>
-        <span className="text-[10px] font-medium uppercase tracking-wide text-text-placeholder">
+        <span className="font-caption uppercase tracking-wide text-text-placeholder">
           {campaign.providers.length > 0
             ? campaign.providers.map((p) => platformShort[p] ?? p).join(" · ")
             : "플랫폼 미지정"}
         </span>
       </div>
-      <span className="shrink-0 font-caption font-semibold tabular-nums text-text-muted">
+      <span className="shrink-0 font-caption tabular-nums text-text-muted">
         {campaign.budgetUsageRate.toFixed(0)}%
       </span>
     </button>
@@ -108,7 +108,7 @@ export default memo(function OverviewCampaignSnapshotCard({
           onClick={() => navigate("/ads")}
           className="group flex h-8 shrink-0 items-center gap-1 rounded-full border-none bg-surface-200/60 px-3 hover:bg-surface-200"
         >
-          <span className="font-caption font-semibold text-text-muted group-hover:text-text-body">
+          <span className="font-caption text-text-muted group-hover:text-text-body">
             목록
           </span>
           <ChevronDoubleRightIcon className="h-4 w-4 text-text-placeholder" />

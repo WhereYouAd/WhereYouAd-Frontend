@@ -163,7 +163,7 @@ export default function CampaignDetail() {
                   titleClassName="font-heading3 text-info-red"
                   descriptionClassName="font-body2 leading-relaxed text-text-muted"
                   buttonSize="big"
-                  buttonClassName="font-body1 bg-info-red text-white hover:opacity-90"
+                  buttonClassName="font-body1 bg-info-red text-surface-100 hover:opacity-90"
                 />
               ) : data.status === "PAUSED" ? (
                 <ControlBox
@@ -176,7 +176,7 @@ export default function CampaignDetail() {
                   titleClassName="font-heading3 text-info-blue"
                   descriptionClassName="font-body2 leading-relaxed text-text-muted"
                   buttonSize="big"
-                  buttonClassName="font-body1 bg-info-blue text-white hover:opacity-90"
+                  buttonClassName="font-body1 bg-info-blue text-surface-100 hover:opacity-90"
                 />
               ) : null}
             </div>

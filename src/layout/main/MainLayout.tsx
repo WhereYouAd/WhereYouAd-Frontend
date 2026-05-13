@@ -99,7 +99,7 @@ export default function MainLayout() {
                   </span>
                 </>
               ) : null}
-              <span className="truncate font-body1 text-[18px] font-semibold text-text-title">
+              <span className="truncate font-heading4 text-text-title">
                 {currentLabel || parentLabel || " "}
               </span>
             </div>

@@ -56,9 +56,9 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             disabled
               ? "bg-surface-200 cursor-not-allowed"
               : error
-                ? "ring-2 ring-red-500 bg-red-500/5"
+                ? "ring-2 ring-info-red bg-info-red/5"
                 : success
-                  ? "ring-2 ring-emerald-500 bg-emerald-500/5"
+                  ? "ring-2 ring-primary-400 bg-primary-100"
                   : "hover:bg-surface-200 hover:ring-surface-400 focus-within:bg-surface-100 focus-within:ring-2 focus-within:ring-surface-400",
             containerClassName,
           )}
@@ -89,7 +89,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             aria-live="polite"
             className={twMerge(
               "font-caption pl-1 mt-1.5",
-              error ? "text-red-600" : "text-text-body",
+              error ? "text-info-red" : "text-text-body",
             )}
           >
             {helperText}

@@ -37,52 +37,32 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
 
   return (
     <div className="mt-4 flex flex-col">
-      <style>{`
-        .custom-scrollbar {
-          scrollbar-gutter: stable;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 5px;
-          height: 5px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #dde3f0;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #b8ccfc;
-        }
-      `}</style>
-
-      <div className="overflow-auto max-h-125 relative custom-scrollbar border-t border-surface-400">
+      <div className="overflow-auto max-h-125 relative platform-table-scrollbar border-t border-surface-400">
         <table className="w-full text-left border-separate border-spacing-0 min-w-[800px] table-fixed">
           <thead className="sticky top-0 z-20 bg-surface-100">
             <tr className="text-text-muted font-body2">
-              <th className="w-[14%] px-4 py-4 font-normal border-b border-surface-400/90">
+              <th className="w-[14%] border-b border-surface-400/90 px-4 py-4">
                 날짜
               </th>
-              <th className="w-[14%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[14%] border-b border-surface-400 px-4 py-4 text-right">
                 비용(지출)
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 노출 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 클릭 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 CTR(클릭률)
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 CPC
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 전환 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
+              <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 ROAS
               </th>
             </tr>
@@ -90,7 +70,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
           <tbody className="text-text-title font-body2">
             {/* 합계 행 */}
             {total && (
-              <tr className="sticky top-13 z-10 bg-surface-100/95 backdrop-blur-sm font-bold border-b-2 border-surface-400">
+              <tr className="sticky top-13 z-10 border-b-2 border-surface-400 bg-surface-100/95 font-body1 backdrop-blur-sm">
                 <td className="px-4 py-5 border-b border-surface-400">합계</td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
                   ₩{total.spend.toLocaleString()}
@@ -142,7 +122,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.conversions.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-title font-medium border-b border-surface-400/20">
+                <td className="border-b border-surface-400/20 px-4 py-4 text-right tabular-nums text-text-title">
                   {row.roas}%
                 </td>
               </tr>

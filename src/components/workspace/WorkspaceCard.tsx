@@ -57,7 +57,7 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="truncate font-heading4 font-semibold! text-text-title">
+              <div className="truncate font-heading4 text-text-title">
                 {w.name}
               </div>
               {isSelected && (
