@@ -111,7 +111,7 @@ export function WorkspaceSwitcher({
 
   const renderImage = useCallback(
     (workspace: TWorkspace) => (
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-bg-disabled/80 text-text-sub font-bold">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-surface-200 text-text-body font-bold">
         {workspace?.logoUrl ? (
           <img
             src={workspace.logoUrl}
@@ -137,15 +137,15 @@ export function WorkspaceSwitcher({
     return (
       <div className={twMerge("relative mb-4", className)}>
         <div
-          className={twMerge(switcherShellClass, "bg-bg-disabled/20")}
+          className={twMerge(switcherShellClass, "bg-surface-200")}
           aria-busy
           aria-label="워크스페이스 불러오는 중"
         >
-          <div className="h-10 w-10 shrink-0 rounded-lg bg-bg-disabled/60 animate-pulse" />
+          <div className="h-10 w-10 shrink-0 rounded-lg bg-surface-300 animate-pulse" />
           {!isCollapsed && (
             <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-              <div className="h-4 max-w-40 w-[55%] rounded bg-bg-disabled/60 animate-pulse" />
-              <div className="h-3 w-14 rounded bg-bg-disabled/50 animate-pulse" />
+              <div className="h-4 max-w-40 w-[55%] rounded bg-surface-300 animate-pulse" />
+              <div className="h-3 w-14 rounded bg-surface-300 animate-pulse" />
             </div>
           )}
         </div>
@@ -156,13 +156,13 @@ export function WorkspaceSwitcher({
   if (!currentWorkspace) {
     return (
       <div className={twMerge("relative mb-4", className)}>
-        <div className={twMerge(switcherShellClass, "text-text-sub")}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-bg-disabled/80 font-bold text-text-sub">
+        <div className={twMerge(switcherShellClass, "text-text-body")}>
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-200 font-bold text-text-body">
             —
           </div>
           {!isCollapsed && (
             <div className="flex min-w-0 flex-1 flex-col items-start">
-              <span className="w-full truncate text-left font-label text-text-sub">
+              <span className="w-full truncate text-left font-label text-text-body">
                 워크스페이스 없음
               </span>
               <span className="font-caption w-full truncate text-text-disabled">
@@ -184,7 +184,7 @@ export function WorkspaceSwitcher({
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
           switcherShellClass,
-          "transition-colors hover:bg-bg-surface",
+          "transition-colors hover:bg-surface-200",
         )}
       >
         {renderImage(currentWorkspace)}
@@ -192,7 +192,7 @@ export function WorkspaceSwitcher({
         {!isCollapsed && (
           <>
             <div className="flex flex-col flex-1 min-w-0 items-start">
-              <span className="text-left text-text-main font-label truncate w-full">
+              <span className="text-left text-text-title font-label truncate w-full">
                 {currentWorkspace?.name || "워크스페이스 선택"}
               </span>
               <span className="text-text-disabled font-caption truncate">
@@ -201,7 +201,7 @@ export function WorkspaceSwitcher({
             </div>
             <ChevronIcon
               className={twMerge(
-                "h-3 w-3 text-text-sub transition-transform duration-200",
+                "h-3 w-3 text-text-body transition-transform duration-200",
                 isOpen ? "rotate-0" : "rotate-180",
               )}
             />
@@ -214,7 +214,7 @@ export function WorkspaceSwitcher({
           <motion.div
             id="workspace-list"
             className={twMerge(
-              "absolute z-50 flex flex-col rounded-2xl bg-white p-2 shadow-Soft border border-bg-surface origin-top",
+              "absolute z-50 flex flex-col rounded-2xl bg-surface-100 p-2 shadow-Soft border border-surface-300 origin-top",
               isCollapsed
                 ? "left-full top-0 ml-2 w-58"
                 : "left-1 -right-5 top-full mt-1",
@@ -240,18 +240,18 @@ export function WorkspaceSwitcher({
               {otherWorkspaces.map((org, index) => (
                 <div key={org.orgId}>
                   {index !== 0 && (
-                    <div className="my-1 border-t border-bg-surface" />
+                    <div className="my-1 border-t border-surface-300" />
                   )}
                   <button
                     type="button"
                     onClick={() => {
                       saveWorkspace(org.orgId);
                     }}
-                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-main hover:bg-bg-surface transition-colors"
+                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-title hover:bg-surface-200 transition-colors"
                   >
                     {renderImage(org)}
                     <div className="flex flex-col flex-1 min-w-0 items-start">
-                      <span className="truncate w-full text-left font-body2 text-text-main">
+                      <span className="truncate w-full text-left font-body2 text-text-title">
                         {org.name}
                       </span>
                       <span className="font-caption text-text-disabled mt-0.5">
@@ -263,19 +263,19 @@ export function WorkspaceSwitcher({
               ))}
             </div>
 
-            <div className="mt-1 pt-1 border-t border-bg-surface">
+            <div className="mt-1 pt-1 border-t border-surface-300">
               <button
                 type="button"
                 onClick={() => {
                   setIsOpen(false);
                   navigate("/workspace");
                 }}
-                className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-sub hover:bg-bg-surface transition-colors"
+                className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-body hover:bg-surface-200 transition-colors"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-bg-disabled text-text-sub/50">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-surface-400 text-text-muted">
                   +
                 </div>
-                <span className="font-body2 text-text-sub">
+                <span className="font-body2 text-text-body">
                   새 워크스페이스
                 </span>
               </button>

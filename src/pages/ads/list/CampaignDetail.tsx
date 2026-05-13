@@ -95,8 +95,9 @@ export default function CampaignDetail() {
                 <div className="flex items-center gap-5">
                   <h1 className="font-heading2 text-text-main">{data.name}</h1>
                   <Badge
-                    variant={data.status === "ON_GOING" ? "running" : "stopped"}
-                    size="sm"
+                    variant={
+                      data.status === "ON_GOING" ? "infoBlue" : "surface"
+                    }
                   >
                     {data.status === "ON_GOING"
                       ? "운영 중"

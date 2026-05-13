@@ -19,8 +19,8 @@ export interface IStatCardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const trendClasses: Record<ITrend["direction"], string> = {
-  up: "bg-status-red/[0.08] text-status-red font-bold",
-  down: "bg-status-blue/[0.08] text-status-blue font-bold",
+  up: "bg-info-red/[0.08] text-info-red font-bold",
+  down: "bg-info-blue/[0.08] text-info-blue font-bold",
 };
 
 export const TrendBadge = memo(function TrendBadge({
@@ -66,7 +66,7 @@ const StatCard = memo(function StatCard({
   return (
     <div
       className={twMerge(
-        "bg-white/80 backdrop-blur-sm rounded-3xl shadow-card p-7 flex flex-col gap-4 border border-white/40 transition-shadow duration-300 hover:shadow-card-hover",
+        "bg-surface-100/80 backdrop-blur-sm rounded-3xl shadow-card p-7 flex flex-col gap-4 border border-surface-100/40 transition-shadow duration-300 hover:shadow-card-hover",
         className,
       )}
       {...rest}

@@ -27,9 +27,10 @@
   --color-text-placeholder: var(--color-text-200);
   --color-text-disabled: var(--color-text-100);
 
-  --color-red-wraning: #FF2A4B;
-  --color-blue-down: #0084FE;
-
+  /* STATUS — 예산 소진: 안정=blue, 주의=yellow, 위험=red */
+  --color-info-red: #ff2a4b;
+  --color-info-blue: #0084fe;
+  --color-info-yellow: #facc15;
 
   /* 부가 카피·보조 문장 (랜딩/인증 등) — 본문보다 살짝 프라이머리 틴트 */
   --color-text-auth-sub: color-mix(

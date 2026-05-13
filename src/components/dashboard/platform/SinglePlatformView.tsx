@@ -196,9 +196,9 @@ export default function SinglePlatformView({
           description={
             <ChartLegend
               items={[
-                { label: "안정", colorClass: "bg-status-green" },
-                { label: "주의", colorClass: "bg-status-yellow" },
-                { label: "위험", colorClass: "bg-status-red" },
+                { label: "안정", colorClass: "bg-info-blue" },
+                { label: "주의", colorClass: "bg-info-yellow" },
+                { label: "위험", colorClass: "bg-info-red" },
               ]}
             />
           }
@@ -206,7 +206,6 @@ export default function SinglePlatformView({
             budgetStatus && (
               <Badge
                 variant={statusBadgeVariant[budgetStatus]}
-                size="sm"
                 className="px-2"
               >
                 {budgetStatus}

@@ -27,15 +27,15 @@ export function getBudgetStatus(
 }
 
 export const statusBadgeVariant: Record<TBudgetStatus, TBadgeVariant> = {
-  안정: "success",
-  주의: "syncing",
-  위험: "inactive",
+  안정: "infoBlue",
+  주의: "infoYellow",
+  위험: "infoRed",
 };
 
 const statusPointClasses: Record<TBudgetStatus, string> = {
-  안정: "bg-status-green",
-  주의: "bg-status-yellow",
-  위험: "bg-status-red",
+  안정: "bg-info-blue",
+  주의: "bg-info-yellow",
+  위험: "bg-info-red",
 };
 
 function splitInsightHeadTail(text: string): { head: string; tail?: string } {
@@ -99,14 +99,14 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="relative h-3 w-full bg-bg-surface rounded-full overflow-hidden"
+          className="relative h-3 w-full bg-surface-200 rounded-full overflow-hidden"
         >
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-white/60 z-10"
+            className="absolute top-0 bottom-0 w-0.5 bg-surface-100/60 z-10"
             style={{ left: `${warningThreshold}%` }}
           />
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-white/60 z-10"
+            className="absolute top-0 bottom-0 w-0.5 bg-surface-100/60 z-10"
             style={{ left: `${dangerThreshold}%` }}
           />
 
@@ -128,21 +128,21 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
       </div>
 
       <div className="flex-1 flex flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-bg-disabled/25 bg-bg-surface/50 p-4">
+        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 p-4">
           <span className="font-caption font-medium text-text-muted">
             남은 예산
           </span>
           <span
             className={twMerge(
               "font-heading3 font-bold tracking-tight text-text-title tabular-nums",
-              isOverBudget && "text-status-red",
+              isOverBudget && "text-info-red",
             )}
           >
             {isOverBudget ? "-" : ""}₩{remaining.toLocaleString()}
           </span>
         </div>
 
-        <div className="flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
+        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
           <WarnCircleIcon
             className="block size-5 shrink-0 text-text-muted"
             aria-hidden="true"

@@ -5,36 +5,36 @@ import Badge from "./Badge";
 const meta: Meta<typeof Badge> = {
   title: "Common/Badge",
   component: Badge,
-  parameters: { layout: "centered" },
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component:
+          "variant는 **토큰 색 이름**과 맞춤: `infoYellow` · `infoBlue`(기본) · `infoRed` · `surface`. 크기는 **sm 고정** (`h-7` · `font-caption`).",
+      },
+    },
+  },
 };
 
 export default meta;
 type TBadgeStory = StoryObj<typeof Badge>;
 
-export const Syncing: TBadgeStory = {
-  args: { variant: "syncing", children: "동기화중" },
+export const InfoYellow: TBadgeStory = {
+  name: "infoYellow",
+  args: { variant: "infoYellow", children: "예산 주의" },
 };
 
-export const Success: TBadgeStory = {
-  args: { variant: "success", children: "완료" },
+export const InfoBlue: TBadgeStory = {
+  name: "infoBlue (기본)",
+  args: { variant: "infoBlue", children: "운영 중" },
 };
 
-export const Inactive: TBadgeStory = {
-  args: { variant: "inactive", children: "미동기화" },
+export const InfoRed: TBadgeStory = {
+  name: "infoRed",
+  args: { variant: "infoRed", children: "예산 위험" },
 };
 
-export const Running: TBadgeStory = {
-  args: { variant: "running", children: "운영중" },
-};
-
-export const Stopped: TBadgeStory = {
-  args: { variant: "stopped", children: "중단" },
-};
-
-export const SizeSm: TBadgeStory = {
-  args: { size: "sm", variant: "running", children: "운영중작은" },
-};
-
-export const SizeMd: TBadgeStory = {
-  args: { size: "md", variant: "running", children: "운영중큰" },
+export const Surface: TBadgeStory = {
+  name: "surface",
+  args: { variant: "surface", children: "중단" },
 };
