@@ -10,6 +10,7 @@ import type {
 import InviteMemberModal from "./InviteMemberModal";
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
+import Card from "../common/card/Card";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
@@ -65,7 +66,7 @@ export default function MemberList({
   const hasVisibleItems = members.length > 0;
 
   return (
-    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
+    <Card className="p-8">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <h2 className="font-heading4 text-text-title">팀 구성원</h2>
@@ -118,6 +119,6 @@ export default function MemberList({
         orgId={orgId}
         inviteItems={inviteItems}
       />
-    </div>
+    </Card>
   );
 }

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import type { TPermissionRow } from "@/types/workspace/workspace";
 
 import Button from "../common/button/Button";
+import Card from "../common/card/Card";
 import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
@@ -109,7 +110,7 @@ export default function PermissionTable() {
   };
 
   return (
-    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
+    <Card className="p-8">
       <header className="mb-7">
         <h2 className="font-heading4 text-text-title">권한 설정</h2>
         <p className="mt-2 font-body2 text-text-muted">
@@ -163,28 +164,47 @@ export default function PermissionTable() {
           </tbody>
         </table>
       </div>
-      <div className="flex gap-3 items-center justify-end mt-5">
-        <Button
-          type="button"
-          variant="secondary"
-          size="big"
-          onClick={handleResetChange}
-          disabled={!hasChanges || isSaving}
-          className="rounded-2xl"
-        >
-          변경 취소
-        </Button>
-        <Button
-          type="button"
-          variant="primary"
-          size="big"
-          onClick={handleSaveChanges}
-          disabled={!hasChanges || isSaving}
-          className="rounded-2xl"
-        >
-          {isSaving ? "저장 중..." : "변경사항 저장하기"}
-        </Button>
+
+      <div className="mt-6 border-t border-surface-400/35 pt-6">
+        {hasChanges ? (
+          <p
+            role="status"
+            className="mb-4 rounded-xl bg-primary-100/50 px-4 py-3 font-body2 text-text-title"
+          >
+            <span className="font-label text-primary-500">저장 필요</span>
+            <span className="text-text-muted"> · </span>
+            멤버 권한이 변경되었습니다. 반영하려면 저장을 눌러주세요. 취소하면
+            이전 설정으로 돌아갑니다.
+          </p>
+        ) : (
+          <p className="mb-4 font-body2 text-text-muted">
+            멤버 열의 토글을 바꾼 뒤, 아래에서 저장하거나 변경을 취소할 수
+            있습니다.
+          </p>
+        )}
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            size="big"
+            onClick={handleResetChange}
+            disabled={!hasChanges || isSaving}
+            className="rounded-2xl"
+          >
+            변경 취소
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="big"
+            onClick={handleSaveChanges}
+            disabled={!hasChanges || isSaving}
+            className="rounded-2xl"
+          >
+            {isSaving ? "저장 중..." : "변경사항 저장하기"}
+          </Button>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }

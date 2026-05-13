@@ -161,26 +161,26 @@ export default function AdsListPage() {
   return (
     <section className="flex w-full flex-col">
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-200/45 px-4 py-3 tablet:px-3 tablet:py-2.5">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            {selectedIds.size > 0 ? (
-              <>
-                <span className="font-caption text-text-muted">
-                  {selectedIds.size}개 선택
-                </span>
-                <button
-                  type="button"
-                  onClick={clearSelection}
-                  className="font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title"
-                >
-                  선택 해제
-                </button>
-              </>
-            ) : (
-              <span className="font-caption text-text-muted tablet:hidden">
-                캠페인을 선택하면 일부만 중단·재개할 수 있어요
-              </span>
-            )}
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-4 py-3 tablet:px-3 tablet:py-2.5">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5 pl-2.5 tablet:pl-2">
+            <p className="font-caption text-text-placeholder">광고</p>
+            <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h2 className="font-heading3 text-text-title">캠페인 목록</h2>
+              {selectedIds.size > 0 ? (
+                <>
+                  <span className="font-caption text-text-muted">
+                    {selectedIds.size}개 선택
+                  </span>
+                  <button
+                    type="button"
+                    onClick={clearSelection}
+                    className="font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title"
+                  >
+                    선택 해제
+                  </button>
+                </>
+              ) : null}
+            </div>
           </div>
           <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
             <Button
@@ -208,7 +208,7 @@ export default function AdsListPage() {
               variant="gradient"
               onClick={handleCampaignGroupClick}
             >
-              캠페인 연결 설정
+              캠페인 그룹 정보 설정
             </Button>
           </div>
         </div>

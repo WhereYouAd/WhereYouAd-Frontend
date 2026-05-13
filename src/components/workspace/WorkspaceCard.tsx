@@ -28,9 +28,9 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
       <button
         type="button"
         className={twMerge(
-          "flex w-full items-center justify-between rounded-2xl border bg-surface-100 px-6 py-5 text-left shadow-Soft tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
+          "flex w-full items-center justify-between rounded-2xl border bg-surface-100 px-6 py-5 text-left shadow-card tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
           onClick &&
-            "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary-400/30 hover:bg-primary-100/50 hover:shadow-Medium active:scale-[0.98]",
+            "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary-400/30 hover:bg-primary-100/50 hover:shadow-card-hover active:scale-[0.98]",
           isSelected
             ? "border-primary-500/40 bg-primary-100/50"
             : "border-surface-400 focus-within:border-primary-400/50",

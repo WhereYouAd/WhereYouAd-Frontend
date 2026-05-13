@@ -266,7 +266,7 @@ export default function MemberManagement() {
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-8">
-      <div className="flex w-full min-w-0 flex-col gap-10">
+      <div className="flex w-full min-w-0 flex-col gap-8">
         <MemberList
           orgId={orgId}
           members={members}

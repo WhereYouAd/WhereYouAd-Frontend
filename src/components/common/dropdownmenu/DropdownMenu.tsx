@@ -17,12 +17,15 @@ export function DropdownMenu({
   items,
   className,
   menuClassName,
+  fullWidth = false,
   "aria-label": ariaLabel,
 }: {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   items: TMenuItem[];
   className?: string;
   menuClassName?: string;
+  /** 트리거와 동일 너비로 패널을 펼침 (폼 필드용) */
+  fullWidth?: boolean;
   "aria-label"?: string;
 }) {
   const reduceMotion = useReducedMotion();
@@ -45,7 +48,13 @@ export function DropdownMenu({
   }, []);
 
   return (
-    <div ref={ref} className="relative inline-block">
+    <div
+      ref={ref}
+      className={twMerge(
+        "relative",
+        fullWidth ? "block w-full" : "inline-block",
+      )}
+    >
       <div
         role="button"
         aria-haspopup="menu"
@@ -69,9 +78,14 @@ export function DropdownMenu({
             key="dropdown-panel"
             id={menuId}
             role="menu"
-            style={{ transformOrigin: "top right" }}
+            style={{
+              transformOrigin: fullWidth ? "top center" : "top right",
+            }}
             className={twMerge(
-              "absolute right-0 top-full z-50 mt-2 w-56 max-w-[calc(100vw-40px)] rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Medium",
+              "absolute z-50 mt-2 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Medium",
+              fullWidth
+                ? "left-0 right-0 top-full w-full"
+                : "right-0 top-full w-56 max-w-[calc(100vw-40px)]",
               menuClassName,
             )}
             initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
@@ -83,7 +97,12 @@ export function DropdownMenu({
             }}
             transition={{ duration: openMs, ease: easeOut }}
           >
-            <div className="space-y-1">
+            <div
+              className={twMerge(
+                "space-y-1",
+                fullWidth && "max-h-60 overflow-y-auto overscroll-contain",
+              )}
+            >
               {items.map((it, idx) => (
                 <div key={idx} className="px-2">
                   <button
@@ -100,7 +119,7 @@ export function DropdownMenu({
                         : "text-text-body hover:bg-primary-100/50 hover:text-info-blue",
                     )}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       {it.icon ? (
                         <span
                           className={twMerge(
@@ -116,7 +135,7 @@ export function DropdownMenu({
                       ) : null}
                       <span
                         className={twMerge(
-                          "whitespace-nowrap font-body2",
+                          "min-w-0 truncate font-body2 text-left",
                           it.active && "font-label",
                         )}
                       >

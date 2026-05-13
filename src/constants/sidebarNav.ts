@@ -33,13 +33,13 @@ export const mainNav: INavItem[] = [
   },
   {
     id: "ads",
-    label: "광고",
+    label: "캠페인",
     icon: AdsIcon,
     path: "/ads",
     children: [
       {
         id: "ads-list",
-        label: "광고 목록",
+        label: "캠페인 목록",
         path: "/ads",
       },
       {
@@ -56,9 +56,25 @@ export const mainNav: INavItem[] = [
     path: "/workspace",
     children: [
       {
+        id: "workspace-list",
+        label: "워크스페이스 목록",
+        path: "/workspace",
+        pathExact: true,
+      },
+      {
+        id: "workspace-settings",
+        label: "기본 정보",
+        workspaceSubpath: "settings",
+      },
+      {
+        id: "workspace-members",
+        label: "멤버 관리",
+        workspaceSubpath: "members",
+      },
+      {
         id: "workspace-billing",
         label: "플랜 및 결제",
-        path: "/workspace/billing",
+        workspaceSubpath: "billing",
       },
     ],
   },
