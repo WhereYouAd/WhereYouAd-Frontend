@@ -1,8 +1,9 @@
+import Card from "../common/card/Card";
 import { Skeleton, SkeletonCircle } from "../common/skeleton/Skeleton";
 
 function MemberRowSkeleton() {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-Soft tablet:px-4 tablet:py-4">
+    <div className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-card tablet:px-4 tablet:py-4">
       <div className="flex items-center gap-4 min-w-0">
         <SkeletonCircle className="w-12 h-12 shrink-0 tablet:w-10 tablet:h-10" />
         <div className="flex flex-col gap-2 min-w-0">
@@ -37,8 +38,8 @@ export default function MemberManagementLoading() {
       aria-label="멤버 관리 정보 불러오는 중"
       className="w-full min-w-0 flex flex-col gap-8"
     >
-      <div className="flex w-full min-w-0 flex-col gap-10">
-        <div className="rounded-3xl border border-surface-400 bg-surface-100 p-6 shadow-Soft">
+      <div className="flex w-full min-w-0 flex-col gap-8">
+        <Card className="p-8">
           <div className="space-y-5">
             <div className="flex items-center justify-between">
               <div className="space-y-2">
@@ -53,8 +54,8 @@ export default function MemberManagementLoading() {
               ))}
             </div>
           </div>
-        </div>
-        <div className="rounded-3xl border border-surface-400 bg-surface-100 p-6 shadow-Soft">
+        </Card>
+        <Card className="p-8">
           <div className="space-y-2 mb-6">
             <Skeleton className="h-6 w-28" />
             <Skeleton className="h-4 w-56" />
@@ -64,7 +65,7 @@ export default function MemberManagementLoading() {
               <PermissionRowSkeleton key={i} />
             ))}
           </div>
-        </div>
+        </Card>
       </div>
     </section>
   );

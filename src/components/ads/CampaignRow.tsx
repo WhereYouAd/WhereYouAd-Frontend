@@ -21,9 +21,9 @@ interface ICampaignRowProps {
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
-  kakao: <KakaoLogo className="h-full w-full" />,
-  google: <GoogleLogo className="h-full w-full" />,
-  naver: <NaverLogo className="h-full w-full" />,
+  kakao: <KakaoLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
+  google: <GoogleLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
+  naver: <NaverLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
 };
 
 export default function CampaignRow({
@@ -86,12 +86,11 @@ export default function CampaignRow({
         {providers && providers.length > 0 ? (
           <div className="flex items-center justify-start gap-1">
             {providers.map((p, idx) => (
-              <div
-                key={idx}
-                className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-sm tablet:h-6 tablet:w-6"
-              >
-                {LogoMap[p.toLowerCase() as TPlatform]}
-              </div>
+              <span key={idx} className="flex shrink-0">
+                {LogoMap[p.toLowerCase() as TPlatform] ?? (
+                  <span className="font-caption text-text-muted">?</span>
+                )}
+              </span>
             ))}
           </div>
         ) : (

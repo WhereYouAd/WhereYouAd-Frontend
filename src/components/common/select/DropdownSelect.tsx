@@ -63,7 +63,7 @@ export default function DropdownSelect<T>({
         </span>
         <ChevronDownIcon
           className={twMerge(
-            "w-4 h-4 transition-transform duration-200 text-text-muted",
+            "h-4 w-4 shrink-0 transition-transform duration-200 text-text-muted",
             isOpen ? "rotate-0 text-info-blue" : "rotate-180",
           )}
         />

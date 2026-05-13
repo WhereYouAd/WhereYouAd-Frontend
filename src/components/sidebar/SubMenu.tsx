@@ -62,7 +62,7 @@ export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
           className={({ isActive }) => getSubItemClass(isActive)}
         >
           {isCollapsed && parentLabel ? (
-            <div className="flex flex-col items-start min-w-0">
+            <div className="flex min-w-0 flex-col items-start">
               <span className="font-caption text-current/80 truncate max-w-full">
                 {parentLabel}
               </span>

@@ -1,5 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -7,6 +7,7 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
+import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
@@ -17,6 +18,7 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
@@ -68,6 +70,12 @@ export default function Sidebar() {
 
   const { showComingSoon } = useComingSoon();
 
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const mainNavWithWorkspace = useMemo(
+    () => applyWorkspacePathsToNav(mainNav, selectedOrgId),
+    [selectedOrgId],
+  );
+
   const handleFooterItemClick = useCallback(
     (id: string, hasChildren: boolean) => {
       if (id === "notifications") {
@@ -102,7 +110,7 @@ export default function Sidebar() {
               : "overflow-y-auto overflow-x-hidden",
           )}
         >
-          {mainNav.map((item) => {
+          {mainNavWithWorkspace.map((item) => {
             const isOpen = openId === item.id;
             const { isParentActive } = mainNavSidebar.getItemActiveState(
               pathname,
@@ -141,7 +149,12 @@ export default function Sidebar() {
                         e.preventDefault();
                         toggleOpenId(item.id);
                       }}
-                      className="ml-auto p-2 hover:bg-surface-200 rounded-lg transition-colors"
+                      className={twMerge(
+                        "ml-auto shrink-0 rounded-lg p-2 transition-colors",
+                        isParentActive
+                          ? "text-surface-100 hover:bg-surface-100/20"
+                          : "hover:bg-surface-200",
+                      )}
                     >
                       <ChevronIcon
                         className={twMerge(

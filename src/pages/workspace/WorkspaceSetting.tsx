@@ -6,9 +6,10 @@ import { toast } from "sonner";
 import type { IApiErrorResponse } from "@/types/common/common";
 
 import Button from "@/components/common/button/Button";
-import ControlBox from "@/components/common/controlbox/ControlBox";
+import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
@@ -39,6 +40,8 @@ export default function WorkspaceSetting() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
 
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -111,6 +114,10 @@ export default function WorkspaceSetting() {
       setErrorMsg("잘못된 워크스페이스ID 입니다");
       return;
     }
+    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
+      toast.error("워크스페이스 이름이 일치하지 않습니다.");
+      return;
+    }
     setDeleting(true);
     try {
       await deleteWorkspace(orgId);
@@ -128,6 +135,13 @@ export default function WorkspaceSetting() {
   };
 
   const openDeleteModal = () => {
+    const snapshot = name.trim();
+    if (!snapshot) {
+      toast.error("워크스페이스 이름을 먼저 입력해 주세요.");
+      return;
+    }
+    setDeleteNameSnapshot(snapshot);
+    setDeleteConfirmInput("");
     setDeleteOpen(true);
   };
 
@@ -178,7 +192,7 @@ export default function WorkspaceSetting() {
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
-        <div className="space-y-4 rounded-3xl border border-surface-400 bg-surface-100 p-10 text-center">
+        <Card className="space-y-4 p-10 text-center">
           <p className="font-body2 text-info-red">{errorMsg}</p>
           <Button
             type="button"
@@ -187,11 +201,11 @@ export default function WorkspaceSetting() {
           >
             다시 시도
           </Button>
-        </div>
+        </Card>
       )}
       {!loading && !errorMsg && (
         <>
-          <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
+          <Card className="p-8">
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
               <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
                 <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
@@ -270,7 +284,17 @@ export default function WorkspaceSetting() {
                 />
               </div>
             </div>
-            <div className="flex justify-end mt-6 gap-4 tablet:flex-col">
+            <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
+              <Button
+                type="button"
+                variant="dangerSoft"
+                size="big"
+                onClick={openDeleteModal}
+                disabled={saving || deleting}
+                className="w-auto tablet:w-full"
+              >
+                워크스페이스 삭제
+              </Button>
               <Button
                 size="big"
                 variant="primary"
@@ -283,60 +307,47 @@ export default function WorkspaceSetting() {
                 {saving ? "저장 중.." : "변경사항 저장하기"}
               </Button>
             </div>
-          </div>
+          </Card>
 
-          <div className="w-full flex flex-col">
-            <ControlBox
-              title="워크스페이스 삭제"
-              description={`워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.\n 이 작업은 되돌릴 수 없습니다`}
-              buttonText="워크스페이스 삭제"
-              onButtonClick={openDeleteModal}
-              className="w-full"
-              containerClassName="border-info-red bg-info-red/10"
-              titleClassName="text-info-red"
-              descriptionClassName="text-text-auth-sub"
-              buttonVariant="dangerSoft"
-              buttonSize="big"
-              buttonClassName="px-8 !rounded-2xl"
-              buttonDisabled={saving || deleting}
-              leadingSlot={<WarnIcon className="h-12 w-12 text-info-red" />}
-            />
-          </div>
           <Modal
             isOpen={deleteOpen}
-            onClose={() => setDeleteOpen(false)}
+            onClose={() => {
+              if (!deleting) {
+                setDeleteOpen(false);
+                setDeleteNameSnapshot("");
+                setDeleteConfirmInput("");
+              }
+            }}
+            title="워크스페이스 삭제"
             size="lg"
-            padding="lg"
-            title="워크스페이스 삭제 확인"
+            disableOverlayClick={deleting}
           >
-            <div className="text-center px-2 py-6">
-              <div className="flex justify-center mb-6">
+            <ModalContent
+              icon={
                 <WarnIcon
-                  className="h-15 w-15 text-info-red"
+                  className="h-7 w-7 text-info-red"
                   aria-hidden="true"
                 />
-              </div>
-              <h3 className="mb-3 font-heading2 text-text-title">
-                정말 삭제하시겠습니까?
-              </h3>
-              <p className="font-body1 text-text-auth-sub mb-7">
-                삭제된 워크스페이스와 관련된 모든 데이터는 영구 삭제되며 <br />{" "}
-                절대 되돌릴 수 없습니다.
-              </p>
-              <div className="flex justify-center">
-                <Button
-                  variant="danger"
-                  size="big"
-                  aria-label="워크스페이스 최종 삭제 버튼"
-                  onClick={onDelete}
-                  className="w-auto tablet:w-full"
-                  type="button"
-                  disabled={deleting}
-                >
-                  {deleting ? "삭제 중.." : "삭제하기"}
-                </Button>
-              </div>
-            </div>
+              }
+              title="정말 삭제하시겠습니까?"
+              description={
+                <>
+                  워크스페이스를 삭제하면 연결된 모든 데이터가 영구적으로
+                  삭제됩니다.
+                  <br />
+                  삭제 후에는 복구할 수 없습니다.
+                </>
+              }
+              confirmMatchText={deleteNameSnapshot}
+              confirmInput={deleteConfirmInput}
+              onConfirmInputChange={setDeleteConfirmInput}
+              buttonText="삭제하기"
+              onConfirm={() => {
+                void onDelete();
+              }}
+              isLoading={deleting}
+              variant="danger"
+            />
           </Modal>
         </>
       )}
