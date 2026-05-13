@@ -1,12 +1,11 @@
 @theme {
 
-  /* PRIMARY — 원시 팔레트 (100 밝음 → 500 진함) */
-  --palette-primary-100: #e8effe; /* Blue Tint */
-  --palette-primary-200: #b8ccfc; /* Light Blue */
-  --palette-primary-300: #7a9bf8; /* Mid Blue */
-  --palette-primary-400: #4b74f5; /* CTA Blue */
-  --palette-primary-500: #2f5bea; /* Brand Blue */
-
+  /* PRIMARY */
+  --color-primary-100: #e8effe; /* Blue Tint */
+  --color-primary-200: #b8ccfc; /* Light Blue */
+  --color-primary-300: #7a9bf8; /* Mid Blue */
+  --color-primary-400: #4b74f5; /* CTA Blue */
+  --color-primary-500: #2f5bea; /* Brand Blue */
 
   /* SURFACE */
   --color-surface-100: #ffffff;
@@ -15,20 +14,41 @@
   --color-surface-400: #dde3f0;
   --color-surface-500: #1b2b6b;
 
-
-  /* TEXT — 밝기 순 (100 가장 밝음 → 400 가장 진함), 쿨 그레이 */
+  /* TEXT */
   --color-text-100: #e4e7ec;
   --color-text-200: #9ca3af;
   --color-text-300: #374151;
   --color-text-400: #111827;
 
-  /* text 역할 기준 고정 값 */
+  /* TEXT - 역할 기준 고정 값 */
   --color-text-title: var(--color-text-400);
   --color-text-body: var(--color-text-300);
   --color-text-muted: var(--color-text-200);
   --color-text-placeholder: var(--color-text-200);
   --color-text-disabled: var(--color-text-100);
 
+  --color-red-wraning: #FF2A4B;
+  --color-blue-down: #0084FE;
+
+
+  /* 부가 카피·보조 문장 (랜딩/인증 등) — 본문보다 살짝 프라이머리 틴트 */
+  --color-text-auth-sub: color-mix(
+    in srgb,
+    var(--color-text-300) 82%,
+    var(--color-primary-500) 18%
+  );
+
+  /* 랜딩 섹션 배경·목업 면 — brand-200 대비 살짝 구분되는 톤 */
+  --color-landing-section: color-mix(
+    in srgb,
+    var(--color-text-400) 4%,
+    transparent
+  );
+  --color-landing-surface: color-mix(
+    in srgb,
+    var(--color-text-400) 6%,
+    transparent
+  );
 
   /* 타이포 스케일 — 유틸(.font-*)은 여기 값만 참조 */
   --type-hero-size: 54px;

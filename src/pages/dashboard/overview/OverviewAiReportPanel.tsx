@@ -17,7 +17,7 @@ export default function OverviewAiReportPanel() {
               <span>{data.label}</span>
             </div>
           </div>
-          <h2 className="font-heading2 font-extrabold text-text-main tracking-[-0.02em] leading-tight break-keep">
+          <h2 className="font-heading2 font-extrabold text-text-title tracking-[-0.02em] leading-tight break-keep">
             {data.title}
           </h2>
         </div>
@@ -27,7 +27,7 @@ export default function OverviewAiReportPanel() {
             <SparkleIcon className="w-5 h-auto text-logo-1 fill-current" />
             {data.strategySuggestion.title}
           </h3>
-          <p className="text-text-main font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">
+          <p className="text-text-body font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">
             {data.strategySuggestion.content}
           </p>
         </div>
@@ -38,10 +38,10 @@ export default function OverviewAiReportPanel() {
               key={section.title}
               className="flex flex-col gap-3 text-left shrink-0"
             >
-              <h3 className="text-text-main font-heading4 font-semibold! tracking-[-0.01em]">
+              <h3 className="text-text-title font-heading4 font-semibold! tracking-[-0.01em]">
                 {section.title}
               </h3>
-              <div className="text-text-auth-sub font-body2 font-medium leading-[1.7] whitespace-pre-line break-keep tracking-[-0.01em]">
+              <div className="text-text-body font-body2 font-medium leading-[1.7] whitespace-pre-line break-keep tracking-[-0.01em]">
                 {section.content}
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function OverviewAiReportPanel() {
             <WarnCircleIcon className="w-5 h-auto text-status-red" />
             {data.warning.title}
           </h3>
-          <p className="text-text-auth-sub font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">
+          <p className="text-text-body font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">
             {data.warning.content}
           </p>
         </div>

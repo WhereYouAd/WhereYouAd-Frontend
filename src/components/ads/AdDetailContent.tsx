@@ -106,7 +106,7 @@ export default function AdDetailContent({
         <div className="flex flex-col gap-2">
           <span className="text-text-placeholder font-caption">랜딩 URL</span>
           <div className="relative w-full max-w-160">
-            <div className="flex items-center justify-between w-full h-9 px-4 py-2 bg-white border border-bg-disabled rounded-lg group-hover:border-primary-light transition-all">
+            <div className="flex items-center justify-between w-full h-9 px-4 py-2 bg-white border border-bg-disabled rounded-lg group-hover:border-primary-200 transition-all">
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
                 {ad.landingUrl}
               </span>
@@ -115,7 +115,7 @@ export default function AdDetailContent({
                   e.stopPropagation();
                   ad.landingUrl && handleCopy(ad.landingUrl);
                 }}
-                className="shrink-0 text-text-placeholder hover:text-primary-main transition-colors p-1"
+                className="shrink-0 text-text-placeholder hover:text-primary-500 transition-colors p-1"
                 title="링크 복사"
               >
                 <LinkIcon className="w-5 h-5" />

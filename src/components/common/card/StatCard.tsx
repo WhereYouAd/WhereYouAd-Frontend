@@ -71,10 +71,10 @@ const StatCard = memo(function StatCard({
       )}
       {...rest}
     >
-      <p className="font-body2 text-text-sub font-medium">{title}</p>
+      <p className="font-body2 text-text-muted font-medium">{title}</p>
       <p
         className={twMerge(
-          "text-text-main font-extrabold tracking-tight",
+          "text-text-title font-extrabold tracking-tight",
           compact ? "font-heading2" : "font-heading1",
         )}
       >

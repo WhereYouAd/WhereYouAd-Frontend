@@ -62,7 +62,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
     <div className="@container flex flex-col h-full font-pretendard w-full">
       <div className="flex flex-col flex-1 min-w-0">
         <div
-          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 @2xl:gap-x-6 px-4 pt-2 pb-4 font-caption text-[#8B95A1] font-medium tracking-wider uppercase border-b border-[#F2F4F6]`}
+          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 @2xl:gap-x-6 px-4 pt-2 pb-4 font-caption text-text-muted font-medium tracking-wider uppercase border-b border-[#F2F4F6]`}
         >
           <span className="flex min-h-[1.25rem] items-center justify-center text-center tabular-nums leading-snug">
             순위
@@ -95,7 +95,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
             >
               {/* 순위 */}
               <div className="flex min-h-0 min-w-0 items-center justify-center">
-                <span className="text-center font-caption font-bold leading-none text-text-disabled tabular-nums transition-colors group-hover:text-text-sub">
+                <span className="text-center font-caption font-bold leading-none text-text-disabled tabular-nums transition-colors group-hover:text-text-muted">
                   {item.rank}
                 </span>
               </div>
@@ -105,14 +105,14 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 <div className="shrink-0 p-1.5 hover:will-change-transform group-hover:scale-105">
                   {getPlatformLogo(item.provider)}
                 </div>
-                <span className="font-body1 font-semibold! text-text-main tracking-tight">
+                <span className="font-body1 font-semibold! text-text-title tracking-tight">
                   {getDisplayName(item.provider)}
                 </span>
               </div>
 
               {/* ROAS */}
               <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
-                <span className="font-body1 leading-none text-text-main tabular-nums tracking-tight">
+                <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
                   {item.roas.toLocaleString()}%
                 </span>
               </div>
@@ -121,7 +121,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
                 {item.clickRate !== undefined ? (
                   <>
-                    <span className="w-full font-body1 text-text-main tracking-tight leading-none tabular-nums text-center">
+                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
                       {item.clickRate.toFixed(1)}%
                     </span>
                     {item.ctrDelta !== undefined && (
@@ -139,7 +139,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 text-center @2xl:flex">
                 {item.conversionRate !== undefined ? (
                   <>
-                    <span className="w-full font-body1 text-text-main tracking-tight leading-none tabular-nums text-center">
+                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
                       {item.conversionRate.toFixed(1)}%
                     </span>
                     {item.conversionDelta !== undefined && (
@@ -155,10 +155,10 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
 
               {/* 매출/광고비 */}
               <div className="flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
-                <span className="font-heading4 font-semibold! text-text-main tracking-tight leading-none tabular-nums truncate w-full">
+                <span className="font-heading4 font-semibold! text-text-title tracking-tight leading-none tabular-nums truncate w-full">
                   ₩{item.revenue.toLocaleString()}
                 </span>
-                <div className="flex items-center justify-end gap-1.5 text-[#8B95A1] font-caption w-full transition-colors group-hover:text-text-sub">
+                <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
                   <span className="font-medium whitespace-nowrap">광고비</span>
                   <span className="tabular-nums truncate">
                     ₩{item.adSpend.toLocaleString()}

@@ -35,7 +35,7 @@ export function TrafficChartDownload() {
         trigger={
           <button
             type="button"
-            className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-fast"
+            className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-ui-fast"
             aria-label="다운로드 메뉴 열기"
           >
             <MoreIcon
@@ -84,16 +84,18 @@ const AnomalyBubble = memo(function AnomalyBubble({
       <div className="relative bg-white border border-bg-disabled rounded-lg px-5 py-4 min-w-40">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
           <span className="inline-block w-2 h-2 rounded-full bg-status-red shrink-0" />
-          <p className="font-body2 text-text-main font-semibold! tracking-tight">
+          <p className="font-body2 text-text-title font-semibold! tracking-tight">
             클릭 이상 징후 감지
           </p>
         </div>
         <div className="text-center">
           {message && (
-            <p className="text-text-sub font-caption leading-5">{message}</p>
+            <p className="text-text-muted font-caption leading-5">{message}</p>
           )}
           {timestamp && (
-            <p className="text-text-sub font-caption leading-5">{timestamp}</p>
+            <p className="text-text-muted font-caption leading-5">
+              {timestamp}
+            </p>
           )}
         </div>
       </div>
@@ -267,7 +269,7 @@ const TrafficChart = memo(function TrafficChart() {
 
   if (isError && !data) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-100 gap-2 text-text-sub">
+      <div className="flex flex-col items-center justify-center w-full h-100 gap-2 text-text-muted">
         <p className="font-body2">실시간 데이터를 불러오지 못했습니다.</p>
         <p className="font-caption">잠시 후 다시 시도해 주세요.</p>
       </div>

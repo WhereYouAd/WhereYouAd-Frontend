@@ -70,7 +70,7 @@ export function OverviewPlatformSection({
         <Button
           variant="tertiary"
           onClick={onNavigate}
-          className="group flex h-8 items-center gap-1 rounded-full border-none bg-bg-surface/60 px-4 text-text-sub transition-colors hover:bg-bg-surface hover:text-text-auth-sub"
+          className="group flex h-8 items-center gap-1 rounded-full border-none bg-bg-surface/60 px-4 text-text-muted transition-colors hover:bg-bg-surface hover:text-text-body"
         >
           <span className="font-caption font-semibold">
             플랫폼 대시보드 살펴보기

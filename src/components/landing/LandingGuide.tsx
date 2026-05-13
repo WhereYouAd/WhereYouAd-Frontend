@@ -12,15 +12,11 @@ export default function LandingGuide() {
     <section
       id="guide"
       tabIndex={-1}
-      className="py-24 md:py-40 bg-brand-200 scroll-mt-[calc(var(--landing-header-height,64px)+16px)] relative overflow-hidden focus-visible:outline-none"
+      className="py-24 md:py-40 bg-surface-100 scroll-mt-[calc(var(--landing-header-height,64px)+16px)] relative overflow-hidden focus-visible:outline-none"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-35"
-        style={{
-          backgroundImage:
-            "radial-gradient(900px 320px at 20% 0%, rgba(46, 180, 255, 0.16), transparent 60%), radial-gradient(900px 320px at 80% 10%, rgba(96, 136, 254, 0.12), transparent 60%)",
-        }}
+        className="pointer-events-none absolute inset-0 opacity-35 bg-landing-guide-wash"
       />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -50,7 +46,7 @@ export default function LandingGuide() {
                 className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
                   page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
-                    : "bg-white shadow-card border border-chart-inactive/70"
+                    : "bg-surface-100 shadow-card border border-surface-400/70"
                 }`}
                 initial={{ opacity: 0, x: page.reverse ? 42 : -42 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -92,15 +88,15 @@ export default function LandingGuide() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-bold text-brand-600/35 leading-none select-none">
+                  <span className="text-4xl font-bold text-primary-400 leading-none select-none">
                     {page.number}
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-brand-300 px-3 py-1 text-[11px] font-semibold text-text-sub tracking-wide">
+                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 text-[11px] font-semibold text-surface-100 tracking-wide shadow-landing-pill">
                     {page.label}
                   </span>
                 </div>
 
-                <h3 className="font-heading2 text-text-main leading-snug break-keep text-balance">
+                <h3 className="font-heading2 text-text-title leading-snug break-keep text-balance">
                   {page.title}
                 </h3>
 
@@ -112,10 +108,10 @@ export default function LandingGuide() {
                   {page.steps.map((item) => (
                     <div
                       key={item.step}
-                      className="rounded-2xl border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
+                      className="rounded-2xl border border-surface-400/60 bg-surface-100/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="font-body1 font-semibold text-text-main leading-snug break-keep text-balance">
+                        <span className="font-body1 font-semibold text-text-title leading-snug break-keep text-balance">
                           {item.title}
                         </span>
                       </div>

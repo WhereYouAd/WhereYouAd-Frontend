@@ -79,14 +79,14 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   return (
     <div className="flex flex-col w-full h-full font-pretendard pt-6">
       <div className="flex flex-col mb-6">
-        <h3 className="mb-3 font-body2 font-semibold text-text-auth-sub">
+        <h3 className="mb-3 font-body2 font-semibold text-text-body">
           사용 예산
         </h3>
         <div className="flex items-baseline gap-2">
-          <span className="font-heading1 font-extrabold tracking-tight text-text-main leading-none tabular-nums">
+          <span className="font-heading1 font-extrabold tracking-tight text-text-title leading-none tabular-nums">
             {percentage}%
           </span>
-          <span className="font-body2 font-bold tracking-tight text-text-auth-sub tabular-nums">
+          <span className="font-body2 font-bold tracking-tight text-text-body tabular-nums">
             소진
           </span>
         </div>
@@ -121,7 +121,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           />
         </div>
 
-        <div className="mt-3 flex items-center justify-between font-body2 font-medium text-text-auth-sub">
+        <div className="mt-3 flex items-center justify-between font-body2 font-medium text-text-body">
           <span className="tabular-nums">₩{spent.toLocaleString()}</span>
           <span className="tabular-nums">₩{totalBudget.toLocaleString()}</span>
         </div>
@@ -129,12 +129,12 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
 
       <div className="flex-1 flex flex-col gap-3">
         <div className="flex flex-col gap-1 rounded-2xl border border-bg-disabled/25 bg-bg-surface/50 p-4">
-          <span className="font-caption font-medium text-text-sub">
+          <span className="font-caption font-medium text-text-muted">
             남은 예산
           </span>
           <span
             className={twMerge(
-              "font-heading3 font-bold tracking-tight text-text-main tabular-nums",
+              "font-heading3 font-bold tracking-tight text-text-title tabular-nums",
               isOverBudget && "text-status-red",
             )}
           >
@@ -144,10 +144,10 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
 
         <div className="flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
           <WarnCircleIcon
-            className="block size-5 shrink-0 text-text-sub"
+            className="block size-5 shrink-0 text-text-muted"
             aria-hidden="true"
           />
-          <p className="m-0 min-w-0 flex-1 font-body2 font-medium leading-snug break-keep text-text-auth-sub">
+          <p className="m-0 min-w-0 flex-1 font-body2 font-medium leading-snug break-keep text-text-body">
             <span>{insightHead}</span>
             {insightTail ? (
               <span className="mt-0.5 block tablet:ml-1 tablet:mt-0 tablet:inline">
