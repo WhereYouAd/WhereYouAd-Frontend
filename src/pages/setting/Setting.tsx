@@ -7,7 +7,9 @@ import { useImageUploader } from "@/hooks/common/useImageUploader";
 
 import Button from "@/components/common/button/Button";
 import PasswordSection from "@/components/setting/PasswordSection";
+import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
 import ProfileSection from "@/components/setting/ProfileSection";
+import ProfileSectionSkeleton from "@/components/setting/ProfileSectionSkeleton";
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 
@@ -42,6 +44,7 @@ export default function Setting() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [isImageDeleted, setIsImageDeleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     fileRef,
     file,
@@ -141,6 +144,7 @@ export default function Setting() {
   useEffect(() => {
     const fetchMyInfo = async () => {
       try {
+        setIsLoading(true);
         const res = await getMyInfo();
 
         const profileData = {
@@ -162,6 +166,8 @@ export default function Setting() {
       } catch (error) {
         toast.error("회원 정보를 불러오는데 실패했습니다");
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchMyInfo();
@@ -169,30 +175,39 @@ export default function Setting() {
   return (
     <section className="w-full flex flex-col gap-8">
       <div className="flex flex-col gap-6">
-        <ProfileSection
-          name={draftProfile.name}
-          setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
-          organizations={draftProfile.organizations}
-          email={draftProfile.email}
-          phoneNumber={draftProfile.phoneNumber}
-          fileRef={fileRef}
-          preview={preview}
-          onPickFile={handlePickFile}
-          openFilePicker={openFilePicker}
-          resetImage={() => {
-            resetImage();
-            setIsImageDeleted(true);
-          }}
-        />
-        <PasswordSection
-          currentPassword={currentPassword}
-          setCurrentPassword={setCurrentPassword}
-          newPassword={newPassword}
-          setNewPassword={setNewPassword}
-          confirmNewPassword={confirmNewPassword}
-          setConfirmNewPassword={setConfirmNewPassword}
-          errors={passwordErrors}
-        />
+        {isLoading ? (
+          <>
+            <ProfileSectionSkeleton />
+            <PasswordSectionSkeleton />
+          </>
+        ) : (
+          <>
+            <ProfileSection
+              name={draftProfile.name}
+              setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
+              organizations={draftProfile.organizations}
+              email={draftProfile.email}
+              phoneNumber={draftProfile.phoneNumber}
+              fileRef={fileRef}
+              preview={preview}
+              onPickFile={handlePickFile}
+              openFilePicker={openFilePicker}
+              resetImage={() => {
+                resetImage();
+                setIsImageDeleted(true);
+              }}
+            />
+            <PasswordSection
+              currentPassword={currentPassword}
+              setCurrentPassword={setCurrentPassword}
+              newPassword={newPassword}
+              setNewPassword={setNewPassword}
+              confirmNewPassword={confirmNewPassword}
+              setConfirmNewPassword={setConfirmNewPassword}
+              errors={passwordErrors}
+            />
+          </>
+        )}
       </div>
       <div className="flex justify-end">
         <Button
@@ -201,7 +216,7 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={!hasChanges}
+          disabled={!hasChanges || isLoading}
         >
           변경사항 저장하기
         </Button>
