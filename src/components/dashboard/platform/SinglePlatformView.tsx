@@ -54,14 +54,6 @@ export default function SinglePlatformView({
 
     return [
       {
-        title: "클릭수(CTR)",
-        value: platformData.clicks.toLocaleString(),
-        trend: {
-          direction: platformData.clickChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.clickChangeRate * 100).toFixed(2)}%`,
-        },
-      },
-      {
         title: "노출수",
         value: platformData.impressions.toLocaleString(),
         trend: {
@@ -70,7 +62,15 @@ export default function SinglePlatformView({
         },
       },
       {
-        title: "전환율(CVR)",
+        title: "클릭수 (CTR)",
+        value: platformData.clicks.toLocaleString(),
+        trend: {
+          direction: platformData.clickChangeRate >= 0 ? "up" : "down",
+          value: `${Math.abs(platformData.clickChangeRate * 100).toFixed(2)}%`,
+        },
+      },
+      {
+        title: "전환율 (CVR)",
         value: `${platformData.conversion}%`,
         trend: {
           direction: platformData.cvrChangeRate >= 0 ? "up" : "down",
@@ -78,7 +78,7 @@ export default function SinglePlatformView({
         },
       },
       {
-        title: "광고비 대비 매출(ROAS)",
+        title: "광고비 대비 매출 (ROAS)",
         value: `${platformData.ROAS}%`,
         trend: {
           direction: platformData.ROASChangeRate >= 0 ? "up" : "down",
