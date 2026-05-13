@@ -218,18 +218,24 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 tablet:h-46 tablet:w-46">
+                <button
+                  type="button"
+                  onClick={openFilePicker}
+                  disabled={saving || deleting}
+                  aria-label="로고 이미지 업로드 또는 변경"
+                  className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
+                >
                   {logoPreview ? (
                     <img
                       src={logoPreview}
-                      alt={"새 로고 미리보기"}
-                      className="w-full h-full object-cover rounded-lg"
+                      alt=""
+                      className="h-full w-full object-cover rounded-lg"
                     />
                   ) : resolvedLogoUrl ? (
                     <img
                       src={resolvedLogoUrl}
-                      alt={`${name || "워크스페이스"} 로고`}
-                      className="w-full h-full object-cover rounded-lg"
+                      alt=""
+                      className="h-full w-full object-cover rounded-lg"
                       onError={() => {
                         setImageError(true);
                       }}
@@ -237,10 +243,10 @@ export default function WorkspaceSetting() {
                   ) : (
                     <BuildingIcon
                       aria-hidden="true"
-                      className="w-11 h-11 text-text-placeholder"
+                      className="h-11 w-11 text-text-placeholder"
                     />
                   )}
-                </div>
+                </button>
                 <div className="flex gap-2 mt-4 justify-center">
                   <Button
                     variant="custom"

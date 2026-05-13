@@ -208,7 +208,7 @@ export default function AdsListPage() {
               variant="gradient"
               onClick={handleCampaignGroupClick}
             >
-              캠페인 그룹 정보 설정
+              통합 캠페인 등록
             </Button>
           </div>
         </div>

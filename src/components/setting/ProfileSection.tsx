@@ -1,5 +1,7 @@
 import type React from "react";
 
+import Card from "@/components/common/card/Card";
+
 import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 
@@ -32,7 +34,7 @@ export default function ProfileSection({
   resetImage,
 }: TProfileSectionProps) {
   return (
-    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
+    <Card className="p-8 tablet:p-10">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
@@ -51,17 +53,25 @@ export default function ProfileSection({
             className="hidden"
             onChange={onPickFile}
           />
-          <div className="relative flex h-60 w-60 items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 shadow-sm">
+          <button
+            type="button"
+            onClick={openFilePicker}
+            aria-label="프로필 이미지 업로드 또는 변경"
+            className="relative flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
+          >
             {preview ? (
               <img
                 src={preview}
-                alt="프로필 이미지 미리보기"
-                className="w-full h-full object-cover"
+                alt=""
+                className="h-full w-full object-cover"
               />
             ) : (
-              <CameraIcon className="text-text-disabled w-10 h-10" />
+              <CameraIcon
+                className="h-10 w-10 shrink-0 text-text-placeholder"
+                aria-hidden
+              />
             )}
-          </div>
+          </button>
           <div className="mt-5 flex gap-3">
             <Button
               variant="custom"
@@ -95,7 +105,7 @@ export default function ProfileSection({
           <div className="col-span-2">
             <div className="mb-2 ml-1 text-text-title">소속 조직</div>
             {organizations.length === 0 ? (
-              <div className="text-text-disabled font-body2 ml-1">
+              <div className="ml-1 font-body2 text-text-muted">
                 소속된 조직이 없습니다.
               </div>
             ) : (
@@ -106,7 +116,6 @@ export default function ProfileSection({
                       <Input
                         value={`${org.name}  (${org.position})`}
                         disabled
-                        inputClassName="text-text-title"
                         containerClassName="bg-surface-200"
                         readOnly
                       />
@@ -146,6 +155,6 @@ export default function ProfileSection({
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

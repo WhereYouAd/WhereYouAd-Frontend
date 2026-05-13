@@ -155,7 +155,7 @@ export default function AdListTable({
               />
 
               {isOpen ? (
-                <div className="w-full min-w-0 origin-top border-b-2 border-surface-400 bg-surface-200">
+                <div className="w-full min-w-0 origin-top border-b-2 border-surface-400 bg-surface-300">
                   <AdDetailContent ad={ad} refetchAds={refetchAds} />
                 </div>
               ) : null}

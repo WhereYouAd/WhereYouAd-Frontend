@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import Card from "@/components/common/card/Card";
+
 import Input from "../common/input/Input";
 
 import EyeIcon from "@/assets/icon/common/eye.svg?react";
@@ -34,7 +36,7 @@ export default function PasswordSection({
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
+    <Card className="p-8 tablet:p-10">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <div className="flex gap-4 items-center">
@@ -115,6 +117,6 @@ export default function PasswordSection({
           }
         />
       </div>
-    </div>
+    </Card>
   );
 }

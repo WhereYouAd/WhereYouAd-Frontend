@@ -8,12 +8,12 @@ export default function OverviewAiReportPanel() {
   const data = aiReportMockData;
 
   return (
-    <div className="flex flex-col bg-surface-100 relative">
-      <div className="flex flex-col px-4 tablet:px-2 gap-8 pb-8 pt-2">
-        <div className="flex flex-col gap-2.5 text-left px-2">
+    <div className="relative flex flex-col bg-surface-100">
+      <div className="flex flex-col gap-8 px-5 pb-8 pt-2 tablet:px-4">
+        <div className="flex flex-col gap-2.5 text-left">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-primary-500 font-label">
-              <SparkleCircleIcon className="w-4.5 h-4.5 text-primary-500 fill-current" />
+            <div className="flex items-center gap-1.5 font-label text-primary-500">
+              <SparkleCircleIcon className="h-4 w-4 shrink-0 fill-current text-primary-500" />
               <span>{data.label}</span>
             </div>
           </div>
@@ -22,9 +22,9 @@ export default function OverviewAiReportPanel() {
           </h2>
         </div>
 
-        <div className="rounded-[24px] bg-primary-500/6 p-7 text-left mx-1">
+        <div className="rounded-[24px] bg-primary-500/6 p-6 text-left tablet:p-5">
           <h3 className="mb-3 flex items-center gap-2 font-heading4 text-primary-500">
-            <SparkleIcon className="w-5 h-auto text-primary-500 fill-current" />
+            <SparkleIcon className="h-4 w-4 shrink-0 fill-current text-primary-500" />
             {data.strategySuggestion.title}
           </h3>
           <p className="font-body2 whitespace-pre-line break-keep text-text-body">
@@ -32,11 +32,11 @@ export default function OverviewAiReportPanel() {
           </p>
         </div>
 
-        <div className="flex flex-col px-2 gap-8">
+        <div className="flex flex-col gap-8">
           {data.sections.map((section) => (
             <div
               key={section.title}
-              className="flex flex-col gap-3 text-left shrink-0"
+              className="flex shrink-0 flex-col gap-3 text-left"
             >
               <h3 className="font-heading4 text-text-title">{section.title}</h3>
               <div className="font-body2 whitespace-pre-line break-keep text-text-body">
@@ -46,9 +46,9 @@ export default function OverviewAiReportPanel() {
           ))}
         </div>
 
-        <div className="rounded-[24px] bg-info-red/6 p-7 text-left mx-1">
+        <div className="rounded-[24px] bg-info-red/6 p-6 text-left tablet:p-5">
           <h3 className="mb-3 flex items-center gap-2 font-heading4 text-info-red">
-            <WarnCircleIcon className="w-5 h-auto text-info-red" />
+            <WarnCircleIcon className="h-4 w-4 shrink-0 text-info-red" />
             {data.warning.title}
           </h3>
           <p className="font-body2 whitespace-pre-line break-keep text-text-body">
