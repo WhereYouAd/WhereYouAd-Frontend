@@ -15,8 +15,8 @@ type TProps = {
 };
 
 const triggerStyleMap: Record<TMemberRole, string> = {
-  ADMIN: "bg-status-blue/80 text-white shadow-sm",
-  MEMBER: "bg-chart-3/15 text-text-auth-sub",
+  ADMIN: "bg-primary-400 text-white shadow-sm",
+  MEMBER: "bg-primary-100/80 text-text-auth-sub",
 };
 
 export default function MemberRoleSelect({

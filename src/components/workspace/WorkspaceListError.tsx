@@ -12,9 +12,9 @@ export default function WorkspaceListError({
   return (
     <div
       role="alert"
-      className="bg-white p-10 text-center border border-gray-100 rounded-3xl space-y-4"
+      className="space-y-4 rounded-3xl border border-surface-400 bg-surface-100 p-10 text-center"
     >
-      <p className="font-body2 text-status-red">{message}</p>
+      <p className="font-body2 text-info-red">{message}</p>
       <Button type="button" variant="primary" onClick={onRetry}>
         다시 시도
       </Button>

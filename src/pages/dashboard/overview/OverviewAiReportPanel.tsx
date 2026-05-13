@@ -8,7 +8,7 @@ export default function OverviewAiReportPanel() {
   const data = aiReportMockData;
 
   return (
-    <div className="flex flex-col bg-white relative">
+    <div className="flex flex-col bg-surface-100 relative">
       <div className="flex flex-col px-4 tablet:px-2 gap-8 pb-8 pt-2">
         <div className="flex flex-col gap-2.5 text-left px-2">
           <div className="flex items-center justify-between">
@@ -48,9 +48,9 @@ export default function OverviewAiReportPanel() {
           ))}
         </div>
 
-        <div className="rounded-[24px] bg-status-red/6 p-7 text-left mx-1">
-          <h3 className="flex items-center gap-2 text-status-red font-heading4 font-semibold! mb-3 tracking-tight">
-            <WarnCircleIcon className="w-5 h-auto text-status-red" />
+        <div className="rounded-[24px] bg-info-red/6 p-7 text-left mx-1">
+          <h3 className="flex items-center gap-2 text-info-red font-heading4 font-semibold! mb-3 tracking-tight">
+            <WarnCircleIcon className="w-5 h-auto text-info-red" />
             {data.warning.title}
           </h3>
           <p className="text-text-body font-body2 font-medium leading-[1.65] whitespace-pre-line break-keep">

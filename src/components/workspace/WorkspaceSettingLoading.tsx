@@ -7,7 +7,7 @@ export default function WorkspaceSettingLoading() {
       aria-label="워크스페이스 설정 불러오는 중"
       className="w-full flex flex-col gap-8"
     >
-      <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
+      <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
         <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
           <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
             <Skeleton className="h-5 w-24 mb-3 self-start tablet:self-center" />
@@ -33,7 +33,7 @@ export default function WorkspaceSettingLoading() {
         </div>
       </div>
       <div className="w-full">
-        <div className="flex items-center h-41 rounded-3xl border border-status-red/20 bg-status-red/5 p-6">
+        <div className="flex h-41 items-center rounded-3xl border border-info-red/20 bg-info-red/5 p-6">
           <div className="flex w-full items-center justify-between gap-4 tablet:flex-col tablet:items-stretch">
             <div className="flex items-start gap-4">
               <Skeleton className="w-12 h-12 rounded-full shrink-0" />

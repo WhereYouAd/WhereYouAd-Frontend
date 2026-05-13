@@ -38,19 +38,19 @@ export default function CampaignGroup() {
   } = useCampaignGroup();
 
   return (
-    <section className="flex flex-col items-center w-full pt-0 pb-20 min-h-screen bg-bg-surface/30">
+    <section className="flex min-h-screen w-full flex-col items-center bg-surface-200/30 pb-20 pt-0">
       <div className="flex flex-col gap-8 w-full max-w-4xl">
         {/* 캠페인 기본 정보 */}
-        <Card className="flex flex-col gap-8 p-10 shadow-sm bg-white">
+        <Card className="flex flex-col gap-8 p-10 shadow-sm">
           <div className="border-l-3 border-text-auth-sub pl-4 py-1">
-            <h3 className="font-heading4 text-text-main">캠페인 기본 정보</h3>
+            <h3 className="font-heading4 text-text-title">캠페인 기본 정보</h3>
           </div>
           <div className="flex flex-col gap-10 w-full">
             {/* 캠페인명 */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="campaign-name"
-                className="font-body1 text-text-main"
+                className="font-body1 text-text-title"
               >
                 캠페인명
               </label>
@@ -65,7 +65,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="campaign-description"
-                className="font-body1 text-text-main"
+                className="font-body1 text-text-title"
               >
                 캠페인 설명
               </label>
@@ -76,16 +76,16 @@ export default function CampaignGroup() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 minRows={8}
-                className="bg-white ring-1 ring-logo-1/30 hover:ring-logo-1/40 focus:ring-2 focus:ring-logo-1/50"
+                className="bg-surface-100 ring-1 ring-logo-1/30 hover:ring-logo-1/40 focus:ring-2 focus:ring-logo-1/50"
               />
             </div>
           </div>
         </Card>
 
         {/* 플랫폼별 캠페인 연결 */}
-        <Card className="flex flex-col gap-8 p-10 shadow-sm bg-white">
+        <Card className="flex flex-col gap-8 p-10 shadow-sm">
           <div className="border-l-3 border-text-auth-sub pl-4 py-1">
-            <h3 className="font-heading4 text-text-main">
+            <h3 className="font-heading4 text-text-title">
               플랫폼별 캠페인 연결
             </h3>
           </div>
@@ -94,7 +94,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <GoogleIcon className="w-6 h-6" />
-                <span className="font-body1 text-text-main">Google</span>
+                <span className="font-body1 text-text-title">Google</span>
               </div>
               <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
@@ -110,7 +110,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <NaverIcon className="w-6 h-6" />
-                <span className="font-body1 text-text-main">NAVER</span>
+                <span className="font-body1 text-text-title">NAVER</span>
               </div>
               <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
@@ -126,7 +126,7 @@ export default function CampaignGroup() {
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 px-1">
                 <KakaoIcon className="w-6 h-6" />
-                <span className="font-body1 text-text-main">Kakao</span>
+                <span className="font-body1 text-text-title">Kakao</span>
               </div>
               <DropdownSelect<IPlatformCampaign>
                 placeholder="캠페인 선택"
@@ -157,7 +157,7 @@ export default function CampaignGroup() {
         size="md"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="w-8 h-8 text-status-blue" />}
+          icon={<WarnCircleIcon className="h-8 w-8 text-info-blue" />}
           title="캠페인 생성 완료"
           description="캠페인 그룹이 성공적으로 생성되었습니다."
           buttonText="확인"

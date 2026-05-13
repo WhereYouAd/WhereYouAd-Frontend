@@ -24,7 +24,7 @@ export function TopPerformanceListSkeleton() {
 // 개별 플랫폼 상세 카드
 export function PlatformDetailCardSkeleton() {
   return (
-    <div className="bg-white/80 p-7 rounded-3xl border border-white/40 flex flex-col gap-8">
+    <div className="flex flex-col gap-8 rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7">
       <div className="flex items-center gap-3">
         <SkeletonCircle className="w-10 h-10" />
         <Skeleton className="h-6 w-24" />
@@ -33,7 +33,7 @@ export function PlatformDetailCardSkeleton() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="bg-white/40 p-5 rounded-2xl flex flex-col gap-3"
+            className="flex flex-col gap-3 rounded-2xl bg-surface-100/40 p-5"
           >
             <Skeleton className="h-4 w-12" />
             <Skeleton className="h-15 w-30" />

@@ -38,7 +38,7 @@ export default function AdRow({
       onClick={onToggle}
       aria-expanded={isOpen}
       className={
-        "flex w-full items-center px-5 py-5 text-left cursor-pointer transition-all border-t border-bg-disabled hover:bg-bg-surface"
+        "flex w-full cursor-pointer items-center border-t border-surface-400 px-5 py-5 text-left transition-all hover:bg-surface-200"
       }
     >
       {/* status badge */}
@@ -57,7 +57,9 @@ export default function AdRow({
 
       {/* title */}
       <div className="flex-1 min-w-0 pl-3">
-        <span className="font-body1 truncate block">{name}</span>
+        <span className="block truncate font-body1 text-text-title">
+          {name}
+        </span>
       </div>
 
       {/* chevron */}

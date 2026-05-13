@@ -69,12 +69,12 @@ export default function AdDetailContent({
   };
 
   return (
-    <div className="pt-5 pb-5 flex flex-col gap-7 bg-bg-surface/30 transition-all animate-fade-in overflow-hidden border-t border-bg-disabled">
+    <div className="flex flex-col gap-7 overflow-hidden border-t border-surface-400 bg-surface-200/30 pt-5 pb-5 transition-all animate-fade-in">
       <div className="flex flex-col w-full px-8 gap-6 tablet:flex-col tablet:gap-8">
         {/* description */}
         <div className="flex-1 flex flex-col gap-2 min-w-0">
           <span className="text-text-placeholder font-caption">광고 소재</span>
-          <p className="font-body2 text-text-sub whitespace-pre-line leading-relaxed">
+          <p className="font-body2 leading-relaxed whitespace-pre-line text-text-muted">
             {ad.description}
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function AdDetailContent({
                 <Badge
                   key={idx}
                   variant="infoBlue"
-                  className="border border-bg-disabled bg-white text-text-sub px-3"
+                  className="border border-surface-400 bg-surface-100 px-3 text-text-muted"
                 >
                   #{tag}
                 </Badge>
@@ -105,7 +105,7 @@ export default function AdDetailContent({
         <div className="flex flex-col gap-2">
           <span className="text-text-placeholder font-caption">랜딩 URL</span>
           <div className="relative w-full max-w-160">
-            <div className="flex items-center justify-between w-full h-9 px-4 py-2 bg-white border border-bg-disabled rounded-lg group-hover:border-primary-200 transition-all">
+            <div className="flex h-9 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-all group-hover:border-primary-200">
               <span className="font-body2 text-text-auth-sub truncate pr-10 select-all">
                 {ad.landingUrl}
               </span>
@@ -144,11 +144,11 @@ export default function AdDetailContent({
                 : trackControl.openModal
             }
             buttonDisabled={false}
-            containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
-            titleClassName="text-status-blue font-heading4 -mb-1"
-            descriptionClassName="font-caption text-text-sub"
+            containerClassName="border-info-blue bg-info-blue/10 px-6 py-4"
+            titleClassName="font-heading4 -mb-1 text-info-blue"
+            descriptionClassName="font-caption text-text-muted"
             buttonSize="small"
-            buttonClassName="bg-status-blue font-body2 tablet:w-full"
+            buttonClassName="bg-info-blue font-body2 text-white hover:opacity-90 tablet:w-full"
           />
 
           <ControlBox
@@ -171,16 +171,16 @@ export default function AdDetailContent({
             buttonDisabled={false}
             containerClassName={`px-6 py-4 tablet:flex-col tablet:items-start tablet:gap-4 ${
               ad.status === "PAUSED"
-                ? "bg-status-blue/7 border-status-blue"
-                : "bg-status-red/7 border-status-red"
+                ? "border-info-blue bg-info-blue/10"
+                : "border-info-red bg-info-red/10"
             }`}
             titleClassName={`font-heading4 -mb-1 ${
-              ad.status === "PAUSED" ? "text-status-blue" : "text-status-red"
+              ad.status === "PAUSED" ? "text-info-blue" : "text-info-red"
             }`}
-            descriptionClassName="font-caption text-text-sub"
+            descriptionClassName="font-caption text-text-muted"
             buttonSize="small"
-            buttonClassName={`font-body2 tablet:w-full ${
-              ad.status === "PAUSED" ? "bg-status-blue" : "bg-status-red"
+            buttonClassName={`font-body2 text-white hover:opacity-90 tablet:w-full ${
+              ad.status === "PAUSED" ? "bg-info-blue" : "bg-info-red"
             }`}
           />
         </div>
@@ -193,7 +193,7 @@ export default function AdDetailContent({
         title="트래킹 링크 발급"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-info-blue" />}
           title="트래킹 링크를 발급하시겠습니까?"
           description={
             <>
@@ -226,7 +226,7 @@ export default function AdDetailContent({
         title="광고 소재 중단"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-info-red" />}
           title="광고 소재를 중단하시겠습니까?"
           description="해당 광고의 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -247,7 +247,7 @@ export default function AdDetailContent({
         title="광고 소재 재개"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-info-blue" />}
           title="광고 운영을 재개하시겠습니까?"
           description="중단되었던 광고 소재가 다시 플랫폼에 노출되기 시작합니다."
           buttonText="시작하기"

@@ -17,8 +17,8 @@ export default function AdListTable({ ads, refetchAds }: IAdsListTableProps) {
     setOpenAdId((prev) => (prev === id ? null : id));
   };
   return (
-    <div className="w-full flex flex-col mt-10 border-b border-bg-disabled">
-      <h2 className="font-heading3 text-text-main mb-3">광고 모아보기</h2>
+    <div className="mt-10 flex w-full flex-col border-b border-surface-400">
+      <h2 className="mb-3 font-heading3 text-text-title">광고 모아보기</h2>
       <div>
         {ads && ads.length > 0 ? (
           ads.map((ad) => {

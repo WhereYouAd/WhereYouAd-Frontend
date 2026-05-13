@@ -51,10 +51,10 @@ export default function DropdownSelect<T>({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={twMerge(
-          "flex items-center justify-between w-full h-14 px-5 bg-white border border-bg-disabled rounded-2xl text-body1 transition-all outline-none",
+          "flex h-14 w-full items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-5 text-body1 transition-all outline-none",
           isOpen
-            ? "border-status-blue ring-1 ring-status-blue"
-            : "hover:border-text-disabled focus:border-status-blue focus:ring-1 focus:ring-status-blue",
+            ? "border-info-blue ring-1 ring-info-blue"
+            : "hover:border-surface-400 focus:border-info-blue focus:ring-1 focus:ring-info-blue",
           !selectedOption && "text-text-placeholder",
         )}
       >
@@ -63,14 +63,14 @@ export default function DropdownSelect<T>({
         </span>
         <ChevronDownIcon
           className={twMerge(
-            "w-4 h-4 transition-transform duration-200 text-text-sub",
-            isOpen ? "rotate-0 text-status-blue" : "rotate-180",
+            "w-4 h-4 transition-transform duration-200 text-text-muted",
+            isOpen ? "rotate-0 text-info-blue" : "rotate-180",
           )}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-full overflow-hidden rounded-2xl border border-bg-disabled bg-white shadow-lg animate-fade-in">
+        <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-lg animate-fade-in">
           <ul className="max-h-60 overflow-y-auto">
             {options.map((option) => {
               const key = getOptionKey(option);
@@ -83,10 +83,10 @@ export default function DropdownSelect<T>({
                     type="button"
                     onClick={() => handleSelect(option)}
                     className={twMerge(
-                      "w-full px-5 py-3 text-left text-body1 transition-colors hover:bg-text-placeholder/20",
+                      "w-full px-5 py-3 text-left text-body1 transition-colors hover:bg-surface-200",
                       isSelected
-                        ? "text-status-blue font-bold bg-status-blue/5"
-                        : "text-text-main",
+                        ? "bg-info-blue/5 font-bold text-info-blue"
+                        : "text-text-title",
                     )}
                   >
                     {renderOption

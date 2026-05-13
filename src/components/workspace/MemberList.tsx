@@ -65,13 +65,13 @@ export default function MemberList({
   const hasVisibleItems = members.length > 0;
 
   return (
-    <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
+    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
-          <h2 className="font-heading4 text-text-main font-semibold!">
+          <h2 className="font-heading4 font-semibold! text-text-title">
             팀 구성원
           </h2>
-          <p className="font-body2 text-text-sub mt-2">
+          <p className="mt-2 font-body2 text-text-muted">
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
         </div>
@@ -89,12 +89,12 @@ export default function MemberList({
       </header>
 
       {!hasVisibleItems ? (
-        <div className="flex min-h-40 items-center justify-center rounded-2xl bg-gray-50 text-text-sub">
+        <div className="flex min-h-40 items-center justify-center rounded-2xl bg-surface-200 text-text-muted">
           아직 등록된 팀원이 없습니다
         </div>
       ) : (
         <>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-surface-400">
             {members.map((member) => (
               <MemberItem
                 key={member.memberId}
@@ -108,7 +108,7 @@ export default function MemberList({
           </ul>
           <div ref={observerRef} className="w-full h-6" />
           {isFetchingNextPage && (
-            <div className="pt-4 text-center font-body2 text-text-sub">
+            <div className="pt-4 text-center font-body2 text-text-muted">
               팀원을 더 불러오는 중입니다...
             </div>
           )}

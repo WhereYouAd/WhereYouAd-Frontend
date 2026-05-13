@@ -49,68 +49,68 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #D1D1D1;
+          background: #dde3f0;
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #B1B1B1;
+          background: #b8ccfc;
         }
       `}</style>
 
-      <div className="overflow-auto max-h-125 relative custom-scrollbar border-t border-bg-disabled">
+      <div className="overflow-auto max-h-125 relative custom-scrollbar border-t border-surface-400">
         <table className="w-full text-left border-separate border-spacing-0 min-w-[800px] table-fixed">
-          <thead className="sticky top-0 z-20 bg-white">
-            <tr className="text-text-sub font-body2">
-              <th className="w-[14%] px-4 py-4 font-normal border-b border-bg-disabled/90">
+          <thead className="sticky top-0 z-20 bg-surface-100">
+            <tr className="text-text-muted font-body2">
+              <th className="w-[14%] px-4 py-4 font-normal border-b border-surface-400/90">
                 날짜
               </th>
-              <th className="w-[14%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[14%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 비용(지출)
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 노출 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 클릭 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 CTR(클릭률)
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 CPC
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 전환 수
               </th>
-              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-bg-disabled">
+              <th className="w-[12%] px-4 py-4 font-normal text-right border-b border-surface-400">
                 ROAS
               </th>
             </tr>
           </thead>
-          <tbody className="text-text-main font-body2">
+          <tbody className="text-text-title font-body2">
             {/* 합계 행 */}
             {total && (
-              <tr className="sticky top-13 z-10 bg-white/95 backdrop-blur-sm font-bold border-b-2 border-bg-disabled">
-                <td className="px-4 py-5 border-b border-bg-disabled">합계</td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled text-brand-main">
+              <tr className="sticky top-13 z-10 bg-surface-100/95 backdrop-blur-sm font-bold border-b-2 border-surface-400">
+                <td className="px-4 py-5 border-b border-surface-400">합계</td>
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
                   ₩{total.spend.toLocaleString()}
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   {total.impressions.toLocaleString()}
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   {total.clicks.toLocaleString()}
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   {total.ctr.toFixed(2)}%
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   ₩{Math.round(total.cpc).toLocaleString()}
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   {total.conversions.toLocaleString()}
                 </td>
-                <td className="px-4 py-5 text-right tabular-nums border-b border-bg-disabled text-brand-main">
+                <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
                   {Math.round(total.roas)}%
                 </td>
               </tr>
@@ -119,30 +119,30 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
             {data.map((row, idx) => (
               <tr
                 key={idx}
-                className="hover:bg-bg-surface/30 transition-colors group"
+                className="hover:bg-surface-200/30 transition-colors group"
               >
-                <td className="px-4 py-4 text-text-sub border-b border-bg-disabled/20 truncate">
+                <td className="px-4 py-4 text-text-muted border-b border-surface-400/20 truncate">
                   {row.date}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   ₩{row.spend.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.impressions.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.clicks.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.ctr.toFixed(2)}%
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   ₩{row.cpc.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.conversions.toLocaleString()}
                 </td>
-                <td className="px-4 py-4 text-right tabular-nums text-text-main font-medium border-b border-bg-disabled/20">
+                <td className="px-4 py-4 text-right tabular-nums text-text-title font-medium border-b border-surface-400/20">
                   {row.roas}%
                 </td>
               </tr>

@@ -64,8 +64,8 @@ const initialMemberPermissionState: TMemberPermissionState =
 
 function AdminCheckBadge() {
   return (
-    <div className="inline-flex w-8 h-8 bg-chart-5/15 justify-center items-center rounded-3xl">
-      <CheckIcon className="w-5 h-5 text-chart-3 stroke-2" />
+    <div className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-primary-100/80">
+      <CheckIcon className="h-5 w-5 stroke-2 text-primary-500" />
       <span className="sr-only">가능</span>
     </div>
   );
@@ -109,12 +109,12 @@ export default function PermissionTable() {
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
+    <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
       <header className="mb-7">
-        <h2 className="font-heading4 text-text-main font-semibold!">
+        <h2 className="font-heading4 font-semibold! text-text-title">
           권한 설정
         </h2>
-        <p className="font-body2 text-text-sub mt-2">
+        <p className="mt-2 font-body2 text-text-muted">
           역할별 권한을 확인하고 설정할 수 있습니다
         </p>
       </header>
@@ -122,7 +122,7 @@ export default function PermissionTable() {
       <div className="w-full overflow-hidden">
         <table className="w-full table-fixed">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-surface-400">
               <th className="text-text-auth-sub py-2 text-left">
                 기능 및 작업
               </th>
@@ -136,11 +136,11 @@ export default function PermissionTable() {
             {permissionRows.map((row) => (
               <tr
                 key={row.key}
-                className="border-b border-gray-100 last:border-b-0"
+                className="border-b border-surface-400 last:border-b-0"
               >
                 <td className="py-5">
                   <div className="flex flex-col">
-                    <p className="text-text-main font-semibold">{row.label}</p>
+                    <p className="font-semibold text-text-title">{row.label}</p>
                     <p className="text-text-auth-sub font-body2">
                       {row.description}
                     </p>

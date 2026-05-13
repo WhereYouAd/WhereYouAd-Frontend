@@ -55,7 +55,7 @@ export default function PlatformDashboard() {
           className={twMerge(
             "w-28 py-5 font-body1 rounded-2xl",
             !isAllView &&
-              "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
+              "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
           )}
         >
           전체보기
@@ -70,13 +70,13 @@ export default function PlatformDashboard() {
               className={twMerge(
                 "flex items-center w-34 py-5 rounded-2xl",
                 isAllView &&
-                  "border border-bg-disabled bg-white text-text-sub hover:bg-bg-surface",
+                  "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
               <span
                 className={twMerge(
                   "font-body1",
-                  isAllView ? "text-text-sub" : "text-white",
+                  isAllView ? "text-text-muted" : "text-white",
                 )}
               >
                 {isAllView ? "플랫폼 선택" : selectedPlatform}
@@ -84,7 +84,7 @@ export default function PlatformDashboard() {
               <ChevronDownIcon
                 className={twMerge(
                   "w-3 h-3 rotate-180 ml-2 transition-transform",
-                  isAllView ? "text-text-sub" : "text-white",
+                  isAllView ? "text-text-muted" : "text-white",
                 )}
               />
             </Button>
@@ -95,10 +95,10 @@ export default function PlatformDashboard() {
         <button
           type="button"
           onClick={() => setIsAiPanelOpen(true)}
-          className="group relative ml-4 -mr-2 inline-flex h-8 cursor-pointer items-center justify-center overflow-hidden rounded-2xl px-1 outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="group relative ml-4 -mr-2 inline-flex h-8 cursor-pointer items-center justify-center overflow-hidden rounded-2xl px-1 outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
           aria-label="AI 요약하기"
         >
-          <div className="pointer-events-none absolute inset-0 z-20 -translate-x-full skew-x-12 bg-linear-to-r from-transparent via-white/80 to-transparent mix-blend-overlay group-hover:animate-[shimmer_1.2s_ease-out]" />
+          <div className="pointer-events-none absolute inset-0 z-20 -translate-x-full skew-x-12 bg-linear-to-r from-transparent via-surface-100/80 to-transparent mix-blend-overlay group-hover:animate-[shimmer_1.2s_ease-out]" />
           <div className="relative z-10">
             <span className="sm:hidden">
               <SparkleCircleIcon className="h-5 w-5 fill-current text-logo-1" />
