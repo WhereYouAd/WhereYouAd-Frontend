@@ -24,7 +24,7 @@ const ChartLegend = memo(function ChartLegend({
             className={twMerge("w-1.5 h-1.5 rounded-full", item.colorClass)}
             style={item.color ? { backgroundColor: item.color } : undefined}
           />
-          <span className="font-caption font-bold text-text-sub">
+          <span className="font-caption font-bold text-text-muted">
             {item.label}
           </span>
         </div>

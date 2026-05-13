@@ -94,7 +94,7 @@ export function DropdownMenu({
                       setOpen(false);
                     }}
                     className={twMerge(
-                      "group flex w-full items-center justify-between rounded-2xl px-5 py-4 text-left font-body2 transition-fast",
+                      "group flex w-full items-center justify-between rounded-2xl px-5 py-4 text-left font-body2 transition-ui-fast",
                       it.active
                         ? "bg-status-blue/10 text-status-blue"
                         : "text-text-main hover:bg-status-blue/5 hover:text-status-blue",

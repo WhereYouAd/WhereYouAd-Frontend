@@ -15,13 +15,13 @@ const colorSections: {
   {
     title: "Primary",
     description:
-      "원시 팔레트 (--palette-primary-*). 100이 가장 밝고 500이 가장 진합니다.",
+      "원시 팔레트 (--primary-*). 100이 가장 밝고 500이 가장 진합니다.",
     items: [
-      { varName: "--palette-primary-100", note: "Blue tint" },
-      { varName: "--palette-primary-200", note: "Light blue" },
-      { varName: "--palette-primary-300", note: "Mid blue" },
-      { varName: "--palette-primary-400", note: "CTA blue" },
-      { varName: "--palette-primary-500", note: "Brand blue" },
+      { varName: "--primary-100", note: "Blue tint" },
+      { varName: "--primary-200", note: "Light blue" },
+      { varName: "--primary-300", note: "Mid blue" },
+      { varName: "--primary-400", note: "CTA blue" },
+      { varName: "--primary-500", note: "Brand blue" },
     ],
   },
   {

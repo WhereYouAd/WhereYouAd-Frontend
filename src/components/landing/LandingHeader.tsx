@@ -56,19 +56,19 @@ export default function LandingHeader() {
 
   return (
     <header
-      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-smooth h-[var(--landing-header-height,64px)] ${
+      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-ui-smooth h-[var(--landing-header-height,64px)] ${
         isScrolled
-          ? "bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)] border-transparent"
-          : "bg-brand-200/60 backdrop-blur-xl border-chart-inactive"
+          ? "bg-surface-100 shadow-landing-header border-transparent"
+          : "bg-surface-100/80 backdrop-blur-xl border-surface-400"
       }`}
     >
       <div className="flex items-center">
         <Link
           to="/"
           aria-label="WhereYouAd 홈"
-          className="flex items-center gap-2 text-text-main rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="flex items-center gap-2 text-text-title rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
         >
-          <img src={logoSvg} alt="" aria-hidden className="h-5 w-auto" />
+          <img src={logoSvg} alt="" aria-hidden className="h-6 w-auto" />
         </Link>
       </div>
 
@@ -78,7 +78,7 @@ export default function LandingHeader() {
             key={targetId}
             type="button"
             onClick={() => scrollToSection(targetId)}
-            className="text-[15px] font-medium text-text-sub hover:text-text-main transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="text-[15px] font-medium text-text-body hover:text-text-title transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
           >
             {label}
           </button>
@@ -88,13 +88,13 @@ export default function LandingHeader() {
       <div className="ml-auto flex items-center gap-2 md:gap-3 shrink-0">
         <Link
           to="/login"
-          className="text-[13px] md:text-[14px] font-medium text-text-sub rounded-xl px-3 py-2 md:px-3.5 transition-colors hover:bg-[#EDEDF0] hover:text-text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="text-[13px] md:text-[14px] font-medium text-text-body rounded-xl px-3 py-2 md:px-3.5 transition-colors hover:bg-surface-300 hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
         >
           로그인
         </Link>
         <Link
           to="/signup"
-          className="text-[13px] md:text-[14px] font-semibold text-white rounded-xl px-3 py-2 md:px-3.5 bg-logo-2 hover:bg-logo-2-dark transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="text-[13px] md:text-[14px] font-semibold text-surface-100 rounded-xl px-3 py-2 md:px-3.5 bg-primary-400 hover:bg-primary-500 transition-colors shadow-landing-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
         >
           회원가입
         </Link>

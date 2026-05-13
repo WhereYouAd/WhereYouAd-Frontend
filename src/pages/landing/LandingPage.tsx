@@ -17,8 +17,8 @@ const LandingFAQ = lazy(() => import("@/components/landing/LandingFAQ"));
 function SectionFallback({ height = 96 }: { height?: number }) {
   return (
     <div className="w-full" style={{ height }} aria-hidden>
-      <div className="h-full w-full rounded-[28px] border border-chart-inactive/60 bg-white/55 backdrop-blur-sm shadow-card overflow-hidden">
-        <div className="h-full w-full animate-pulse bg-linear-to-r from-brand-300/40 via-white/40 to-brand-300/40" />
+      <div className="h-full w-full rounded-[28px] border border-surface-400/60 bg-surface-100/55 backdrop-blur-sm shadow-card overflow-hidden">
+        <div className="h-full w-full animate-pulse bg-linear-to-r from-primary-100/40 via-surface-100/40 to-primary-100/40" />
       </div>
     </div>
   );
@@ -26,7 +26,7 @@ function SectionFallback({ height = 96 }: { height?: number }) {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-brand-200 text-text-main flex flex-col [--landing-header-height:64px] md:[--landing-header-height:72px]">
+    <div className="min-h-screen bg-surface-100 text-text-auth-sub flex flex-col [--landing-header-height:64px] md:[--landing-header-height:72px]">
       <LandingHeader />
 
       <main className="flex-1 flex flex-col">

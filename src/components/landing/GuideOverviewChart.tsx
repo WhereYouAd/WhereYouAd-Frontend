@@ -19,8 +19,8 @@ export default function GuideOverviewChart() {
         description={
           <ChartLegend
             items={[
-              { label: "클릭수", colorClass: "bg-logo-2" },
-              { label: "예측 클릭수", colorClass: "bg-brand-500" },
+              { label: "클릭수", colorClass: "bg-primary-400" },
+              { label: "예측 클릭수", colorClass: "bg-primary-500" },
             ]}
           />
         }
@@ -31,12 +31,12 @@ export default function GuideOverviewChart() {
         </p>
         <Suspense
           fallback={
-            <div className="flex-1 w-full rounded-2xl bg-brand-300/50" />
+            <div className="flex-1 w-full rounded-2xl bg-primary-100/50" />
           }
         >
           <div className="relative flex-1 pt-12">
-            <div className="absolute right-2 top-0 z-20 rounded-2xl border border-chart-inactive/80 bg-white/95 px-4 py-3 shadow-sm">
-              <p className="text-[12px] font-semibold text-text-main">
+            <div className="absolute right-2 top-0 z-20 rounded-2xl border border-surface-400/80 bg-surface-100/95 px-4 py-3 shadow-landing-pill">
+              <p className="text-[12px] font-semibold text-text-title">
                 광고 클릭수 추이
               </p>
               <p className="mt-1 text-[11px] text-text-auth-sub">

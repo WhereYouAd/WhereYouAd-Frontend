@@ -74,7 +74,7 @@ export function OverviewBudgetSection({
           title="예산 소진 현황"
           description={
             <ChartLegend
-              className="flex-wrap gap-x-4 gap-y-1 [&_span]:font-medium [&_span]:text-text-sub"
+              className="flex-wrap gap-x-4 gap-y-1 [&_span]:font-medium [&_span]:text-text-muted"
               items={budgetStatusLegendItems}
             />
           }

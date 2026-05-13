@@ -63,7 +63,11 @@ export default function PasswordSection({
             helperText={errors.currentPassword}
             rightElement={
               <button type="button" onClick={() => setShowCurrent((p) => !p)}>
-                {showCurrent ? <EyeOffIcon /> : <EyeIcon />}
+                {showCurrent ? (
+                  <EyeOffIcon className="w-5 h-auto text-text-muted" />
+                ) : (
+                  <EyeIcon className="w-5 h-auto text-text-muted" />
+                )}
               </button>
             }
           />
@@ -86,7 +90,11 @@ export default function PasswordSection({
               aria-pressed={showCurrent}
               onClick={() => setShowNew((p) => !p)}
             >
-              {showNew ? <EyeOffIcon /> : <EyeIcon />}
+              {showNew ? (
+                <EyeOffIcon className="w-5 h-auto text-text-muted" />
+              ) : (
+                <EyeIcon className="w-5 h-auto text-text-muted" />
+              )}
             </button>
           }
         />
@@ -100,7 +108,11 @@ export default function PasswordSection({
           helperText={errors.confirmNewPassword}
           rightElement={
             <button type="button" onClick={() => setShowConfirm((p) => !p)}>
-              {showConfirm ? <EyeOffIcon /> : <EyeIcon />}
+              {showConfirm ? (
+                <EyeOffIcon className="w-5 h-auto text-text-muted" />
+              ) : (
+                <EyeIcon className="w-5 h-auto text-text-muted" />
+              )}
             </button>
           }
         />
