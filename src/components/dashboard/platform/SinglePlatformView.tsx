@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
+import type { TPlatformProvider } from "@/types/dashboard/platform";
+
+import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
+
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
@@ -18,7 +22,6 @@ import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
 import {
   budgetStatusMock,
-  performanceEfficiencyMock,
   platformDailyPerformanceMock,
   platformTrafficMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -43,11 +46,11 @@ export default function SinglePlatformView({
 }: ISinglePlatformViewProps) {
   const [viewRange, setViewRange] = React.useState<7 | 30>(7);
 
-  const platformData = useMemo(() => {
-    return performanceEfficiencyMock.find(
-      (p) => p.provider.toUpperCase() === platform.toUpperCase(),
-    );
-  }, [platform]);
+  const {
+    data: platformData,
+    isLoading: isMetricsLoading,
+    isError: isMetricsError,
+  } = usePlatformMetrics(platform.toUpperCase() as TPlatformProvider);
 
   const kpis = useMemo(() => {
     if (!platformData) return [];
@@ -58,7 +61,7 @@ export default function SinglePlatformView({
         value: platformData.impressions.toLocaleString(),
         trend: {
           direction: platformData.impressionChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.impressionChangeRate * 100).toFixed(2)}%`,
+          value: `${Math.abs(platformData.impressionChangeRate).toFixed(2)}%`,
         },
       },
       {
@@ -66,7 +69,7 @@ export default function SinglePlatformView({
         value: platformData.clicks.toLocaleString(),
         trend: {
           direction: platformData.clickChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.clickChangeRate * 100).toFixed(2)}%`,
+          value: `${Math.abs(platformData.clickChangeRate).toFixed(2)}%`,
         },
       },
       {
@@ -74,7 +77,7 @@ export default function SinglePlatformView({
         value: `${platformData.conversion}%`,
         trend: {
           direction: platformData.cvrChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.cvrChangeRate * 100).toFixed(2)}%`,
+          value: `${Math.abs(platformData.cvrChangeRate).toFixed(2)}%`,
         },
       },
       {
@@ -82,7 +85,7 @@ export default function SinglePlatformView({
         value: `${platformData.ROAS}%`,
         trend: {
           direction: platformData.ROASChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.ROASChangeRate * 100).toFixed(2)}%`,
+          value: `${Math.abs(platformData.ROASChangeRate).toFixed(2)}%`,
         },
       },
     ];
@@ -148,25 +151,35 @@ export default function SinglePlatformView({
 
       {/* top */}
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
-              >
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-6 w-14 rounded-full" />
-              </div>
-            ))
-          : kpis.map((kpi) => (
-              <StatCard
-                key={kpi.title}
-                title={kpi.title}
-                value={kpi.value}
-                trend={kpi.trend as any}
-              />
-            ))}
+        {isLoading || isMetricsLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
+            >
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-6 w-14 rounded-full" />
+            </div>
+          ))
+        ) : isMetricsError ? (
+          <div className="col-span-4 text-center py-8 text-text-sub">
+            지표 데이터를 불러오지 못했습니다.
+          </div>
+        ) : !platformData ? (
+          <div className="col-span-4 text-center py-8 text-text-sub">
+            표시할 지표 데이터가 없습니다.
+          </div>
+        ) : (
+          kpis.map((kpi) => (
+            <StatCard
+              key={kpi.title}
+              title={kpi.title}
+              value={kpi.value}
+              trend={kpi.trend as any}
+            />
+          ))
+        )}
       </div>
 
       {/* mid */}
