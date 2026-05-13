@@ -37,7 +37,7 @@ export default function TextareaField({
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="text-text-main select-none ml-1 mb-2" htmlFor={id}>
+        <label className="text-text-title select-none ml-1 mb-2" htmlFor={id}>
           {label}
         </label>
       )}
@@ -47,10 +47,10 @@ export default function TextareaField({
         rows={minRows}
         value={value}
         className={twMerge(
-          "w-full rounded-2xl px-5 py-4 ring-1 ring-logo-1/30 outline-none transition-colors duration-200 ease-out overflow-hidden placeholder:text-text-placeholder text-text-main font-body1",
+          "w-full rounded-2xl px-5 py-4 ring-1 ring-primary-400/30 outline-none transition-colors duration-200 ease-out overflow-hidden placeholder:text-text-placeholder text-text-title font-body1",
           disabled
-            ? "bg-gray-100 cursor-not-allowed"
-            : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
+            ? "bg-surface-200 cursor-not-allowed"
+            : "hover:bg-surface-200 hover:ring-primary-400/40 focus-within:bg-surface-100 focus-within:ring-2 focus-within:ring-primary-400/50",
           className,
         )}
         placeholder={placeholder}

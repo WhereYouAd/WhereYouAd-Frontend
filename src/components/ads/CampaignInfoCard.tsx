@@ -22,7 +22,7 @@ export default function CampaignInfoCard({
           <Badge variant="infoBlue" className={badgeStyle}>
             예산 현황
           </Badge>
-          <span className="ml-16 truncate text-xl font-heading3 text-text-title">
+          <span className="ml-16 truncate font-heading3 text-text-title">
             {budget}
           </span>
         </div>
@@ -32,9 +32,7 @@ export default function CampaignInfoCard({
           <Badge variant="infoBlue" className={badgeStyle}>
             등록 날짜
           </Badge>
-          <span className="ml-16 text-xl font-heading3 text-text-title">
-            {date}
-          </span>
+          <span className="ml-16 font-heading3 text-text-title">{date}</span>
         </div>
       </div>
     </InfoCard>

@@ -20,10 +20,10 @@ export default function Alert({
   const base = "w-full rounded-3xl px-5 py-4";
 
   const variantClasses: Record<TAlertVariant, string> = {
-    info: "text-brand-700",
-    success: "text-status-blue",
-    warning: "text-status-yellow",
-    danger: "text-status-red",
+    info: "text-primary-500",
+    success: "text-info-blue",
+    warning: "text-info-yellow",
+    danger: "text-info-red",
   };
 
   return (
@@ -35,7 +35,7 @@ export default function Alert({
         {icon && <div className="mt-0.5 shrink-0">{icon}</div>}
         <div className="min-w-0">
           {title && <div className="font-body1 mb-1">{title}</div>}
-          <div className="font-body2 text-text-main">{children}</div>
+          <div className="font-body2 text-text-title">{children}</div>
         </div>
       </div>
     </div>

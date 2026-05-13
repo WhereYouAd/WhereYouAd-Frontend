@@ -115,7 +115,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-main mb-10">
+      <h1 className="text-start font-heading2 text-text-title mb-10">
         <span className="block">이메일 찾기를 위해</span>
         <span className="block">휴대폰 인증을 진행할게요</span>
       </h1>
@@ -134,7 +134,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
             </div>
             <Button
               variant="custom"
-              className="shrink-0 h-13.5! border border-brand-400 text-status-blue bg-white hover:bg-gray-50 px-4 rounded-15 font-body2 whitespace-nowrap"
+              className="shrink-0 h-13.5! border border-primary-400 text-info-blue bg-surface-100 hover:bg-surface-200 px-4 rounded-15 font-body2 whitespace-nowrap"
               onClick={postSendCode}
               type="button"
               disabled={isSending}
@@ -149,13 +149,13 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
               value={watchedPhone || ""}
               readOnly
               aria-label="입력된 전화번호"
-              className="w-full h-13.5 px-5 border rounded-2xl text-body1 text-text-main bg-white border-brand-400 focus:outline-none focus:border-brand-400"
+              className="w-full h-13.5 px-5 rounded-2xl border border-primary-400 font-body1 text-text-title bg-surface-100 focus:outline-none focus:border-primary-400"
             />
             <button
               type="button"
               onClick={handleEditPhone}
               aria-label="전화번호 수정"
-              className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-main"
+              className="absolute right-5 top-1/2 -translate-y-1/2 font-body2 text-text-placeholder underline hover:text-text-title"
             >
               수정
             </button>

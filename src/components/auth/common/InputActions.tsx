@@ -29,7 +29,7 @@ export default function InputActions({
 
   return (
     <div className="flex items-center gap-2">
-      {timer && <span className="text-red-wraning font-body2">{timer}</span>}
+      {timer && <span className="text-info-red font-body2">{timer}</span>}
       {button && (
         <Button
           size="small"
@@ -46,7 +46,7 @@ export default function InputActions({
         <span
           className={twMerge(
             "flex items-center justify-center rounded-2xl font-body1 whitespace-nowrap py-1 px-3 h-full cursor-default",
-            validation ? "bg-surface-500 text-white" : "opacity-50",
+            validation ? "bg-surface-500 text-surface-100" : "opacity-50",
           )}
         >
           {validationState}

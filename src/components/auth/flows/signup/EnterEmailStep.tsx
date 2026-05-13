@@ -48,7 +48,7 @@ export default function EnterEmailStep({ onNext }: IEnterEmailStepProps) {
             </div>
             <Button
               variant="custom"
-              className="shrink-0 h-13.5! border border-surface-400 text-blue-down bg-surface-100 hover:bg-surface-200 px-4 rounded-15 font-body2 whitespace-nowrap"
+              className="shrink-0 h-13.5! border border-surface-400 text-info-blue bg-surface-100 hover:bg-surface-200 px-4 rounded-15 font-body2 whitespace-nowrap"
               onClick={postSendCode}
               type="button"
               disabled={isPending}

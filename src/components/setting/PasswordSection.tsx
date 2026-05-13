@@ -39,9 +39,7 @@ export default function PasswordSection({
         <div>
           <div className="flex gap-4 items-center">
             <LockIcon />
-            <h2 className="font-heading4 font-semibold! text-text-title">
-              비밀번호 변경
-            </h2>
+            <h2 className="font-heading4 text-text-title">비밀번호 변경</h2>
           </div>
 
           <p className="mt-2 font-body2 text-text-muted">

@@ -119,7 +119,7 @@ function Modal({
         {isOpen ? (
           <motion.div
             key="modal-layer"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-text-400/50"
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? titleId : undefined}
@@ -135,7 +135,7 @@ function Modal({
             <motion.div
               ref={modalRef}
               className={twMerge(
-                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-white shadow-Medium",
+                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Medium",
                 sizeClasses[size],
                 paddingClasses[padding],
                 className,
@@ -160,10 +160,10 @@ function Modal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="absolute top-4 right-4 rounded-full p-1 transition-colors hover:bg-gray-100"
+                  className="absolute top-4 right-4 rounded-full p-1 transition-colors hover:bg-surface-200"
                   aria-label="모달 닫기"
                 >
-                  <CloseIcon className="h-6 w-6 text-gray-600" />
+                  <CloseIcon className="h-6 w-6 text-text-muted" />
                 </button>
               ) : null}
               {children}

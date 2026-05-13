@@ -107,13 +107,13 @@ export default function SearchSelect<T>({
           aria-controls={listboxId}
           aria-haspopup="listbox"
           aria-autocomplete="list"
-          className="h-13 w-full rounded-2xl border border-status-blue px-4 pl-5 font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-status-blue"
+          className="h-13 w-full rounded-2xl border border-info-blue px-4 pl-5 font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-info-blue"
         />
-        <SearchIcon className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-status-blue" />
+        <SearchIcon className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-info-blue" />
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-sm">
           {filteredOptions.length > 0 ? (
             <ul
               id={listboxId}
@@ -135,7 +135,7 @@ export default function SearchSelect<T>({
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => handleSelect(option)}
-                      className="w-full py-2 text-left hover:bg-gray-50"
+                      className="w-full py-2 text-left hover:bg-surface-200"
                     >
                       {renderOption(option)}
                     </button>
@@ -147,7 +147,7 @@ export default function SearchSelect<T>({
             <div
               role="status"
               aria-live="polite"
-              className="px-4 py-5 font-body2 text-text-sub"
+              className="px-4 py-5 font-body2 text-text-auth-sub"
             >
               {emptyMessage}
             </div>

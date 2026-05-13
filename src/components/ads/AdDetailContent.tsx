@@ -94,7 +94,7 @@ export default function AdDetailContent({
                 </Badge>
               ))
             ) : (
-              <span className="text-caption text-text-placeholder">
+              <span className="font-caption text-text-placeholder">
                 설정된 타겟 정보가 없습니다.
               </span>
             )}
@@ -148,7 +148,7 @@ export default function AdDetailContent({
             titleClassName="font-heading4 -mb-1 text-info-blue"
             descriptionClassName="font-caption text-text-muted"
             buttonSize="small"
-            buttonClassName="bg-info-blue font-body2 text-white hover:opacity-90 tablet:w-full"
+            buttonClassName="bg-info-blue font-body2 text-surface-100 hover:opacity-90 tablet:w-full"
           />
 
           <ControlBox
@@ -179,7 +179,7 @@ export default function AdDetailContent({
             }`}
             descriptionClassName="font-caption text-text-muted"
             buttonSize="small"
-            buttonClassName={`font-body2 text-white hover:opacity-90 tablet:w-full ${
+            buttonClassName={`font-body2 text-surface-100 hover:opacity-90 tablet:w-full ${
               ad.status === "PAUSED" ? "bg-info-blue" : "bg-info-red"
             }`}
           />

@@ -156,7 +156,7 @@ export default function InviteMemberModal({
                         <UserIcon className="text-text-auth-sub h-6 w-6" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm text-text-muted">
+                        <p className="truncate font-body2 text-text-muted">
                           {item.email}
                         </p>
                       </div>

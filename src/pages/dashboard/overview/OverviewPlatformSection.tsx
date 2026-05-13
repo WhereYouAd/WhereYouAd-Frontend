@@ -72,9 +72,7 @@ export function OverviewPlatformSection({
           onClick={onNavigate}
           className="group flex h-8 items-center gap-1 rounded-full border-none bg-surface-200/60 px-4 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body"
         >
-          <span className="font-caption font-semibold">
-            플랫폼 대시보드 살펴보기
-          </span>
+          <span className="font-caption">플랫폼 대시보드 살펴보기</span>
           <ChevronDoubleRightIcon className="h-4.5 w-4.5 text-text-muted group-hover:text-text-body" />
         </Button>
       }

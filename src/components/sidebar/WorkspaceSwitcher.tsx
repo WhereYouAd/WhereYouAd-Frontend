@@ -111,7 +111,7 @@ export function WorkspaceSwitcher({
 
   const renderImage = useCallback(
     (workspace: TWorkspace) => (
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg overflow-hidden bg-surface-200 text-text-body font-bold">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-200 font-label text-text-body">
         {workspace?.logoUrl ? (
           <img
             src={workspace.logoUrl}
@@ -157,7 +157,7 @@ export function WorkspaceSwitcher({
     return (
       <div className={twMerge("relative mb-4", className)}>
         <div className={twMerge(switcherShellClass, "text-text-body")}>
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-200 font-bold text-text-body">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-200 font-label text-text-body">
             —
           </div>
           {!isCollapsed && (
@@ -247,7 +247,7 @@ export function WorkspaceSwitcher({
                     onClick={() => {
                       saveWorkspace(org.orgId);
                     }}
-                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-title hover:bg-surface-200 transition-colors"
+                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-title hover:bg-surface-200 transition-colors"
                   >
                     {renderImage(org)}
                     <div className="flex flex-col flex-1 min-w-0 items-start">
@@ -270,7 +270,7 @@ export function WorkspaceSwitcher({
                   setIsOpen(false);
                   navigate("/workspace");
                 }}
-                className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 text-sm text-text-body hover:bg-surface-200 transition-colors"
+                className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-body hover:bg-surface-200 transition-colors"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-surface-400 text-text-muted">
                   +

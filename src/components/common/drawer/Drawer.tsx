@@ -103,7 +103,7 @@ export default function Drawer({
     >
       <div
         data-print-hide
-        className="absolute inset-0 bg-black/40 transition-opacity"
+        className="absolute inset-0 bg-text-400/40 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -141,9 +141,7 @@ export default function Drawer({
             {title ? (
               <>
                 {typeof title === "string" ? (
-                  <h2 className="font-heading3 text-text-title font-bold">
-                    {title}
-                  </h2>
+                  <h2 className="font-heading3 text-text-title">{title}</h2>
                 ) : (
                   title
                 )}

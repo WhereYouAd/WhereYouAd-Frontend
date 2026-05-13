@@ -28,7 +28,7 @@ export const Default: TStory = {
   args: {
     title: "제목",
     children: (
-      <div className="flex justify-center text-text-main w-full">내용</div>
+      <div className="flex justify-center text-text-title w-full">내용</div>
     ),
   },
 };

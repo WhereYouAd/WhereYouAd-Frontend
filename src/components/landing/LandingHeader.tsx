@@ -78,7 +78,7 @@ export default function LandingHeader() {
             key={targetId}
             type="button"
             onClick={() => scrollToSection(targetId)}
-            className="text-[15px] font-medium text-text-body hover:text-text-title transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
+            className="rounded-lg font-body1 text-text-body transition-colors hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
           >
             {label}
           </button>
@@ -88,13 +88,13 @@ export default function LandingHeader() {
       <div className="ml-auto flex items-center gap-2 md:gap-3 shrink-0">
         <Link
           to="/login"
-          className="text-[13px] md:text-[14px] font-medium text-text-body rounded-xl px-3 py-2 md:px-3.5 transition-colors hover:bg-surface-300 hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
+          className="rounded-xl px-3 py-2 font-body2 text-text-body transition-colors hover:bg-surface-300 hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5 md:font-body1"
         >
           로그인
         </Link>
         <Link
           to="/signup"
-          className="text-[13px] md:text-[14px] font-semibold text-surface-100 rounded-xl px-3 py-2 md:px-3.5 bg-primary-400 hover:bg-primary-500 transition-colors shadow-landing-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
+          className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-landing-pill transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5"
         >
           회원가입
         </Link>

@@ -47,7 +47,7 @@ export default function MemberItem({
           <span
             className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${
               member.role === "ADMIN"
-                ? "bg-primary-400 text-white shadow-sm"
+                ? "bg-primary-400 text-surface-100 shadow-sm"
                 : "bg-primary-100/80 text-text-auth-sub"
             }`}
           >

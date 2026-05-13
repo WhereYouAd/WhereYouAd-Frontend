@@ -19,8 +19,8 @@ export interface IStatCardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const trendClasses: Record<ITrend["direction"], string> = {
-  up: "bg-info-red/[0.08] text-info-red font-bold",
-  down: "bg-info-blue/[0.08] text-info-blue font-bold",
+  up: "bg-info-red/[0.08] text-info-red",
+  down: "bg-info-blue/[0.08] text-info-blue",
 };
 
 export const TrendBadge = memo(function TrendBadge({
@@ -32,9 +32,9 @@ export const TrendBadge = memo(function TrendBadge({
     <span
       aria-label={`${value} ${direction === "up" ? "상승" : "하락"}`}
       className={twMerge(
-        "inline-flex items-center rounded-full w-fit font-semibold",
+        "inline-flex items-center rounded-full w-fit",
         compact
-          ? "gap-0.5 px-2 py-0.5 font-caption leading-snug"
+          ? "gap-0.5 px-2 py-0.5 font-caption"
           : "gap-1 px-2 py-1 font-caption",
         trendClasses[direction],
       )}
@@ -71,10 +71,10 @@ const StatCard = memo(function StatCard({
       )}
       {...rest}
     >
-      <p className="font-body2 text-text-muted font-medium">{title}</p>
+      <p className="font-body2 text-text-muted">{title}</p>
       <p
         className={twMerge(
-          "text-text-title font-extrabold tracking-tight",
+          "text-text-title tracking-tight",
           compact ? "font-heading2" : "font-heading1",
         )}
       >

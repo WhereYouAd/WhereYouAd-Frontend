@@ -52,7 +52,7 @@ const ComingSoonPlaceholder = memo(function ComingSoonPlaceholder({
       )}
     >
       <motion.div
-        className="flex w-full max-w-[420px] flex-col items-center rounded-[32px] bg-white px-8 py-12 text-center shadow-card transition-ui-smooth hover:shadow-card-hover tablet:px-6"
+        className="flex w-full max-w-[420px] flex-col items-center rounded-[32px] bg-surface-100 px-8 py-12 text-center shadow-card transition-ui-smooth hover:shadow-card-hover tablet:px-6"
         role="status"
         aria-live="polite"
         initial="hidden"
@@ -69,7 +69,7 @@ const ComingSoonPlaceholder = memo(function ComingSoonPlaceholder({
         </motion.div>
 
         <motion.h1
-          className="mb-4 text-balance font-heading1 font-bold leading-snug tracking-tight text-text-main"
+          className="mb-4 text-balance font-heading1 text-text-title"
           variants={itemVariants}
           custom={!!reduceMotion}
         >
@@ -85,11 +85,11 @@ const ComingSoonPlaceholder = memo(function ComingSoonPlaceholder({
         </motion.p>
 
         <motion.div
-          className="mt-8 flex w-full items-center justify-center rounded-2xl bg-chart-inactive px-6 py-4"
+          className="mt-8 flex w-full items-center justify-center rounded-2xl bg-surface-300 px-6 py-4"
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          <p className="font-body1 font-medium text-text-main">{footer}</p>
+          <p className="font-body1 text-text-title">{footer}</p>
         </motion.div>
       </motion.div>
     </div>

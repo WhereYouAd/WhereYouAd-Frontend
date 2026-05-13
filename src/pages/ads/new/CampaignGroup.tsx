@@ -76,7 +76,7 @@ export default function CampaignGroup() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 minRows={8}
-                className="bg-surface-100 ring-1 ring-logo-1/30 hover:ring-logo-1/40 focus:ring-2 focus:ring-logo-1/50"
+                className="bg-surface-100 ring-1 ring-primary-400/30 hover:ring-primary-400/40 focus:ring-2 focus:ring-primary-400/50"
               />
             </div>
           </div>
@@ -143,7 +143,7 @@ export default function CampaignGroup() {
         <div className="flex justify-end mb-5">
           <Button
             size="big"
-            className="w-full max-w-40 py-4 font-bold"
+            className="w-full max-w-40 py-4"
             disabled={!isFormValid || isCreating}
             onClick={handleComplete}
           >

@@ -257,3 +257,26 @@
     }
   }
 }
+
+/* 플랫폼 상세 테이블 스크롤바 — @theme 팔레트만 사용 */
+.platform-table-scrollbar {
+  scrollbar-gutter: stable;
+}
+
+.platform-table-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.platform-table-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.platform-table-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-surface-400);
+  border-radius: 10px;
+}
+
+.platform-table-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-200);
+}

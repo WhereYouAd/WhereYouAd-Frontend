@@ -88,19 +88,19 @@ export default function LandingGuide() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-bold text-primary-400 leading-none select-none">
+                  <span className="select-none font-heading1 leading-none text-primary-400">
                     {page.number}
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 text-[11px] font-semibold text-surface-100 tracking-wide shadow-landing-pill">
+                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 font-caption text-surface-100 shadow-landing-pill tracking-wide">
                     {page.label}
                   </span>
                 </div>
 
-                <h3 className="font-heading2 text-text-title leading-snug break-keep text-balance">
+                <h3 className="break-keep text-balance font-heading2 text-text-title">
                   {page.title}
                 </h3>
 
-                <p className="font-body1 text-text-auth-sub leading-relaxed break-keep whitespace-pre-line">
+                <p className="break-keep whitespace-pre-line font-body1 text-text-auth-sub">
                   {page.description}
                 </p>
 
@@ -111,11 +111,11 @@ export default function LandingGuide() {
                       className="rounded-2xl border border-surface-400/60 bg-surface-100/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="font-body1 font-semibold text-text-title leading-snug break-keep text-balance">
+                        <span className="break-keep text-balance font-label text-text-title">
                           {item.title}
                         </span>
                       </div>
-                      <p className="mt-2 font-body2 text-text-auth-sub leading-relaxed break-keep">
+                      <p className="mt-2 break-keep font-body2 text-text-auth-sub">
                         {item.text}
                       </p>
                     </div>

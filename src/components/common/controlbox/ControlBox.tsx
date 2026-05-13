@@ -42,7 +42,7 @@ export default function ControlBox({
   return (
     <div
       className={twMerge(
-        "flex w-full min-w-0 items-center justify-between gap-6 px-7 py-6  border-[0.5px] border-chart-3/7 rounded-3xl",
+        "flex w-full min-w-0 items-center justify-between gap-6 px-7 py-6  border-[0.5px] border-surface-400/40 rounded-3xl",
         "tablet:flex-col tablet:items-start tablet:px-5 tablet:py-5",
         containerClassName,
         className,
@@ -57,7 +57,9 @@ export default function ControlBox({
       >
         {leadingSlot ? <div className="shrink-0">{leadingSlot}</div> : null}
         <div className="flex min-w-0 flex-col gap-2">
-          <h3 className={twMerge("font-heading3 text-chart-3", titleClassName)}>
+          <h3
+            className={twMerge("font-heading3 text-text-title", titleClassName)}
+          >
             {title}
           </h3>
           <p
