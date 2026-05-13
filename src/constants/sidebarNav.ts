@@ -44,7 +44,7 @@ export const mainNav: INavItem[] = [
       },
       {
         id: "ads-campaign-group",
-        label: "캠페인 그룹 정보 설정",
+        label: "통합 캠페인 등록",
         path: "/ads/campaignGroup",
       },
     ],

@@ -39,8 +39,13 @@ export default function CampaignGroup() {
     <section className="flex w-full flex-col gap-8 pb-20">
       {/* 캠페인 기본 정보 */}
       <Card className="flex flex-col gap-8 p-8 tablet:p-10">
-        <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
-        <div className="flex flex-col gap-10 w-full">
+        <div className="flex flex-col gap-2">
+          <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
+          <p className="font-body1 leading-relaxed text-text-muted">
+            여러 매체 캠페인을 하나로 묶어 관리합니다.
+          </p>
+        </div>
+        <div className="flex w-full flex-col gap-10">
           {/* 캠페인명 */}
           <div className="flex flex-col gap-2">
             <label
@@ -131,8 +136,9 @@ export default function CampaignGroup() {
           className="w-full max-w-40 py-4"
           disabled={!isFormValid || isCreating}
           onClick={handleComplete}
+          aria-label="그룹 생성"
         >
-          {isCreating ? "생성 중..." : "완료"}
+          {isCreating ? "그룹 생성 중..." : "그룹 생성"}
         </Button>
       </div>
 
@@ -143,8 +149,8 @@ export default function CampaignGroup() {
       >
         <ModalContent
           icon={<WarnCircleIcon className="h-8 w-8 text-info-blue" />}
-          title="캠페인 생성 완료"
-          description="캠페인 그룹이 성공적으로 생성되었습니다."
+          title="그룹 생성 완료"
+          description="통합 캠페인 그룹이 성공적으로 생성되었습니다."
           buttonText="확인"
           onConfirm={handleCloseSuccessModal}
           variant="primary"

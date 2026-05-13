@@ -51,7 +51,7 @@ export default function AdRow({
     <div
       className={twMerge(
         "border-b border-surface-400/50 last:border-b-0",
-        isOpen && "border-b-0 bg-surface-200",
+        isOpen && "border-b-0 bg-surface-300",
         isSelected && !isOpen && "bg-primary-100/35",
         isPaused && !isSelected && !isOpen && "bg-surface-200/40",
       )}
