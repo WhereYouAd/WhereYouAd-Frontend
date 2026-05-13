@@ -87,8 +87,7 @@ export default function AdDetailContent({
               tags.map((tag, idx) => (
                 <Badge
                   key={idx}
-                  variant="running"
-                  size="sm"
+                  variant="infoBlue"
                   className="border border-bg-disabled bg-white text-text-sub px-3"
                 >
                   #{tag}

@@ -1,41 +1,30 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-export type TBadgeVariant =
-  | "syncing"
-  | "success"
-  | "inactive"
-  | "running"
-  | "stopped";
-
-type TBadgeSize = "sm" | "md";
+/** 토큰 색 기준 (`info-*`, `surface`) */
+export type TBadgeVariant = "infoYellow" | "infoBlue" | "infoRed" | "surface";
 
 interface IBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: TBadgeVariant;
-  size?: TBadgeSize;
   leftIcon?: ReactNode;
 }
 
+const badgeSizeClass = "h-7 px-3 py-1 font-caption";
+
 export default function Badge({
-  variant = "success",
-  size = "md",
+  variant = "infoBlue",
   leftIcon,
   className,
   children,
   ...rest
 }: IBadgeProps) {
-  const sizeClasses: Record<TBadgeSize, string> = {
-    sm: "h-7 px-3 py-1 font-caption",
-    md: "h-9 px-4 py-1 font-body2",
-  };
-
   const variantClasses: Record<TBadgeVariant, string> = {
-    syncing:
-      "bg-status-yellow/15 text-status-yellow border border-status-yellow",
-    success: "bg-status-green/15 text-status-green border border-status-green",
-    inactive: "bg-status-red/15 text-status-red border border-status-red/40",
-    running: "bg-status-blue/15 text-status-blue border border-status-blue/40",
-    stopped: "bg-brand-300 text-text-sub border border-text-placeholder/40",
+    infoYellow:
+      "bg-info-yellow/20 text-info-yellow border border-info-yellow/50",
+    infoBlue: "bg-info-blue/15 text-info-blue border border-info-blue/40",
+    infoRed: "bg-info-red/15 text-info-red border border-info-red/40",
+    /* 중립 배지 */
+    surface: "bg-surface-200 text-text-muted border border-text-placeholder/40",
   };
 
   return (
@@ -43,7 +32,7 @@ export default function Badge({
       role="status"
       className={twMerge(
         "inline-flex items-center gap-2 rounded-full whitespace-nowrap",
-        sizeClasses[size],
+        badgeSizeClass,
         variantClasses[variant],
         className,
       )}

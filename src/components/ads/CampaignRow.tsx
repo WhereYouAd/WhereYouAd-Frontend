@@ -74,7 +74,7 @@ export default function CampaignRow({
 
       {/* 동기화 상태 */}
       {/* <div className="w-[15%] tablet:w-[18%] shrink-0 pr-10 tablet:pr-2">
-        <Badge variant={status} size="sm">
+        <Badge variant={status}>
           {statusText}
         </Badge>
       </div> */}

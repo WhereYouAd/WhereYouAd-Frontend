@@ -19,7 +19,7 @@ export default function CampaignInfoCard({
       <div className="flex flex-col h-full justify-between">
         {/* 예산 현황 */}
         <div className="flex items-center justify-between w-full">
-          <Badge variant="running" size="sm" className={badgeStyle}>
+          <Badge variant="infoBlue" className={badgeStyle}>
             예산 현황
           </Badge>
           <span className="text-xl font-heading3 text-text-main truncate ml-16">
@@ -29,7 +29,7 @@ export default function CampaignInfoCard({
 
         {/* 등록 날짜 */}
         <div className="flex items-center justify-between w-full">
-          <Badge variant="running" size="sm" className={badgeStyle}>
+          <Badge variant="infoBlue" className={badgeStyle}>
             등록 날짜
           </Badge>
           <span className="text-xl font-heading3 text-text-main ml-16">

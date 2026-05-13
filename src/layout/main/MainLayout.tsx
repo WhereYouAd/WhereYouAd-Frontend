@@ -81,17 +81,17 @@ export default function MainLayout() {
   }, [pathname]);
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-gray-50">
+    <div className="flex h-dvh w-full overflow-hidden bg-surface-200">
       <div className="flex h-full shrink-0">
         <Sidebar />
       </div>
       <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
-        <header className="sticky top-0 z-30 border-b border-bg-surface bg-white">
+        <header className="sticky top-0 z-30 border-b border-surface-300 bg-surface-100">
           <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
             <div className="flex min-w-0 items-center gap-2">
               {parentLabel ? (
                 <>
-                  <span className="truncate font-body1 text-text-sub">
+                  <span className="truncate font-body1 text-text-body">
                     {parentLabel}
                   </span>
                   <span className="text-text-placeholder" aria-hidden="true">
@@ -99,7 +99,7 @@ export default function MainLayout() {
                   </span>
                 </>
               ) : null}
-              <span className="truncate font-body1 text-[18px] font-semibold text-text-main">
+              <span className="truncate font-body1 text-[18px] font-semibold text-text-title">
                 {currentLabel || parentLabel || " "}
               </span>
             </div>

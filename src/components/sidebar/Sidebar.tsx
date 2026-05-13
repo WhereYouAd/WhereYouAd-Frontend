@@ -27,8 +27,8 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
     isActive
-      ? "bg-chart-3 text-white"
-      : "text-text-auth-sub hover:bg-bg-surface",
+      ? "bg-primary-400 text-surface-100"
+      : "text-text-auth-sub hover:bg-surface-200",
   );
 }
 
@@ -36,7 +36,7 @@ function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
     "flex w-full h-[55px] items-center rounded-2xl px-3 text-sm cursor-pointer transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
-    isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
+    isActive ? "text-primary-400" : "text-text-auth-sub hover:text-primary-400",
   );
 }
 
@@ -92,7 +92,7 @@ export default function Sidebar() {
   return (
     <motion.div
       className={twMerge(
-        "relative z-40 flex h-full flex-col bg-white border-r border-bg-surface",
+        "relative z-40 flex h-full flex-col bg-surface-100 border-r border-surface-300",
       )}
       initial={false}
       animate={{ width: isCollapsed ? 88 : 256 }}
@@ -200,7 +200,7 @@ export default function Sidebar() {
             );
           })}
 
-          <div className="mt-2 pt-2 border-t border-bg-surface">
+          <div className="mt-2 pt-2 border-t border-surface-300">
             <button
               type="button"
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
@@ -208,7 +208,7 @@ export default function Sidebar() {
               className={twMerge(
                 "w-full h-14 rounded-2xl text-sm transition-all duration-200 inline-flex items-center",
                 isCollapsed ? "justify-center px-0" : "gap-4 px-3",
-                "text-text-auth-sub hover:text-chart-3 hover:bg-bg-surface",
+                "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
             >
               <CollapseIcon

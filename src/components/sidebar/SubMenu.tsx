@@ -16,12 +16,12 @@ export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
       "flex items-center rounded-2xl px-3 text-sm transition-all duration-200 whitespace-nowrap",
       isCollapsed ? "h-auto py-2.5" : "h-10 pl-4",
       isActive
-        ? "bg-chart-3 text-white"
-        : "text-text-auth-sub hover:bg-bg-surface",
+        ? "bg-primary-400 text-surface-100"
+        : "text-text-auth-sub hover:bg-surface-200",
     );
 
   const menuContainerClass = isCollapsed
-    ? "absolute left-full top-0 pl-2 w-52 flex flex-col gap-1 rounded-2xl bg-white p-2 shadow-Soft z-50 whitespace-nowrap"
+    ? "absolute left-full top-0 pl-2 w-52 flex flex-col gap-1 rounded-2xl bg-surface-100 p-2 shadow-Soft z-50 whitespace-nowrap"
     : "ml-11 mt-1 flex flex-col gap-1 overflow-hidden";
 
   const expandedMaxHeight = Math.min(640, Math.max(160, items.length * 44 + 8));

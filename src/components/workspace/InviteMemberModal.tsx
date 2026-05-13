@@ -163,8 +163,7 @@ export default function InviteMemberModal({
                     </div>
                     <div className="flex shrink-0 items-center">
                       <Badge
-                        variant="stopped"
-                        size="md"
+                        variant="surface"
                         className="bg-text-placeholder/50"
                       >
                         가입 대기 중

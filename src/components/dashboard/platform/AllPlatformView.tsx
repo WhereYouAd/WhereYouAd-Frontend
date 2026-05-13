@@ -51,7 +51,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             isLoading ? (
               <BadgeSkeleton className="w-28" />
             ) : (
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
+              <Badge variant="surface" className="text-text-auth-sub">
                 ROAS 기준 상위 3
               </Badge>
             )

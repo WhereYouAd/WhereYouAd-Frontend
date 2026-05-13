@@ -2,8 +2,7 @@
 @media print {
   /*
    * !important: 화면용 Tailwind·컴포넌트 스타일이 인쇄 시에도 적용되어 레이아웃이 어긋나는 것을
-   * 막기 위해 선언 우선순위를 올림. 인쇄 전용 규칙만 해당하며, 남용 시 수정이 어려워지므로
-   * 이 블록 안에서만 사용합니다.
+   * 막기 위해 선언 우선순위를 올림. 인쇄 전용 규칙만 해당하며, 이 블록 안에서만 사용.
    */
   body.ai-report-printing > *:not([data-drawer-portal]) {
     display: none !important;

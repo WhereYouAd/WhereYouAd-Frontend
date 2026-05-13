@@ -43,10 +43,7 @@ export default function AdRow({
     >
       {/* status badge */}
       <div className="w-21 shrink-0 mr-3">
-        <Badge
-          variant={runStatus === "running" ? "running" : "stopped"}
-          size="sm"
-        >
+        <Badge variant={runStatus === "running" ? "infoBlue" : "surface"}>
           {runStatusText}
         </Badge>
       </div>
