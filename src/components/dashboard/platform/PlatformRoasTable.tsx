@@ -32,7 +32,7 @@ function getPlatformLogo(provider: string) {
     return platformLogoMap[name as TPlatformName];
   }
   return (
-    <span className="h-7 w-7 rounded-full bg-bg-disabled flex items-center justify-center text-xs font-bold">
+    <span className="h-7 w-7 rounded-full bg-surface-300 flex items-center justify-center text-xs font-bold text-text-muted">
       {name[0]}
     </span>
   );
@@ -62,7 +62,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
     <div className="@container flex flex-col h-full font-pretendard w-full">
       <div className="flex flex-col flex-1 min-w-0">
         <div
-          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 @2xl:gap-x-6 px-4 pt-2 pb-4 font-caption text-text-muted font-medium tracking-wider uppercase border-b border-[#F2F4F6]`}
+          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 @2xl:gap-x-6 px-4 pt-2 pb-4 font-caption text-text-muted font-medium tracking-wider uppercase border-b border-surface-200`}
         >
           <span className="flex min-h-[1.25rem] items-center justify-center text-center tabular-nums leading-snug">
             순위
@@ -87,11 +87,11 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
             플랫폼 데이터가 없습니다.
           </div>
         )}
-        <div className="flex flex-col pb-2 divide-y divide-[#F2F4F6]">
+        <div className="flex flex-col pb-2 divide-y divide-surface-200">
           {rankings.map((item) => (
             <div
               key={item.provider}
-              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-lg transition-colors duration-300 hover:bg-[#F2F4F6]`}
+              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-lg transition-colors duration-300 hover:bg-surface-200`}
             >
               {/* 순위 */}
               <div className="flex min-h-0 min-w-0 items-center justify-center">

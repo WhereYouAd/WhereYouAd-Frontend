@@ -35,7 +35,7 @@ export default function MemberItem({
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-text-main font-body1">{member.name}</p>
+          <p className="truncate font-body1 text-text-title">{member.name}</p>
           <div className="flex text-text-auth-sub items-center gap-2 min-w-0">
             <MailIcon className="w-4 h-4" />
             <p className="truncate">{member.email}</p>
@@ -47,8 +47,8 @@ export default function MemberItem({
           <span
             className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${
               member.role === "ADMIN"
-                ? "bg-status-blue/80 text-white shadow-sm"
-                : "bg-chart-3/15 text-text-auth-sub"
+                ? "bg-primary-400 text-white shadow-sm"
+                : "bg-primary-100/80 text-text-auth-sub"
             }`}
           >
             {member.role === "ADMIN" ? "관리자" : "멤버"}
@@ -60,7 +60,7 @@ export default function MemberItem({
               type="button"
               aria-label="멤버 삭제버튼"
               onClick={onDeleteClick}
-              className="text-text-sub transition-colors hover:text-status-red"
+              className="text-text-muted transition-colors hover:text-info-red"
             >
               <TrashIcon className="h-5 w-5" />
             </button>

@@ -33,8 +33,8 @@ export default function CampaignRow({
   const isPaused = status == "PAUSED";
   return (
     <li
-      className={`flex items-center px-7 py-5 border-b border-bg-disabled hover:bg-bg-surface hover:cursor-pointer transition-colors list-none ${
-        isPaused ? "bg-bg-surface" : "bg-white"
+      className={`flex list-none cursor-pointer items-center border-b border-surface-400 px-7 py-5 transition-colors hover:bg-surface-200 ${
+        isPaused ? "bg-surface-200" : "bg-surface-100"
       }
        `}
       onClick={onClick}
@@ -66,7 +66,7 @@ export default function CampaignRow({
       {/* 캠페인 명 */}
       <div className="w-[40%] tablet:w-[34%] min-w-0 pr-10 tablet:pr-3 shrink-0">
         <div
-          className={`font-body1 truncate ${isPaused ? "text-text-sub" : "text-text-main"}`}
+          className={`truncate font-body1 ${isPaused ? "text-text-muted" : "text-text-title"}`}
         >
           {name}
         </div>

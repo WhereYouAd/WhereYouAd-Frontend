@@ -35,7 +35,7 @@ export function TrafficChartDownload() {
         trigger={
           <button
             type="button"
-            className="flex items-center justify-center w-8 h-8 rounded hover:bg-brand-300 transition-ui-fast"
+            className="flex items-center justify-center w-8 h-8 rounded hover:bg-surface-200 transition-ui-fast"
             aria-label="다운로드 메뉴 열기"
           >
             <MoreIcon
@@ -51,7 +51,7 @@ export function TrafficChartDownload() {
       <button
         type="button"
         onClick={toggleDummyClicks}
-        className="shrink-0 px-1.5 py-0.5 text-[10px] leading-tight font-medium text-text-placeholder rounded border border-bg-disabled/50 hover:bg-bg-surface transition-colors"
+        className="shrink-0 px-1.5 py-0.5 text-[10px] leading-tight font-medium text-text-placeholder rounded border border-surface-400/50 hover:bg-surface-200 transition-colors"
       >
         더미 토글
       </button>
@@ -81,9 +81,9 @@ const AnomalyBubble = memo(function AnomalyBubble({
         transform: "translateX(-50%) translateY(-100%)",
       }}
     >
-      <div className="relative bg-white border border-bg-disabled rounded-lg px-5 py-4 min-w-40">
+      <div className="relative bg-surface-100 border border-surface-400 rounded-lg px-5 py-4 min-w-40">
         <div className="flex items-center justify-center gap-1.5 mb-1.5">
-          <span className="inline-block w-2 h-2 rounded-full bg-status-red shrink-0" />
+          <span className="inline-block w-2 h-2 rounded-full bg-info-red shrink-0" />
           <p className="font-body2 text-text-title font-semibold! tracking-tight">
             클릭 이상 징후 감지
           </p>
@@ -301,11 +301,11 @@ const TrafficChart = memo(function TrafficChart() {
         {markerPos && (
           <>
             <span
-              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
+              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-info-red opacity-60 animate-ping [animation-duration:2s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
               style={{ left: markerPos.x, top: markerPos.y }}
             />
             <span
-              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-status-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
+              className="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-info-red opacity-40 animate-ping [animation-duration:2s] [animation-delay:1s] in-[.is-scrolling]:[animation-play-state:paused] pointer-events-none"
               style={{ left: markerPos.x, top: markerPos.y }}
             />
             <button

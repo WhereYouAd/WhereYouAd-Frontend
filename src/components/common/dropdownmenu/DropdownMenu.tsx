@@ -71,7 +71,7 @@ export function DropdownMenu({
             role="menu"
             style={{ transformOrigin: "top right" }}
             className={twMerge(
-              "absolute right-0 top-full z-50 mt-2 w-56 max-w-[calc(100vw-40px)] rounded-2xl border border-gray-100 bg-brand-200 py-3 px-1 shadow-Medium",
+              "absolute right-0 top-full z-50 mt-2 w-56 max-w-[calc(100vw-40px)] rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Medium",
               menuClassName,
             )}
             initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
@@ -96,18 +96,18 @@ export function DropdownMenu({
                     className={twMerge(
                       "group flex w-full items-center justify-between rounded-2xl px-5 py-4 text-left font-body2 transition-ui-fast",
                       it.active
-                        ? "bg-status-blue/10 text-status-blue"
-                        : "text-text-main hover:bg-status-blue/5 hover:text-status-blue",
+                        ? "bg-info-blue/10 text-info-blue"
+                        : "text-text-body hover:bg-primary-100/50 hover:text-info-blue",
                     )}
                   >
                     <div className="flex items-center gap-3">
                       {it.icon ? (
                         <span
                           className={twMerge(
-                            "inline-flex h-5 w-5 items-center justify-center text-text-main",
+                            "inline-flex h-5 w-5 items-center justify-center text-text-body",
                             it.active
-                              ? "text-status-blue"
-                              : "group-hover:text-status-blue",
+                              ? "text-info-blue"
+                              : "group-hover:text-info-blue",
                           )}
                           aria-hidden="true"
                         >

@@ -27,14 +27,14 @@ export default function Toggle({
       onClick={onToggle}
       className={twMerge(
         "relative inline-flex h-8 w-15 items-center rounded-full transition-colors",
-        checked ? "bg-chart-3" : "bg-gray-200",
+        checked ? "bg-primary-400" : "bg-surface-300",
         disabled && "cursor-not-allowed opacity-50",
         className,
       )}
     >
       <span
         className={twMerge(
-          "inline-block h-6 w-6 transform rounded-full bg-white shadow-sm transition-transform",
+          "inline-block h-6 w-6 transform rounded-full bg-surface-100 shadow-sm transition-transform",
           checked ? "translate-x-7.5" : "translate-x-1.5",
           thumbClassName,
         )}

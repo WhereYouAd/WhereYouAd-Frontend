@@ -100,7 +100,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
           const m = String(d.getMinutes()).padStart(2, "0");
           return `${h}:${m}`;
         },
-        style: { colors: "#8b8b8f", fontSize: "12px" },
+        style: { colors: "#9ca3af", fontSize: "12px" },
       },
       axisBorder: { show: false },
       axisTicks: { show: false },
@@ -111,7 +111,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       max: yMax,
       tickAmount: 5,
       labels: {
-        style: { colors: "#8b8b8f", fontSize: "12px" },
+        style: { colors: "#9ca3af", fontSize: "12px" },
         formatter: (val) => {
           const rounded = Math.round(val);
           if (rounded <= 0) return "";
@@ -121,7 +121,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       },
     },
     grid: {
-      borderColor: "#f2f4f6",
+      borderColor: "#f4f6fb",
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
       padding: {

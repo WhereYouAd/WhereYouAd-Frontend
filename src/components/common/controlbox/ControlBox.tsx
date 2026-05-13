@@ -62,7 +62,7 @@ export default function ControlBox({
           </h3>
           <p
             className={twMerge(
-              "font-body2 text-text-sub whitespace-pre-line leading-relaxed",
+              "font-body2 text-text-muted whitespace-pre-line leading-relaxed",
               descriptionClassName,
             )}
           >

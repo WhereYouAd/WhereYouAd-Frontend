@@ -170,7 +170,7 @@ export default function WorkspacePage() {
             placeholder="워크스페이스 검색하기"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            rightElement={<SearchIcon className="w-6 h-6 fill-chart-3" />}
+            rightElement={<SearchIcon className="h-6 w-6 fill-primary-500" />}
           />
         </div>
         <Button
@@ -178,7 +178,7 @@ export default function WorkspacePage() {
           onClick={onOpenCreate}
           size="big"
           variant="primary"
-          className="bg-chart-3 flex shrink-0 whitespace-nowrap items-center justify-center gap-2 tablet:w-full tablet:justify-center"
+          className="flex shrink-0 items-center justify-center gap-2 whitespace-nowrap tablet:w-full tablet:justify-center"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           <span className="tablet:hidden">워크스페이스 생성하기</span>
@@ -190,10 +190,10 @@ export default function WorkspacePage() {
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="md" padding="lg">
         <div className="flex flex-col items-start px-2 tablet:px-0">
-          <h2 className="font-heading3 text-text-main mb-2">
+          <h2 className="mb-2 font-heading3 text-text-title">
             워크스페이스 생성
           </h2>
-          <p className="font-body2 text-text-sub mb-10 text-start">
+          <p className="mb-10 text-start font-body2 text-text-muted">
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.
             <br className="tablet:hidden" />
             로고 이미지와 기본 정보를 입력해 주세요.
@@ -212,10 +212,10 @@ export default function WorkspacePage() {
                 type="button"
                 aria-label="로고 이미지 업로드"
                 onClick={openFile}
-                className={`relative flex h-40 w-40 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 transition-all duration-300 group focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none ${
+                className={`group relative flex h-40 w-40 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none ${
                   logoPreview
                     ? "border-transparent shadow-sm"
-                    : "border-dashed border-gray-300 bg-gray-50 hover:border-chart-3 hover:bg-chart-3/5"
+                    : "border-dashed border-surface-400 bg-surface-200 hover:border-primary-400 hover:bg-primary-100/50"
                 }`}
               >
                 {logoPreview ? (
@@ -226,7 +226,7 @@ export default function WorkspacePage() {
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                      <UpLoadImgIcon className="w-6 h-6 text-white mb-1 transition-transform duration-300" />
+                      <UpLoadImgIcon className="mb-1 h-6 w-6 text-white transition-transform duration-300" />
                       <span className="text-white font-caption font-semibold">
                         사진 변경
                       </span>
@@ -234,8 +234,8 @@ export default function WorkspacePage() {
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center transform transition-all duration-300">
-                    <UpLoadImgIcon className="text-text-placeholder w-8 h-8 group-hover:text-chart-3 transition-colors duration-300" />
-                    <span className="mt-2 text-text-placeholder font-caption group-hover:text-chart-3 transition-colors duration-300">
+                    <UpLoadImgIcon className="h-8 w-8 text-text-placeholder transition-colors duration-300 group-hover:text-primary-500" />
+                    <span className="mt-2 font-caption text-text-placeholder transition-colors duration-300 group-hover:text-primary-500">
                       이미지 업로드
                     </span>
                   </div>
@@ -261,7 +261,7 @@ export default function WorkspacePage() {
                 disabled={isCreating}
               />
               {createErrorMsg && (
-                <p className="font-body2 text-status-red">{createErrorMsg}</p>
+                <p className="font-body2 text-info-red">{createErrorMsg}</p>
               )}
             </div>
 

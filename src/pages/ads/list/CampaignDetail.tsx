@@ -77,14 +77,14 @@ export default function CampaignDetail() {
   }
 
   return (
-    <section className="flex flex-col justify-start bg-white rounded-3xl min-h-[90vh] overflow-x-auto">
+    <section className="flex min-h-[90vh] flex-col justify-start overflow-x-auto rounded-3xl bg-surface-100">
       <div className="flex-1 py-10 px-20 tablet:px-10">
         <div className="flex flex-col gap-10 w-full">
           {/* header */}
           <header className="flex flex-col gap-5 w-full">
             <button
               onClick={() => navigate("/ads")}
-              className="flex items-center gap-2 text-text-sub font-body2 hover:text-text-main transition-colors w-fit mb-3"
+              className="mb-3 flex w-fit items-center gap-2 font-body2 text-text-muted transition-colors hover:text-text-title"
             >
               <LeftChevronIcon className="w-4 h-4" />
               광고 운영 관리
@@ -93,7 +93,7 @@ export default function CampaignDetail() {
             <div className="flex flex-col gap-5">
               <div className="flex items-center justify-between w-full tablet:flex-col tablet:items-start tablet:gap-2">
                 <div className="flex items-center gap-5">
-                  <h1 className="font-heading2 text-text-main">{data.name}</h1>
+                  <h1 className="font-heading2 text-text-title">{data.name}</h1>
                   <Badge
                     variant={
                       data.status === "ON_GOING" ? "infoBlue" : "surface"
@@ -111,7 +111,7 @@ export default function CampaignDetail() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 text-text-sub font-body2">
+              <div className="flex items-center gap-4 font-body2 text-text-muted">
                 <span>예산 {data.budget.toLocaleString()}원</span>
                 <span className="text-text-placeholder">·</span>
                 <div className="flex items-center gap-1">
@@ -132,7 +132,7 @@ export default function CampaignDetail() {
 
               {data.description && (
                 <div className="flex flex-col gap-1">
-                  <p className="text-text-sub font-body2 whitespace-pre-line leading-relaxed">
+                  <p className="font-body2 leading-relaxed whitespace-pre-line text-text-muted">
                     {data.description}
                   </p>
                 </div>
@@ -159,11 +159,11 @@ export default function CampaignDetail() {
                   buttonText="중단하기"
                   onButtonClick={stopControl.openModal}
                   buttonDisabled={stopControl.isLoading}
-                  containerClassName="bg-status-red/7 border-status-red px-6 py-4"
-                  titleClassName="text-status-red font-heading3"
-                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
+                  containerClassName="border-info-red bg-info-red/10 px-6 py-4"
+                  titleClassName="font-heading3 text-info-red"
+                  descriptionClassName="font-body2 leading-relaxed text-text-muted"
                   buttonSize="big"
-                  buttonClassName="font-body1 bg-status-red"
+                  buttonClassName="font-body1 bg-info-red text-white hover:opacity-90"
                 />
               ) : data.status === "PAUSED" ? (
                 <ControlBox
@@ -172,11 +172,11 @@ export default function CampaignDetail() {
                   buttonText="시작하기"
                   onButtonClick={resumeControl.openModal}
                   buttonDisabled={resumeControl.isLoading}
-                  containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
-                  titleClassName="text-status-blue font-heading3"
-                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
+                  containerClassName="border-info-blue bg-info-blue/10 px-6 py-4"
+                  titleClassName="font-heading3 text-info-blue"
+                  descriptionClassName="font-body2 leading-relaxed text-text-muted"
                   buttonSize="big"
-                  buttonClassName="font-body1 bg-status-blue"
+                  buttonClassName="font-body1 bg-info-blue text-white hover:opacity-90"
                 />
               ) : null}
             </div>
@@ -191,7 +191,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 중단"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-red" />}
+          icon={<WarnCircleIcon className="text-info-red" />}
           title="캠페인 운영을 중단하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 중단됩니다."
           buttonText="중단하기"
@@ -212,7 +212,7 @@ export default function CampaignDetail() {
         title="캠페인 운영 재개"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-info-blue" />}
           title="캠페인 운영을 재개하시겠습니까?"
           description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
           buttonText="시작하기"

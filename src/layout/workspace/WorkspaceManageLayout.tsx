@@ -3,8 +3,8 @@ import { NavLink, Outlet, useParams } from "react-router-dom";
 const tabLinkClass = ({ isActive }: { isActive: boolean }) =>
   `px-4 py-2 font-body1 border-b-2 -mb-px transition-colors ${
     isActive
-      ? "border-chart-3 text-chart-3"
-      : "border-transparent text-text-sub hover:text-text-main"
+      ? "border-primary-500 text-primary-500"
+      : "border-transparent text-text-muted hover:text-text-title"
   }`;
 
 export default function WorkspaceManageLayout() {
@@ -12,7 +12,7 @@ export default function WorkspaceManageLayout() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <nav className="flex border-b border-gray-100">
+      <nav className="flex border-b border-surface-400">
         <NavLink
           to={`/workspace/${workspaceId}/settings`}
           className={tabLinkClass}

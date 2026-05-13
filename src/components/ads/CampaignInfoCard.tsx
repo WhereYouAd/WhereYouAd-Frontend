@@ -13,7 +13,7 @@ export default function CampaignInfoCard({
   date,
   className,
 }: ICampaignInfoCardProps) {
-  const badgeStyle = "border-none bg-bg-disabled text-text-sub";
+  const badgeStyle = "border-none bg-surface-300 text-text-muted";
   return (
     <InfoCard title="캠페인 정보" className={className}>
       <div className="flex flex-col h-full justify-between">
@@ -22,17 +22,17 @@ export default function CampaignInfoCard({
           <Badge variant="infoBlue" className={badgeStyle}>
             예산 현황
           </Badge>
-          <span className="text-xl font-heading3 text-text-main truncate ml-16">
+          <span className="ml-16 truncate text-xl font-heading3 text-text-title">
             {budget}
           </span>
         </div>
 
         {/* 등록 날짜 */}
-        <div className="flex items-center justify-between w-full">
+        <div className="flex w-full items-center justify-between">
           <Badge variant="infoBlue" className={badgeStyle}>
             등록 날짜
           </Badge>
-          <span className="text-xl font-heading3 text-text-main ml-16">
+          <span className="ml-16 text-xl font-heading3 text-text-title">
             {date}
           </span>
         </div>

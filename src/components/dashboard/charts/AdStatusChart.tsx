@@ -24,7 +24,7 @@ export const AdStatusChart = memo(({ data }: { data: IAdCount[] }) => {
           <div
             key={item.provider}
             style={{ width: `${getWidth(item.count)}%` }}
-            className="flex justify-center text-caption text-text-sub tabular-nums"
+            className="flex justify-center text-caption text-text-muted tabular-nums"
           >
             {item.count}개
           </div>

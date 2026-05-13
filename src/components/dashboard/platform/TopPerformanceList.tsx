@@ -36,16 +36,16 @@ export const TopPerformanceList = memo(function TopPerformanceList({
         return (
           <div key={item.provider} className="flex items-center gap-4 w-full">
             <div className="flex flex-1 items-center gap-4 min-w-0">
-              <span className="font-body1 text-text-sub w-4 shrink-0">
+              <span className="font-body1 text-text-muted w-4 shrink-0">
                 {item.rank}
               </span>
               <div className="shrink-0">{info.logo}</div>
-              <span className="font-body1 text-text-main truncate">
+              <span className="font-body1 text-text-title truncate">
                 {info.name}
               </span>
             </div>
             <div className="flex items-center gap-4 shrink-0">
-              <span className="font-heading4 text-text-main tabular-nums whitespace-nowrap">
+              <span className="font-heading4 text-text-title tabular-nums whitespace-nowrap">
                 {item.roas.toFixed(2)}%
               </span>
               {item.diffRate !== null && item.diffRate !== 0 && (

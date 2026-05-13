@@ -108,12 +108,12 @@ export default function InviteMemberModal({
     >
       <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6">
         <div className="flex justify-between items-center px-8 py-6 pb-3 shrink-0">
-          <p className="font-heading4">팀원 초대하기</p>
+          <p className="font-heading4 text-text-title">팀원 초대하기</p>
           <button
             type="button"
             aria-label="팀원 초대 링크 복사 버튼"
             onClick={handleCopyLink}
-            className="flex items-center gap-2 rounded-lg px-2 py-1 text-chart-3 transition-opacity hover:opacity-80"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 text-primary-500 transition-opacity hover:opacity-80"
           >
             <CopyIcon />
             <span className="font-body1">링크 복사</span>
@@ -156,7 +156,7 @@ export default function InviteMemberModal({
                         <UserIcon className="text-text-auth-sub h-6 w-6" />
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm text-text-sub">
+                        <p className="truncate text-sm text-text-muted">
                           {item.email}
                         </p>
                       </div>
@@ -191,7 +191,7 @@ export default function InviteMemberModal({
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-1">
-                        <p className="truncate font-body1 text-text-main">
+                        <p className="truncate font-body1 text-text-title">
                           {item.name}
                         </p>
                         {item.isMe && (
@@ -203,7 +203,7 @@ export default function InviteMemberModal({
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center">
-                    <span className="text-text-main">
+                    <span className="text-text-title">
                       {item.role === "ADMIN" ? "관리자" : "멤버"}
                     </span>
                   </div>

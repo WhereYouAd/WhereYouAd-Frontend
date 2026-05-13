@@ -178,8 +178,8 @@ export default function WorkspaceSetting() {
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-3xl space-y-4">
-          <p className="font-body2 text-status-red">{errorMsg}</p>
+        <div className="space-y-4 rounded-3xl border border-surface-400 bg-surface-100 p-10 text-center">
+          <p className="font-body2 text-info-red">{errorMsg}</p>
           <Button
             type="button"
             variant="primary"
@@ -191,10 +191,10 @@ export default function WorkspaceSetting() {
       )}
       {!loading && !errorMsg && (
         <>
-          <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-Soft">
+          <div className="rounded-3xl border border-surface-400 bg-surface-100 p-8 shadow-Soft">
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
-              <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
-                <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
+              <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
+                <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
                   로고 이미지
                 </div>
                 <input
@@ -204,7 +204,7 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-lg border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
+                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 tablet:h-46 tablet:w-46">
                   {logoPreview ? (
                     <img
                       src={logoPreview}
@@ -231,7 +231,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={saving || deleting}
@@ -241,7 +241,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-3xl bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={saving || deleting}
@@ -292,14 +292,14 @@ export default function WorkspaceSetting() {
               buttonText="워크스페이스 삭제"
               onButtonClick={openDeleteModal}
               className="w-full"
-              containerClassName="bg-status-red/10 border-status-red"
-              titleClassName="text-status-red"
+              containerClassName="border-info-red bg-info-red/10"
+              titleClassName="text-info-red"
               descriptionClassName="text-text-auth-sub"
               buttonVariant="dangerSoft"
               buttonSize="big"
               buttonClassName="px-8 !rounded-2xl"
               buttonDisabled={saving || deleting}
-              leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
+              leadingSlot={<WarnIcon className="h-12 w-12 text-info-red" />}
             />
           </div>
           <Modal
@@ -312,11 +312,11 @@ export default function WorkspaceSetting() {
             <div className="text-center px-2 py-6">
               <div className="flex justify-center mb-6">
                 <WarnIcon
-                  className="text-status-red w-15 h-15"
+                  className="h-15 w-15 text-info-red"
                   aria-hidden="true"
                 />
               </div>
-              <h3 className="font-heading2 text-text-main mb-3">
+              <h3 className="mb-3 font-heading2 text-text-title">
                 정말 삭제하시겠습니까?
               </h3>
               <p className="font-body1 text-text-auth-sub mb-7">

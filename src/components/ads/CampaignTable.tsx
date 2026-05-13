@@ -18,23 +18,23 @@ export default function CampaignTable({
   );
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full bg-surface-100">
       {/* Table Header */}
-      <div className="flex items-center px-7 py-3 border-b border-bg-disabled">
-        <div className="w-[25%] tablet:w-[28%] font-body1 text-text-main">
+      <div className="flex items-center border-b border-surface-400 px-7 py-3">
+        <div className="w-[25%] font-body1 text-text-title tablet:w-[28%]">
           플랫폼
         </div>
-        <div className="w-[40%] tablet:w-[34%] font-body1 text-text-main">
+        <div className="w-[40%] font-body1 text-text-title tablet:w-[34%]">
           캠페인 명
         </div>
-        <div className="w-[35%] tablet:w-[38%] font-body1 text-text-main">
+        <div className="w-[35%] font-body1 text-text-title tablet:w-[38%]">
           <span className="tablet:hidden">예산 소진 현황</span>
           <span className="hidden tablet:inline">예산</span>
         </div>
       </div>
 
       {/* Row */}
-      <ul className="divide-y divide-bg-disabled">
+      <ul>
         {visibleCampaigns.length > 0 ? (
           visibleCampaigns.map((project) => (
             <CampaignRow

@@ -75,9 +75,9 @@ export default function AdsListPage() {
           buttonText="캠페인 통합 연동하기"
           onButtonClick={handleCampaignGroupClick}
           buttonDisabled={false}
-          containerClassName="bg-chart-3/7 border-chart-3 px-6 py-4"
-          titleClassName="text-chart-3 font-heading3"
-          descriptionClassName="font-body2 text-text-sub"
+          containerClassName="border-primary-300 bg-primary-100/50 px-6 py-4"
+          titleClassName="font-heading3 text-primary-500"
+          descriptionClassName="font-body2 text-text-muted"
           buttonSize="big"
           buttonClassName="font-body1"
         />
@@ -89,11 +89,11 @@ export default function AdsListPage() {
               buttonText="중단하기"
               onButtonClick={stopAll.openModal}
               buttonDisabled={stopAll.isLoading}
-              containerClassName="bg-status-red/7 border-status-red px-6 py-4"
-              titleClassName="text-status-red font-heading3"
-              descriptionClassName="font-body2 text-text-sub"
+              containerClassName="border-info-red bg-info-red/10 px-6 py-4"
+              titleClassName="font-heading3 text-info-red"
+              descriptionClassName="font-body2 text-text-muted"
               buttonSize="big"
-              buttonClassName="font-body1 bg-status-red"
+              buttonClassName="font-body1 bg-info-red text-white hover:opacity-90"
             />
           ) : (
             <ControlBox
@@ -102,11 +102,11 @@ export default function AdsListPage() {
               buttonText="시작하기"
               onButtonClick={resumeAll.openModal}
               buttonDisabled={resumeAll.isLoading}
-              containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
-              titleClassName="text-status-blue font-heading3"
-              descriptionClassName="font-body2 text-text-sub"
+              containerClassName="border-info-blue bg-info-blue/10 px-6 py-4"
+              titleClassName="font-heading3 text-info-blue"
+              descriptionClassName="font-body2 text-text-muted"
               buttonSize="big"
-              buttonClassName="font-body1 bg-status-blue"
+              buttonClassName="font-body1 bg-info-blue text-white hover:opacity-90"
             />
           ))}
       </div>
@@ -118,7 +118,7 @@ export default function AdsListPage() {
         title="전체 캠페인 중단"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="w-7 h-auto text-status-red" />}
+          icon={<WarnCircleIcon className="h-auto w-7 text-info-red" />}
           title="전체 캠페인을 중단하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 중단됩니다."
           buttonText="중단하기"
@@ -139,7 +139,7 @@ export default function AdsListPage() {
         title="전체 캠페인 재개"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-blue" />}
+          icon={<WarnCircleIcon className="text-info-blue" />}
           title="전체 캠페인을 재개하시겠습니까?"
           description="모든 캠페인의 광고 노출이 즉시 재개됩니다."
           buttonText="시작하기"

@@ -87,9 +87,9 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           description={
             <ChartLegend
               items={[
-                { label: "클릭률", color: "#0084fe" },
-                { label: "전환율", color: "#0a3d91" },
-                { label: "노출수", color: "#4fc3f7" },
+                { label: "클릭률", colorClass: "bg-info-blue" },
+                { label: "전환율", colorClass: "bg-primary-500" },
+                { label: "노출수", colorClass: "bg-primary-300" },
               ]}
             />
           }
