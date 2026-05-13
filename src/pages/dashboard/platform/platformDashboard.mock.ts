@@ -1,5 +1,4 @@
 import type {
-  IAdStatusData,
   IBudgetStatus,
   IPlatformPerformance,
   IRoasRanking,
@@ -32,16 +31,6 @@ export const roasRankingMock: IRoasRanking[] = [
     adSpend: 472000,
   },
 ];
-
-// 광고 소재 현황
-export const adStatusMock: IAdStatusData = {
-  totalCount: 14,
-  providerCount: [
-    { provider: "GOOGLE", count: 7 },
-    { provider: "NAVER", count: 5 },
-    { provider: "META", count: 2 },
-  ],
-};
 
 // 플랫폼별 성과 효율 비교
 export const performanceEfficiencyMock: IPlatformPerformance[] = [

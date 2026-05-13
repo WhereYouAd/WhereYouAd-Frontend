@@ -52,7 +52,7 @@ export const PlatformDetailCard = memo(
               impressionChangeRate !== 0
                 ? {
                     direction: impressionChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(impressionChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(impressionChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -65,7 +65,7 @@ export const PlatformDetailCard = memo(
               clickChangeRate !== 0
                 ? {
                     direction: clickChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(clickChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(clickChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -78,7 +78,7 @@ export const PlatformDetailCard = memo(
               cvrChangeRate !== 0
                 ? {
                     direction: cvrChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(cvrChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -91,7 +91,7 @@ export const PlatformDetailCard = memo(
               ROASChangeRate !== 0
                 ? {
                     direction: ROASChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(ROASChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(ROASChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }

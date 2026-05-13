@@ -84,4 +84,22 @@ export interface IMyPageInfoResponse {
   phoneNumber: string;
   isEmailVerified: boolean;
   providerType: TLoginProvider;
+  organizations: {
+    orgId: number;
+    orgName: string;
+    myRole: string;
+  }[];
+}
+
+export interface IUpdateMyInfoRequest {
+  name?: string;
+  oldPassword?: string;
+  newPassword?: string;
+  isImageDeleted?: boolean;
+}
+
+export interface IUpdateMyInfoResponse {
+  userId: number;
+  name: string;
+  profileImageUrl: string | null;
 }
