@@ -5,8 +5,8 @@ import type { IPlatformRankingItem } from "@/types/dashboard/overview";
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 const platformLogoMap = {
   Google: <GoogleLogo className="h-7 w-auto" />,

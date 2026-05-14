@@ -6,8 +6,8 @@ import type { TPlatform, TStatus } from "@/types/ads/campaign";
 import ProgressBar from "../common/progressbar/ProgressBar";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 interface ICampaignRowProps {
   projectId: number;

@@ -10,8 +10,8 @@ import TextareaField from "@/components/common/textarea/TextareaField";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 export default function CampaignGroup() {
   const {

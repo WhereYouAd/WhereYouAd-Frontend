@@ -13,9 +13,9 @@ import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
-import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 

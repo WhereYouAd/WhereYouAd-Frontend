@@ -9,8 +9,8 @@ import ChevronRight from "@/assets/icon/chevron/chevron-right.svg?react";
 import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 import GoogleAdsLogo from "@/assets/logo/social-logo/circle/googleAds-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 type TFeatureCardProps = {
   delay: number;
