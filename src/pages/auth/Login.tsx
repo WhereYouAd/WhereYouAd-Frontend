@@ -86,25 +86,25 @@ export default function Login() {
         <div className="flex items-center gap-12">
           <button
             type="button"
-            className="w-14 h-14 rounded-full flex items-center justify-center bg-[#FEE500] shadow-Soft hover:scale-110 transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-surface-100 shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="카카오로 로그인"
             onClick={() => handleSocialLogin("kakao")}
           >
-            <KakaoIcon className="w-7 h-auto" aria-hidden />
+            <KakaoIcon className="h-7 w-auto" aria-hidden />
           </button>
 
           <button
             type="button"
-            className="w-14 h-14 rounded-full p-0 overflow-hidden shadow-Soft hover:scale-110 transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+            className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="네이버로 로그인"
             onClick={() => handleSocialLogin("naver")}
           >
-            <NaverIcon className="w-full h-full block" aria-hidden />
+            <NaverIcon className="block h-full w-full" aria-hidden />
           </button>
 
           <button
             type="button"
-            className="w-14 h-14 rounded-full flex items-center justify-center bg-surface-100 border border-surface-300 hover:scale-110 transition-transform duration-200 shadow-Soft"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-surface-100 shadow-Soft transition-transform duration-200 hover:scale-110"
             aria-label="구글로 로그인"
             onClick={() => toast.error("준비중입니다.")}
           >

@@ -13,7 +13,7 @@ import Button from "@/components/common/button/Button";
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
-import NaverIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
+import NaverWordmarkIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {
@@ -80,7 +80,7 @@ export default function Signup() {
           variant="custom"
           leftIcon={<KakaoIcon className="w-6 h-6 shrink-0" aria-hidden />}
           onClick={() => handleSocialLogin("kakao")}
-          className="bg-[#FEE500] text-text-title font-heading4 shadow-Soft hover:bg-surface-200"
+          className="bg-oauth-kakao font-heading4 text-text-title shadow-Soft transition-opacity hover:opacity-90"
         >
           카카오 로그인
         </Button>
@@ -89,9 +89,11 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<NaverIcon className="w-6 h-6 shrink-0" aria-hidden />}
+          leftIcon={
+            <NaverWordmarkIcon className="h-6 w-6 shrink-0" aria-hidden />
+          }
           onClick={() => handleSocialLogin("naver")}
-          className="bg-[#03C75A] text-white font-heading4 shadow-Soft hover:bg-surface-200"
+          className="bg-oauth-naver font-heading4 text-surface-100 shadow-Soft transition-opacity hover:opacity-90"
         >
           네이버 로그인
         </Button>
