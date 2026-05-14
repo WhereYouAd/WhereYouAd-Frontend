@@ -89,7 +89,7 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<NaverIcon className="w-5 h-5 shrink-0" aria-hidden />}
+          leftIcon={<NaverIcon className="w-6 h-6 shrink-0" aria-hidden />}
           onClick={() => handleSocialLogin("naver")}
           className="bg-[#03C75A] text-white font-heading4 shadow-Soft hover:bg-surface-200"
         >

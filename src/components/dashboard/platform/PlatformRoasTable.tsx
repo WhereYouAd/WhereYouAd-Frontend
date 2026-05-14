@@ -64,11 +64,11 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
         <div
           className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 border-b border-surface-200 px-4 pb-4 pt-2 font-caption uppercase tracking-wider text-text-muted @2xl:gap-x-6`}
         >
-          <span className="flex min-h-[1.25rem] items-center justify-center text-center font-caption tabular-nums">
+          <span className="flex min-h-5 items-center justify-center text-center font-caption tabular-nums">
             순위
           </span>
           <span className="min-w-0 font-caption">플랫폼</span>
-          <span className="flex min-h-[1.25rem] items-center justify-center px-2 font-caption tabular-nums @2xl:px-3">
+          <span className="flex min-h-5 items-center justify-center px-2 font-caption tabular-nums @2xl:px-3">
             ROAS(%)
           </span>
           <span className="hidden min-w-0 pl-1 text-center font-caption @2xl:block @2xl:pl-0">

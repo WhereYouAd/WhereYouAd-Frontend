@@ -86,11 +86,11 @@ export default function Login() {
         <div className="flex items-center gap-12">
           <button
             type="button"
-            className="w-14 h-14 rounded-full p-0 overflow-hidden shadow-Soft hover:scale-110 transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+            className="w-14 h-14 rounded-full flex items-center justify-center bg-[#FEE500] shadow-Soft hover:scale-110 transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="카카오로 로그인"
             onClick={() => handleSocialLogin("kakao")}
           >
-            <KakaoIcon className="w-full h-full block" aria-hidden />
+            <KakaoIcon className="w-7 h-auto" aria-hidden />
           </button>
 
           <button

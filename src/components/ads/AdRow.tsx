@@ -99,7 +99,7 @@ export default function AdRow({
           </Badge>
         </div>
 
-        <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start">
+        <div className="flex min-w-11 items-center justify-start justify-self-start">
           <span className="flex shrink-0" title={platform}>
             {LogoMap[platform] ?? (
               <span className="font-caption text-text-muted">?</span>
