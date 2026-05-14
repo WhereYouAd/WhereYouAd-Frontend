@@ -13,7 +13,7 @@ interface ISubMenuProps {
 export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
   const getSubItemClass = (isActive: boolean) =>
     twMerge(
-      "flex items-center rounded-xl px-3 font-body2 transition-all duration-200 whitespace-nowrap",
+      "flex items-center rounded-2xl px-3 font-body2 transition-all duration-200 whitespace-nowrap",
       isCollapsed ? "h-auto py-2.5" : "h-10 pl-4",
       isActive
         ? "bg-primary-400 text-surface-100"
