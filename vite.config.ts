@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: env.VITE_API_TARGET_URL,
           changeOrigin: true,
+          cookieDomainRewrite: { "*": "" },
           configure(proxy) {
             proxy.on("proxyReq", (proxyReq) => {
               // 백엔드가 Origin 기반으로 CORS 차단하는 경우(예: "Invalid CORS request")
