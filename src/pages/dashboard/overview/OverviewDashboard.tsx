@@ -15,8 +15,8 @@ import { OverviewBudgetSection } from "./OverviewBudgetSection";
 import { OverviewKpiSection } from "./OverviewKpiSection";
 import { OverviewPlatformSection } from "./OverviewPlatformSection";
 
+import AiButtonSvg from "@/assets/icon/ai/ai-요약버튼.svg?react";
 import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
-import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
