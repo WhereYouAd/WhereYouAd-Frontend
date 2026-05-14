@@ -93,7 +93,7 @@ export default memo(function OverviewCampaignSnapshotCard({
   return (
     <Card
       className={twMerge("flex w-full min-w-0 flex-col pb-3!", className)}
-      title="캠페인 스냅샷"
+      title="캠페인 미리보기"
       description={
         isPending || isError ? undefined : (
           <span className="font-caption text-text-placeholder">
