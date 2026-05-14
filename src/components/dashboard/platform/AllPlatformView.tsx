@@ -51,7 +51,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             isLoading ? (
               <BadgeSkeleton className="w-28" />
             ) : (
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
+              <Badge variant="surface" className="text-text-auth-sub">
                 ROAS 기준 상위 3
               </Badge>
             )
@@ -90,7 +90,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             isLoading || isAdStatusLoading ? (
               <BadgeSkeleton className="w-14" />
             ) : adStatus ? (
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
+              <Badge variant="surface" className="text-text-auth-sub">
                 총 {adStatus.totalCount}개
               </Badge>
             ) : null
@@ -119,9 +119,9 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           description={
             <ChartLegend
               items={[
-                { label: "클릭률", color: "#0084fe" },
-                { label: "전환율", color: "#0a3d91" },
-                { label: "노출수", color: "#4fc3f7" },
+                { label: "클릭률", colorClass: "bg-info-blue" },
+                { label: "전환율", colorClass: "bg-primary-500" },
+                { label: "노출수", colorClass: "bg-primary-300" },
               ]}
             />
           }

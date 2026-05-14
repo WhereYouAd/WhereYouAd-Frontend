@@ -1,0 +1,104 @@
+@theme {
+
+  /* PRIMARY */
+  --color-primary-100: #e8effe; /* Blue Tint */
+  --color-primary-200: #b8ccfc; /* Light Blue */
+  --color-primary-300: #7a9bf8; /* Mid Blue */
+  --color-primary-400: #4b74f5; /* CTA Blue */
+  --color-primary-500: #2f5bea; /* Brand Blue */
+
+  /* SURFACE */
+  --color-surface-100: #ffffff;
+  --color-surface-200: #f4f6fb;
+  --color-surface-300: #edf0f8;
+  --color-surface-400: #dde3f0;
+  --color-surface-500: #1b2b6b;
+
+  /* TEXT */
+  --color-text-100: #e4e7ec;
+  --color-text-200: #9ca3af;
+  --color-text-300: #374151;
+  --color-text-400: #111827;
+
+  /* TEXT - 역할 기준 고정 값 */
+  --color-text-title: var(--color-text-400);
+  --color-text-body: var(--color-text-300);
+  --color-text-muted: var(--color-text-200);
+  --color-text-placeholder: var(--color-text-200);
+  --color-text-disabled: var(--color-text-100);
+
+  /* STATUS — 예산 소진: 안정=blue, 주의=yellow, 위험=red */
+  --color-info-red: #ff2a4b;
+  --color-info-blue: #0084fe;
+  --color-info-yellow: #facc15;
+
+  /* OAuth 소셜 로그인 (카카오·네이버 브랜드 가이드 색) */
+  --color-oauth-kakao: #fee500;
+  --color-oauth-naver: #03c75a;
+
+  /* 부가 카피·보조 문장 (랜딩/인증 등) — 본문보다 살짝 프라이머리 틴트 */
+  --color-text-auth-sub: color-mix(
+    in srgb,
+    var(--color-text-300) 82%,
+    var(--color-primary-500) 18%
+  );
+
+  /* 랜딩 섹션 배경·목업 면 — brand-200 대비 살짝 구분되는 톤 */
+  --color-landing-section: color-mix(
+    in srgb,
+    var(--color-text-400) 4%,
+    transparent
+  );
+  --color-landing-surface: color-mix(
+    in srgb,
+    var(--color-text-400) 6%,
+    transparent
+  );
+
+  /* 타이포 스케일 — 유틸(.font-*)은 여기 값만 참조 */
+  --type-hero-size: 54px;
+  --type-hero-weight: 700;
+  --type-hero-leading: 140%;
+
+  --type-heading1-size: 32px;
+  --type-heading1-weight: 600;
+  --type-heading1-leading: 130%;
+
+  --type-heading2-size: 28px;
+  --type-heading2-weight: 600;
+  --type-heading2-leading: 130%;
+
+  --type-heading3-size: 24px;
+  --type-heading3-weight: 500;
+  --type-heading3-leading: 130%;
+
+  --type-heading4-size: 18px;
+  --type-heading4-weight: 500;
+  --type-heading4-leading: 130%;
+
+  --type-body1-size: 16px;
+  --type-body1-weight: 500;
+  --type-body1-leading: 140%;
+
+  --type-body2-size: 14px;
+  --type-body2-weight: 500;
+  --type-body2-leading: 140%;
+
+  --type-caption-size: 12px;
+  --type-caption-weight: 500;
+  --type-caption-leading: 130%;
+
+  --type-label-size: 14px;
+  --type-label-weight: 600;
+  --type-label-leading: 140%;
+
+  /* 애니메이션 이징 */
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 애니메이션 속도 */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+}

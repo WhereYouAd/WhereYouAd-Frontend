@@ -15,8 +15,8 @@ import { OverviewBudgetSection } from "./OverviewBudgetSection";
 import { OverviewKpiSection } from "./OverviewKpiSection";
 import { OverviewPlatformSection } from "./OverviewPlatformSection";
 
+import AiButtonSvg from "@/assets/icon/ai/ai-요약버튼.svg?react";
 import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
-import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
@@ -66,13 +66,13 @@ export default function OverviewDashboard() {
       <button
         type="button"
         onClick={() => setIsAiPanelOpen(true)}
-        className="group relative -mr-2 inline-flex h-8 cursor-pointer items-center justify-center overflow-hidden rounded-2xl px-1 outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="group relative -mr-2 inline-flex h-8 cursor-pointer items-center justify-center overflow-hidden rounded-2xl px-1 outline-none focus-visible:ring-2 focus-visible:ring-primary-300/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
         aria-label="AI 요약하기"
       >
-        <div className="pointer-events-none absolute inset-0 z-20 -translate-x-full skew-x-12 bg-linear-to-r from-transparent via-white/80 to-transparent mix-blend-overlay group-hover:animate-[shimmer_1.2s_ease-out]" />
+        <div className="pointer-events-none absolute inset-0 z-20 -translate-x-full skew-x-12 bg-linear-to-r from-transparent via-surface-100/80 to-transparent mix-blend-overlay group-hover:animate-[shimmer_1.2s_ease-out]" />
         <div className="relative z-10">
           <span className="sm:hidden">
-            <SparkleCircleIcon className="h-5 w-5 fill-current text-logo-1" />
+            <SparkleCircleIcon className="h-5 w-5 fill-current text-primary-500" />
           </span>
           <span className="hidden sm:block">
             <AiButtonSvg className="h-6 w-auto [&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />

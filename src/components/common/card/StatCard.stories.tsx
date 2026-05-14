@@ -34,7 +34,7 @@ export const WithTrendDown: TStatCardStory = {
 
 export const KpiGroup: TStatCardStory = {
   render: () => (
-    <div className="flex bg-white rounded-component-md border border-chart-inactive w-200">
+    <div className="flex bg-surface-100 rounded-2xl border border-surface-400 w-200">
       {[
         {
           title: "클릭수(CTR)",
@@ -58,7 +58,7 @@ export const KpiGroup: TStatCardStory = {
         },
       ].map((kpi, index) => (
         <Fragment key={kpi.title}>
-          {index > 0 && <div className="w-px bg-bg-disabled my-5" />}
+          {index > 0 && <div className="w-px bg-surface-300 my-5" />}
           <StatCard className="flex-1 border-0 rounded-none" {...kpi} />
         </Fragment>
       ))}

@@ -3,11 +3,13 @@ import React, {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
 import { RemoveScroll } from "react-remove-scroll";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
 import CloseIcon from "@/assets/icon/common/close.svg?react";
@@ -24,7 +26,8 @@ export interface IModalProps {
   title?: string;
 }
 
-const CLOSE_DURATION = 150; // --duration-fast 와 동일
+const easeOut = [0, 0, 0.2, 1] as const;
+const easeIn = [0.4, 0, 1, 1] as const;
 
 function Modal({
   isOpen,
@@ -37,44 +40,28 @@ function Modal({
   disableOverlayClick = false,
   title,
 }: IModalProps) {
+  const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const titleId = useId();
-  const [shouldRender, setShouldRender] = useState(isOpen);
-  const [isClosing, setIsClosing] = useState(false);
-  const isVisible = isOpen || isClosing; // 모달이 열려있거나 닫히는 중일 때
+  const [scrollLocked, setScrollLocked] = useState(isOpen);
 
-  // 진입/퇴장 렌더링 제어
   useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-      setIsClosing(false);
-    } else {
-      setIsClosing(true);
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-        setIsClosing(false);
-      }, CLOSE_DURATION);
-      return () => clearTimeout(timer);
-    }
+    if (isOpen) setScrollLocked(true);
   }, [isOpen]);
 
-  // 포커스 관리: 모달 열릴 때 포커스 이동, 닫힘 애니메이션 종료 후 원래 위치로 복귀
-  useEffect(() => {
-    if (isVisible) {
-      previousActiveElement.current = document.activeElement as HTMLElement;
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    previousActiveElement.current = document.activeElement as HTMLElement;
+    const id = requestAnimationFrame(() => modalRef.current?.focus());
+    return () => cancelAnimationFrame(id);
+  }, [isOpen]);
 
-      setTimeout(() => {
-        modalRef.current?.focus();
-      }, 0);
-    } else {
-      if (previousActiveElement.current) {
-        previousActiveElement.current.focus();
-      }
-    }
-  }, [isVisible]);
+  const handleExitComplete = useCallback(() => {
+    setScrollLocked(false);
+    previousActiveElement.current?.focus();
+  }, []);
 
-  // ESC 키로 모달 닫기
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -86,7 +73,6 @@ function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  // 오버레이 클릭으로 닫기
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (disableOverlayClick) return;
@@ -104,20 +90,18 @@ function Modal({
     [],
   );
 
-  if (!shouldRender) return null;
-
   const sizeClasses = {
-    sm: "max-w-modal-sm",
-    md: "max-w-modal-md",
-    lg: "max-w-modal-lg",
-    xl: "max-w-modal-xl",
+    sm: "max-w-sm",
+    md: "max-w-lg",
+    lg: "max-w-2xl",
+    xl: "max-w-4xl",
   };
 
   const paddingClasses = {
-    none: "p-modal-none",
-    sm: "p-modal-sm",
-    md: "p-modal-md",
-    lg: "p-modal-lg",
+    none: "p-0",
+    sm: "p-4",
+    md: "p-6",
+    lg: "p-8",
   };
 
   const modalRoot = document.getElementById("modal-root");
@@ -126,44 +110,67 @@ function Modal({
     return null;
   }
 
+  const openMs = reduceMotion ? 0 : 0.25;
+  const closeMs = reduceMotion ? 0 : 0.15;
+
   return createPortal(
-    // isVisible 기준으로 잠금: 닫힘 애니메이션 중에 배경 스크롤 막음
-    <RemoveScroll enabled={isVisible}>
-      <div
-        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 ${isClosing ? "animate-modal-overlay-out" : "animate-modal-overlay"}`}
-        onClick={handleOverlayClick}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-      >
-        <div
-          ref={modalRef}
-          className={twMerge(
-            `relative bg-white rounded-component-md shadow-Medium w-full max-h-[90vh] overflow-auto ${isClosing ? "animate-modal-content-out" : "animate-modal-content"}`,
-            sizeClasses[size],
-            paddingClasses[padding],
-            className,
-          )}
-          onClick={handleContentClick}
-          tabIndex={-1}
-        >
-          {title && (
-            <h2 id={titleId} className="sr-only">
-              {title}
-            </h2>
-          )}
-          {!hideCloseButton && (
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
-              aria-label="모달 닫기"
+    <RemoveScroll enabled={scrollLocked}>
+      <AnimatePresence onExitComplete={handleExitComplete}>
+        {isOpen ? (
+          <motion.div
+            key="modal-layer"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-text-400/50"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId : undefined}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{
+              opacity: 0,
+              transition: { duration: closeMs, ease: easeIn },
+            }}
+            transition={{ duration: openMs, ease: easeOut }}
+            onClick={handleOverlayClick}
+          >
+            <motion.div
+              ref={modalRef}
+              className={twMerge(
+                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Medium",
+                sizeClasses[size],
+                paddingClasses[padding],
+                className,
+              )}
+              initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{
+                opacity: 0,
+                scale: reduceMotion ? 1 : 0.95,
+                transition: { duration: closeMs, ease: easeIn },
+              }}
+              transition={{ duration: openMs, ease: easeOut }}
+              onClick={handleContentClick}
+              tabIndex={-1}
             >
-              <CloseIcon className="w-6 h-6 text-gray-600" />
-            </button>
-          )}
-          {children}
-        </div>
-      </div>
+              {title ? (
+                <h2 id={titleId} className="sr-only">
+                  {title}
+                </h2>
+              ) : null}
+              {!hideCloseButton ? (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="absolute top-4 right-4 rounded-full p-1 transition-colors hover:bg-surface-200"
+                  aria-label="모달 닫기"
+                >
+                  <CloseIcon className="h-6 w-6 text-text-muted" />
+                </button>
+              ) : null}
+              {children}
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </RemoveScroll>,
     modalRoot,
   );

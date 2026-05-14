@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import Card from "@/components/common/card/Card";
+
 import Input from "../common/input/Input";
 
 import EyeIcon from "@/assets/icon/common/eye.svg?react";
@@ -34,17 +36,15 @@ export default function PasswordSection({
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <Card className="p-8 tablet:p-10">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <div className="flex gap-4 items-center">
             <LockIcon />
-            <h2 className="font-heading4 text-text-main font-semibold!">
-              비밀번호 변경
-            </h2>
+            <h2 className="font-heading4 text-text-title">비밀번호 변경</h2>
           </div>
 
-          <p className="font-body2 text-text-sub mt-2">
+          <p className="mt-2 font-body2 text-text-muted">
             안전한 계정 사용을 위해 주기적인 비밀번호 변경을 권장합니다
             <br /> 영문, 숫자, 특수문자가 모두 포함된 8~16자리의 비밀번호를
             설정해 주세요
@@ -63,7 +63,11 @@ export default function PasswordSection({
             helperText={errors.currentPassword}
             rightElement={
               <button type="button" onClick={() => setShowCurrent((p) => !p)}>
-                {showCurrent ? <EyeOffIcon /> : <EyeIcon />}
+                {showCurrent ? (
+                  <EyeOffIcon className="w-5 h-auto text-text-muted" />
+                ) : (
+                  <EyeIcon className="w-5 h-auto text-text-muted" />
+                )}
               </button>
             }
           />
@@ -86,7 +90,11 @@ export default function PasswordSection({
               aria-pressed={showCurrent}
               onClick={() => setShowNew((p) => !p)}
             >
-              {showNew ? <EyeOffIcon /> : <EyeIcon />}
+              {showNew ? (
+                <EyeOffIcon className="w-5 h-auto text-text-muted" />
+              ) : (
+                <EyeIcon className="w-5 h-auto text-text-muted" />
+              )}
             </button>
           }
         />
@@ -100,11 +108,15 @@ export default function PasswordSection({
           helperText={errors.confirmNewPassword}
           rightElement={
             <button type="button" onClick={() => setShowConfirm((p) => !p)}>
-              {showConfirm ? <EyeOffIcon /> : <EyeIcon />}
+              {showConfirm ? (
+                <EyeOffIcon className="w-5 h-auto text-text-muted" />
+              ) : (
+                <EyeIcon className="w-5 h-auto text-text-muted" />
+              )}
             </button>
           }
         />
       </div>
-    </div>
+    </Card>
   );
 }

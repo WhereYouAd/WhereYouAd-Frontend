@@ -1,0 +1,31 @@
+/* AI 리포트 인쇄 — 드로어 패널 외 모든 요소 숨김 */
+@media print {
+  /*
+   * !important: 화면용 Tailwind·컴포넌트 스타일이 인쇄 시에도 적용되어 레이아웃이 어긋나는 것을
+   * 막기 위해 선언 우선순위를 올림. 인쇄 전용 규칙만 해당하며, 이 블록 안에서만 사용.
+   */
+  body.ai-report-printing > *:not([data-drawer-portal]) {
+    display: none !important;
+  }
+
+  body.ai-report-printing [data-drawer-portal] {
+    position: static !important;
+    display: block !important;
+  }
+
+  body.ai-report-printing [data-print-hide] {
+    display: none !important;
+  }
+
+  body.ai-report-printing [data-drawer-portal] > div:last-child {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}

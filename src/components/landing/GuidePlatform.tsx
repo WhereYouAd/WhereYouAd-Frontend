@@ -72,25 +72,25 @@ export default function GuidePlatform() {
   }
 
   return (
-    <div className="w-full h-[360px] md:h-[420px] bg-transparent font-sans">
-      <div className="h-full rounded-[28px] bg-white/65 border border-chart-inactive/60 backdrop-blur-sm p-5 md:p-6 flex flex-col gap-4">
+    <div className="h-[360px] w-full bg-transparent md:h-[420px]">
+      <div className="h-full rounded-[28px] bg-surface-100/65 border border-surface-400/60 backdrop-blur-sm p-5 md:p-6 flex flex-col gap-4">
         <button
           type="button"
           onClick={() => setIsMenuOpen((prev) => !prev)}
           aria-expanded={isMenuOpen}
-          className="h-11 w-full rounded-xl px-4 border border-chart-inactive/70 bg-white text-[13px] font-semibold text-text-main flex items-center justify-between hover:bg-brand-300/40 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/30"
+          className="flex h-11 w-full items-center justify-between rounded-xl border border-surface-400/70 bg-surface-100 px-4 font-body2 text-text-title transition-ui-smooth hover:bg-primary-100/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/30"
         >
           <span>플랫폼 선택</span>
           <span
             aria-hidden
-            className={`text-text-sub transition-transform duration-200 ${isMenuOpen ? "rotate-180" : "rotate-0"}`}
+            className={`text-text-muted transition-transform duration-200 ${isMenuOpen ? "rotate-180" : "rotate-0"}`}
           >
             <ChevronDown className="w-4.5 h-4.5" />
           </span>
         </button>
 
         {isMenuOpen && (
-          <div className="bg-white border border-chart-inactive/70 rounded-component-md shadow-[0_10px_24px_rgba(0,0,0,0.06)] overflow-hidden">
+          <div className="bg-surface-100 border border-surface-400/70 rounded-2xl shadow-landing-dropdown overflow-hidden">
             <div>
               {PLATFORMS.map((platform) => {
                 const isSelected = selectedIds.includes(platform.id);
@@ -99,10 +99,8 @@ export default function GuidePlatform() {
                     key={platform.id}
                     type="button"
                     onClick={() => togglePlatform(platform.id)}
-                    className={`w-full h-14 px-4 flex items-center justify-start border-b last:border-b-0 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/25 focus-visible:ring-inset ${
-                      isSelected
-                        ? "bg-brand-300/22 border-chart-inactive/40"
-                        : "bg-white hover:bg-brand-300/25 border-chart-inactive/40"
+                    className={`w-full h-14 px-4 flex items-center justify-start border-b last:border-b-0 transition-ui-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/25 focus-visible:ring-inset bg-surface-100 border-surface-400/40 ${
+                      isSelected ? "" : "hover:bg-surface-100"
                     }`}
                   >
                     <div

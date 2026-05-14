@@ -8,7 +8,7 @@ interface ISkeletonProps extends HTMLAttributes<HTMLDivElement> {
 export function Skeleton({ className, ...props }: ISkeletonProps) {
   return (
     <div
-      className={twMerge("animate-shimmer rounded bg-gray-200", className)}
+      className={twMerge("animate-shimmer rounded bg-surface-300", className)}
       {...props}
     />
   );
@@ -17,7 +17,10 @@ export function Skeleton({ className, ...props }: ISkeletonProps) {
 export function SkeletonCircle({ className, ...props }: ISkeletonProps) {
   return (
     <div
-      className={twMerge("animate-shimmer rounded-full bg-gray-200", className)}
+      className={twMerge(
+        "animate-shimmer rounded-full bg-surface-300",
+        className,
+      )}
       {...props}
     />
   );

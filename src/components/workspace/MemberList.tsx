@@ -10,6 +10,7 @@ import type {
 import InviteMemberModal from "./InviteMemberModal";
 import MemberItem from "./MemberItem";
 import Button from "../common/button/Button";
+import Card from "../common/card/Card";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 
@@ -65,13 +66,11 @@ export default function MemberList({
   const hasVisibleItems = members.length > 0;
 
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <Card className="p-8">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
-          <h2 className="font-heading4 text-text-main font-semibold!">
-            팀 구성원
-          </h2>
-          <p className="font-body2 text-text-sub mt-2">
+          <h2 className="font-heading4 text-text-title">팀 구성원</h2>
+          <p className="mt-2 font-body2 text-text-muted">
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
         </div>
@@ -81,7 +80,7 @@ export default function MemberList({
           size="small"
           aria-label="팀원 초대 버튼"
           onClick={openInviteMember}
-          className="p-5 py-6 rounded-component-md"
+          className="p-5 py-6 rounded-2xl"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           팀원 초대
@@ -89,12 +88,12 @@ export default function MemberList({
       </header>
 
       {!hasVisibleItems ? (
-        <div className="flex min-h-40 items-center justify-center rounded-component-md bg-gray-50 text-text-sub">
+        <div className="flex min-h-40 items-center justify-center rounded-2xl bg-surface-200 text-text-muted">
           아직 등록된 팀원이 없습니다
         </div>
       ) : (
         <>
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-surface-400">
             {members.map((member) => (
               <MemberItem
                 key={member.memberId}
@@ -108,7 +107,7 @@ export default function MemberList({
           </ul>
           <div ref={observerRef} className="w-full h-6" />
           {isFetchingNextPage && (
-            <div className="pt-4 text-center font-body2 text-text-sub">
+            <div className="pt-4 text-center font-body2 text-text-muted">
               팀원을 더 불러오는 중입니다...
             </div>
           )}
@@ -120,6 +119,6 @@ export default function MemberList({
         orgId={orgId}
         inviteItems={inviteItems}
       />
-    </div>
+    </Card>
   );
 }

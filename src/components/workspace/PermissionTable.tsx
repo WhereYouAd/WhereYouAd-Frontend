@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import type { TPermissionRow } from "@/types/workspace/workspace";
 
 import Button from "../common/button/Button";
+import Card from "../common/card/Card";
 import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
@@ -64,8 +65,8 @@ const initialMemberPermissionState: TMemberPermissionState =
 
 function AdminCheckBadge() {
   return (
-    <div className="inline-flex w-8 h-8 bg-chart-5/15 justify-center items-center rounded-component-lg">
-      <CheckIcon className="w-5 h-5 text-chart-3 stroke-2" />
+    <div className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-primary-100/80">
+      <CheckIcon className="h-5 w-5 stroke-2 text-primary-500" />
       <span className="sr-only">가능</span>
     </div>
   );
@@ -109,12 +110,10 @@ export default function PermissionTable() {
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <Card className="p-8">
       <header className="mb-7">
-        <h2 className="font-heading4 text-text-main font-semibold!">
-          권한 설정
-        </h2>
-        <p className="font-body2 text-text-sub mt-2">
+        <h2 className="font-heading4 text-text-title">권한 설정</h2>
+        <p className="mt-2 font-body2 text-text-muted">
           역할별 권한을 확인하고 설정할 수 있습니다
         </p>
       </header>
@@ -122,7 +121,7 @@ export default function PermissionTable() {
       <div className="w-full overflow-hidden">
         <table className="w-full table-fixed">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-surface-400">
               <th className="text-text-auth-sub py-2 text-left">
                 기능 및 작업
               </th>
@@ -136,11 +135,11 @@ export default function PermissionTable() {
             {permissionRows.map((row) => (
               <tr
                 key={row.key}
-                className="border-b border-gray-100 last:border-b-0"
+                className="border-b border-surface-400 last:border-b-0"
               >
                 <td className="py-5">
                   <div className="flex flex-col">
-                    <p className="text-text-main font-semibold">{row.label}</p>
+                    <p className="font-label text-text-title">{row.label}</p>
                     <p className="text-text-auth-sub font-body2">
                       {row.description}
                     </p>
@@ -165,28 +164,47 @@ export default function PermissionTable() {
           </tbody>
         </table>
       </div>
-      <div className="flex gap-3 items-center justify-end mt-5">
-        <Button
-          type="button"
-          variant="secondary"
-          size="big"
-          onClick={handleResetChange}
-          disabled={!hasChanges || isSaving}
-          className="rounded-component-md"
-        >
-          변경 취소
-        </Button>
-        <Button
-          type="button"
-          variant="primary"
-          size="big"
-          onClick={handleSaveChanges}
-          disabled={!hasChanges || isSaving}
-          className="rounded-component-md"
-        >
-          {isSaving ? "저장 중..." : "변경사항 저장하기"}
-        </Button>
+
+      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 sm:px-6">
+        {hasChanges ? (
+          <p
+            role="status"
+            className="mb-4 rounded-xl bg-primary-100/50 px-4 py-3 font-body2 text-text-title"
+          >
+            <span className="font-label text-primary-500">저장 필요</span>
+            <span className="text-text-muted"> · </span>
+            멤버 권한이 변경되었습니다. 반영하려면 저장을 눌러주세요. 취소하면
+            이전 설정으로 돌아갑니다.
+          </p>
+        ) : (
+          <p className="mb-4 font-body2 text-text-muted">
+            멤버 열의 토글을 바꾼 뒤, 아래에서 저장하거나 변경을 취소할 수
+            있습니다.
+          </p>
+        )}
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="big"
+            onClick={handleResetChange}
+            disabled={!hasChanges || isSaving}
+            className="rounded-2xl"
+          >
+            변경 취소
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="big"
+            onClick={handleSaveChanges}
+            disabled={!hasChanges || isSaving}
+            className="rounded-2xl"
+          >
+            {isSaving ? "저장 중..." : "변경사항 저장하기"}
+          </Button>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }

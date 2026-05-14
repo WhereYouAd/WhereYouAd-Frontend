@@ -36,3 +36,4 @@ storybook-static
 scripts/strip-cursor-attribution.mjs
 scripts/strip-cursor-attribution 2.mjs
 scripts/optimize-landing-images.mjs
+

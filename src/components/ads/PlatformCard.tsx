@@ -14,7 +14,7 @@ interface IPlatformCardProps {
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
-  kakao: <KakaoLogo className="w-full h-full" />,
+  kakao: <KakaoLogo className="h-full w-full text-text-title" />,
   google: <GoogleLogo className="w-full h-full" />,
   naver: <NaverLogo className="w-full h-full" />,
 };

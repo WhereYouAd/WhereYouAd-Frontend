@@ -103,7 +103,7 @@ export default function Drawer({
     >
       <div
         data-print-hide
-        className="absolute inset-0 bg-black/40 transition-opacity"
+        className="absolute inset-0 bg-text-400/40 transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -111,9 +111,9 @@ export default function Drawer({
         ref={panelRef}
         className={twMerge(
           // [데스크톱] 우측 슬라이드
-          "relative w-full rounded-l-4xl overflow-hidden max-w-md bg-white shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-out",
+          "relative w-full rounded-l-4xl overflow-hidden max-w-md bg-surface-100 shadow-2xl h-full flex flex-col transform transition-transform duration-300 ease-out",
           // [태블릿] 하단 bottom sheet
-          "tablet:rounded-t-4xl tablet:rounded-bl-none tablet:h-auto tablet:max-h-[85vh] tablet:max-w-none tablet:border-t tablet:border-bg-disabled",
+          "tablet:rounded-t-4xl tablet:rounded-bl-none tablet:h-auto tablet:max-h-[85vh] tablet:max-w-none tablet:border-t tablet:border-surface-400",
           isOpen
             ? "translate-x-0 tablet:translate-y-0"
             : "translate-x-full tablet:translate-x-0 tablet:translate-y-full",
@@ -131,37 +131,37 @@ export default function Drawer({
           aria-orientation="vertical"
           tabIndex={0}
         >
-          <div className="w-20 h-1 rounded-full bg-bg-disabled" />
+          <div className="w-20 h-1 rounded-full bg-surface-300" />
         </div>
         {!hideHeader && (
           <div
             data-print-hide
-            className="flex items-center justify-between px-6 pt-4 pb-4 shrink-0"
+            className="flex items-center justify-between px-4 pt-3 pb-3 shrink-0"
           >
             {title ? (
               <>
                 {typeof title === "string" ? (
-                  <h2 className="font-heading3 text-text-main font-bold">
-                    {title}
-                  </h2>
+                  <h2 className="font-heading3 text-text-title">{title}</h2>
                 ) : (
                   title
                 )}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-0.5">
                   {dropdownItems && dropdownItems.length > 0 && (
                     <DropdownMenu
-                      trigger={<MoreIcon className="text-text-disabled" />}
+                      trigger={
+                        <MoreIcon className="h-4 w-4 text-text-disabled" />
+                      }
                       aria-label="더보기"
-                      className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
+                      className="h-8 w-8 cursor-pointer rounded-lg hover:bg-surface-200 transition-colors flex items-center justify-center"
                       items={dropdownItems}
                     />
                   )}
                   <button
                     onClick={onClose}
-                    className="tablet:hidden h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
+                    className="tablet:hidden h-8 w-8 cursor-pointer rounded-lg hover:bg-surface-200 transition-colors flex items-center justify-center outline-none"
                     aria-label="닫기"
                   >
-                    <CloseIcon className="text-text-disabled" />
+                    <CloseIcon className="h-4 w-4 text-text-disabled" />
                   </button>
                 </div>
               </>
@@ -169,17 +169,19 @@ export default function Drawer({
               <>
                 <button
                   onClick={onClose}
-                  className="tablet:hidden h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center outline-none"
+                  className="tablet:hidden h-8 w-8 cursor-pointer rounded-lg hover:bg-surface-200 transition-colors flex items-center justify-center outline-none"
                   aria-label="닫기"
                 >
-                  <CloseIcon className="text-text-disabled" />
+                  <CloseIcon className="h-4 w-4 text-text-disabled" />
                 </button>
                 {dropdownItems && (
                   <div className="ml-auto">
                     <DropdownMenu
-                      trigger={<MoreIcon className="text-text-disabled" />}
+                      trigger={
+                        <MoreIcon className="h-4 w-4 text-text-disabled" />
+                      }
                       aria-label="더보기"
-                      className="h-10 w-10 cursor-pointer rounded-component-sm hover:bg-gray-100 transition-colors flex items-center justify-center"
+                      className="h-8 w-8 cursor-pointer rounded-lg hover:bg-surface-200 transition-colors flex items-center justify-center"
                       items={dropdownItems}
                     />
                   </div>
@@ -190,7 +192,7 @@ export default function Drawer({
         )}
         <div
           className={twMerge(
-            "flex-1 p-6 bg-white",
+            "flex-1 bg-surface-100 p-0",
             disableScroll ? "overflow-hidden" : "overflow-y-auto",
           )}
         >

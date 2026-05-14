@@ -43,7 +43,7 @@ export const LANDING_TIMELINE_CARDS: TLandingTimelineCard[] = [
     colStart: 3.2,
     colEnd: 9,
     row: 1,
-    colorClass: "bg-status-blue",
+    colorClass: "bg-primary-300",
   },
   {
     id: 2,
@@ -52,7 +52,7 @@ export const LANDING_TIMELINE_CARDS: TLandingTimelineCard[] = [
     colStart: 8.9,
     colEnd: 15.3,
     row: 2,
-    colorClass: "bg-logo-2",
+    colorClass: "bg-primary-400",
   },
   {
     id: 3,
@@ -61,6 +61,6 @@ export const LANDING_TIMELINE_CARDS: TLandingTimelineCard[] = [
     colStart: 2.4,
     colEnd: 8,
     row: 3,
-    colorClass: "bg-status-green",
+    colorClass: "bg-primary-500",
   },
 ];

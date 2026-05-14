@@ -34,9 +34,9 @@ export default function DeleteMemberModal({
     >
       <div className="text-center px-2 py-6">
         <div className="flex justify-center mb-6">
-          <WarnIcon className="text-status-red w-15 h-15" aria-hidden="true" />
+          <WarnIcon className="h-15 w-15 text-info-red" aria-hidden="true" />
         </div>
-        <h3 className="font-heading2 text-text-main mb-3">
+        <h3 className="mb-3 font-heading2 text-text-title">
           팀원을 삭제하시겠습니까?
         </h3>
         <p className="font-body1 text-text-auth-sub mb-7">

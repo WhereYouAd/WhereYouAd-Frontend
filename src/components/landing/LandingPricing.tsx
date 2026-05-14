@@ -8,7 +8,7 @@ import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
 function CheckIcon({ enabled }: { enabled: boolean }) {
   return (
     <svg
-      className={`w-5 h-5 shrink-0 ${enabled ? "text-logo-2" : "text-text-disabled"}`}
+      className={`w-5 h-5 shrink-0 ${enabled ? "text-primary-400" : "text-text-disabled"}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -34,15 +34,11 @@ export default function LandingPricing() {
     <section
       id="pricing"
       tabIndex={-1}
-      className="py-24 md:py-40 bg-landing-section relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] overflow-hidden focus-visible:outline-none"
+      className="py-24 md:py-40 bg-surface-100 relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] overflow-hidden focus-visible:outline-none"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-55"
-        style={{
-          backgroundImage:
-            "radial-gradient(900px 420px at 20% 0%, rgba(96,136,254,0.18), transparent 62%), radial-gradient(900px 420px at 85% 15%, rgba(46,180,255,0.14), transparent 60%)",
-        }}
+        className="pointer-events-none absolute inset-0 opacity-35 bg-landing-guide-wash"
       />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -70,38 +66,38 @@ export default function LandingPricing() {
                 delay: i * 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`bg-white rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
+              className={`bg-surface-100 rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
                 plan.featured
-                  ? "order-first md:order-0 border border-logo-2/55 shadow-[0_18px_55px_rgba(96,136,254,0.14)] -translate-y-1"
-                  : "border border-chart-inactive/70 shadow-card hover:shadow-card-hover"
+                  ? "order-first md:order-0 border border-primary-400/55 shadow-landing-featured-plan -translate-y-1"
+                  : "border border-surface-400/70 shadow-card hover:shadow-card-hover"
               }`}
             >
               {plan.featured && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-logo-2 text-white px-4 py-1.5 rounded-[99px] text-[12px] font-semibold shadow-sm">
-                  가장 인기
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[99px] bg-primary-400 px-4 py-1.5 font-caption text-surface-100 shadow-landing-pill">
+                  인기 플랜
                 </div>
               )}
 
-              <h3 className="text-xl font-bold text-text-main mb-2">
+              <h3 className="mb-2 font-heading4 text-text-title">
                 {plan.name}
               </h3>
-              <p className="font-body2 text-text-auth-sub mb-6 leading-relaxed break-keep">
+              <p className="mb-6 break-keep font-body2 text-text-auth-sub">
                 {plan.target}
               </p>
 
               <div className="mb-7">
                 <div className="flex items-end gap-2">
-                  <span className="text-[30px] leading-none font-extrabold tracking-[-0.02em] text-text-main">
+                  <span className="font-heading2 text-text-title tabular-nums leading-none">
                     {plan.price}
                   </span>
                   {plan.priceUnit && (
-                    <span className="pb-1 text-[14px] font-semibold text-text-sub">
+                    <span className="pb-1 font-body2 text-text-muted">
                       {plan.priceUnit}
                     </span>
                   )}
                 </div>
                 {plan.priceUnit && plan.priceSubText && (
-                  <div className="mt-2 font-caption text-text-sub">
+                  <div className="mt-2 font-caption text-text-muted">
                     {plan.priceSubText}
                   </div>
                 )}
@@ -110,11 +106,11 @@ export default function LandingPricing() {
               {plan.name === "프로" ? (
                 <a
                   href={proMailtoHref}
-                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 inline-flex items-center justify-center ${
+                  className={`mb-4 inline-flex h-12 w-full items-center justify-center rounded-2xl font-heading4 transition-colors ${
                     plan.featured
-                      ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
-                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
-                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
+                      : "bg-text-disabled text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100`}
                 >
                   {plan.buttonText}
                 </a>
@@ -122,22 +118,24 @@ export default function LandingPricing() {
                 <button
                   type="button"
                   onClick={handleCta}
-                  className={`w-full h-12 rounded-component-md font-semibold transition-colors mb-4 ${
+                  className={`mb-4 h-12 w-full rounded-2xl font-heading4 transition-colors ${
                     plan.featured
-                      ? "bg-logo-2 text-white hover:bg-logo-2-dark shadow-[0_10px_24px_rgba(96,136,254,0.28)]"
-                      : "bg-white border border-chart-inactive/70 text-text-main hover:bg-brand-300"
-                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-logo-2/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
+                      : "bg-text-disabled/50 text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
+                  } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100`}
                 >
                   {plan.buttonText}
                 </button>
               )}
 
-              <p className="text-[13px] text-text-sub mb-8">{plan.assurance}</p>
+              <p className="mb-8 font-body2 text-text-muted">
+                {plan.assurance}
+              </p>
 
-              <div className="h-px w-full bg-chart-inactive/70 mb-7" />
+              <div className="h-px w-full bg-surface-400/70 mb-7" />
 
               <ul
-                className={`space-y-4 text-sm font-body2 flex-1 ${plan.featured ? "text-text-main" : "text-text-auth-sub"}`}
+                className={`flex-1 space-y-4 font-body2 ${plan.featured ? "text-text-title" : "text-text-auth-sub"}`}
               >
                 {plan.features.map((feature) => (
                   <li key={feature.text} className="flex items-center gap-3">
