@@ -13,9 +13,8 @@ import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
+import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
-import NaverIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 
@@ -46,7 +45,9 @@ export default function Login() {
 
   return (
     <AuthFormShell variant="page">
-      <h1 className="text-center font-heading2 text-text-main mb-10">로그인</h1>
+      <h1 className="text-center font-heading2 text-text-title mb-10">
+        로그인
+      </h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
         <CommonAuthInput
@@ -68,7 +69,7 @@ export default function Login() {
 
         <Link
           to="/find-email"
-          className="block w-full text-center mt-3 font-caption text-text-sub underline underline-offset-4 hover:text-text-auth-sub"
+          className="block w-full text-center mt-3 font-caption text-text-body underline underline-offset-4 hover:text-text-auth-sub"
         >
           이메일/비밀번호를 잊어버렸어요
         </Link>
@@ -84,25 +85,16 @@ export default function Login() {
         <div className="flex items-center gap-12">
           <button
             type="button"
-            className="w-14 h-14 rounded-full flex items-center justify-center bg-social-kakao hover:scale-110 transition-transform duration-200 shadow-Soft"
-            aria-label="카카오로 로그인"
-            onClick={() => handleSocialLogin("kakao")}
-          >
-            <KakaoIcon className="w-6 h-auto" />
-          </button>
-
-          <button
-            type="button"
-            className="w-14 h-14 rounded-full flex items-center justify-center bg-social-naver hover:scale-110 transition-transform duration-200 shadow-Soft"
+            className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="네이버로 로그인"
             onClick={() => handleSocialLogin("naver")}
           >
-            <NaverIcon className="w-5 h-auto text-white" />
+            <NaverIcon className="block h-full w-full" aria-hidden />
           </button>
 
           <button
             type="button"
-            className="w-14 h-14 rounded-full flex items-center justify-center bg-white border border-gray-100 hover:scale-110 transition-transform duration-200 shadow-Soft"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-surface-100 shadow-Soft transition-transform duration-200 hover:scale-110"
             aria-label="구글로 로그인"
             onClick={() => toast.error("준비중입니다.")}
           >
@@ -111,11 +103,11 @@ export default function Login() {
         </div>
 
         <div className="w-full mt-12 flex items-center gap-4 px-10">
-          <div className="flex-1 h-px bg-gray-100" />
+          <div className="flex-1 h-px bg-surface-300" />
           <span className="font-body2 text-text-placeholder select-none">
             또는
           </span>
-          <div className="flex-1 h-px bg-gray-100" />
+          <div className="flex-1 h-px bg-surface-300" />
         </div>
 
         <Link

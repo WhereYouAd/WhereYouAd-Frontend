@@ -1,5 +1,7 @@
 import type React from "react";
 
+import Card from "@/components/common/card/Card";
+
 import Button from "../common/button/Button";
 import Input from "../common/input/Input";
 
@@ -32,18 +34,16 @@ export default function ProfileSection({
   resetImage,
 }: TProfileSectionProps) {
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <Card className="p-8 tablet:p-10">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
-          <h2 className="font-heading4 text-text-main font-semibold!">
-            프로필
-          </h2>
+          <h2 className="font-heading4 text-text-title">프로필</h2>
         </div>
       </header>
       <div className="flex tablet:flex-row gap-10">
         <div className="flex flex-col items-center basis-1/4 shrink-0">
-          <div className="w-full text-text-main mb-4 select-none">
+          <div className="mb-4 w-full select-none text-text-title">
             프로필 이미지
           </div>
           <input
@@ -53,23 +53,31 @@ export default function ProfileSection({
             className="hidden"
             onChange={onPickFile}
           />
-          <div className="relative h-60 w-60 overflow-hidden rounded-full border border-gray-100 bg-gray-100 shadow-sm flex items-center justify-center">
+          <button
+            type="button"
+            onClick={openFilePicker}
+            aria-label="프로필 이미지 업로드 또는 변경"
+            className="relative flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
+          >
             {preview ? (
               <img
                 src={preview}
-                alt="프로필 이미지 미리보기"
-                className="w-full h-full object-cover"
+                alt=""
+                className="h-full w-full object-cover"
               />
             ) : (
-              <CameraIcon className="text-text-disabled w-10 h-10" />
+              <CameraIcon
+                className="h-10 w-10 shrink-0 text-text-placeholder"
+                aria-hidden
+              />
             )}
-          </div>
+          </button>
           <div className="mt-5 flex gap-3">
             <Button
               variant="custom"
               type="button"
               onClick={openFilePicker}
-              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+              className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
               aria-label="프로필 이미지 변경 버튼"
             >
               변경
@@ -78,7 +86,7 @@ export default function ProfileSection({
               variant="custom"
               type="button"
               onClick={resetImage}
-              className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out disabled:cursor-not-allowed disabled:opacity-40"
+              className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="프로필 이미지 초기화 버튼"
               disabled={!preview}
             >
@@ -95,9 +103,9 @@ export default function ProfileSection({
             />
           </div>
           <div className="col-span-2">
-            <div className="text-text-main mb-2 ml-1">소속 조직</div>
+            <div className="mb-2 ml-1 text-text-title">소속 조직</div>
             {organizations.length === 0 ? (
-              <div className="text-text-disabled font-body2 ml-1">
+              <div className="ml-1 font-body2 text-text-muted">
                 소속된 조직이 없습니다.
               </div>
             ) : (
@@ -108,14 +116,13 @@ export default function ProfileSection({
                       <Input
                         value={`${org.name}  (${org.position})`}
                         disabled
-                        inputClassName="text-text-main"
-                        containerClassName="bg-gray-100"
+                        containerClassName="bg-surface-200"
                         readOnly
                       />
                     </div>
                   ))}
 
-                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
                     조직 정보는 별도 조직페이지에서 수정할 수 있습니다.
                   </div>
                 </div>
@@ -127,10 +134,10 @@ export default function ProfileSection({
               label="이메일"
               value={email}
               disabled={true}
-              rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+              rightElement={<CheckIcon className="h-6 w-6 text-primary-500" />}
               readOnly
             />
-            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
               이메일은 변경할 수 없습니다.
             </div>
           </div>
@@ -139,15 +146,15 @@ export default function ProfileSection({
               label="전화번호"
               value={phoneNumber}
               disabled={true}
-              rightElement={<CheckIcon className="w-6 h-6 text-chart-3" />}
+              rightElement={<CheckIcon className="h-6 w-6 text-primary-500" />}
               readOnly
             />
-            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
               전화번호는 변경할 수 없습니다.
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -16,9 +16,9 @@ import BudgetGaugeChart, {
 import OverviewCampaignSnapshotCard from "@/pages/dashboard/overview/OverviewCampaignSnapshotCard";
 
 const budgetStatusLegendItems: IChartLegendItem[] = [
-  { label: "안정", colorClass: "bg-status-green" },
-  { label: "주의", colorClass: "bg-status-yellow" },
-  { label: "위험", colorClass: "bg-status-red" },
+  { label: "안정", colorClass: "bg-info-blue" },
+  { label: "주의", colorClass: "bg-info-yellow" },
+  { label: "위험", colorClass: "bg-info-red" },
 ];
 
 function BudgetGaugeSkeleton() {
@@ -40,11 +40,11 @@ function BudgetGaugeSkeleton() {
         </div>
       </div>
       <div className="flex shrink-0 flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-bg-disabled/25 bg-bg-surface/40 p-4">
+        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/40 p-4">
           <Skeleton className="h-3 w-16" />
           <Skeleton className="h-7 w-36" />
         </div>
-        <div className="flex items-center gap-3 rounded-2xl bg-chart-inactive px-5 py-4">
+        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
           <Skeleton className="size-5 shrink-0 rounded-full" />
           <Skeleton className="h-10 flex-1 rounded-md" />
         </div>
@@ -74,7 +74,7 @@ export function OverviewBudgetSection({
           title="예산 소진 현황"
           description={
             <ChartLegend
-              className="flex-wrap gap-x-4 gap-y-1 [&_span]:font-medium [&_span]:text-text-sub"
+              className="flex-wrap gap-x-4 gap-y-1 [&_span]:text-text-muted"
               items={budgetStatusLegendItems}
             />
           }
@@ -82,7 +82,6 @@ export function OverviewBudgetSection({
             budgetStatus ? (
               <Badge
                 variant={statusBadgeVariant[budgetStatus]}
-                size="sm"
                 className="px-2"
               >
                 {budgetStatus}
@@ -92,7 +91,7 @@ export function OverviewBudgetSection({
         >
           <div className="flex min-h-0 flex-1 flex-col">
             {isBudgetError ? (
-              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-status-red">
+              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
                 {budgetError?.message ?? (
                   <>
                     예산 데이터를 불러오지 못했습니다.

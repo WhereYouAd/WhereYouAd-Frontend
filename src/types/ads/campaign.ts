@@ -6,7 +6,10 @@ export type TStatus = "ON_GOING" | "PAUSED" | "OVER";
 export interface IAd {
   id: number;
   name: string;
-  provider: TProvider[];
+  /** API가 `TProvider` 단일 값 또는 배열로 줄 수 있음 */
+  provider?: TProvider[] | TProvider;
+  /** 일부 응답은 `provider` 대신 이 필드만 포함 */
+  providerType?: TProvider;
   status: TStatus;
 
   trackingUrl?: string;

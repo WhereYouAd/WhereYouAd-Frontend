@@ -15,11 +15,9 @@ export default function LandingSectionHeader({
 
   return (
     <div className={`${alignClass} ${className}`.trim()}>
-      <h2 className="font-heading1 md:text-[40px] font-bold text-text-main leading-snug tracking-tight">
-        {title}
-      </h2>
+      <h2 className="font-heading1 text-text-title">{title}</h2>
       {subtitle && (
-        <p className="mt-3 font-body1 text-text-auth-sub leading-relaxed break-keep">
+        <p className="mt-3 break-keep font-body1 text-text-auth-sub">
           {subtitle}
         </p>
       )}

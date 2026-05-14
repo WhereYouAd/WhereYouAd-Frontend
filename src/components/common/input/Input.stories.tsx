@@ -49,7 +49,7 @@ export const RightElement: TInputStory = {
     rightElement: (
       <button
         type="button"
-        className="font-body2 text-text-sub hover:text-text-disabled"
+        className="font-body2 text-text-auth-sub hover:text-text-disabled"
       >
         지우기
       </button>

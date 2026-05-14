@@ -17,7 +17,7 @@ import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 function PlatformRankingSkeleton() {
   return (
-    <div className="flex flex-col divide-y divide-[#F2F4F6]">
+    <div className="flex flex-col divide-y divide-surface-200">
       {Array.from({ length: 3 }).map((_, i) => (
         <div
           key={i}
@@ -70,12 +70,10 @@ export function OverviewPlatformSection({
         <Button
           variant="tertiary"
           onClick={onNavigate}
-          className="group flex h-8 items-center gap-1 rounded-full border-none bg-bg-surface/60 px-4 text-text-sub transition-colors hover:bg-bg-surface hover:text-text-auth-sub"
+          className="group flex h-8 items-center gap-1 rounded-full border-none bg-surface-200/60 px-4 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body"
         >
-          <span className="font-caption font-semibold">
-            플랫폼 대시보드 살펴보기
-          </span>
-          <ChevronDoubleRightIcon className="h-4.5 w-4.5" />
+          <span className="font-caption">플랫폼 대시보드 살펴보기</span>
+          <ChevronDoubleRightIcon className="h-4.5 w-4.5 text-text-muted group-hover:text-text-body" />
         </Button>
       }
       description={
@@ -89,7 +87,7 @@ export function OverviewPlatformSection({
       }
     >
       {isRankingsError ? (
-        <div className="flex items-center justify-center py-16 font-body2 text-status-red">
+        <div className="flex items-center justify-center py-16 font-body2 text-info-red">
           {rankingsError?.message ??
             "플랫폼 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
         </div>

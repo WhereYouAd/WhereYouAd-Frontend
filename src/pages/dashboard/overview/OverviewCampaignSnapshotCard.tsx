@@ -34,19 +34,19 @@ const SnapshotRow = memo(function SnapshotRow({
     <button
       type="button"
       onClick={() => onOpen(campaign.projectId)}
-      className="flex w-full min-w-0 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-bg-surface/80"
+      className="flex w-full min-w-0 items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-surface-200/80"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-body2 font-semibold text-text-main">
+        <span className="truncate font-body1 text-text-title">
           {campaign.name}
         </span>
-        <span className="text-[10px] font-medium uppercase tracking-wide text-text-placeholder">
+        <span className="font-caption uppercase tracking-wide text-text-placeholder">
           {campaign.providers.length > 0
             ? campaign.providers.map((p) => platformShort[p] ?? p).join(" · ")
             : "플랫폼 미지정"}
         </span>
       </div>
-      <span className="shrink-0 font-caption font-semibold tabular-nums text-text-sub">
+      <span className="shrink-0 font-caption tabular-nums text-text-muted">
         {campaign.budgetUsageRate.toFixed(0)}%
       </span>
     </button>
@@ -93,7 +93,7 @@ export default memo(function OverviewCampaignSnapshotCard({
   return (
     <Card
       className={twMerge("flex w-full min-w-0 flex-col pb-3!", className)}
-      title="캠페인 스냅샷"
+      title="캠페인 미리보기"
       description={
         isPending || isError ? undefined : (
           <span className="font-caption text-text-placeholder">
@@ -106,9 +106,9 @@ export default memo(function OverviewCampaignSnapshotCard({
           variant="tertiary"
           type="button"
           onClick={() => navigate("/ads")}
-          className="group flex h-8 shrink-0 items-center gap-1 rounded-full border-none bg-bg-surface/60 px-3 hover:bg-bg-surface"
+          className="group flex h-8 shrink-0 items-center gap-1 rounded-full border-none bg-surface-200/60 px-3 hover:bg-surface-200"
         >
-          <span className="font-caption font-semibold text-text-sub group-hover:text-text-auth-sub">
+          <span className="font-caption text-text-muted group-hover:text-text-body">
             목록
           </span>
           <ChevronDoubleRightIcon className="h-4 w-4 text-text-placeholder" />
@@ -117,7 +117,7 @@ export default memo(function OverviewCampaignSnapshotCard({
     >
       <div className="flex flex-col">
         {isError ? (
-          <p className="font-body2 text-status-red">
+          <p className="font-body2 text-info-red">
             {error?.message ??
               "캠페인 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
           </p>
@@ -132,7 +132,7 @@ export default memo(function OverviewCampaignSnapshotCard({
           </p>
         ) : (
           <div className="flex flex-col pt-0.5">
-            <div className="flex flex-col divide-y divide-bg-disabled/60 overflow-hidden rounded-lg border border-bg-disabled/25">
+            <div className="flex flex-col divide-y divide-surface-400/60 overflow-hidden rounded-lg border border-surface-400/25">
               {topByBudgetUsage.map((c) => (
                 <SnapshotRow
                   key={c.projectId}

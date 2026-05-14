@@ -1,5 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -7,6 +7,7 @@ import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
+import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
@@ -17,24 +18,25 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex items-center rounded-component-md px-3 text-sm cursor-pointer transition-colors duration-200",
+    "flex cursor-pointer items-center rounded-2xl px-3 font-body2 transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
       : "h-[55px] gap-4 px-3",
     isActive
-      ? "bg-chart-3 text-white"
-      : "text-text-auth-sub hover:bg-bg-surface",
+      ? "bg-primary-400 text-surface-100"
+      : "text-text-auth-sub hover:bg-surface-200",
   );
 }
 
 function getFooterItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
-    "flex w-full h-[55px] items-center rounded-component-md px-3 text-sm cursor-pointer transition-all duration-200",
+    "flex h-[55px] w-full cursor-pointer items-center rounded-2xl px-3 font-body2 transition-all duration-200",
     isCollapsed ? "justify-center px-0" : "gap-4 px-3",
-    isActive ? "text-chart-3" : "text-text-auth-sub hover:text-chart-3",
+    isActive ? "text-primary-400" : "text-text-auth-sub hover:text-primary-400",
   );
 }
 
@@ -68,6 +70,12 @@ export default function Sidebar() {
 
   const { showComingSoon } = useComingSoon();
 
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const mainNavWithWorkspace = useMemo(
+    () => applyWorkspacePathsToNav(mainNav, selectedOrgId),
+    [selectedOrgId],
+  );
+
   const handleFooterItemClick = useCallback(
     (id: string, hasChildren: boolean) => {
       if (id === "notifications") {
@@ -82,7 +90,7 @@ export default function Sidebar() {
   return (
     <motion.div
       className={twMerge(
-        "relative z-40 flex h-full flex-col bg-white border-r border-bg-surface",
+        "relative z-40 flex h-full flex-col bg-surface-100 border-r border-surface-300",
       )}
       initial={false}
       animate={{ width: isCollapsed ? 88 : 256 }}
@@ -102,7 +110,7 @@ export default function Sidebar() {
               : "overflow-y-auto overflow-x-hidden",
           )}
         >
-          {mainNav.map((item) => {
+          {mainNavWithWorkspace.map((item) => {
             const isOpen = openId === item.id;
             const { isParentActive } = mainNavSidebar.getItemActiveState(
               pathname,
@@ -141,7 +149,12 @@ export default function Sidebar() {
                         e.preventDefault();
                         toggleOpenId(item.id);
                       }}
-                      className="ml-auto p-2 hover:bg-black/5 rounded-lg transition-colors"
+                      className={twMerge(
+                        "ml-auto shrink-0 rounded-lg p-2 transition-colors",
+                        isParentActive
+                          ? "text-surface-100 hover:bg-surface-100/20"
+                          : "hover:bg-surface-200",
+                      )}
                     >
                       <ChevronIcon
                         className={twMerge(
@@ -190,15 +203,15 @@ export default function Sidebar() {
             );
           })}
 
-          <div className="mt-2 pt-2 border-t border-bg-surface">
+          <div className="mt-2 pt-2 border-t border-surface-300">
             <button
               type="button"
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "w-full h-button-big rounded-component-md text-sm transition-all duration-200 inline-flex items-center",
+                "inline-flex h-14 w-full items-center rounded-2xl font-body2 transition-all duration-200",
                 isCollapsed ? "justify-center px-0" : "gap-4 px-3",
-                "text-text-auth-sub hover:text-chart-3 hover:bg-bg-surface",
+                "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
             >
               <CollapseIcon

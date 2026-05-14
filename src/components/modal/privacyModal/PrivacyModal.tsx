@@ -73,11 +73,11 @@ export default function PrivacyModal({
     >
       <div className="flex flex-col w-full h-full">
         <div className="px-6 pt-8 pb-4">
-          <h2 className="font-heading2 text-text-main">개인정보 수집 동의</h2>
+          <h2 className="font-heading2 text-text-title">개인정보 수집 동의</h2>
         </div>
         <div className="flex-1 overflow-y-auto px-6 pb-6 scrollbar-hide">
           <div
-            className="flex items-center gap-3 py-4 border-b border-gray-100 cursor-pointer"
+            className="flex items-center gap-3 py-4 border-b border-surface-200 cursor-pointer"
             onClick={handleAllAgree}
           >
             <input
@@ -86,9 +86,7 @@ export default function PrivacyModal({
               checked={isAllChecked}
               readOnly
             />
-            <span className="font-body1 font-bold text-text-main">
-              전체 동의하기
-            </span>
+            <span className="font-body1 text-text-title">전체 동의하기</span>
           </div>
 
           <div className="flex flex-col gap-6 mt-6">
@@ -111,14 +109,14 @@ export default function PrivacyModal({
             />
           </div>
         </div>
-        <div className="p-6 border-t border-gray-100 bg-white">
+        <div className="p-6 border-t border-surface-200 bg-surface-100">
           <Button
             size="big"
             fullWidth
             variant="custom"
             onClick={handleConfirm}
             disabled={!isRequiredChecked}
-            className="bg-status-blue text-white hover:opacity-90 disabled:bg-bg-disabled disabled:text-text-disabled disabled:opacity-100"
+            className="bg-info-blue text-surface-100 hover:opacity-90 disabled:bg-surface-300 disabled:text-text-disabled disabled:opacity-100"
           >
             동의하고 계속하기
           </Button>

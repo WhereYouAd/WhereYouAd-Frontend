@@ -13,15 +13,15 @@ interface ISubMenuProps {
 export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
   const getSubItemClass = (isActive: boolean) =>
     twMerge(
-      "flex items-center rounded-component-md px-3 text-sm transition-all duration-200 whitespace-nowrap",
+      "flex items-center rounded-xl px-3 font-body2 transition-all duration-200 whitespace-nowrap",
       isCollapsed ? "h-auto py-2.5" : "h-10 pl-4",
       isActive
-        ? "bg-chart-3 text-white"
-        : "text-text-auth-sub hover:bg-bg-surface",
+        ? "bg-primary-400 text-surface-100"
+        : "text-text-auth-sub hover:bg-surface-200",
     );
 
   const menuContainerClass = isCollapsed
-    ? "absolute left-full top-0 pl-2 w-52 flex flex-col gap-1 rounded-component-md bg-white p-2 shadow-Soft z-50 whitespace-nowrap"
+    ? "absolute left-full top-0 pl-2 w-52 flex flex-col gap-1 rounded-xl bg-surface-100 p-2 shadow-Soft z-50 whitespace-nowrap"
     : "ml-11 mt-1 flex flex-col gap-1 overflow-hidden";
 
   const expandedMaxHeight = Math.min(640, Math.max(160, items.length * 44 + 8));
@@ -62,11 +62,11 @@ export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
           className={({ isActive }) => getSubItemClass(isActive)}
         >
           {isCollapsed && parentLabel ? (
-            <div className="flex flex-col items-start min-w-0">
+            <div className="flex min-w-0 flex-col items-start">
               <span className="font-caption text-current/80 truncate max-w-full">
                 {parentLabel}
               </span>
-              <span className="font-body2 font-semibold truncate max-w-full">
+              <span className="max-w-full truncate font-label">
                 {child.label}
               </span>
             </div>

@@ -1,99 +1,149 @@
+import type { CSSProperties } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 
-const colorGroups = [
+type TSwatchItem = {
+  varName: string;
+  note?: string;
+};
+
+const colorSections: {
+  title: string;
+  description?: string;
+  items: TSwatchItem[];
+}[] = [
   {
-    label: "Brand",
-    colors: [
-      { name: "brand-900", value: "#000000" },
-      { name: "brand-800", value: "#001f5b" },
-      { name: "brand-700", value: "#213e68" },
-      { name: "brand-600", value: "#466a9c" },
-      { name: "brand-500", value: "#88c1ff" },
-      { name: "brand-400", value: "#dce7f2" },
-      { name: "brand-300", value: "#f9fafb" },
-      { name: "brand-200", value: "#ffffff" },
+    title: "Primary",
+    description:
+      "원시 팔레트 (--primary-*). 100이 가장 밝고 500이 가장 진합니다.",
+    items: [
+      { varName: "--primary-100", note: "Blue tint" },
+      { varName: "--primary-200", note: "Light blue" },
+      { varName: "--primary-300", note: "Mid blue" },
+      { varName: "--primary-400", note: "CTA blue" },
+      { varName: "--primary-500", note: "Brand blue" },
     ],
   },
   {
-    label: "Logo",
-    colors: [
-      { name: "logo-1", value: "#2eb4ff" },
-      { name: "logo-2", value: "#6088fe" },
+    title: "Surface",
+    description:
+      "밝기 순 (--color-surface-*). 100이 가장 밝고 500이 가장 진합니다.",
+    items: [
+      { varName: "--color-surface-100" },
+      { varName: "--color-surface-200" },
+      { varName: "--color-surface-300" },
+      { varName: "--color-surface-400" },
+      { varName: "--color-surface-500" },
     ],
   },
   {
-    label: "Status",
-    colors: [
-      { name: "status-red", value: "#ff2a4b" },
-      { name: "status-blue", value: "#0084fe" },
-      { name: "status-green", value: "#22c55e" },
-      { name: "status-yellow", value: "#facc15" },
+    title: "Text (밝기)",
+    description: "쿨 그레이 스케일. 100이 가장 밝고 400이 가장 진합니다.",
+    items: [
+      { varName: "--color-text-100", note: "가장 밝음" },
+      { varName: "--color-text-200" },
+      { varName: "--color-text-300" },
+      { varName: "--color-text-400", note: "가장 진함" },
     ],
   },
   {
-    label: "Text",
-    colors: [
-      { name: "text-main", value: "#212121" },
-      { name: "text-auth-sub", value: "#546171" },
-      { name: "text-sub", value: "#8b8b8f" },
-      { name: "text-placeholder", value: "#c3c3c3" },
-      { name: "text-disabled", value: "#b0b8c1" },
-      { name: "bg-disabled", value: "#e5e8eb" },
-      { name: "bg-surface", value: "#f6f6f6" },
-    ],
-  },
-  {
-    label: "Social",
-    colors: [
-      { name: "social-kakao", value: "#fee500" },
-      { name: "social-naver", value: "#03c75a" },
-      { name: "social-google", value: "#ffffff" },
-    ],
-  },
-  {
-    label: "Chart",
-    colors: [
-      { name: "chart-1", value: "#0a3d91" },
-      { name: "chart-2", value: "#0056b3" },
-      { name: "chart-3", value: "#1485ff" },
-      { name: "chart-4", value: "#00aeef" },
-      { name: "chart-5", value: "#4fc3f7" },
-      { name: "chart-inactive", value: "#f2f4f6" },
+    title: "Text (역할 별칭)",
+    description:
+      "위 밝기 토큰을 가리킵니다. 계산 색은 동일 스케일로 이어집니다.",
+    items: [
+      { varName: "--color-text-title", note: "→ 400" },
+      { varName: "--color-text-body", note: "→ 300" },
+      { varName: "--color-text-muted", note: "→ 200" },
+      { varName: "--color-text-placeholder", note: "→ 200" },
+      { varName: "--color-text-disabled", note: "→ 100" },
     ],
   },
 ];
 
+const checkerboardStyle: CSSProperties = {
+  backgroundImage:
+    "linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)",
+  backgroundSize: "8px 8px",
+  backgroundPosition: "0 0, 0 4px, 4px -4px, -4px 0px",
+};
+
 function ColorDoc() {
+  const swatchRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [resolved, setResolved] = useState<Record<string, string>>({});
+
+  useLayoutEffect(() => {
+    const next: Record<string, string> = {};
+    for (const section of colorSections) {
+      for (const item of section.items) {
+        const el = swatchRefs.current[item.varName];
+        if (!el) continue;
+        next[item.varName] = getComputedStyle(el).backgroundColor;
+      }
+    }
+    setResolved(next);
+  }, []);
+
   return (
-    <div className="p-8 space-y-8 max-w-3xl">
-      {colorGroups.map(({ label, colors }) => (
-        <div key={label}>
-          <h2 className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-3">
-            {label}
-          </h2>
-          <div className="flex flex-wrap gap-4">
-            {colors.map(({ name, value }) => (
-              <div key={name} className="flex flex-col gap-1.5 w-24">
+    <div className="max-w-5xl space-y-12 p-8">
+      <header className="space-y-1">
+        <h1 className="font-heading2 text-text-main">Colors</h1>
+        <p className="font-body2 text-text-muted">
+          스와치는 <code className="font-mono text-sm">tokens.css</code>{" "}
+          <code className="font-mono text-sm">@theme</code> 변수로만 칠한 뒤,
+          아래 hex/rgb는 브라우저에서 계산된 값입니다.
+        </p>
+      </header>
+
+      {colorSections.map((section) => (
+        <section key={section.title} className="space-y-3">
+          <div>
+            <h2 className="font-heading4 text-text-main">{section.title}</h2>
+            {section.description ? (
+              <p className="mt-1 font-body2 text-text-muted">
+                {section.description}
+              </p>
+            ) : null}
+          </div>
+          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] gap-x-4 gap-y-3 border-b border-surface-400 pb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
+            <span>토큰</span>
+            <span>스와치</span>
+            <span>계산 색</span>
+          </div>
+          <ul className="list-none space-y-0 p-0">
+            {section.items.map((item) => (
+              <li
+                key={item.varName}
+                className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] items-center gap-x-4 border-b border-surface-400/30 py-3"
+              >
+                <div>
+                  <span className="font-mono text-xs text-text-title">
+                    {item.varName}
+                  </span>
+                  {item.note ? (
+                    <p className="mt-0.5 font-caption text-text-muted">
+                      {item.note}
+                    </p>
+                  ) : null}
+                </div>
                 <div
-                  className="w-24 h-12 rounded-lg border border-gray-300 overflow-hidden"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(45deg, #d1d5db 25%, transparent 25%), linear-gradient(-45deg, #d1d5db 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d1d5db 75%), linear-gradient(-45deg, transparent 75%, #d1d5db 75%)",
-                    backgroundSize: "8px 8px",
-                    backgroundPosition: "0 0, 0 4px, 4px -4px, -4px 0px",
-                  }}
+                  className="h-12 w-full max-w-[7rem] overflow-hidden rounded-lg border border-surface-400"
+                  style={checkerboardStyle}
                 >
                   <div
-                    className="w-full h-full"
-                    style={{ backgroundColor: value }}
+                    ref={(el) => {
+                      swatchRefs.current[item.varName] = el;
+                    }}
+                    className="h-full w-full"
+                    style={{ backgroundColor: `var(${item.varName})` }}
                   />
                 </div>
-                <span className="text-xs text-gray-500 font-mono">{name}</span>
-                <span className="text-xs text-gray-400">{value}</span>
-              </div>
+                <span className="font-mono text-xs text-text-body">
+                  {resolved[item.varName] ?? "—"}
+                </span>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
       ))}
     </div>
   );
@@ -102,7 +152,15 @@ function ColorDoc() {
 const meta: Meta = {
   title: "Design Tokens/Colors",
   component: ColorDoc,
-  parameters: { layout: "fullscreen" },
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        component:
+          "`tokens.css`에 정의된 색 토큰만 표시합니다. Primary·Surface·Text는 여기가 단일 출처이며, 스토리북 값은 런타임 계산 결과입니다.",
+      },
+    },
+  },
 };
 
 export default meta;

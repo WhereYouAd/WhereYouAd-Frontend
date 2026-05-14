@@ -46,8 +46,10 @@ export default function MemberSearchSelect({
             )}
           </div>
           <div className="min-w-0">
-            <p className="truncate font-body2 text-text-main">{member.name}</p>
-            <p className="truncate font-body2 text-text-sub">{member.email}</p>
+            <p className="truncate font-body2 text-text-title">{member.name}</p>
+            <p className="truncate font-body2 text-text-muted">
+              {member.email}
+            </p>
           </div>
         </div>
       )}

@@ -5,8 +5,8 @@ import type { IPlatformRankingItem } from "@/types/dashboard/overview";
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 const platformLogoMap = {
   Google: <GoogleLogo className="h-7 w-auto" />,
@@ -32,7 +32,7 @@ function getPlatformLogo(provider: string) {
     return platformLogoMap[name as TPlatformName];
   }
   return (
-    <span className="h-7 w-7 rounded-full bg-bg-disabled flex items-center justify-center text-xs font-bold">
+    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
       {name[0]}
     </span>
   );
@@ -59,25 +59,25 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
   rankings,
 }: IPlatformRoasTableProps) {
   return (
-    <div className="@container flex flex-col h-full font-pretendard w-full">
+    <div className="@container flex h-full w-full flex-col">
       <div className="flex flex-col flex-1 min-w-0">
         <div
-          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 @2xl:gap-x-6 px-4 pt-2 pb-4 font-caption text-[#8B95A1] font-medium tracking-wider uppercase border-b border-[#F2F4F6]`}
+          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 border-b border-surface-200 px-4 pb-4 pt-2 font-caption uppercase tracking-wider text-text-muted @2xl:gap-x-6`}
         >
-          <span className="flex min-h-[1.25rem] items-center justify-center text-center tabular-nums leading-snug">
+          <span className="flex min-h-5 items-center justify-center text-center font-caption tabular-nums">
             순위
           </span>
-          <span className="min-w-0 leading-snug">플랫폼</span>
-          <span className="flex min-h-[1.25rem] items-center justify-center px-2 tabular-nums leading-snug @2xl:px-3">
+          <span className="min-w-0 font-caption">플랫폼</span>
+          <span className="flex min-h-5 items-center justify-center px-2 font-caption tabular-nums @2xl:px-3">
             ROAS(%)
           </span>
-          <span className="hidden min-w-0 pl-1 text-center leading-snug @2xl:block @2xl:pl-0">
+          <span className="hidden min-w-0 pl-1 text-center font-caption @2xl:block @2xl:pl-0">
             CTR(클릭률)
           </span>
-          <span className="hidden min-w-0 text-center leading-snug @2xl:block">
+          <span className="hidden min-w-0 text-center font-caption @2xl:block">
             CVR(전환율)
           </span>
-          <span className="min-w-0 whitespace-nowrap text-right leading-snug">
+          <span className="min-w-0 whitespace-nowrap text-right font-caption">
             매출 / 광고비
           </span>
         </div>
@@ -87,15 +87,15 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
             플랫폼 데이터가 없습니다.
           </div>
         )}
-        <div className="flex flex-col pb-2 divide-y divide-[#F2F4F6]">
+        <div className="flex flex-col pb-2 divide-y divide-surface-200">
           {rankings.map((item) => (
             <div
               key={item.provider}
-              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-component-sm transition-colors duration-300 hover:bg-[#F2F4F6]`}
+              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-lg transition-colors duration-300 hover:bg-surface-200`}
             >
               {/* 순위 */}
               <div className="flex min-h-0 min-w-0 items-center justify-center">
-                <span className="text-center font-caption font-bold leading-none text-text-disabled tabular-nums transition-colors group-hover:text-text-sub">
+                <span className="text-center font-caption tabular-nums text-text-disabled transition-colors group-hover:text-text-muted">
                   {item.rank}
                 </span>
               </div>
@@ -105,14 +105,14 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 <div className="shrink-0 p-1.5 hover:will-change-transform group-hover:scale-105">
                   {getPlatformLogo(item.provider)}
                 </div>
-                <span className="font-body1 font-semibold! text-text-main tracking-tight">
+                <span className="font-body1 text-text-title">
                   {getDisplayName(item.provider)}
                 </span>
               </div>
 
               {/* ROAS */}
               <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
-                <span className="font-body1 leading-none text-text-main tabular-nums tracking-tight">
+                <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
                   {item.roas.toLocaleString()}%
                 </span>
               </div>
@@ -121,7 +121,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
                 {item.clickRate !== undefined ? (
                   <>
-                    <span className="w-full font-body1 text-text-main tracking-tight leading-none tabular-nums text-center">
+                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
                       {item.clickRate.toFixed(1)}%
                     </span>
                     {item.ctrDelta !== undefined && (
@@ -139,7 +139,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 text-center @2xl:flex">
                 {item.conversionRate !== undefined ? (
                   <>
-                    <span className="w-full font-body1 text-text-main tracking-tight leading-none tabular-nums text-center">
+                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
                       {item.conversionRate.toFixed(1)}%
                     </span>
                     {item.conversionDelta !== undefined && (
@@ -155,11 +155,11 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
 
               {/* 매출/광고비 */}
               <div className="flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
-                <span className="font-heading4 font-semibold! text-text-main tracking-tight leading-none tabular-nums truncate w-full">
+                <span className="font-heading4 w-full truncate text-right tabular-nums text-text-title">
                   ₩{item.revenue.toLocaleString()}
                 </span>
-                <div className="flex items-center justify-end gap-1.5 text-[#8B95A1] font-caption w-full transition-colors group-hover:text-text-sub">
-                  <span className="font-medium whitespace-nowrap">광고비</span>
+                <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
+                  <span className="whitespace-nowrap">광고비</span>
                   <span className="tabular-nums truncate">
                     ₩{item.adSpend.toLocaleString()}
                   </span>

@@ -73,9 +73,9 @@ const CommonAuthInput = React.forwardRef<
             aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
           >
             {showPassword ? (
-              <EyeIcon className="w-5 h-auto text-text-auth-sub" />
+              <EyeIcon className="w-5 h-auto text-text-muted" />
             ) : (
-              <EyeOffIcon className="w-5 h-auto text-text-auth-sub" />
+              <EyeOffIcon className="w-5 h-auto text-text-muted" />
             )}
           </button>
         );

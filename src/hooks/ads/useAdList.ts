@@ -18,7 +18,8 @@ export const useAdList = (orgId: number | null, projectId: number | null) => {
       setAds(result);
     } catch (e) {
       toast.error(
-        (e as IApiErrorResponse).message ?? "광고 목록을 불러오지 못했습니다.",
+        (e as IApiErrorResponse).message ??
+          "연결된 광고를 불러오지 못했습니다.",
       );
     } finally {
       setIsAdLoading(false);

@@ -71,7 +71,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-main mb-10">
+      <h1 className="text-start font-heading2 text-text-title mb-10">
         <span className="block">사용자의</span>
         <span className="block">기본 정보를 입력해 주세요</span>
       </h1>
@@ -119,14 +119,14 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
               checked={watch("terms")}
               readOnly
             />
-            <span className="font-body2 text-text-main flex items-center gap-2">
-              <span className="text-brand-700 font-body2">(필수)</span>
+            <span className="font-body2 text-text-title flex items-center gap-2">
+              <span className="text-primary-500 font-body2">(필수)</span>
               개인정보 수집 및 이용 동의
             </span>
           </div>
           <button
             type="button"
-            className="text-text-sub underline hover:text-text-main font-body2 whitespace-nowrap"
+            className="text-text-body underline hover:text-text-title font-body2 whitespace-nowrap"
           >
             내용 보기
           </button>

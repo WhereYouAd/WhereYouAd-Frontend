@@ -15,12 +15,12 @@ export default function InfoCard({
   return (
     <div
       className={twMerge(
-        "flex flex-col gap-4 p-5 h-40 w-full border-bg-disabled rounded-component-md border bg-white transition-all duration-normal",
+        "flex h-40 w-full flex-col gap-4 rounded-2xl border border-surface-400 bg-surface-100 p-5 transition-all duration-normal",
 
         className,
       )}
     >
-      <h3 className="font-heading4 text-text-main text-center">{title}</h3>
+      <h3 className="text-center font-heading4 text-text-title">{title}</h3>
       <div className="flex flex-1 items-center justify-center w-full">
         {children}
       </div>

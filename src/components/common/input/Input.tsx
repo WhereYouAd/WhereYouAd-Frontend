@@ -45,29 +45,29 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-text-main select-none ml-1 mb-2"
+            className="text-text-title select-none ml-1 mb-2"
           >
             {label}
           </label>
         )}
         <div
           className={twMerge(
-            "flex items-center w-full h-input bg-white ring-1 ring-logo-1/30 rounded-component-md transition-colors duration-200 ease-out overflow-hidden",
+            "flex items-center w-full h-14 bg-surface-100 ring-1 ring-surface-400 rounded-2xl transition-colors duration-200 ease-out overflow-hidden",
             disabled
-              ? "bg-gray-100 cursor-not-allowed"
+              ? "bg-surface-200 cursor-not-allowed"
               : error
-                ? "ring-2 ring-status-red bg-status-red/5"
+                ? "ring-2 ring-info-red bg-info-red/5"
                 : success
-                  ? "ring-2 ring-status-green bg-status-green/5"
-                  : "hover:bg-gray-100 hover:ring-logo-1/40 focus-within:bg-white focus-within:ring-2 focus-within:ring-logo-1/50",
+                  ? "ring-2 ring-primary-400 bg-primary-100"
+                  : "hover:bg-surface-200 hover:ring-surface-400 focus-within:bg-surface-100 focus-within:ring-2 focus-within:ring-surface-400",
             containerClassName,
           )}
         >
           <input
             ref={ref}
             className={twMerge(
-              "flex-1 h-full w-full bg-transparent border-none outline-none font-body1 text-text-main placeholder:text-text-placeholder px-5",
-              "disabled:cursor-not-allowed disabled:text-text-disabled",
+              "flex-1 h-full w-full bg-transparent border-none outline-none font-body1 text-text-title placeholder:text-text-placeholder px-5",
+              "disabled:cursor-not-allowed disabled:text-text-muted",
               rightElement ? "pr-2" : "",
               inputClassName,
             )}
@@ -89,7 +89,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
             aria-live="polite"
             className={twMerge(
               "font-caption pl-1 mt-1.5",
-              error ? "text-status-red" : "text-text-sub",
+              error ? "text-info-red" : "text-text-body",
             )}
           >
             {helperText}

@@ -31,14 +31,14 @@ export const PlatformDetailCard = memo(
     } = data;
 
     const innerCardClass =
-      "shadow-none! hover:shadow-none! rounded-component-md! p-2! gap-2!";
+      "shadow-none! hover:shadow-none! !rounded-2xl p-2! gap-2!";
 
     return (
-      <Card className="flex-1 p-7 bg-white/80 backdrop-blur-sm">
+      <Card className="flex-1 p-7">
         {/* 로고 + 이름 */}
         <div className="flex items-center gap-2 mb-8">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
-          <h3 className="font-heading4 font-semibold! text-text-main truncate">
+          <h3 className="font-heading4 text-text-title truncate">
             {PLATFORM_MAP[provider]}
           </h3>
         </div>
@@ -52,7 +52,7 @@ export const PlatformDetailCard = memo(
               impressionChangeRate !== 0
                 ? {
                     direction: impressionChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(impressionChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(impressionChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -65,7 +65,7 @@ export const PlatformDetailCard = memo(
               clickChangeRate !== 0
                 ? {
                     direction: clickChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(clickChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(clickChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -78,7 +78,7 @@ export const PlatformDetailCard = memo(
               cvrChangeRate !== 0
                 ? {
                     direction: cvrChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(cvrChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(cvrChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }
@@ -91,7 +91,7 @@ export const PlatformDetailCard = memo(
               ROASChangeRate !== 0
                 ? {
                     direction: ROASChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(ROASChangeRate * 100).toFixed(1)}%`,
+                    value: `${Math.abs(ROASChangeRate).toFixed(1)}%`,
                   }
                 : undefined
             }

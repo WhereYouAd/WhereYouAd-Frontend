@@ -39,9 +39,9 @@ export default function RedirectPage() {
   }, [navigate, setAccessToken]);
 
   return (
-    <div className="relative flex justify-center items-center h-screen w-full bg-white">
+    <div className="relative flex justify-center items-center h-screen w-full bg-surface-100">
       <div className="relative flex justify-center h-75 min-w-70 w-112.5 max-w-[96vw]">
-        <div className="absolute top-80 text-[20px] text-gray-500 font-medium animate-pulse">
+        <div className="absolute top-80 font-body1 text-text-muted animate-pulse">
           로그인 중...
         </div>
       </div>

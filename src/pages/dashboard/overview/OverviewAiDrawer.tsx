@@ -30,7 +30,7 @@ export function OverviewAiDrawer({
           label: "링크 공유하기",
           icon: (
             <LinkIcon
-              className="text-text-auth-sub transition-colors group-hover:text-status-blue"
+              className="text-text-body transition-colors group-hover:text-info-blue"
               width={20}
               height={20}
             />
@@ -41,7 +41,7 @@ export function OverviewAiDrawer({
           label: "PDF로 저장하기",
           icon: (
             <DownloadIcon
-              className="text-text-auth-sub transition-colors group-hover:text-status-blue"
+              className="text-text-body transition-colors group-hover:text-info-blue"
               width={20}
               height={20}
             />

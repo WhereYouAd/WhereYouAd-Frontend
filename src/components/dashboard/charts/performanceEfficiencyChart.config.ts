@@ -15,7 +15,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   markers: {
     size: [0, 0, 6], // 막대 = 0, 점 = 6
     strokeWidth: 2,
-    strokeColors: "#fff",
+    strokeColors: "var(--color-surface-100)",
     hover: { sizeOffset: 2 },
   },
   plotOptions: {
@@ -25,14 +25,18 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       borderRadiusApplication: "end",
     },
   },
-  colors: ["#0084fe", "#0a3d91", "#4fc3f7"],
+  colors: [
+    "var(--color-info-blue)",
+    "var(--color-primary-500)",
+    "var(--color-primary-300)",
+  ],
   xaxis: {
     categories: categories,
     labels: {
       style: {
         fontSize: "14px",
         fontWeight: 500,
-        colors: "#212121",
+        colors: "var(--color-text-title)",
       },
     },
     axisBorder: { show: false },
@@ -40,16 +44,19 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   },
   yaxis: [
     {
-      seriesName: "클릭률",
+      seriesName: "클릭률(CTR)",
       labels: {
         formatter: (val) => `${val.toFixed(1)}%`,
         style: {
-          colors: "#8B8B8F",
+          colors: "var(--color-text-muted)",
           fontSize: "12px",
         },
       },
     },
-    { show: false, seriesName: "전환율" },
+    {
+      seriesName: "클릭률(CTR)",
+      show: false,
+    },
     {
       opposite: true,
       seriesName: "노출수",
@@ -57,7 +64,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
         offsetX: -10,
         formatter: (val) => val.toLocaleString("ko-KR"),
         style: {
-          colors: "#8B8B8F",
+          colors: "var(--color-text-muted)",
           fontSize: "12px",
         },
       },
@@ -76,7 +83,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     },
   },
   grid: {
-    borderColor: "#f1f1f1",
+    borderColor: "var(--color-surface-200)",
     yaxis: { lines: { show: true } },
     padding: {
       bottom: -15,
