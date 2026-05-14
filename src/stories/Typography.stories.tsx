@@ -167,7 +167,7 @@ function TypographyDoc() {
 
       <section className="space-y-3">
         <h2 className="font-heading4 text-text-main">타이포 스케일</h2>
-        <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,2fr)_repeat(3,minmax(0,0.65fr))] gap-x-3 gap-y-0 border-b border-gray-200 pb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+        <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,2fr)_repeat(3,minmax(0,0.65fr))] gap-x-3 gap-y-0 border-b border-surface-400 pb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
           <span>스타일</span>
           <span>CSS 변수</span>
           <span>샘플</span>
@@ -180,15 +180,15 @@ function TypographyDoc() {
           return (
             <div
               key={row.className}
-              className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,2fr)_repeat(3,minmax(0,0.65fr))] items-baseline gap-x-3 border-b border-gray-100 py-3"
+              className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)_minmax(0,2fr)_repeat(3,minmax(0,0.65fr))] items-baseline gap-x-3 border-b border-surface-400/30 py-3"
             >
               <div className="space-y-0.5">
                 <span className="text-sm text-text-main">{row.label}</span>
-                <span className="block font-mono text-xs text-gray-400">
+                <span className="block font-mono text-xs text-text-muted">
                   .{row.className}
                 </span>
               </div>
-              <ul className="list-none space-y-0.5 font-mono text-[11px] leading-snug text-gray-500">
+              <ul className="list-none space-y-0.5 font-mono text-[11px] leading-snug text-text-muted">
                 {row.cssVars.map((v) => (
                   <li key={v}>{v}</li>
                 ))}
@@ -201,13 +201,13 @@ function TypographyDoc() {
               >
                 {row.label} — 가나다라마바사
               </span>
-              <span className="font-mono text-xs text-gray-500">
+              <span className="font-mono text-xs text-text-muted">
                 {m?.fontSize ?? "—"}
               </span>
-              <span className="font-mono text-xs text-gray-500">
+              <span className="font-mono text-xs text-text-muted">
                 {m?.fontWeight ?? "—"}
               </span>
-              <span className="font-mono text-xs text-gray-500">
+              <span className="font-mono text-xs text-text-muted">
                 {m?.lineHeight ?? "—"}
               </span>
             </div>
@@ -221,7 +221,7 @@ function TypographyDoc() {
           <code className="font-mono text-sm">--color-text-100</code> ···{" "}
           <code className="font-mono text-sm">--color-text-400</code>
         </p>
-        <div className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.5fr)] gap-x-3 border-b border-gray-200 pb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+        <div className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.5fr)] gap-x-3 border-b border-surface-400 pb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
           <span>토큰</span>
           <span>샘플</span>
           <span>계산 색</span>
@@ -229,13 +229,13 @@ function TypographyDoc() {
         {textColorTokens.map((row) => (
           <div
             key={row.varName}
-            className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.5fr)] items-center gap-x-3 border-b border-gray-100 py-3"
+            className="grid grid-cols-[minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.5fr)] items-center gap-x-3 border-b border-surface-400/30 py-3"
           >
             <div>
-              <span className="font-mono text-xs text-gray-600">
+              <span className="font-mono text-xs text-text-body">
                 {row.varName}
               </span>
-              <p className="mt-0.5 font-caption text-gray-400">{row.note}</p>
+              <p className="mt-0.5 font-caption text-text-muted">{row.note}</p>
             </div>
             <span
               ref={(el) => {
@@ -246,7 +246,7 @@ function TypographyDoc() {
             >
               본문 샘플 · {row.label}
             </span>
-            <span className="font-mono text-xs text-gray-500">
+            <span className="font-mono text-xs text-text-muted">
               {colors[row.varName] ?? "—"}
             </span>
           </div>
@@ -258,7 +258,7 @@ function TypographyDoc() {
         <p className="font-body2 text-text-muted">
           아래 토큰은 위 밝기 스케일을 가리킵니다.
         </p>
-        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.2fr)] gap-x-3 border-b border-gray-200 pb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+        <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.2fr)] gap-x-3 border-b border-surface-400 pb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
           <span>별칭</span>
           <span>→</span>
           <span>샘플</span>
@@ -267,12 +267,12 @@ function TypographyDoc() {
         {textRoleAliases.map((row) => (
           <div
             key={row.varName}
-            className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.2fr)] items-center gap-x-3 border-b border-gray-100 py-2"
+            className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_minmax(0,2fr)_minmax(0,1.2fr)] items-center gap-x-3 border-b border-surface-400/30 py-2"
           >
-            <span className="font-mono text-xs text-gray-600">
+            <span className="font-mono text-xs text-text-body">
               {row.varName}
             </span>
-            <span className="font-mono text-xs text-gray-400">
+            <span className="font-mono text-xs text-text-muted">
               {row.mapsTo}
             </span>
             <span
@@ -284,7 +284,7 @@ function TypographyDoc() {
             >
               역할 샘플 텍스트
             </span>
-            <span className="font-mono text-xs text-gray-500">
+            <span className="font-mono text-xs text-text-muted">
               {colors[row.varName] ?? "—"}
             </span>
           </div>

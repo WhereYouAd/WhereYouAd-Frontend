@@ -16,7 +16,7 @@ const shadowTokens = [
 function ShadowDoc() {
   return (
     <div className="p-8 space-y-2 max-w-2xl">
-      <div className="grid grid-cols-[140px_1fr_280px] gap-x-4 pb-2 border-b border-gray-200 text-xs text-gray-400 font-medium uppercase tracking-wide">
+      <div className="grid grid-cols-[140px_1fr_280px] gap-x-4 pb-2 border-b border-surface-400 text-xs text-text-muted font-medium uppercase tracking-wide">
         <span>Token</span>
         <span>Preview</span>
         <span>Value</span>
@@ -24,11 +24,13 @@ function ShadowDoc() {
       {shadowTokens.map(({ className, value }) => (
         <div
           key={className}
-          className="grid grid-cols-[140px_1fr_280px] gap-x-4 items-center py-6 border-b border-gray-100"
+          className="grid grid-cols-[140px_1fr_280px] gap-x-4 items-center py-6 border-b border-surface-400/30"
         >
-          <span className="text-xs text-gray-400 font-mono">.{className}</span>
-          <div className={`w-24 h-14 bg-white rounded-lg ${className}`} />
-          <span className="text-xs text-gray-400">{value}</span>
+          <span className="text-xs text-text-muted font-mono">
+            .{className}
+          </span>
+          <div className={`w-24 h-14 bg-surface-100 rounded-lg ${className}`} />
+          <span className="text-xs text-text-muted">{value}</span>
         </div>
       ))}
     </div>

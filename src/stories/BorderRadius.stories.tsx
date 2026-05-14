@@ -30,7 +30,7 @@ const radiusTokens = [
 function BorderRadiusDoc() {
   return (
     <div className="p-8 space-y-2 max-w-3xl">
-      <div className="grid grid-cols-[180px_1fr_120px_1fr] gap-x-4 pb-2 border-b border-gray-200 text-xs text-gray-400 font-medium uppercase tracking-wide">
+      <div className="grid grid-cols-[180px_1fr_120px_1fr] gap-x-4 pb-2 border-b border-surface-400 text-xs text-text-muted font-medium uppercase tracking-wide">
         <span>Token</span>
         <span>Preview</span>
         <span>Value</span>
@@ -39,19 +39,19 @@ function BorderRadiusDoc() {
       {radiusTokens.map(({ className, label, value, usage }) => (
         <div
           key={className}
-          className="grid grid-cols-[180px_1fr_120px_1fr] gap-x-4 items-center py-4 border-b border-gray-100"
+          className="grid grid-cols-[180px_1fr_120px_1fr] gap-x-4 items-center py-4 border-b border-surface-400/30"
         >
-          <span className="text-xs text-gray-700 font-mono">
+          <span className="text-xs text-text-title font-mono">
             .{className}
-            <span className="mt-0.5 block text-[10px] font-sans text-gray-400">
+            <span className="mt-0.5 block text-[10px] font-sans text-text-muted">
               {label}
             </span>
           </span>
           <div
-            className={`w-20 h-12 bg-brand-400 border border-brand-500 ${className}`}
+            className={`w-20 h-12 bg-primary-400 border border-primary-500 ${className}`}
           />
-          <span className="text-xs text-gray-400">{value}</span>
-          <span className="text-xs text-gray-400">{usage}</span>
+          <span className="text-xs text-text-muted">{value}</span>
+          <span className="text-xs text-text-muted">{usage}</span>
         </div>
       ))}
     </div>

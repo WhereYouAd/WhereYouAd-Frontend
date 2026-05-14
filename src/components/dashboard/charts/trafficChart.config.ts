@@ -103,7 +103,7 @@ export function buildChartOptions(params: {
       opacity: 0.1,
     },
 
-    colors: ["#0084fe"],
+    colors: ["var(--color-info-blue)"],
 
     markers: { size: 0 },
 
@@ -116,8 +116,8 @@ export function buildChartOptions(params: {
                 y: anomalyY,
                 marker: {
                   size: 3,
-                  fillColor: "#ff4560",
-                  strokeColor: "#ff4560",
+                  fillColor: "var(--color-info-red)",
+                  strokeColor: "var(--color-info-red)",
                   strokeWidth: 1,
                 },
               },
@@ -144,7 +144,7 @@ export function buildChartOptions(params: {
           const m = String(d.getMinutes()).padStart(2, "0");
           return `${h}:${m}`;
         },
-        style: { colors: "#8b8b8f", fontSize: "12px" },
+        style: { colors: "var(--color-text-muted)", fontSize: "12px" },
         rotate: 0,
         rotateAlways: false,
       },
@@ -164,12 +164,12 @@ export function buildChartOptions(params: {
           if (rounded < 1000) return rounded.toLocaleString();
           return `${Math.round(rounded / 1000)}K`;
         },
-        style: { colors: "#8b8b8f", fontSize: "12px" },
+        style: { colors: "var(--color-text-muted)", fontSize: "12px" },
       },
     },
 
     grid: {
-      borderColor: "#f2f4f6",
+      borderColor: "var(--color-surface-200)",
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
       padding: { left: 16, right: 24 },

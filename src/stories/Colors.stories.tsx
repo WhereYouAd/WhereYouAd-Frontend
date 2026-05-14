@@ -104,7 +104,7 @@ function ColorDoc() {
               </p>
             ) : null}
           </div>
-          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] gap-x-4 gap-y-3 border-b border-gray-200 pb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] gap-x-4 gap-y-3 border-b border-surface-400 pb-2 text-xs font-medium uppercase tracking-wide text-text-muted">
             <span>토큰</span>
             <span>스와치</span>
             <span>계산 색</span>
@@ -113,20 +113,20 @@ function ColorDoc() {
             {section.items.map((item) => (
               <li
                 key={item.varName}
-                className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] items-center gap-x-4 border-b border-gray-100 py-3"
+                className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,0.9fr)_minmax(0,1.2fr)] items-center gap-x-4 border-b border-surface-400/30 py-3"
               >
                 <div>
-                  <span className="font-mono text-xs text-gray-700">
+                  <span className="font-mono text-xs text-text-title">
                     {item.varName}
                   </span>
                   {item.note ? (
-                    <p className="mt-0.5 font-caption text-gray-400">
+                    <p className="mt-0.5 font-caption text-text-muted">
                       {item.note}
                     </p>
                   ) : null}
                 </div>
                 <div
-                  className="h-12 w-full max-w-[7rem] overflow-hidden rounded-lg border border-gray-300"
+                  className="h-12 w-full max-w-[7rem] overflow-hidden rounded-lg border border-surface-400"
                   style={checkerboardStyle}
                 >
                   <div
@@ -137,7 +137,7 @@ function ColorDoc() {
                     style={{ backgroundColor: `var(${item.varName})` }}
                   />
                 </div>
-                <span className="font-mono text-xs text-gray-600">
+                <span className="font-mono text-xs text-text-body">
                   {resolved[item.varName] ?? "—"}
                 </span>
               </li>

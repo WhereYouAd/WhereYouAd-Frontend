@@ -2,7 +2,7 @@ import { Skeleton, SkeletonCircle } from "../common/skeleton/Skeleton";
 
 export default function PasswordSectionSkeleton() {
   return (
-    <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+    <div className="bg-surface-100 border border-surface-400/30 rounded-component-lg p-8 shadow-Soft">
       <div className="mb-7">
         <div className="flex gap-4 items-center mb-3">
           <SkeletonCircle className="w-8 h-8" />

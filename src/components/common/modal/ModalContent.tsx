@@ -152,7 +152,7 @@ export default function ModalContent({
               "w-full",
               showMutedDangerConfirm &&
                 variant === "danger" &&
-                "!cursor-not-allowed !border !border-info-red/45 !bg-info-red/12 !text-info-red !opacity-100 shadow-none hover:!border-info-red/55 hover:!bg-info-red/18 disabled:hover:!border-info-red/45 disabled:hover:!bg-info-red/12",
+                "cursor-not-allowed! border! border-info-red/45! bg-info-red/12! text-info-red! opacity-100! shadow-none hover:border-info-red/55! hover:bg-info-red/18! disabled:hover:border-info-red/45! disabled:hover:bg-info-red/12!",
             )}
             disabled={isLoading || confirmMismatch}
           >

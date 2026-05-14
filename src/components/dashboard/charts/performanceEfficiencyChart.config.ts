@@ -15,7 +15,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   markers: {
     size: [0, 0, 6], // 막대 = 0, 점 = 6
     strokeWidth: 2,
-    strokeColors: "#ffffff",
+    strokeColors: "var(--color-surface-100)",
     hover: { sizeOffset: 2 },
   },
   plotOptions: {
@@ -25,14 +25,18 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       borderRadiusApplication: "end",
     },
   },
-  colors: ["#0084fe", "#2f5bea", "#7a9bf8"],
+  colors: [
+    "var(--color-info-blue)",
+    "var(--color-primary-500)",
+    "var(--color-primary-300)",
+  ],
   xaxis: {
     categories: categories,
     labels: {
       style: {
         fontSize: "14px",
         fontWeight: 500,
-        colors: "#111827",
+        colors: "var(--color-text-title)",
       },
     },
     axisBorder: { show: false },
@@ -44,7 +48,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       labels: {
         formatter: (val) => `${val.toFixed(1)}%`,
         style: {
-          colors: "#9ca3af",
+          colors: "var(--color-text-muted)",
           fontSize: "12px",
         },
       },
@@ -60,7 +64,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
         offsetX: -10,
         formatter: (val) => val.toLocaleString("ko-KR"),
         style: {
-          colors: "#9ca3af",
+          colors: "var(--color-text-muted)",
           fontSize: "12px",
         },
       },
@@ -79,7 +83,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     },
   },
   grid: {
-    borderColor: "#f4f6fb",
+    borderColor: "var(--color-surface-200)",
     yaxis: { lines: { show: true } },
     padding: {
       bottom: -15,
