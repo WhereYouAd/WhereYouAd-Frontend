@@ -9,54 +9,54 @@ alwaysApply: true
 
 ## 강제 규칙 (에이전트 최우선)
 
-1. **색**: `tokens.css`의 `@theme` 토큰만. 토큰 **이름 변경·임의 색 추가 금지**.  
-2. **컴포넌트/페이지**: `var(--*)`·인라인 hex **금지** → `bg-*` `text-*` `border-*` 유틸만.  
-3. **SVG**: `fill`/`stroke="currentColor"`, 색은 `text-*`.  
-4. **“디자인 변경 금지”** 요청 시: **색상 클래스만** (spacing·타이포·DOM 변경 금지).  
-5. **상태**: UI → Zustand · 서버 → react-query(스토어에 서버 데이터 금지) · 폼 → RHF(전역에 폼값 금지).  
-6. **커밋**: 제목 **1줄만** `type: subject`. 커밋 전 `eslint --fix`.  
+1. **색**: `tokens.css`의 `@theme` 토큰만. 토큰 **이름 변경·임의 색 추가 금지**.
+2. **컴포넌트/페이지**: `var(--*)`·인라인 hex **금지** → `bg-*` `text-*` `border-*` 유틸만.
+3. **SVG**: `fill`/`stroke="currentColor"`, 색은 `text-*`.
+4. **“디자인 변경 금지”** 요청 시: **색상 클래스만** (spacing·타이포·DOM 변경 금지).
+5. **상태**: UI → Zustand · 서버 → react-query(스토어에 서버 데이터 금지) · 폼 → RHF(전역에 폼값 금지).
+6. **커밋**: 제목 **1줄만** `type: subject`. 커밋 전 `eslint --fix`.
 7. **Git**: 요청 없으면 `push`·PR 생성·`commit --amend`·`push --force` 금지.
 
 ---
 
 ## `#project-overview` — 프로젝트 개요
 
-- **프로젝트명**: WhereYouAd  
-- **한 줄**: 광고 성과 및 워크스페이스 관리를 지원하는 웹 서비스 **프론트엔드**.  
-- **성격**: 2026 Capstone · Graduation Project.  
-- **목표**: 대시보드 UI, 안정적인 상태 관리, 확장 가능한 구조.  
-- **팀 (Frontend)**: 서제경, 박재선, 임예림.  
+- **프로젝트명**: WhereYouAd
+- **한 줄**: 광고 성과 및 워크스페이스 관리를 지원하는 웹 서비스 **프론트엔드**.
+- **성격**: 2026 Capstone · Graduation Project.
+- **목표**: 대시보드 UI, 안정적인 상태 관리, 확장 가능한 구조.
+- **팀 (Frontend)**: 서제경, 박재선, 임예림.
 - **기술 방향**: 빠른 렌더링·효율적 데이터 패칭, **UI State / Server State 분리**, 린트·컨벤션으로 품질 유지.
 
 ### 기술 스택 (요약)
 
-| 구분 | 내용 |
-|------|------|
-| Core | React 19, TypeScript, Vite |
-| Routing | react-router-dom v7 |
-| Client state | zustand |
-| Server state | @tanstack/react-query |
-| Styling | Tailwind CSS v4, clsx, vite-plugin-svgr |
-| Form | react-hook-form, zod, @hookform/resolvers, sonner |
-| 품질 | ESLint v9, Prettier, husky, lint-staged, commitlint |
+| 구분         | 내용                                                |
+| ------------ | --------------------------------------------------- |
+| Core         | React 19, TypeScript, Vite                          |
+| Routing      | react-router-dom v7                                 |
+| Client state | zustand                                             |
+| Server state | @tanstack/react-query                               |
+| Styling      | Tailwind CSS v4, clsx, vite-plugin-svgr             |
+| Form         | react-hook-form, zod, @hookform/resolvers, sonner   |
+| 품질         | ESLint v9, Prettier, husky, lint-staged, commitlint |
 
 ### 개발 환경
 
-- **Node**: v20.x LTS 권장. **패키지 매니저**: pnpm.  
+- **Node**: v20.x LTS 권장. **패키지 매니저**: pnpm.
 - **스크립트**: `pnpm run dev` / `build` / `preview` / `lint` / `prepare`(Husky).
 
 ### 브랜치 전략
 
-- `main`: 배포 가능. `develop`: 다음 버전 개발.  
+- `main`: 배포 가능. `develop`: 다음 버전 개발.
 - `feature/#[이슈번호]`: 기능 브랜치 (예: `feature/#1`).
 
 ---
 
 ## `#feature-requirements` — 기능 요구사항
 
-- 광고 **성과 지표 대시보드**.  
-- **워크스페이스** 단위 광고·캠페인 관리.  
-- 성과 데이터 **시각화·요약 리포트**.  
+- 광고 **성과 지표 대시보드**.
+- **워크스페이스** 단위 광고·캠페인 관리.
+- 성과 데이터 **시각화·요약 리포트**.
 - **인증** 및 **권한** 기반 접근 제어.
 
 ---
@@ -77,14 +77,14 @@ src/
 └── utils/        유틸
 ```
 
-- 스타일 토큰: `src/styles/tokens.css`, `utilities.css`, `base.css` · 엔트리: `src/index.css`.  
+- 스타일 토큰: `src/styles/tokens.css`, `utilities.css`, `base.css` · 엔트리: `src/index.css`.
 - 외부 차트 등 라이브러리 옵션 색은 `@theme`과 맞출 것(임의 hex 추가 지양).
 
 ---
 
 ## `#Current-file-instruction` — 현재 파일·작업 시
 
-- 연 파일·커서 위치를 기준으로 수정 범위를 좁힌다.  
+- 연 파일·커서 위치를 기준으로 수정 범위를 좁힌다.
 - 색·디자인 제약은 **상단 강제 규칙 1–4**를 따른다.
 
 ---
@@ -97,8 +97,8 @@ src/
 
 ### 타입
 
-- 공통 타입(`Workspace`, `Campaign` 등): `src/types/`.  
-- 컴포넌트 로컬 타입(props 등): 해당 파일 상단.  
+- 공통 타입(`Workspace`, `Campaign` 등): `src/types/`.
+- 컴포넌트 로컬 타입(props 등): 해당 파일 상단.
 - API 응답 타입: `src/types/api.ts` 또는 도메인별 파일.
 
 ### 상태 관리
@@ -107,10 +107,10 @@ src/
 
 ### 커밋
 
-- **상단 강제 규칙 6**과 동일.  
+- **상단 강제 규칙 6**과 동일.
 - 허용 `type`: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `ci`, `setting`.
 
 ### Git·PR
 
-- **상단 강제 규칙 7**과 동일.  
+- **상단 강제 규칙 7**과 동일.
 - PR 제목 예: `[Type/#이슈번호] 작업 요약`. 리뷰 라벨: P1 필수 · P2 권장 · P3 제안 · P4 Nit.

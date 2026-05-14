@@ -38,7 +38,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
   return (
     <div className="mt-4 flex flex-col">
       <div className="overflow-auto max-h-125 relative platform-table-scrollbar border-t border-surface-400">
-        <table className="w-full text-left border-separate border-spacing-0 min-w-[800px] table-fixed">
+        <table className="w-full text-left border-separate border-spacing-0 min-w-200 table-fixed">
           <thead className="sticky top-0 z-20 bg-surface-100">
             <tr className="text-text-muted font-body2">
               <th className="w-[14%] border-b border-surface-400/90 px-4 py-4">
