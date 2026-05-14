@@ -43,7 +43,7 @@ export default function LandingHero() {
         />
       </picture>
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-landing-hero-scrim"
+        className="pointer-events-none absolute inset-0 z-1 bg-landing-hero-scrim"
         aria-hidden
       />
       <motion.div
@@ -60,10 +60,10 @@ export default function LandingHero() {
             광고 통합 대시보드
           </span>
         </div>
-        <h1 className="break-keep whitespace-pre-line font-heading2 text-surface-100 sm:font-heading1 md:font-hero">
+        <h1 className="break-keep whitespace-pre-line font-hero text-surface-100 sm:font-heading1 md:font-hero">
           광고 성과를 실시간으로{"\n"}한 화면에서 관리하세요
         </h1>
-        <p className="max-w-2xl break-keep font-body1 text-surface-100/85">
+        <p className="max-w-2xl break-keep font-heading3 text-surface-100/85">
           Google·Meta 파트너 서비스로 광고 데이터를 한 곳에서 관리하세요.
         </p>
       </motion.div>
