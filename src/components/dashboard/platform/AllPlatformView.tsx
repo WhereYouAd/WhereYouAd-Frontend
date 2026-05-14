@@ -90,7 +90,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             isLoading || isAdStatusLoading ? (
               <BadgeSkeleton className="w-14" />
             ) : adStatus ? (
-              <Badge variant="stopped" size="sm" className="text-text-auth-sub">
+              <Badge variant="surface" className="text-text-auth-sub">
                 총 {adStatus.totalCount}개
               </Badge>
             ) : null
