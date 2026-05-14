@@ -324,7 +324,7 @@ export default function WorkspaceSetting() {
                 setDeleteConfirmInput("");
               }
             }}
-            title="워크스페이스 삭제"
+            title="워크스페이스를 삭제할게요"
             size="lg"
             disableOverlayClick={deleting}
           >
@@ -335,19 +335,24 @@ export default function WorkspaceSetting() {
                   aria-hidden="true"
                 />
               }
-              title="정말 삭제하시겠습니까?"
+              title="워크스페이스를 삭제할게요"
               description={
                 <>
-                  워크스페이스를 삭제하면 연결된 모든 데이터가 영구적으로
-                  삭제됩니다.
-                  <br />
-                  삭제 후에는 복구할 수 없습니다.
+                  <p>
+                    삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
+                    없어요.
+                  </p>
+                  <p className="mt-2.5">
+                    아래 워크스페이스 이름을 그대로 입력해 주세요.
+                  </p>
                 </>
               }
+              confirmMatchSubheading={false}
               confirmMatchText={deleteNameSnapshot}
               confirmInput={deleteConfirmInput}
               onConfirmInputChange={setDeleteConfirmInput}
-              buttonText="삭제하기"
+              confirmMatchInputPlaceholder="워크스페이스 이름"
+              buttonText="영구 삭제"
               onConfirm={() => {
                 void onDelete();
               }}

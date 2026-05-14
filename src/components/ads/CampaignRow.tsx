@@ -40,7 +40,7 @@ export default function CampaignRow({
   return (
     <li
       className={twMerge(
-        "flex list-none cursor-pointer items-center border-b border-surface-400/50 px-4 py-6 transition-colors last:border-b-0 tablet:px-3 tablet:py-5",
+        "flex list-none cursor-pointer items-center border-b border-surface-400/50 px-6 py-5 transition-colors last:border-b-0 tablet:px-5 tablet:py-4",
         isSelected
           ? "bg-primary-100/35 hover:bg-primary-100/45"
           : "bg-surface-100 hover:bg-surface-200/50",
@@ -71,7 +71,7 @@ export default function CampaignRow({
         />
       </div>
 
-      <div className="min-w-0 flex-1 pr-4 tablet:pr-3">
+      <div className="min-w-0 flex-1 pr-5 tablet:pr-4">
         <div
           className={twMerge(
             "truncate font-body1",

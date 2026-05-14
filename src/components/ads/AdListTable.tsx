@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import type { IAd, TPlatform } from "@/types/ads/campaign";
 
 import AdDetailContent from "./AdDetailContent";
-import AdRow, { adListTableGridClass } from "./AdRow";
+import AdRow, { adListTableHeaderGridClass } from "./AdRow";
 
 interface IAdsListTableProps {
   ads: IAd[];
@@ -75,7 +75,7 @@ export default function AdListTable({
   };
 
   const titleBlock = (
-    <div className="shrink-0 border-b border-surface-400/45 px-4 py-3 tablet:px-3">
+    <div className="shrink-0 border-b border-surface-400/45 px-6 py-4 tablet:px-5 tablet:py-3.5">
       <p className="mb-1 font-caption text-text-placeholder">
         이 캠페인의 광고
       </p>
@@ -91,7 +91,7 @@ export default function AdListTable({
       )}
     >
       <div
-        className={`${adListTableGridClass} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
+        className={`${adListTableHeaderGridClass} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
       >
         <div
           className="flex items-center justify-center"
@@ -108,13 +108,13 @@ export default function AdListTable({
             aria-label="표시 중인 광고 전체 선택"
           />
         </div>
-        <div className="min-w-0 justify-self-start font-label text-text-muted">
+        <div className="min-w-0 justify-self-start self-center font-label text-text-muted">
           광고 명
         </div>
-        <div className="justify-self-start font-label text-text-muted">
+        <div className="flex min-w-0 items-center justify-start justify-self-start self-center pr-8 font-label text-text-muted tablet:pr-6">
           상태
         </div>
-        <div className="flex min-w-[2.75rem] items-center justify-center justify-self-center font-label text-text-muted">
+        <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start self-center font-label text-text-muted">
           플랫폼
         </div>
         <div className="text-right font-label text-text-muted" aria-hidden>

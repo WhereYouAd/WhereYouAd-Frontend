@@ -165,7 +165,7 @@ export default function PermissionTable() {
         </table>
       </div>
 
-      <div className="mt-6 border-t border-surface-400/35 pt-6">
+      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 sm:px-6">
         {hasChanges ? (
           <p
             role="status"
@@ -185,7 +185,7 @@ export default function PermissionTable() {
         <div className="flex flex-wrap items-center justify-end gap-3">
           <Button
             type="button"
-            variant="secondary"
+            variant="outline"
             size="big"
             onClick={handleResetChange}
             disabled={!hasChanges || isSaving}

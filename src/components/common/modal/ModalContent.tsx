@@ -21,6 +21,10 @@ interface IModalContentProps {
   confirmMatchText?: string;
   confirmInput?: string;
   onConfirmInputChange?: (value: string) => void;
+  /** 확인 입력란 위 안내 문단. `false`이면 문단을 렌더하지 않음(기본 문구도 생략). */
+  confirmMatchSubheading?: ReactNode | false;
+  /** 확인 입력란 placeholder. 미지정 시 `confirmMatchText`와 동일하게 사용. */
+  confirmMatchInputPlaceholder?: string;
   buttonText: string;
   onConfirm: () => void;
   isLoading?: boolean;
@@ -36,6 +40,8 @@ export default function ModalContent({
   confirmMatchText,
   confirmInput,
   onConfirmInputChange,
+  confirmMatchSubheading,
+  confirmMatchInputPlaceholder,
   buttonText,
   onConfirm,
   isLoading,
@@ -108,9 +114,12 @@ export default function ModalContent({
 
         {hasConfirmMatch ? (
           <div className="space-y-3 rounded-2xl border border-surface-400/45 bg-surface-200/40 p-4 tablet:p-3.5">
-            <p className="font-body2 leading-snug text-text-title">
-              삭제를 확인하려면 아래 이름을 한 글자도 바꾸지 않고 입력하세요.
-            </p>
+            {confirmMatchSubheading !== false ? (
+              <p className="font-body2 leading-snug text-text-title">
+                {confirmMatchSubheading ??
+                  "삭제를 확인하려면 아래 이름을 한 글자도 바꾸지 않고 입력하세요."}
+              </p>
+            ) : null}
             <div className="rounded-xl border border-surface-400/50 bg-surface-100 px-3 py-2.5">
               <p className="font-caption text-text-muted">확인용 이름</p>
               <p className="mt-0.5 break-all font-label text-text-title">
@@ -121,7 +130,9 @@ export default function ModalContent({
               label=""
               value={confirmInput}
               onChange={(e) => onConfirmInputChange!(e.target.value)}
-              placeholder={confirmMatchText}
+              placeholder={
+                confirmMatchInputPlaceholder ?? confirmMatchText ?? ""
+              }
               autoComplete="off"
               disabled={isLoading}
               aria-label="워크스페이스 이름 확인 입력"

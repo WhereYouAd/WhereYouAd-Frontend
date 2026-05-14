@@ -53,7 +53,7 @@ export default function CampaignTable({
           : "rounded-xl border border-surface-400/40",
       )}
     >
-      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-4 py-2.5 tablet:px-3">
+      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5">
         <div
           className="flex w-11 shrink-0 items-center justify-center tablet:w-10"
           role="presentation"

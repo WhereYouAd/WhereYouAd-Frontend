@@ -10,9 +10,16 @@ import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react
 import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
-/** 체크박스 | 광고 명 | 상태 | 플랫폼 | 펼침 — AdListTable 헤더와 동일 그리드 (상태·플랫폼은 auto로 겹침·잘림 방지) */
-export const adListTableGridClass =
-  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto_auto_2.5rem] items-center gap-x-2 px-4 py-3.5 tablet:px-3";
+/** 체크박스 | 광고 명 | 상태 | 플랫폼 | 펼침 — AdListTable과 동일 그리드 (CampaignTable 패딩과 통일) */
+const adListTableGridCols =
+  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto_auto_2.5rem] items-center gap-x-3";
+
+export const adListTableHeaderGridClass = `${adListTableGridCols} px-6 py-4 tablet:px-5 tablet:py-3.5`;
+
+export const adListTableRowGridClass = `${adListTableGridCols} px-6 py-5 tablet:px-5 tablet:py-4`;
+
+/** @deprecated 행 패딩과 동일. 명시적으로 `adListTableRowGridClass` 사용 권장 */
+export const adListTableGridClass = adListTableRowGridClass;
 
 interface IAdRowProps {
   name: string;
@@ -56,7 +63,7 @@ export default function AdRow({
         isPaused && !isSelected && !isOpen && "bg-surface-200/40",
       )}
     >
-      <div className={adListTableGridClass}>
+      <div className={adListTableRowGridClass}>
         <div
           className="flex items-center justify-center"
           role="presentation"
@@ -86,13 +93,13 @@ export default function AdRow({
           {name}
         </button>
 
-        <div className="flex min-w-0 justify-self-start items-center">
+        <div className="flex min-w-0 justify-start justify-self-start items-center pr-8 tablet:pr-6">
           <Badge variant={runStatus === "running" ? "infoBlue" : "surface"}>
             {runStatusText}
           </Badge>
         </div>
 
-        <div className="flex min-w-[2.75rem] items-center justify-center justify-self-center">
+        <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start">
           <span className="flex shrink-0" title={platform}>
             {LogoMap[platform] ?? (
               <span className="font-caption text-text-muted">?</span>
