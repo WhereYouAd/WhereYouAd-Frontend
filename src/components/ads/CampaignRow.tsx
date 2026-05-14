@@ -6,8 +6,8 @@ import type { TPlatform, TStatus } from "@/types/ads/campaign";
 import ProgressBar from "../common/progressbar/ProgressBar";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 interface ICampaignRowProps {
   projectId: number;
@@ -21,7 +21,9 @@ interface ICampaignRowProps {
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
-  kakao: <KakaoLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
+  kakao: (
+    <KakaoLogo className="h-7 w-7 shrink-0 text-text-title tablet:h-6 tablet:w-6" />
+  ),
   google: <GoogleLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
   naver: <NaverLogo className="h-7 w-7 shrink-0 tablet:h-6 tablet:w-6" />,
 };

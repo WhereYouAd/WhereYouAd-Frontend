@@ -5,8 +5,8 @@ import type { TPlatform } from "@/types/ads/campaign";
 import InfoCard from "@/components/common/card/InfoCard";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 interface IPlatformCardProps {
   platforms: TPlatform[];
@@ -14,7 +14,7 @@ interface IPlatformCardProps {
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
-  kakao: <KakaoLogo className="w-full h-full" />,
+  kakao: <KakaoLogo className="h-full w-full text-text-title" />,
   google: <GoogleLogo className="w-full h-full" />,
   naver: <NaverLogo className="w-full h-full" />,
 };

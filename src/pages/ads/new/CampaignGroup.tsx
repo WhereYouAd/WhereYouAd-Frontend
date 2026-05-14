@@ -10,8 +10,8 @@ import TextareaField from "@/components/common/textarea/TextareaField";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 export default function CampaignGroup() {
   const {
@@ -117,7 +117,7 @@ export default function CampaignGroup() {
           {/* Kakao */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 px-1">
-              <KakaoIcon className="w-6 h-6" />
+              <KakaoIcon className="h-6 w-6 shrink-0 text-text-title" />
               <span className="font-body1 text-text-title">Kakao</span>
             </div>
             <CampaignPlatformDropdown

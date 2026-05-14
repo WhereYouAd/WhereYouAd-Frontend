@@ -13,9 +13,9 @@ import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
 import Button from "@/components/common/button/Button";
 
+import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 type TLoginFormValues = z.infer<typeof loginSchema>;
 
@@ -86,11 +86,11 @@ export default function Login() {
         <div className="flex items-center gap-12">
           <button
             type="button"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-[#fee500] shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+            className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full text-text-title shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="카카오로 로그인"
             onClick={() => handleSocialLogin("kakao")}
           >
-            <KakaoIcon className="h-7 w-auto" aria-hidden />
+            <KakaoIcon className="block h-full w-full" aria-hidden />
           </button>
 
           <button
