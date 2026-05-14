@@ -86,7 +86,7 @@ export default function Login() {
         <div className="flex items-center gap-12">
           <button
             type="button"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-surface-100 shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
+            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-[#fee500] shadow-Soft transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2"
             aria-label="카카오로 로그인"
             onClick={() => handleSocialLogin("kakao")}
           >

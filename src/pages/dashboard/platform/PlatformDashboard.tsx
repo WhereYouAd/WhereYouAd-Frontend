@@ -12,9 +12,9 @@ import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformVi
 
 import { OverviewAiDrawer } from "../overview/OverviewAiDrawer";
 
+import AiButtonSvg from "@/assets/icon/ai/ai-요약버튼.svg?react";
 import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
-import AiButtonSvg from "@/assets/logo/service-logo/ai-요약버튼.svg?react";
 
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
