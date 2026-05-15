@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import type { TPlatformProvider } from "@/types/dashboard/platform";
 
+import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
@@ -21,7 +22,6 @@ import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?r
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
 import {
-  budgetStatusMock,
   platformDailyPerformanceMock,
   platformTrafficMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -93,19 +93,11 @@ export default function SinglePlatformView({
 
   const logoInfo = PLATFORM_LOGOS[platform.toUpperCase()];
 
-  const budget = useMemo(() => {
-    const data = budgetStatusMock.find(
-      (b) => b.providerType.toUpperCase() === platform.toUpperCase(),
-    );
-    if (!data) return null;
-
-    return {
-      totalBudget: data.totalBudget,
-      spent: data.totalSpend,
-      warningThreshold: 50,
-      dangerThreshold: 75,
-    };
-  }, [platform]);
+  const {
+    data: budget,
+    isLoading: isBudgetLoading,
+    isError: isBudgetError,
+  } = usePlatformBudget(platform.toUpperCase() as TPlatformProvider);
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -163,11 +155,11 @@ export default function SinglePlatformView({
             </div>
           ))
         ) : isMetricsError ? (
-          <div className="col-span-4 text-center py-8 text-text-sub">
+          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
             지표 데이터를 불러오지 못했습니다.
           </div>
         ) : !platformData ? (
-          <div className="col-span-4 text-center py-8 text-text-sub">
+          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
             표시할 지표 데이터가 없습니다.
           </div>
         ) : (
@@ -226,13 +218,21 @@ export default function SinglePlatformView({
             )
           }
         >
-          {budget ? (
-            <div className="flex-1 flex flex-col">
+          {isLoading || isBudgetLoading ? (
+            <div className="flex flex-1 items-center justify-center p-8">
+              <Skeleton className="h-32 w-full rounded-2xl" />
+            </div>
+          ) : isBudgetError ? (
+            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
+              예산 데이터를 불러오지 못했습니다.
+            </div>
+          ) : budget ? (
+            <div className="flex flex-1 flex-col">
               <BudgetGaugeChart {...budget} />
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-text-muted">
-              데이터가 없습니다.
+            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
+              표시할 예산 데이터가 없습니다.
             </div>
           )}
         </Card>
