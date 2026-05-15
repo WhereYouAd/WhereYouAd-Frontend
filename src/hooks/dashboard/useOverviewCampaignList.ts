@@ -5,7 +5,7 @@ import { useCoreQuery } from "@/hooks/customQuery";
 import { getCampaignList } from "@/api/ads/ads";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-/** 광고 목록과 동일 쿼리 키로 캐시 공유 */
+/** 캠페인 목록과 동일 쿼리 키로 캐시 공유 */
 export function useOverviewCampaignList() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 

@@ -13,7 +13,7 @@ import Button from "@/components/common/button/Button";
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
 import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
-import NaverIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
+import NaverWordmarkIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {
@@ -56,9 +56,9 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="gradient"
-          leftIcon={<MailIcon className="w-6 h-6" />}
+          leftIcon={<MailIcon className="w-6.5 h-6.5" />}
           onClick={() => setStep(1)}
-          className="font-heading4 shadow-Soft hover:shadow-Medium transition-all"
+          className="font-heading4 shadow-Soft transition-all"
         >
           이메일로 시작하기
         </Button>
@@ -69,7 +69,7 @@ export default function Signup() {
           variant="custom"
           leftIcon={<GoogleIcon className="w-6 h-6" />}
           onClick={() => handleSocialLogin("google")}
-          className="bg-white border border-gray-100 text-text-main font-heading4 shadow-Soft hover:bg-gray-50"
+          className="bg-surface-100 border border-surface-300 text-text-title font-heading4 shadow-Soft hover:bg-surface-200"
         >
           구글 로그인
         </Button>
@@ -78,9 +78,9 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<KakaoIcon className="w-6 h-6" />}
+          leftIcon={<KakaoIcon className="w-6 h-6 shrink-0" aria-hidden />}
           onClick={() => handleSocialLogin("kakao")}
-          className="bg-social-kakao text-text-main font-heading4 shadow-Soft hover:opacity-90"
+          className="bg-oauth-kakao font-heading4 text-text-title shadow-Soft transition-opacity hover:opacity-90"
         >
           카카오 로그인
         </Button>
@@ -89,19 +89,21 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<NaverIcon className="w-5 h-5 text-white" />}
+          leftIcon={
+            <NaverWordmarkIcon className="h-6 w-6 shrink-0" aria-hidden />
+          }
           onClick={() => handleSocialLogin("naver")}
-          className="bg-social-naver text-white font-heading4 shadow-Soft hover:opacity-90"
+          className="bg-oauth-naver font-heading4 text-surface-100 shadow-Soft transition-opacity hover:opacity-90"
         >
           네이버 로그인
         </Button>
       </div>
 
-      <div className="font-body2 text-text-sub mt-15 flex gap-2">
+      <div className="font-body2 text-text-body mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
         <Link
           to="/login"
-          className="text-text-sub underline hover:text-text-auth-sub"
+          className="text-text-body underline hover:text-text-auth-sub"
         >
           로그인하기
         </Link>

@@ -2,7 +2,6 @@ import type { INavItem } from "@/types/navigation/navItem";
 
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
-import LogoutIcon from "@/assets/icon/sidebar/logout.svg?react";
 import NotificationIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SettingsIcon from "@/assets/icon/sidebar/setting.svg?react";
 import WorkspaceIcon from "@/assets/icon/sidebar/workspace.svg?react";
@@ -33,18 +32,18 @@ export const mainNav: INavItem[] = [
   },
   {
     id: "ads",
-    label: "광고",
+    label: "캠페인",
     icon: AdsIcon,
     path: "/ads",
     children: [
       {
         id: "ads-list",
-        label: "광고 목록",
+        label: "캠페인 목록",
         path: "/ads",
       },
       {
         id: "ads-campaign-group",
-        label: "캠페인 그룹 정보 설정",
+        label: "통합 캠페인 등록",
         path: "/ads/campaignGroup",
       },
     ],
@@ -56,9 +55,25 @@ export const mainNav: INavItem[] = [
     path: "/workspace",
     children: [
       {
+        id: "workspace-list",
+        label: "워크스페이스 목록",
+        path: "/workspace",
+        pathExact: true,
+      },
+      {
+        id: "workspace-settings",
+        label: "기본 정보",
+        workspaceSubpath: "settings",
+      },
+      {
+        id: "workspace-members",
+        label: "멤버 관리",
+        workspaceSubpath: "members",
+      },
+      {
         id: "workspace-billing",
         label: "플랜 및 결제",
-        path: "/workspace/billing",
+        workspaceSubpath: "billing",
       },
     ],
   },
@@ -75,10 +90,5 @@ export const footerNav: INavItem[] = [
     label: "설정",
     icon: SettingsIcon,
     path: "/setting",
-  },
-  {
-    id: "logout",
-    label: "로그아웃",
-    icon: LogoutIcon,
   },
 ];

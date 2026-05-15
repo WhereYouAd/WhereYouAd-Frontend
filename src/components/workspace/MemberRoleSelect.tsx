@@ -15,8 +15,8 @@ type TProps = {
 };
 
 const triggerStyleMap: Record<TMemberRole, string> = {
-  ADMIN: "bg-status-blue/80 text-white shadow-sm",
-  MEMBER: "bg-chart-3/15 text-text-auth-sub",
+  ADMIN: "bg-primary-400 text-surface-100",
+  MEMBER: "bg-primary-100/80 text-text-auth-sub",
 };
 
 export default function MemberRoleSelect({
@@ -45,7 +45,7 @@ export default function MemberRoleSelect({
       className={disabled ? "pointer-events-none opacity-50" : undefined}
       trigger={(open) => (
         <div
-          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-component-lg px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
+          className={`flex h-10 min-w-25 items-center justify-between gap-3 rounded-3xl px-4 font-body2 ${triggerStyleMap[role]} cursor-pointer`}
         >
           <span>{ROLE_LABEL_MAP[role]}</span>
           <ChevonIcon

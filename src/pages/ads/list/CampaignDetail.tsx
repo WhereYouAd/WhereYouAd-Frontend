@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 
 import type { TPlatform } from "@/types/ads/campaign";
 
@@ -9,54 +9,176 @@ import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
 import Badge from "@/components/common/badge/Badge";
-import ControlBox from "@/components/common/controlbox/ControlBox";
+import Button from "@/components/common/button/Button";
+import Card from "@/components/common/card/Card";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { updateCampaignStatus } from "@/api/ads/ads";
-import LeftChevronIcon from "@/assets/icon/chevron/chervon-left.svg?react";
+import { updateAdStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
-import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 
-const LogoMap: Record<TPlatform, React.ReactNode> = {
-  kakao: <KakaoLogo className="w-6 h-6" />,
-  google: <GoogleLogo className="w-6 h-6" />,
-  naver: <NaverLogo className="w-6 h-6" />,
+const PLATFORM_WORDMARK: Record<TPlatform, string> = {
+  naver: "NAVER",
+  kakao: "KAKAO",
+  google: "GOOGLE",
 };
+
+function providerWordmark(provider: string): string {
+  const key = provider.toLowerCase() as TPlatform;
+  if (key === "naver" || key === "kakao" || key === "google") {
+    return PLATFORM_WORDMARK[key];
+  }
+  return provider.toUpperCase();
+}
 
 export default function CampaignDetail() {
   const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
-  const { data, isLoading, refetch } = useCampaignDetail();
+  const orgIdNum = orgId ? Number(orgId) : null;
+  const projectIdNum = projectId ? Number(projectId) : null;
 
-  const { ads, isAdLoading, refetchAds } = useAdList(
-    orgId ? Number(orgId) : null,
-    projectId ? Number(projectId) : null,
+  const { data, isLoading } = useCampaignDetail();
+
+  const { ads, isAdLoading, refetchAds } = useAdList(orgIdNum, projectIdNum);
+
+  const { setCampaignDetailHeaderTitle } =
+    useOutletContext<TMainLayoutOutletContext>();
+
+  const adsList = ads ?? [];
+
+  const [selectedAdIds, setSelectedAdIds] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
+  const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
+  const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
+
+  const clearAdSelection = useCallback(() => {
+    setSelectedAdIds(new Set());
+  }, []);
+
+  const toggleAd = useCallback((adId: number) => {
+    setSelectedAdIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(adId)) next.delete(adId);
+      else next.add(adId);
+      return next;
+    });
+  }, []);
+
+  const operableIds = useMemo(
+    () => adsList.filter((a) => a.status !== "OVER").map((a) => a.id),
+    [adsList],
   );
 
-  const navigate = useNavigate();
+  const toggleSelectAllVisible = useCallback(() => {
+    setSelectedAdIds((prev) => {
+      const allOn =
+        operableIds.length > 0 && operableIds.every((id) => prev.has(id));
+      if (allOn) {
+        const next = new Set(prev);
+        operableIds.forEach((id) => next.delete(id));
+        return next;
+      }
+      return new Set([...prev, ...operableIds]);
+    });
+  }, [operableIds]);
 
-  const stopControl = useControlModal({
-    successMessage: "해당 캠페인의 모든 광고 운영이 중단되었습니다.",
-    errorMessage: "중단 처리에 실패하였습니다.",
+  const selectedOngoingIds = useMemo(
+    () =>
+      [...selectedAdIds].filter((id) =>
+        adsList.some((a) => a.id === id && a.status === "ON_GOING"),
+      ),
+    [selectedAdIds, adsList],
+  );
+
+  const selectedPausedIds = useMemo(
+    () =>
+      [...selectedAdIds].filter((id) =>
+        adsList.some((a) => a.id === id && a.status === "PAUSED"),
+      ),
+    [selectedAdIds, adsList],
+  );
+
+  const ongoingAllCount = useMemo(
+    () => adsList.filter((a) => a.status === "ON_GOING").length,
+    [adsList],
+  );
+
+  const pausedAllCount = useMemo(
+    () => adsList.filter((a) => a.status === "PAUSED").length,
+    [adsList],
+  );
+
+  const canPauseAds = useMemo(() => {
+    if (selectedOngoingIds.length > 0) return true;
+    return selectedAdIds.size === 0 && ongoingAllCount > 0;
+  }, [selectedOngoingIds.length, selectedAdIds.size, ongoingAllCount]);
+
+  const canResumeAds = useMemo(() => {
+    if (selectedPausedIds.length > 0) return true;
+    return selectedAdIds.size === 0 && pausedAllCount > 0;
+  }, [selectedPausedIds.length, selectedAdIds.size, pausedAllCount]);
+
+  const bulkAdPause = useControlModal({
+    successMessage: "광고 소재 운영 상태가 반영되었습니다.",
+    errorMessage: "중단 처리에 실패했습니다.",
     onSuccess: () => {
-      refetch();
-      refetchAds();
+      void refetchAds();
+      clearAdSelection();
     },
   });
 
-  const resumeControl = useControlModal({
-    successMessage: "해당 캠페인의 광고 운영이 재개되었습니다.",
-    errorMessage: "재개 처리에 실패하였습니다.",
+  const bulkAdResume = useControlModal({
+    successMessage: "광고 소재 운영 상태가 반영되었습니다.",
+    errorMessage: "재개 처리에 실패했습니다.",
     onSuccess: () => {
-      refetch();
-      refetchAds();
+      void refetchAds();
+      clearAdSelection();
     },
   });
+
+  const openAdPauseModal = () => {
+    const scope = selectedOngoingIds.length > 0 ? "selection" : "all";
+    setPauseScope(scope);
+    bulkAdPause.openModal();
+  };
+
+  const openAdResumeModal = () => {
+    const scope = selectedPausedIds.length > 0 ? "selection" : "all";
+    setResumeScope(scope);
+    bulkAdResume.openModal();
+  };
+
+  const pauseAdDetailItems = useMemo(() => {
+    const rows =
+      pauseScope === "selection"
+        ? adsList.filter((a) => selectedOngoingIds.includes(a.id))
+        : adsList.filter((a) => a.status === "ON_GOING");
+    return rows.map((a) => ({ id: a.id, label: a.name }));
+  }, [pauseScope, adsList, selectedOngoingIds]);
+
+  const resumeAdDetailItems = useMemo(() => {
+    const rows =
+      resumeScope === "selection"
+        ? adsList.filter((a) => selectedPausedIds.includes(a.id))
+        : adsList.filter((a) => a.status === "PAUSED");
+    return rows.map((a) => ({ id: a.id, label: a.name }));
+  }, [resumeScope, adsList, selectedPausedIds]);
+
+  useEffect(() => {
+    if (!setCampaignDetailHeaderTitle) return;
+    if (data?.name) {
+      setCampaignDetailHeaderTitle(data.name);
+      return () => {
+        setCampaignDetailHeaderTitle(null);
+      };
+    }
+    setCampaignDetailHeaderTitle(null);
+    return undefined;
+  }, [data?.name, setCampaignDetailHeaderTitle]);
 
   if (isLoading) {
     return (
@@ -77,154 +199,227 @@ export default function CampaignDetail() {
   }
 
   return (
-    <section className="flex flex-col justify-start bg-white rounded-component-lg min-h-[90vh] overflow-x-auto">
-      <div className="flex-1 py-10 px-20 tablet:px-10">
-        <div className="flex flex-col gap-10 w-full">
-          {/* header */}
-          <header className="flex flex-col gap-5 w-full">
-            <button
-              onClick={() => navigate("/ads")}
-              className="flex items-center gap-2 text-text-sub font-body2 hover:text-text-main transition-colors w-fit mb-3"
-            >
-              <LeftChevronIcon className="w-4 h-4" />
-              광고 운영 관리
-            </button>
-
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center justify-between w-full tablet:flex-col tablet:items-start tablet:gap-2">
-                <div className="flex items-center gap-5">
-                  <h1 className="font-heading2 text-text-main">{data.name}</h1>
-                  <Badge
-                    variant={data.status === "ON_GOING" ? "running" : "stopped"}
-                    size="sm"
-                  >
-                    {data.status === "ON_GOING"
-                      ? "운영 중"
-                      : data.status === "PAUSED"
-                        ? "중단"
-                        : "종료"}
-                  </Badge>
-                </div>
-                <span className="text-text-placeholder font-body2">
-                  {data.createdAt.replaceAll("-", ".")} 등록
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4 text-text-sub font-body2">
-                <span>예산 {data.budget.toLocaleString()}원</span>
-                <span className="text-text-placeholder">·</span>
-                <div className="flex items-center gap-1">
-                  {data.providers.map((provider) => {
-                    const platform = provider.toLowerCase() as TPlatform;
-                    return (
-                      <div
-                        key={provider}
-                        title={provider}
-                        className="flex items-center justify-center w-6 h-6 rounded-full overflow-hidden shadow-sm"
-                      >
-                        {LogoMap[platform] || null}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {data.description && (
-                <div className="flex flex-col gap-1">
-                  <p className="text-text-sub font-body2 whitespace-pre-line leading-relaxed">
-                    {data.description}
-                  </p>
-                </div>
-              )}
+    <section className="flex w-full flex-col gap-8">
+      <Card className="px-6 py-8 tablet:px-5 tablet:py-7">
+        <header className="flex w-full flex-col gap-6">
+          <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+            <div className="flex min-w-0 flex-wrap items-center gap-3">
+              <h1 className="min-w-0 break-words font-heading2 text-text-title">
+                {data.name}
+              </h1>
+              <Badge
+                variant={data.status === "ON_GOING" ? "infoBlue" : "surface"}
+              >
+                {data.status === "ON_GOING"
+                  ? "운영 중"
+                  : data.status === "PAUSED"
+                    ? "중단"
+                    : "종료"}
+              </Badge>
             </div>
-          </header>
+            <span className="shrink-0 text-right font-caption text-text-muted">
+              {data.createdAt.replaceAll("-", ".")} 등록
+            </span>
+          </div>
 
-          <div className="w-full">
-            {/* ads list */}
-            {isAdLoading ? (
-              <div className="py-20 text-center font-body2 text-text-placeholder">
-                광고 목록을 불러오는 중입니다...
+          <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 tablet:gap-x-10 tablet:gap-y-4">
+            <div className="min-w-0">
+              <p className="mb-1 font-caption text-text-placeholder">
+                캠페인 예산
+              </p>
+              <p className="font-body1 tabular-nums leading-snug text-text-title">
+                {data.budget.toLocaleString()}원
+              </p>
+            </div>
+            <div className="min-w-0">
+              <p className="mb-2 font-caption text-text-placeholder">
+                연결 플랫폼
+              </p>
+              <div
+                className="flex flex-wrap items-center gap-2"
+                aria-label="연결된 광고 플랫폼"
+              >
+                {data.providers.map((provider) => (
+                  <span
+                    key={provider}
+                    className="inline-flex items-center rounded-lg border border-surface-400/60 bg-surface-200/70 px-2.5 py-1 font-body2 font-medium tracking-wide text-text-title"
+                  >
+                    {providerWordmark(provider)}
+                  </span>
+                ))}
               </div>
-            ) : (
-              <AdListTable ads={ads || []} refetchAds={refetchAds} />
-            )}
-
-            {/* campaign controlbox */}
-            <div className="mt-10">
-              {data.status === "ON_GOING" ? (
-                <ControlBox
-                  title="캠페인 운영 중단"
-                  description={`클릭 시 해당 캠페인 내 속한 모든 광고 소재의 운영이 즉시 중단됩니다.`}
-                  buttonText="중단하기"
-                  onButtonClick={stopControl.openModal}
-                  buttonDisabled={stopControl.isLoading}
-                  containerClassName="bg-status-red/7 border-status-red px-6 py-4"
-                  titleClassName="text-status-red font-heading3"
-                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
-                  buttonSize="big"
-                  buttonClassName="font-body1 bg-status-red"
-                />
-              ) : data.status === "PAUSED" ? (
-                <ControlBox
-                  title="캠페인 운영 제어"
-                  description={`중단된 캠페인을 다시 활성화하여 광고 노출을 시작합니다.`}
-                  buttonText="시작하기"
-                  onButtonClick={resumeControl.openModal}
-                  buttonDisabled={resumeControl.isLoading}
-                  containerClassName="bg-status-blue/7 border-status-blue px-6 py-4"
-                  titleClassName="text-status-blue font-heading3"
-                  descriptionClassName="font-body2 text-text-sub leading-relaxed"
-                  buttonSize="big"
-                  buttonClassName="font-body1 bg-status-blue"
-                />
-              ) : null}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* 해당 캠페인 중단 */}
+          {data.description ? (
+            <div>
+              <p className="mb-2 font-caption text-text-placeholder">
+                캠페인 설명
+              </p>
+              <p className="font-body1 leading-relaxed whitespace-pre-line text-text-body">
+                {data.description}
+              </p>
+            </div>
+          ) : null}
+        </header>
+      </Card>
+
+      {isAdLoading ? (
+        <Card className="flex flex-col overflow-hidden p-0">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <p className="font-caption text-text-placeholder">광고</p>
+              <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
+              </div>
+            </div>
+          </div>
+          <div className="py-20 text-center font-body2 text-text-placeholder">
+            연결된 광고를 불러오는 중입니다...
+          </div>
+        </Card>
+      ) : (
+        <Card className="flex flex-col overflow-hidden p-0">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <p className="font-caption text-text-placeholder">광고</p>
+              <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
+                {selectedAdIds.size > 0 ? (
+                  <>
+                    <span className="font-caption text-text-muted">
+                      {selectedAdIds.size}개 선택
+                    </span>
+                    <button
+                      type="button"
+                      onClick={clearAdSelection}
+                      className="font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title"
+                    >
+                      선택 해제
+                    </button>
+                  </>
+                ) : null}
+              </div>
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <Button
+                type="button"
+                size="small"
+                variant="dangerSoft"
+                onClick={openAdPauseModal}
+                disabled={!canPauseAds || bulkAdPause.isLoading}
+              >
+                중단
+              </Button>
+              <Button
+                type="button"
+                size="small"
+                variant="outline"
+                className="border-info-blue text-info-blue hover:bg-info-blue/5"
+                onClick={openAdResumeModal}
+                disabled={!canResumeAds || bulkAdResume.isLoading}
+              >
+                재개
+              </Button>
+            </div>
+          </div>
+
+          <div className="min-h-0 min-w-0 flex-1">
+            <AdListTable
+              embedded
+              ads={adsList}
+              refetchAds={refetchAds}
+              selectedAdIds={selectedAdIds}
+              onToggleAd={toggleAd}
+              onToggleSelectAllVisible={toggleSelectAllVisible}
+            />
+          </div>
+        </Card>
+      )}
+
       <Modal
-        isOpen={stopControl.isOpen}
-        onClose={stopControl.closeModal}
-        title="캠페인 운영 중단"
+        isOpen={bulkAdPause.isOpen}
+        onClose={bulkAdPause.closeModal}
+        title="광고 소재 중단"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-red" />}
-          title="캠페인 운영을 중단하시겠습니까?"
-          description="해당 캠페인의 모든 광고 노출이 중단됩니다."
+          icon={<WarnCircleIcon className="h-7 w-7 text-info-red" />}
+          title={
+            pauseScope === "all"
+              ? "운영 중인 광고 소재를 모두 중단할까요?"
+              : "선택한 광고 소재를 중단할까요?"
+          }
+          description={
+            pauseScope === "all"
+              ? `운영 중인 ${ongoingAllCount}개 광고 소재의 노출이 즉시 중단됩니다.`
+              : `선택한 ${selectedOngoingIds.length}개 광고 소재의 노출이 즉시 중단됩니다.`
+          }
+          detailItems={pauseAdDetailItems}
+          detailListTitle="중단 대상 광고"
           buttonText="중단하기"
           onConfirm={() =>
-            stopControl.handleConfirm(() =>
-              updateCampaignStatus(Number(orgId), Number(projectId), "PAUSED"),
-            )
+            bulkAdPause.handleConfirm(async () => {
+              if (orgIdNum == null || projectIdNum == null) return;
+              const ids =
+                pauseScope === "all"
+                  ? adsList
+                      .filter((a) => a.status === "ON_GOING")
+                      .map((a) => a.id)
+                  : selectedOngoingIds;
+              await Promise.all(
+                ids.map((adContentId) =>
+                  updateAdStatus(orgIdNum, projectIdNum, adContentId, "PAUSED"),
+                ),
+              );
+            })
           }
-          isLoading={stopControl.isLoading}
+          isLoading={bulkAdPause.isLoading}
           variant="danger"
         />
       </Modal>
 
-      {/* 해당 캠페인 재개 */}
       <Modal
-        isOpen={resumeControl.isOpen}
-        onClose={resumeControl.closeModal}
-        title="캠페인 운영 재개"
+        isOpen={bulkAdResume.isOpen}
+        onClose={bulkAdResume.closeModal}
+        title="광고 소재 재개"
       >
         <ModalContent
-          icon={<WarnCircleIcon className="text-status-blue" />}
-          title="캠페인 운영을 재개하시겠습니까?"
-          description="해당 캠페인의 모든 광고 노출이 다시 시작됩니다."
-          buttonText="시작하기"
-          onConfirm={() =>
-            resumeControl.handleConfirm(() =>
-              updateCampaignStatus(
-                Number(orgId),
-                Number(projectId),
-                "ON_GOING",
-              ),
-            )
+          icon={<WarnCircleIcon className="h-7 w-7 text-info-blue" />}
+          title={
+            resumeScope === "all"
+              ? "중단된 광고 소재를 모두 재개할까요?"
+              : "선택한 광고 소재를 재개할까요?"
           }
-          isLoading={resumeControl.isLoading}
+          description={
+            resumeScope === "all"
+              ? `중단된 ${pausedAllCount}개 광고 소재의 노출이 즉시 재개됩니다.`
+              : `선택한 ${selectedPausedIds.length}개 광고 소재의 노출이 즉시 재개됩니다.`
+          }
+          detailItems={resumeAdDetailItems}
+          detailListTitle="재개 대상 광고"
+          buttonText="재개하기"
+          onConfirm={() =>
+            bulkAdResume.handleConfirm(async () => {
+              if (orgIdNum == null || projectIdNum == null) return;
+              const ids =
+                resumeScope === "all"
+                  ? adsList
+                      .filter((a) => a.status === "PAUSED")
+                      .map((a) => a.id)
+                  : selectedPausedIds;
+              await Promise.all(
+                ids.map((adContentId) =>
+                  updateAdStatus(
+                    orgIdNum,
+                    projectIdNum,
+                    adContentId,
+                    "ON_GOING",
+                  ),
+                ),
+              );
+            })
+          }
+          isLoading={bulkAdResume.isLoading}
           variant="primary"
         />
       </Modal>

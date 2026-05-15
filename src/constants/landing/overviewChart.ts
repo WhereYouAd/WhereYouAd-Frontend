@@ -35,7 +35,7 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
     dashArray: [0, 6],
     lineCap: "round",
   },
-  colors: ["var(--color-logo-2)", "var(--color-brand-500)"],
+  colors: ["var(--color-primary-400)", "var(--color-primary-500)"],
   markers: { size: [0, 0] },
   tooltip: { enabled: false },
   xaxis: {
@@ -54,12 +54,12 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
     labels: {
       formatter: (val: number) =>
         val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,
-      style: { colors: "var(--color-text-sub)", fontSize: "10px" },
+      style: { colors: "var(--color-text-muted)", fontSize: "10px" },
       offsetX: -2,
     },
   },
   grid: {
-    borderColor: "var(--color-bg-disabled)",
+    borderColor: "var(--color-surface-400)",
     strokeDashArray: 5,
     xaxis: { lines: { show: false } },
     yaxis: { lines: { show: true } },
@@ -70,7 +70,7 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
     xaxis: [
       {
         x: SPLIT_INDEX,
-        borderColor: "var(--color-brand-500)",
+        borderColor: "var(--color-primary-500)",
         strokeDashArray: 0,
       },
     ],
@@ -80,8 +80,8 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
         y: NORMALIZED_CLICKS[SPLIT_INDEX],
         marker: {
           size: 5,
-          fillColor: "var(--color-logo-2)",
-          strokeColor: "var(--color-logo-2)",
+          fillColor: "var(--color-primary-400)",
+          strokeColor: "var(--color-primary-400)",
         },
       },
     ],

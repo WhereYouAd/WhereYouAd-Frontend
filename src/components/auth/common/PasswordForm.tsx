@@ -39,7 +39,9 @@ export default function PasswordForm({
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-main mb-10">{title}</h1>
+      <h1 className="text-start font-heading2 text-text-title mb-10">
+        {title}
+      </h1>
 
       <form
         onSubmit={handleSubmit(handleFormSubmit)}

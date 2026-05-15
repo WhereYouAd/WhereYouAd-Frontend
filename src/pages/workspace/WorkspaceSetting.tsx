@@ -6,9 +6,10 @@ import { toast } from "sonner";
 import type { IApiErrorResponse } from "@/types/common/common";
 
 import Button from "@/components/common/button/Button";
-import ControlBox from "@/components/common/controlbox/ControlBox";
+import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 import TextareaField from "@/components/common/textarea/TextareaField";
 import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
@@ -39,6 +40,8 @@ export default function WorkspaceSetting() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
 
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -111,6 +114,10 @@ export default function WorkspaceSetting() {
       setErrorMsg("잘못된 워크스페이스ID 입니다");
       return;
     }
+    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
+      toast.error("워크스페이스 이름이 일치하지 않습니다.");
+      return;
+    }
     setDeleting(true);
     try {
       await deleteWorkspace(orgId);
@@ -128,6 +135,13 @@ export default function WorkspaceSetting() {
   };
 
   const openDeleteModal = () => {
+    const snapshot = name.trim();
+    if (!snapshot) {
+      toast.error("워크스페이스 이름을 먼저 입력해 주세요.");
+      return;
+    }
+    setDeleteNameSnapshot(snapshot);
+    setDeleteConfirmInput("");
     setDeleteOpen(true);
   };
 
@@ -178,8 +192,8 @@ export default function WorkspaceSetting() {
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
       {!loading && errorMsg && (
-        <div className="bg-white p-10 text-center border border-gray-100 rounded-component-lg space-y-4">
-          <p className="font-body2 text-status-red">{errorMsg}</p>
+        <Card className="space-y-4 p-10 text-center">
+          <p className="font-body2 text-info-red">{errorMsg}</p>
           <Button
             type="button"
             variant="primary"
@@ -187,14 +201,14 @@ export default function WorkspaceSetting() {
           >
             다시 시도
           </Button>
-        </div>
+        </Card>
       )}
       {!loading && !errorMsg && (
         <>
-          <div className="bg-white border border-gray-100 rounded-component-lg p-8 shadow-Soft">
+          <Card className="p-8">
             <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
-              <div className="flex flex-col items-center w-60 tablet:w-full shrink-0">
-                <div className="w-full text-text-main mb-3 ml-1 select-none tablet:text-center">
+              <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
+                <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
                   로고 이미지
                 </div>
                 <input
@@ -204,18 +218,24 @@ export default function WorkspaceSetting() {
                   className="hidden"
                   onChange={onPickLogo}
                 />
-                <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-component-sm border border-gray-100 bg-gray-100 tablet:h-46 tablet:w-46">
+                <button
+                  type="button"
+                  onClick={openFilePicker}
+                  disabled={saving || deleting}
+                  aria-label="로고 이미지 업로드 또는 변경"
+                  className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
+                >
                   {logoPreview ? (
                     <img
                       src={logoPreview}
-                      alt={"새 로고 미리보기"}
-                      className="w-full h-full object-cover rounded-component-sm"
+                      alt=""
+                      className="h-full w-full object-cover rounded-lg"
                     />
                   ) : resolvedLogoUrl ? (
                     <img
                       src={resolvedLogoUrl}
-                      alt={`${name || "워크스페이스"} 로고`}
-                      className="w-full h-full object-cover rounded-component-sm"
+                      alt=""
+                      className="h-full w-full object-cover rounded-lg"
                       onError={() => {
                         setImageError(true);
                       }}
@@ -223,15 +243,15 @@ export default function WorkspaceSetting() {
                   ) : (
                     <BuildingIcon
                       aria-hidden="true"
-                      className="w-11 h-11 text-text-placeholder"
+                      className="h-11 w-11 text-text-placeholder"
                     />
                   )}
-                </div>
+                </button>
                 <div className="flex gap-2 mt-4 justify-center">
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={saving || deleting}
@@ -241,7 +261,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! border border-gray-200 text-text-auth-sub px-4 rounded-component-lg bg-white font-body2 hover:bg-gray-100 transition-colors duration-200 ease-in-out"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={saving || deleting}
@@ -270,7 +290,17 @@ export default function WorkspaceSetting() {
                 />
               </div>
             </div>
-            <div className="flex justify-end mt-6 gap-4 tablet:flex-col">
+            <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
+              <Button
+                type="button"
+                variant="dangerSoft"
+                size="big"
+                onClick={openDeleteModal}
+                disabled={saving || deleting}
+                className="w-auto tablet:w-full"
+              >
+                워크스페이스 삭제
+              </Button>
               <Button
                 size="big"
                 variant="primary"
@@ -283,60 +313,52 @@ export default function WorkspaceSetting() {
                 {saving ? "저장 중.." : "변경사항 저장하기"}
               </Button>
             </div>
-          </div>
+          </Card>
 
-          <div className="w-full flex flex-col">
-            <ControlBox
-              title="워크스페이스 삭제"
-              description={`워크스페이스를 삭제하면 모든 데이터가 영구적으로 삭제됩니다.\n 이 작업은 되돌릴 수 없습니다`}
-              buttonText="워크스페이스 삭제"
-              onButtonClick={openDeleteModal}
-              className="w-full"
-              containerClassName="bg-status-red/10 border-status-red"
-              titleClassName="text-status-red"
-              descriptionClassName="text-text-auth-sub"
-              buttonVariant="dangerSoft"
-              buttonSize="big"
-              buttonClassName="px-8 !rounded-component-md"
-              buttonDisabled={saving || deleting}
-              leadingSlot={<WarnIcon className="text-red-500 w-12 h-12" />}
-            />
-          </div>
           <Modal
             isOpen={deleteOpen}
-            onClose={() => setDeleteOpen(false)}
+            onClose={() => {
+              if (!deleting) {
+                setDeleteOpen(false);
+                setDeleteNameSnapshot("");
+                setDeleteConfirmInput("");
+              }
+            }}
+            title="워크스페이스를 삭제할게요"
             size="lg"
-            padding="lg"
-            title="워크스페이스 삭제 확인"
+            disableOverlayClick={deleting}
           >
-            <div className="text-center px-2 py-6">
-              <div className="flex justify-center mb-6">
+            <ModalContent
+              icon={
                 <WarnIcon
-                  className="text-status-red w-15 h-15"
+                  className="h-7 w-7 text-info-red"
                   aria-hidden="true"
                 />
-              </div>
-              <h3 className="font-heading2 text-text-main mb-3">
-                정말 삭제하시겠습니까?
-              </h3>
-              <p className="font-body1 text-text-auth-sub mb-7">
-                삭제된 워크스페이스와 관련된 모든 데이터는 영구 삭제되며 <br />{" "}
-                절대 되돌릴 수 없습니다.
-              </p>
-              <div className="flex justify-center">
-                <Button
-                  variant="danger"
-                  size="big"
-                  aria-label="워크스페이스 최종 삭제 버튼"
-                  onClick={onDelete}
-                  className="w-auto tablet:w-full"
-                  type="button"
-                  disabled={deleting}
-                >
-                  {deleting ? "삭제 중.." : "삭제하기"}
-                </Button>
-              </div>
-            </div>
+              }
+              title="워크스페이스를 삭제할게요"
+              description={
+                <>
+                  <p>
+                    삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
+                    없어요.
+                  </p>
+                  <p className="mt-2.5">
+                    아래 워크스페이스 이름을 그대로 입력해 주세요.
+                  </p>
+                </>
+              }
+              confirmMatchSubheading={false}
+              confirmMatchText={deleteNameSnapshot}
+              confirmInput={deleteConfirmInput}
+              onConfirmInputChange={setDeleteConfirmInput}
+              confirmMatchInputPlaceholder="워크스페이스 이름"
+              buttonText="영구 삭제"
+              onConfirm={() => {
+                void onDelete();
+              }}
+              isLoading={deleting}
+              variant="danger"
+            />
           </Modal>
         </>
       )}

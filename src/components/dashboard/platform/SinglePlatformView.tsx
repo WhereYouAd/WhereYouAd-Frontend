@@ -144,7 +144,7 @@ export default function SinglePlatformView({
               className={twMerge("w-auto", logoInfo.className)}
             />
           ) : (
-            <h2 className="text-3xl font-bold text-text-main">{platform}</h2>
+            <h2 className="font-heading2 text-text-title">{platform}</h2>
           )}
         </div>
       </div>
@@ -155,7 +155,7 @@ export default function SinglePlatformView({
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="bg-white/80 backdrop-blur-sm rounded-[24px] shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-7 flex flex-col gap-4 border border-white/40"
+              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-card backdrop-blur-sm flex flex-col gap-4"
             >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-8 w-24" />
@@ -191,7 +191,7 @@ export default function SinglePlatformView({
             <ChartLegend
               items={[
                 { label: "클릭수", color: platformColor },
-                { label: "이상 클릭 탐지", colorClass: "bg-status-red" },
+                { label: "이상 클릭 탐지", colorClass: "bg-info-red" },
               ]}
             />
           }
@@ -209,9 +209,9 @@ export default function SinglePlatformView({
           description={
             <ChartLegend
               items={[
-                { label: "안정", colorClass: "bg-status-green" },
-                { label: "주의", colorClass: "bg-status-yellow" },
-                { label: "위험", colorClass: "bg-status-red" },
+                { label: "안정", colorClass: "bg-info-blue" },
+                { label: "주의", colorClass: "bg-info-yellow" },
+                { label: "위험", colorClass: "bg-info-red" },
               ]}
             />
           }
@@ -219,7 +219,6 @@ export default function SinglePlatformView({
             budgetStatus && (
               <Badge
                 variant={statusBadgeVariant[budgetStatus]}
-                size="sm"
                 className="px-2"
               >
                 {budgetStatus}
@@ -232,7 +231,7 @@ export default function SinglePlatformView({
               <BudgetGaugeChart {...budget} />
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-text-sub">
+            <div className="flex items-center justify-center h-full text-text-muted">
               데이터가 없습니다.
             </div>
           )}
@@ -244,15 +243,15 @@ export default function SinglePlatformView({
         title="광고 현황 상세"
         className="min-h-150"
         RightElement={
-          <div className="flex border border-bg-disabled rounded-lg overflow-hidden">
+          <div className="flex overflow-hidden rounded-lg border border-surface-400">
             <button
               type="button"
               onClick={() => setViewRange(7)}
               className={twMerge(
                 "px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 7
-                  ? "bg-status-blue text-white shadow-sm"
-                  : "bg-white text-text-sub hover:bg-bg-surface",
+                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
               최근 7일
@@ -261,10 +260,10 @@ export default function SinglePlatformView({
               type="button"
               onClick={() => setViewRange(30)}
               className={twMerge(
-                "px-4 py-2 font-body2 border-l border-bg-disabled transition-all duration-200",
+                "border-l border-surface-400 px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 30
-                  ? "bg-status-blue text-white shadow-sm"
-                  : "bg-white text-text-sub hover:bg-bg-surface",
+                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
               최근 30일

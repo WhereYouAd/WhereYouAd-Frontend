@@ -12,15 +12,11 @@ export default function LandingGuide() {
     <section
       id="guide"
       tabIndex={-1}
-      className="py-24 md:py-40 bg-brand-200 scroll-mt-[calc(var(--landing-header-height,64px)+16px)] relative overflow-hidden focus-visible:outline-none"
+      className="py-24 md:py-40 bg-surface-100 scroll-mt-[calc(var(--landing-header-height,64px)+16px)] relative overflow-hidden focus-visible:outline-none"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-35"
-        style={{
-          backgroundImage:
-            "radial-gradient(900px 320px at 20% 0%, rgba(46, 180, 255, 0.16), transparent 60%), radial-gradient(900px 320px at 80% 10%, rgba(96, 136, 254, 0.12), transparent 60%)",
-        }}
+        className="pointer-events-none absolute inset-0 opacity-35 bg-landing-guide-wash"
       />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -47,10 +43,10 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-3/5 rounded-component-lg overflow-hidden ${
+                className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
                   page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
-                    : "bg-white shadow-card border border-chart-inactive/70"
+                    : "bg-surface-100 shadow-card border border-surface-400/70"
                 }`}
                 initial={{ opacity: 0, x: page.reverse ? 42 : -42 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -92,19 +88,19 @@ export default function LandingGuide() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-4xl font-bold text-brand-600/35 leading-none select-none">
+                  <span className="select-none font-heading1 leading-none text-primary-400">
                     {page.number}
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-brand-300 px-3 py-1 text-[11px] font-semibold text-text-sub tracking-wide">
+                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 font-caption text-surface-100 shadow-landing-pill tracking-wide">
                     {page.label}
                   </span>
                 </div>
 
-                <h3 className="font-heading2 text-text-main leading-snug break-keep text-balance">
+                <h3 className="break-keep text-balance font-heading2 text-text-title">
                   {page.title}
                 </h3>
 
-                <p className="font-body1 text-text-auth-sub leading-relaxed break-keep whitespace-pre-line">
+                <p className="break-keep whitespace-pre-line font-body1 text-text-auth-sub">
                   {page.description}
                 </p>
 
@@ -112,14 +108,14 @@ export default function LandingGuide() {
                   {page.steps.map((item) => (
                     <div
                       key={item.step}
-                      className="rounded-component-md border border-chart-inactive/60 bg-white/70 backdrop-blur-sm px-4 py-3"
+                      className="rounded-2xl border border-surface-400/60 bg-surface-100/70 backdrop-blur-sm px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="font-body1 font-semibold text-text-main leading-snug break-keep text-balance">
+                        <span className="break-keep text-balance font-label text-text-title">
                           {item.title}
                         </span>
                       </div>
-                      <p className="mt-2 font-body2 text-text-auth-sub leading-relaxed break-keep">
+                      <p className="mt-2 break-keep font-body2 text-text-auth-sub">
                         {item.text}
                       </p>
                     </div>

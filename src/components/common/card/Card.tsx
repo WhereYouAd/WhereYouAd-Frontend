@@ -21,7 +21,7 @@ const Card = memo(function Card({
   return (
     <div
       className={twMerge(
-        "bg-white/80 backdrop-blur-sm rounded-component-lg shadow-card p-7 border border-white/40 transition-shadow duration-300 hover:shadow-card-hover relative",
+        "relative w-full rounded-3xl bg-surface-100 p-7 shadow-card transition-shadow duration-300 hover:shadow-card-hover",
         className,
       )}
       {...rest}
@@ -30,12 +30,10 @@ const Card = memo(function Card({
         <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
           <div className="flex flex-col gap-1">
             {title && (
-              <h3 className="font-heading4 font-semibold! text-text-main">
-                {title}
-              </h3>
+              <h3 className="font-heading4 text-text-title">{title}</h3>
             )}
             {description && (
-              <div className="font-caption text-text-sub">{description}</div>
+              <div className="font-caption text-text-muted">{description}</div>
             )}
           </div>
           {RightElement}

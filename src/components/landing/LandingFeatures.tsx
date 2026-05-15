@@ -9,8 +9,8 @@ import ChevronRight from "@/assets/icon/chevron/chevron-right.svg?react";
 import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 import GoogleAdsLogo from "@/assets/logo/social-logo/circle/googleAds-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 type TFeatureCardProps = {
   delay: number;
@@ -28,43 +28,43 @@ function IntegrationGraphic() {
       viewport={{ once: true, amount: 0.45 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <motion.div className="flex items-center justify-between px-4 py-3 bg-white/80 rounded-component-md border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
+      <motion.div className="flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-landing-pill opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
         <div className="flex items-center gap-3">
-          <NaverLogo className="w-8 h-8 rounded-full shadow-sm" />
+          <NaverLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
           <div className="flex flex-col text-left">
-            <span className="text-[13px] text-text-sub">Naver</span>
+            <span className="font-body2 text-text-muted">Naver</span>
           </div>
         </div>
-        <div className="w-7 h-7 rounded-xl border border-chart-inactive/70 bg-white/70 flex items-center justify-center shrink-0">
-          <ChevronRight className="text-text-sub w-3.5 h-3.5" />
+        <div className="w-7 h-7 rounded-xl border border-surface-400/70 bg-surface-100/70 flex items-center justify-center shrink-0">
+          <ChevronRight className="text-text-muted w-3.5 h-3.5" />
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-white rounded-component-md shadow-[0_18px_40px_rgba(0,0,0,0.10)] border border-chart-inactive/60 relative z-20 scale-[1.02]">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-surface-100 rounded-2xl shadow-landing-integration border border-surface-400/60 relative z-20 scale-[1.02]">
         <div className="flex items-center gap-3">
-          <div className="bg-white rounded-full w-8 h-8 flex items-center justify-center shrink-0 shadow-sm overflow-hidden border border-chart-inactive/70">
+          <div className="bg-surface-100 rounded-full w-8 h-8 flex items-center justify-center shrink-0 shadow-landing-pill overflow-hidden border border-surface-400/70">
             <GoogleAdsLogo className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-[13.5px] font-bold text-text-main tracking-wide">
+            <span className="font-body2 tracking-wide text-text-title">
               Google Ads
             </span>
           </div>
         </div>
-        <div className="w-8 h-8 rounded-xl bg-brand-300 border border-chart-inactive/70 flex items-center justify-center shrink-0 ml-2">
-          <ChevronRight className="text-text-sub w-3.5 h-3.5" />
+        <div className="w-8 h-8 rounded-xl bg-surface-100 border border-surface-400/70 flex items-center justify-center shrink-0 ml-2">
+          <ChevronRight className="text-text-muted w-3.5 h-3.5" />
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-white/80 rounded-component-md border border-chart-inactive/70 shadow-sm opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-landing-pill opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
         <div className="flex items-center gap-3">
-          <KakaoLogo className="w-8 h-8 rounded-full shadow-sm" />
+          <KakaoLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
           <div className="flex flex-col text-left">
-            <span className="text-[13px] text-text-sub">Kakao</span>
+            <span className="font-body2 text-text-muted">Kakao</span>
           </div>
         </div>
-        <div className="w-7 h-7 rounded-xl border border-chart-inactive/70 bg-white/70 flex items-center justify-center shrink-0">
-          <ChevronRight className="text-text-sub w-3.5 h-3.5" />
+        <div className="w-7 h-7 rounded-xl border border-surface-400/70 bg-surface-100/70 flex items-center justify-center shrink-0">
+          <ChevronRight className="text-text-muted w-3.5 h-3.5" />
         </div>
       </motion.div>
     </motion.div>
@@ -73,13 +73,13 @@ function IntegrationGraphic() {
 
 function WorkflowGraphic() {
   return (
-    <div className="absolute left-0 bg-white/85 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-[0_18px_50px_rgba(0,0,0,0.08)] border border-chart-inactive/60">
+    <div className="absolute left-0 bg-surface-100 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-landing-float border border-surface-400/60">
       <div
         aria-hidden
-        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-md shadow-logo-2/20 relative overflow-hidden select-none"
+        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-md shadow-primary-400/20 relative overflow-hidden select-none"
         style={{
           background:
-            "linear-gradient(135deg, var(--color-logo-1), var(--color-logo-2))",
+            "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-500))",
         }}
       >
         <motion.span
@@ -87,7 +87,7 @@ function WorkflowGraphic() {
           className="pointer-events-none absolute -left-1/3 top-[-20%] h-[140%] w-[42%] rotate-12 blur-[1px]"
           style={{
             background:
-              "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.42), rgba(255,255,255,0))",
+              "linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-surface-100) 42%, transparent), transparent)",
           }}
           animate={{
             x: ["-140%", "220%"],
@@ -100,14 +100,12 @@ function WorkflowGraphic() {
             repeatDelay: 1.1,
           }}
         />
-        <span className="text-white text-[14.5px] font-semibold">
-          AI로 요약하기
-        </span>
-        <SparkleIcon className="w-4.5 h-auto ml-0.5 text-white fill-current" />
+        <span className="font-body1 text-surface-100">AI로 요약하기</span>
+        <SparkleIcon className="w-4.5 h-auto ml-0.5 text-surface-100 fill-current" />
       </div>
       <div
         aria-hidden
-        className="text-text-sub text-[14px] font-body2 px-4 py-1.5 rounded-full border border-chart-inactive/70 bg-white/60 shrink-0 select-none"
+        className="shrink-0 select-none rounded-full border border-surface-400/70 bg-surface-100/60 px-4 py-1.5 font-body2 text-text-muted"
       >
         다운로드
       </div>
@@ -158,44 +156,40 @@ function WorkspaceGraphic() {
   return (
     <div
       ref={containerRef}
-      className="bg-white rounded-component-lg shadow-[0_14px_32px_rgba(0,0,0,0.06)] w-70 p-4 flex flex-col gap-4 border border-chart-inactive/60"
+      className="bg-surface-100 rounded-3xl shadow-landing-card-deep w-70 p-4 flex flex-col gap-4 border border-surface-400/60"
     >
       <div className="flex gap-3">
-        <div className="w-7 h-7 bg-brand-300 overflow-hidden shrink-0 mt-0.5 rounded-full flex items-center justify-center border border-chart-inactive/70">
+        <div className="w-7 h-7 bg-color-primary-100 overflow-hidden shrink-0 mt-0.5 rounded-full flex items-center justify-center border border-surface-400/70">
           <UserIcon className="w-5 h-auto object-contain opacity-70" />
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-[14px] font-bold text-text-main">You</span>
-            <span className="text-[10px] font-medium text-text-sub">
-              Team JSON
-            </span>
+            <span className="font-body2 text-text-title">You</span>
+            <span className="font-caption text-text-muted">Team JSON</span>
           </div>
-          <p className="text-[13px] text-text-auth-sub leading-relaxed font-medium">
+          <p className="font-body2 text-text-auth-sub">
             새로운 멤버를 초대하세요!
           </p>
         </div>
       </div>
 
-      <div className="mt-1 flex items-center gap-2 bg-brand-300/70 border border-chart-inactive/70 rounded-full p-1 pl-4">
+      <div className="mt-1 flex items-center gap-2 bg-color-primary-100 border border-surface-400/70 rounded-full p-1 pl-4">
         <div
           aria-hidden
-          className="text-[13px] text-text-sub font-medium flex-1 pt-0.5 bg-transparent border-0 outline-none truncate"
+          className="flex-1 truncate border-0 bg-transparent pt-0.5 font-body2 text-text-muted outline-none"
         >
           {typedText}
         </div>
         {showCursor && (
-          <span className="text-logo-2 animate-pulse font-normal -ml-1">|</span>
+          <span className="-ml-1 animate-pulse font-body2 text-primary-400">
+            |
+          </span>
         )}
         <div
           aria-hidden
-          className="w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 shadow-sm"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--color-logo-1), var(--color-logo-2))",
-          }}
+          className="w-7 h-7 rounded-full flex items-center justify-center bg-primary-500 shrink-0 shadow-landing-pill"
         >
-          <ChevronUp className="text-white w-3.5 h-3.5" />
+          <ChevronUp className="text-surface-100 w-3.5 h-3.5" />
         </div>
       </div>
     </div>
@@ -228,7 +222,7 @@ export default function LandingFeatures() {
     <section
       id="features"
       tabIndex={-1}
-      className="py-24 md:py-40 bg-brand-200 relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] focus-visible:outline-none"
+      className="py-24 md:py-40 bg-surface-100 relative scroll-mt-[calc(var(--landing-header-height,64px)+16px)] focus-visible:outline-none"
     >
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
@@ -255,13 +249,11 @@ export default function LandingFeatures() {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <div className="w-full aspect-4/3 bg-landing-surface rounded-4xl flex items-center justify-center mb-8 relative overflow-hidden group">
+              <div className="w-full aspect-4/3 bg-surface-200 rounded-4xl flex items-center justify-center mb-8 relative overflow-hidden group">
                 <Graphic />
               </div>
-              <h3 className="font-heading4 font-bold! text-text-main mb-3">
-                {title}
-              </h3>
-              <p className="font-body2 text-text-auth-sub leading-relaxed max-w-70">
+              <h3 className="mb-3 font-heading4 text-text-title">{title}</h3>
+              <p className="max-w-70 font-body2 text-text-auth-sub">
                 {description}
               </p>
             </motion.div>

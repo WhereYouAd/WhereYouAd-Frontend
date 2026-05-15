@@ -2,6 +2,7 @@ import type { INavItem } from "@/types/navigation/navItem";
 import { mainNav } from "@/constants/sidebarNav";
 
 import { isPathMatch, normalizePathname } from "./pathMatch";
+import { navItemMatchesPath } from "./workspaceNavPaths";
 
 function createMainNavSidebarHelpers() {
   const childIdToParentId = new Map<string, string>();
@@ -21,17 +22,25 @@ function createMainNavSidebarHelpers() {
   );
 
   function resolveParentId(pathname: string): string | undefined {
-    return (
-      childPathToParentId.get(pathname) ??
-      childPathEntries.find(([p]) => isPathMatch(pathname, p))?.[1]
-    );
+    const norm = normalizePathname(pathname);
+    const direct = childPathToParentId.get(norm);
+    if (direct) return direct;
+    const fromPrefix = childPathEntries.find(([p]) =>
+      isPathMatch(norm, p),
+    )?.[1];
+    if (fromPrefix) return fromPrefix;
+    if (
+      /^\/workspace\/[^/]+\/(settings|members|billing)$/.test(norm) ||
+      /^\/workspace\/[^/]+$/.test(norm)
+    ) {
+      return "workspace";
+    }
+    return undefined;
   }
 
   function getItemActiveState(pathname: string, item: INavItem) {
     const isChildActive =
-      item.children?.some((c) =>
-        c.path ? isPathMatch(pathname, c.path) : false,
-      ) ?? false;
+      item.children?.some((c) => navItemMatchesPath(c, pathname)) ?? false;
 
     const isParentActive =
       (item.path ? isPathMatch(pathname, item.path) : false) || isChildActive;

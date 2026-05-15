@@ -1,9 +1,11 @@
 import { lazy } from "react";
-import type { RouteObject } from "react-router-dom";
+import { Navigate, type RouteObject } from "react-router-dom";
 
 import { loadable } from "@/utils/loadable";
 
 import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
+
+import WorkspaceBillingRedirect from "@/pages/workspace/WorkspaceBillingRedirect";
 
 const OverviewDashboard = loadable(
   lazy(() => import("@/pages/dashboard/overview/OverviewDashboard")),
@@ -71,16 +73,18 @@ const MainRoutes: RouteObject[] = [
     element: <Workspace />,
   },
   {
+    path: "workspace/billing",
+    element: <WorkspaceBillingRedirect />,
+  },
+  {
     path: "workspace/:workspaceId",
     element: <WorkspaceManageLayout />,
     children: [
+      { index: true, element: <Navigate to="settings" replace /> },
       { path: "settings", element: <WorkspaceSetting /> },
       { path: "members", element: <MemberManagement /> },
+      { path: "billing", element: <Billing /> },
     ],
-  },
-  {
-    path: "workspace/billing",
-    element: <Billing />,
   },
   {
     path: "setting",

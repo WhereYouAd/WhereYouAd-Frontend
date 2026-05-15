@@ -39,7 +39,7 @@ export const Default: TModalStory = {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="h-button-small px-4 rounding-15 bg-status-blue text-white font-body2 hover:bg-status-blue/80 transition"
+          className="h-10 px-4 rounding-15 bg-info-blue text-surface-100 font-body2 hover:bg-info-blue/80 transition"
           aria-label="모달 열기 버튼"
         >
           모달 열기
@@ -52,12 +52,12 @@ export const Default: TModalStory = {
           padding="md"
         >
           <div className="space-y-4">
-            <p className="font-body2 text-text-main">모달 내용부분</p>
+            <p className="font-body2 text-text-title">모달 내용부분</p>
             <div className="flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="h-button-small px-4 rounding-15 bg-brand-300 font-body2 hover:bg-text-main/15 transition-fast"
+                className="h-10 px-4 rounding-15 bg-surface-200 font-body2 hover:bg-text-title/15 transition-ui-fast"
                 aria-label="모달 닫기 버튼"
               >
                 닫기
@@ -65,7 +65,7 @@ export const Default: TModalStory = {
               <button
                 type="button"
                 onClick={() => alert("확인")}
-                className="h-button-small px-4 rounding-15 bg-status-blue text-white font-body2 hover:bg-status-blue/80 transition-fast"
+                className="h-10 px-4 rounding-15 bg-info-blue text-surface-100 font-body2 hover:bg-info-blue/80 transition-ui-fast"
                 aria-label="모달 확인"
               >
                 확인

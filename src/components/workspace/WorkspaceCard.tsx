@@ -28,17 +28,17 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
       <button
         type="button"
         className={twMerge(
-          "w-full text-left flex items-center justify-between rounded-component-md bg-white px-6 py-5 shadow-Soft border tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-chart-3 focus-visible:outline-none",
+          "flex w-full items-center justify-between rounded-2xl border bg-surface-100 px-6 py-5 text-left shadow-card tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
           onClick &&
-            "cursor-pointer hover:bg-chart-3/5 hover:-translate-y-1 hover:shadow-Medium hover:border-chart-3/30 active:scale-[0.98] transition-all duration-300 ease-out",
+            "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary-400/30 hover:bg-primary-100/50 hover:shadow-card-hover active:scale-[0.98]",
           isSelected
-            ? "border-chart-3/80 bg-chart-3/5"
-            : "border-gray-100 focus-within:border-chart-3/50",
+            ? "border-primary-500/40 bg-primary-100/50"
+            : "border-surface-400 focus-within:border-primary-400/50",
         )}
         onClick={onClick}
       >
         <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
-          <div className="w-24 h-24 bg-gray-100 shrink-0 rounded-component-sm tablet:h-16 tablet:w-16">
+          <div className="h-24 w-24 shrink-0 rounded-lg bg-surface-200 tablet:h-16 tablet:w-16">
             {showPlaceholder ? (
               <div className="w-full h-full flex items-center justify-center">
                 <BuildingIcon className="w-8 h-8 text-text-placeholder" />
@@ -47,7 +47,7 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
               <img
                 src={imageSrc}
                 alt={`${w.name} 로고`}
-                className="w-full h-full object-cover rounded-component-sm pointer-events-none"
+                className="w-full h-full object-cover rounded-lg pointer-events-none"
                 onError={() => {
                   setImageError(true);
                 }}
@@ -57,23 +57,23 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="font-heading4 font-semibold! text-text-main truncate">
+              <div className="truncate font-heading4 text-text-title">
                 {w.name}
               </div>
               {isSelected && (
                 <span
                   role="status"
-                  className="shrink-0 rounded-full bg-chart-3/12 px-2 py-1 font-caption text-chart-3"
+                  className="shrink-0 rounded-full bg-primary-500/12 px-2 py-1 font-caption text-primary-500"
                 >
                   현재 대시보드 기준
                 </span>
               )}
             </div>
 
-            <div className="font-body2 text-text-main mt-1 truncate">
+            <div className="mt-1 truncate font-body2 text-text-title">
               {w.description ?? ""}
             </div>
-            <div className="font-body1 text-text-sub mt-2">
+            <div className="mt-2 font-body1 text-text-muted">
               {ROLE_LABEL_MAP[w.myRole]}
             </div>
           </div>

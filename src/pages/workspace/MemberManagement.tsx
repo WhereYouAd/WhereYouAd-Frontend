@@ -226,8 +226,8 @@ export default function MemberManagement() {
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
-          <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-status-red">
+          <h1 className="font-heading2 text-text-title">멤버 관리</h1>
+          <p className="font-body1 text-info-red">
             올바르지 않은 워크스페이스입니다.
           </p>
         </header>
@@ -257,8 +257,8 @@ export default function MemberManagement() {
     return (
       <section className="w-full min-w-0">
         <header className="mb-7">
-          <h1 className="font-heading2">멤버 관리</h1>
-          <p className="font-body1 text-status-red">{errorMessage}</p>
+          <h1 className="font-heading2 text-text-title">멤버 관리</h1>
+          <p className="font-body1 text-info-red">{errorMessage}</p>
         </header>
       </section>
     );
@@ -266,7 +266,7 @@ export default function MemberManagement() {
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-8">
-      <div className="flex w-full min-w-0 flex-col gap-10">
+      <div className="flex w-full min-w-0 flex-col gap-8">
         <MemberList
           orgId={orgId}
           members={members}

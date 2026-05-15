@@ -97,7 +97,7 @@ export const useCampaignGroup = () => {
       setIsSuccessModalOpen(true);
     },
     onError: (error) => {
-      toast.error(error.message ?? "캠페인 그룹 생성에 실패했습니다.");
+      toast.error(error.message ?? "그룹 생성에 실패했습니다.");
     },
   });
 
