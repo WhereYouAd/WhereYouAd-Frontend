@@ -8,7 +8,7 @@ import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
-import StatCard from "@/components/common/card/StatCard";
+import StatCard, { type ITrend } from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import BudgetGaugeChart, {
@@ -52,6 +52,11 @@ export default function SinglePlatformView({
     isError: isMetricsError,
   } = usePlatformMetrics(platform.toUpperCase() as TPlatformProvider);
 
+  const toTrend = (changeRate: number): ITrend => ({
+    direction: changeRate >= 0 ? "up" : "down",
+    value: `${Math.abs(changeRate).toFixed(2)}%`,
+  });
+
   const kpis = useMemo(() => {
     if (!platformData) return [];
 
@@ -59,34 +64,22 @@ export default function SinglePlatformView({
       {
         title: "노출수",
         value: platformData.impressions.toLocaleString(),
-        trend: {
-          direction: platformData.impressionChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.impressionChangeRate).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.impressionChangeRate),
       },
       {
         title: "클릭수 (CTR)",
         value: platformData.clicks.toLocaleString(),
-        trend: {
-          direction: platformData.clickChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.clickChangeRate).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.clickChangeRate),
       },
       {
         title: "전환율 (CVR)",
         value: `${platformData.conversion}%`,
-        trend: {
-          direction: platformData.cvrChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.cvrChangeRate).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.cvrChangeRate),
       },
       {
         title: "광고비 대비 매출 (ROAS)",
         value: `${platformData.ROAS}%`,
-        trend: {
-          direction: platformData.ROASChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.ROASChangeRate).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.ROASChangeRate),
       },
     ];
   }, [platformData]);
@@ -168,7 +161,7 @@ export default function SinglePlatformView({
               key={kpi.title}
               title={kpi.title}
               value={kpi.value}
-              trend={kpi.trend as any}
+              trend={kpi.trend}
             />
           ))
         )}
