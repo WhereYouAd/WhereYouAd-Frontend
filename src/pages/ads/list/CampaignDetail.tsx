@@ -204,7 +204,7 @@ export default function CampaignDetail() {
         <header className="flex w-full flex-col gap-6">
           <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
-              <h1 className="min-w-0 break-words font-heading2 text-text-title">
+              <h1 className="min-w-0 wrap-break-word font-heading2 text-text-title">
                 {data.name}
               </h1>
               <Badge
