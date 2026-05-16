@@ -259,20 +259,18 @@ export default function Setting() {
         )}
       </div>
 
-      {activeTab !== "notifications" && (
-        <div className="flex justify-end">
-          <Button
-            variant="primary"
-            type="button"
-            size="big"
-            aria-label="개인 설정 변경사항 저장 버튼"
-            onClick={handleSave}
-            disabled={!hasChanges || isLoading}
-          >
-            변경사항 저장하기
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <Button
+          variant="primary"
+          type="button"
+          size="big"
+          aria-label="개인 설정 변경사항 저장 버튼"
+          onClick={handleSave}
+          disabled={!hasChanges || isLoading}
+        >
+          변경사항 저장하기
+        </Button>
+      </div>
     </section>
   );
 }
