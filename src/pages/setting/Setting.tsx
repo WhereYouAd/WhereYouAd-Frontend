@@ -82,8 +82,19 @@ export default function Setting() {
     );
   }, [savedProfile, draftProfile, preview, file]);
 
-  const hasChanges =
-    activeTab === "profile" ? hasProfileChanges : hasPasswordChanges;
+  const hasChanges = useMemo(() => {
+    switch (activeTab) {
+      case "profile":
+        return hasProfileChanges;
+      case "security":
+        return hasPasswordChanges;
+      case "notifications":
+        //TODO: API연동 후 알림 설정 변경 감지 추가
+        return false;
+      default:
+        return false;
+    }
+  }, [activeTab, hasProfileChanges, hasPasswordChanges]);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
