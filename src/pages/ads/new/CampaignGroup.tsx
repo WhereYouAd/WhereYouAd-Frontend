@@ -10,7 +10,7 @@ import TextareaField from "@/components/common/textarea/TextareaField";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import MetaIcon from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 export default function CampaignGroup() {
@@ -23,11 +23,11 @@ export default function CampaignGroup() {
     setGoogleSelected,
     naverSelected,
     setNaverSelected,
-    kakaoSelected,
-    setKakaoSelected,
+    metaSelected,
+    setMetaSelected,
     googleCampaigns,
     naverCampaigns,
-    kakaoCampaigns,
+    metaCampaigns,
     isFormValid,
     isSuccessModalOpen,
     handleCloseSuccessModal,
@@ -114,17 +114,17 @@ export default function CampaignGroup() {
             />
           </div>
 
-          {/* Kakao */}
+          {/* Meta */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 px-1">
-              <KakaoIcon className="h-6 w-6 shrink-0 text-text-title" />
-              <span className="font-body1 text-text-title">Kakao</span>
+              <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
+              <span className="font-body1 text-text-title">Meta</span>
             </div>
             <CampaignPlatformDropdown
               placeholder="캠페인 선택"
-              options={kakaoCampaigns}
-              selected={kakaoSelected}
-              onSelect={setKakaoSelected}
+              options={metaCampaigns}
+              selected={metaSelected}
+              onSelect={setMetaSelected}
             />
           </div>
         </div>
