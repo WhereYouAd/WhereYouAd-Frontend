@@ -1,5 +1,5 @@
 // 광고 플랫폼 종류
-export type TProviderType = "KAKAO" | "NAVER" | "GOOGLE";
+export type TProviderType = "META" | "NAVER" | "GOOGLE";
 
 // 전체 지표 집계 응답
 export interface IMetricsResponse {
