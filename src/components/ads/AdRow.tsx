@@ -7,7 +7,7 @@ import Badge from "../common/badge/Badge";
 
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 /** 체크박스 | 광고 명 | 상태 | 플랫폼 | 펼침 — AdListTable과 동일 그리드 (CampaignTable 패딩과 통일) */
@@ -35,7 +35,7 @@ interface IAdRowProps {
 }
 
 const LogoMap: Record<TPlatform, ReactNode> = {
-  kakao: <KakaoLogo className="h-7 w-7 shrink-0 text-text-title" />,
+  meta: <MetaLogo className="h-7 w-7 shrink-0 text-text-title" />,
   google: <GoogleLogo className="h-7 w-7 shrink-0" />,
   naver: <NaverLogo className="h-7 w-7 shrink-0" />,
 };

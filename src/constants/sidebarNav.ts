@@ -40,6 +40,7 @@ export const mainNav: INavItem[] = [
         id: "ads-list",
         label: "캠페인 목록",
         path: "/ads",
+        pathExact: true,
       },
       {
         id: "ads-campaign-group",

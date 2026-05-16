@@ -1,5 +1,5 @@
-export type TPlatform = "kakao" | "google" | "naver"; //UI
-export type TProvider = "KAKAO" | "GOOGLE" | "NAVER"; //API
+export type TPlatform = "meta" | "google" | "naver"; //UI
+export type TProvider = "META" | "GOOGLE" | "NAVER"; //API
 export type TStatus = "ON_GOING" | "PAUSED" | "OVER";
 
 // Ad List

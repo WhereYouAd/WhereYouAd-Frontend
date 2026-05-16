@@ -10,7 +10,7 @@ import TextareaField from "@/components/common/textarea/TextareaField";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
+import MetaIcon from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverIcon from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 export default function CampaignGroup() {
@@ -23,11 +23,11 @@ export default function CampaignGroup() {
     setGoogleSelected,
     naverSelected,
     setNaverSelected,
-    kakaoSelected,
-    setKakaoSelected,
+    metaSelected,
+    setMetaSelected,
     googleCampaigns,
     naverCampaigns,
-    kakaoCampaigns,
+    metaCampaigns,
     isFormValid,
     isSuccessModalOpen,
     handleCloseSuccessModal,
@@ -42,7 +42,7 @@ export default function CampaignGroup() {
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
           <p className="font-body1 leading-relaxed text-text-muted">
-            여러 매체 캠페인을 하나로 묶어 관리합니다.
+            워크스페이스에서 묶어 관리할 통합 캠페인 그룹의 기본 정보입니다.
           </p>
         </div>
         <div className="flex w-full flex-col gap-10">
@@ -84,7 +84,15 @@ export default function CampaignGroup() {
 
       {/* 플랫폼별 캠페인 연결 */}
       <Card className="flex flex-col gap-8 p-8 tablet:p-10">
-        <h3 className="font-heading3 text-text-title">플랫폼별 캠페인 연결</h3>
+        <div className="flex flex-col gap-2">
+          <h3 className="font-heading3 text-text-title">
+            플랫폼별 캠페인 연결
+          </h3>
+          <p className="font-body1 leading-relaxed text-text-muted">
+            매체별 운영 중인 캠페인을 선택해 통합 그룹에 연결합니다. 최소 1개
+            매체에서 캠페인을 선택해야 합니다.
+          </p>
+        </div>
         <div className="flex flex-col gap-10">
           {/* Google */}
           <div className="flex flex-col gap-3">
@@ -114,17 +122,17 @@ export default function CampaignGroup() {
             />
           </div>
 
-          {/* Kakao */}
+          {/* Meta */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 px-1">
-              <KakaoIcon className="h-6 w-6 shrink-0 text-text-title" />
-              <span className="font-body1 text-text-title">Kakao</span>
+              <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
+              <span className="font-body1 text-text-title">Meta</span>
             </div>
             <CampaignPlatformDropdown
               placeholder="캠페인 선택"
-              options={kakaoCampaigns}
-              selected={kakaoSelected}
-              onSelect={setKakaoSelected}
+              options={metaCampaigns}
+              selected={metaSelected}
+              onSelect={setMetaSelected}
             />
           </div>
         </div>
