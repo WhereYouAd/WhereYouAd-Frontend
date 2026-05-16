@@ -187,6 +187,13 @@ function AiSummaryExpandToggle({
 const AI_SUMMARY_COLLAPSED_HINT =
   "펼치기를 누르면 오늘 광고 성과를 AI가 분석·요약해 드려요.";
 
+const aiSummaryCardClassName = twMerge(
+  "relative overflow-hidden border border-primary-400/35",
+  "bg-linear-to-br from-primary-100/70 via-surface-100 to-primary-100/25",
+  "shadow-landing-featured-plan ring-1 ring-primary-400/15",
+  "hover:shadow-landing-featured-plan",
+);
+
 const panelExpandTransition = {
   height: { duration: 0.72, ease: [0.33, 1, 0.68, 1] as const },
   opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as const, delay: 0.06 },
@@ -225,49 +232,74 @@ export default function OverviewAiSummaryCard() {
   return (
     <div className="w-full min-w-0 shrink-0 scroll-mt-20">
       <Card
-        className="w-full min-w-0 shrink-0"
-        title="오늘의 성과 AI 요약"
-        description={
-          <span
-            className={twMerge(
-              "block text-text-placeholder transition-opacity duration-300",
-              isExpanded && "pointer-events-none opacity-0",
-            )}
-            aria-hidden={isExpanded}
-          >
-            {AI_SUMMARY_COLLAPSED_HINT}
-          </span>
-        }
-        RightElement={
+        className={twMerge("w-full min-w-0 shrink-0", aiSummaryCardClassName)}
+      >
+        <motion.div
+          className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-primary-300/20 blur-2xl"
+          aria-hidden
+        />
+        <motion.div
+          className="pointer-events-none absolute -bottom-8 -left-8 h-28 w-28 rounded-full bg-primary-400/15 blur-2xl"
+          aria-hidden
+        />
+
+        <motion.div className="relative mb-4 flex flex-wrap items-start justify-between gap-2">
+          <motion.div className="flex min-w-0 flex-col gap-1">
+            <h3 className="flex min-w-0 items-center gap-2 font-heading4">
+              <SparkleIcon
+                className="h-5 w-5 shrink-0 fill-primary-400 text-primary-400"
+                aria-hidden
+              />
+              <span className="bg-linear-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
+                오늘의 성과 AI 요약
+              </span>
+              <span className="shrink-0 rounded-full bg-primary-500/12 px-2 py-0.5 font-caption text-primary-500">
+                AI
+              </span>
+            </h3>
+            <motion.div className="font-caption text-text-muted">
+              <span
+                className={twMerge(
+                  "block text-text-placeholder transition-opacity duration-300",
+                  isExpanded && "pointer-events-none opacity-0",
+                )}
+                aria-hidden={isExpanded}
+              >
+                {AI_SUMMARY_COLLAPSED_HINT}
+              </span>
+            </motion.div>
+          </motion.div>
           <AiSummaryExpandToggle
             isExpanded={isExpanded}
             onToggle={handleToggle}
           />
-        }
-      >
-        <AnimatePresence initial={false}>
-          {isExpanded && (
-            <motion.div
-              key="ai-summary-panel"
-              layout
-              initial={
-                prefersReducedMotion
-                  ? { opacity: 1, height: "auto" }
-                  : { opacity: 0, height: 0 }
-              }
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{
-                opacity: 0,
-                height: 0,
-                transition: panelExitTransition,
-              }}
-              transition={panelTransition}
-              className="overflow-hidden"
-            >
-              <AiReportBody data={aiReportMockData} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </motion.div>
+
+        <motion.div className="relative">
+          <AnimatePresence initial={false}>
+            {isExpanded && (
+              <motion.div
+                key="ai-summary-panel"
+                layout
+                initial={
+                  prefersReducedMotion
+                    ? { opacity: 1, height: "auto" }
+                    : { opacity: 0, height: 0 }
+                }
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{
+                  opacity: 0,
+                  height: 0,
+                  transition: panelExitTransition,
+                }}
+                transition={panelTransition}
+                className="overflow-hidden"
+              >
+                <AiReportBody data={aiReportMockData} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </Card>
     </div>
   );
