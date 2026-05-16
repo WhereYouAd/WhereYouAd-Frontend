@@ -1,5 +1,6 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
@@ -13,6 +14,14 @@ import ProfileSection from "@/components/setting/ProfileSection";
 import ProfileSectionSkeleton from "@/components/setting/ProfileSectionSkeleton";
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
+
+type TSettingTab = "profile" | "security" | "notifications";
+
+const TABS: { id: TSettingTab; label: string }[] = [
+  { id: "profile", label: "프로필" },
+  { id: "security", label: "보안" },
+  { id: "notifications", label: "알림" },
+];
 
 interface IDraftOrganization {
   name: string;
@@ -31,6 +40,7 @@ interface ISavedProfile {
 }
 
 export default function Setting() {
+  const [activeTab, setActiveTab] = useState<TSettingTab>("profile");
   const [savedProfile, setSavedProfile] = useState<ISavedProfile>({
     name: "",
     profileImageUrl: null,
@@ -78,6 +88,7 @@ export default function Setting() {
     newPassword: "",
     confirmNewPassword: "",
   });
+
   const validatePassword = () => {
     const errors = {
       currentPassword: "",
@@ -173,56 +184,93 @@ export default function Setting() {
     };
     fetchMyInfo();
   }, [setPreview]);
+
   return (
     <section className="w-full flex flex-col gap-8">
+      <nav aria-label="설정 탭" className="flex border-b border-surface-300">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={twMerge(
+              "px-5 py-3 font-body1 transition-colors duration-200 border-b-2 -mb-px",
+              activeTab === tab.id
+                ? "border-primary-400 text-primary-400"
+                : "border-transparent text-text-muted hover:text-text-title",
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+
       <div className="flex flex-col gap-6">
-        {isLoading ? (
+        {activeTab === "profile" && (
           <>
-            <ProfileSectionSkeleton />
-            <PasswordSectionSkeleton />
-          </>
-        ) : (
-          <>
-            <ProfileSection
-              name={draftProfile.name}
-              setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
-              organizations={draftProfile.organizations}
-              email={draftProfile.email}
-              phoneNumber={draftProfile.phoneNumber}
-              fileRef={fileRef}
-              preview={preview}
-              onPickFile={handlePickFile}
-              openFilePicker={openFilePicker}
-              resetImage={() => {
-                resetImage();
-                setIsImageDeleted(true);
-              }}
-            />
-            <PasswordSection
-              currentPassword={currentPassword}
-              setCurrentPassword={setCurrentPassword}
-              newPassword={newPassword}
-              setNewPassword={setNewPassword}
-              confirmNewPassword={confirmNewPassword}
-              setConfirmNewPassword={setConfirmNewPassword}
-              errors={passwordErrors}
-            />
-            <NotificationSection email={draftProfile.email} />
+            {isLoading ? (
+              <ProfileSectionSkeleton />
+            ) : (
+              <ProfileSection
+                name={draftProfile.name}
+                setName={(v) =>
+                  setDraftProfile((prev) => ({ ...prev, name: v }))
+                }
+                organizations={draftProfile.organizations}
+                email={draftProfile.email}
+                phoneNumber={draftProfile.phoneNumber}
+                fileRef={fileRef}
+                preview={preview}
+                onPickFile={handlePickFile}
+                openFilePicker={openFilePicker}
+                resetImage={() => {
+                  resetImage();
+                  setIsImageDeleted(true);
+                }}
+              />
+            )}
           </>
         )}
+
+        {activeTab === "security" && (
+          <>
+            {isLoading ? (
+              <PasswordSectionSkeleton />
+            ) : (
+              <PasswordSection
+                currentPassword={currentPassword}
+                setCurrentPassword={setCurrentPassword}
+                newPassword={newPassword}
+                setNewPassword={setNewPassword}
+                confirmNewPassword={confirmNewPassword}
+                setConfirmNewPassword={setConfirmNewPassword}
+                errors={passwordErrors}
+              />
+            )}
+          </>
+        )}
+
+        {activeTab === "notifications" && (
+          <NotificationSection email={draftProfile.email} />
+        )}
       </div>
-      <div className="flex justify-end">
-        <Button
-          variant="primary"
-          type="button"
-          size="big"
-          aria-label="개인 설정 변경사항 저장 버튼"
-          onClick={handleSave}
-          disabled={!hasChanges || isLoading}
-        >
-          변경사항 저장하기
-        </Button>
-      </div>
+
+      {activeTab !== "notifications" && (
+        <div className="flex justify-end">
+          <Button
+            variant="primary"
+            type="button"
+            size="big"
+            aria-label="개인 설정 변경사항 저장 버튼"
+            onClick={handleSave}
+            disabled={!hasChanges || isLoading}
+          >
+            변경사항 저장하기
+          </Button>
+        </div>
+      )}
     </section>
   );
 }

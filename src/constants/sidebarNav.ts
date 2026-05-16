@@ -2,7 +2,6 @@ import type { INavItem } from "@/types/navigation/navItem";
 
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
-import NotificationIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SettingsIcon from "@/assets/icon/sidebar/setting.svg?react";
 import WorkspaceIcon from "@/assets/icon/sidebar/workspace.svg?react";
 
