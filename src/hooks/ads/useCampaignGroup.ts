@@ -11,7 +11,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const NONE_OPTION: IPlatformCampaign = {
   adCampaignId: -1,
-  name: "선택 안 함",
+  name: "연결 안 함",
   description: "",
 };
 
@@ -59,12 +59,10 @@ export const useCampaignGroup = () => {
     enabled: !!orgId,
   });
 
-  // '선택 안 함'이 포함된 리스트 생성
   const googleCampaigns = [NONE_OPTION, ...googleData];
   const naverCampaigns = [NONE_OPTION, ...naverData];
   const metaCampaigns = [NONE_OPTION, ...metaData];
 
-  // 유효성 검사 (실제 캠페인이 하나라도 선택되었는지 확인)
   const isFormValid =
     name.trim() !== "" &&
     [googleSelected, naverSelected, metaSelected].some(
