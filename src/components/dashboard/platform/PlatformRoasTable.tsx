@@ -5,13 +5,13 @@ import type { IPlatformRankingItem } from "@/types/dashboard/overview";
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 const platformLogoMap = {
   Google: <GoogleLogo className="h-7 w-auto" />,
   NAVER: <NaverLogo className="h-7 w-auto" />,
-  Kakao: <KakaoLogo className="h-7 w-auto" />,
+  Meta: <MetaLogo className="h-7 w-auto" />,
 };
 
 type TPlatformName = keyof typeof platformLogoMap;
@@ -19,7 +19,7 @@ type TPlatformName = keyof typeof platformLogoMap;
 const providerDisplayMap: Record<string, string> = {
   GOOGLE: "Google",
   NAVER: "NAVER",
-  KAKAO: "Kakao",
+  META: "Meta",
 };
 
 function getDisplayName(provider: string): string {

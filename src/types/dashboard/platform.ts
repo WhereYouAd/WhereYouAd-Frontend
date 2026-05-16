@@ -1,6 +1,6 @@
 import type { TProviderType } from "./overview";
 
-export type TPlatformProvider = TProviderType | "META";
+export type TPlatformProvider = TProviderType;
 
 export const PLATFORM_MAP: Record<string, string> = {
   GOOGLE: "Google",
