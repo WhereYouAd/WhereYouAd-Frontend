@@ -1,9 +1,14 @@
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
+import type { TPlatformProvider } from "@/types/dashboard/platform";
+
+import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
+import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
+
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
-import StatCard from "@/components/common/card/StatCard";
+import StatCard, { type ITrend } from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import BudgetGaugeChart, {
@@ -17,8 +22,6 @@ import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?r
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
 import {
-  budgetStatusMock,
-  performanceEfficiencyMock,
   platformDailyPerformanceMock,
   platformTrafficMock,
 } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -43,66 +46,51 @@ export default function SinglePlatformView({
 }: ISinglePlatformViewProps) {
   const [viewRange, setViewRange] = React.useState<7 | 30>(7);
 
-  const platformData = useMemo(() => {
-    return performanceEfficiencyMock.find(
-      (p) => p.provider.toUpperCase() === platform.toUpperCase(),
-    );
-  }, [platform]);
+  const {
+    data: platformData,
+    isLoading: isMetricsLoading,
+    isError: isMetricsError,
+  } = usePlatformMetrics(platform.toUpperCase() as TPlatformProvider);
+
+  const toTrend = (changeRate: number): ITrend => ({
+    direction: changeRate >= 0 ? "up" : "down",
+    value: `${Math.abs(changeRate).toFixed(2)}%`,
+  });
 
   const kpis = useMemo(() => {
     if (!platformData) return [];
 
     return [
       {
-        title: "클릭수(CTR)",
-        value: platformData.clicks.toLocaleString(),
-        trend: {
-          direction: platformData.clickChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.clickChangeRate * 100).toFixed(2)}%`,
-        },
-      },
-      {
         title: "노출수",
         value: platformData.impressions.toLocaleString(),
-        trend: {
-          direction: platformData.impressionChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.impressionChangeRate * 100).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.impressionChangeRate),
       },
       {
-        title: "전환율(CVR)",
+        title: "클릭수 (CTR)",
+        value: platformData.clicks.toLocaleString(),
+        trend: toTrend(platformData.clickChangeRate),
+      },
+      {
+        title: "전환율 (CVR)",
         value: `${platformData.conversion}%`,
-        trend: {
-          direction: platformData.cvrChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.cvrChangeRate * 100).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.cvrChangeRate),
       },
       {
-        title: "광고비 대비 매출(ROAS)",
+        title: "광고비 대비 매출 (ROAS)",
         value: `${platformData.ROAS}%`,
-        trend: {
-          direction: platformData.ROASChangeRate >= 0 ? "up" : "down",
-          value: `${Math.abs(platformData.ROASChangeRate * 100).toFixed(2)}%`,
-        },
+        trend: toTrend(platformData.ROASChangeRate),
       },
     ];
   }, [platformData]);
 
   const logoInfo = PLATFORM_LOGOS[platform.toUpperCase()];
 
-  const budget = useMemo(() => {
-    const data = budgetStatusMock.find(
-      (b) => b.providerType.toUpperCase() === platform.toUpperCase(),
-    );
-    if (!data) return null;
-
-    return {
-      totalBudget: data.totalBudget,
-      spent: data.totalSpend,
-      warningThreshold: 50,
-      dangerThreshold: 75,
-    };
-  }, [platform]);
+  const {
+    data: budget,
+    isLoading: isBudgetLoading,
+    isError: isBudgetError,
+  } = usePlatformBudget(platform.toUpperCase() as TPlatformProvider);
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -148,25 +136,35 @@ export default function SinglePlatformView({
 
       {/* top */}
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-card backdrop-blur-sm flex flex-col gap-4"
-              >
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-6 w-14 rounded-full" />
-              </div>
-            ))
-          : kpis.map((kpi) => (
-              <StatCard
-                key={kpi.title}
-                title={kpi.title}
-                value={kpi.value}
-                trend={kpi.trend as any}
-              />
-            ))}
+        {isLoading || isMetricsLoading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-card backdrop-blur-sm flex flex-col gap-4"
+            >
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-6 w-14 rounded-full" />
+            </div>
+          ))
+        ) : isMetricsError ? (
+          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
+            지표 데이터를 불러오지 못했습니다.
+          </div>
+        ) : !platformData ? (
+          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
+            표시할 지표 데이터가 없습니다.
+          </div>
+        ) : (
+          kpis.map((kpi) => (
+            <StatCard
+              key={kpi.title}
+              title={kpi.title}
+              value={kpi.value}
+              trend={kpi.trend}
+            />
+          ))
+        )}
       </div>
 
       {/* mid */}
@@ -213,13 +211,21 @@ export default function SinglePlatformView({
             )
           }
         >
-          {budget ? (
-            <div className="flex-1 flex flex-col">
+          {isLoading || isBudgetLoading ? (
+            <div className="flex flex-1 items-center justify-center p-8">
+              <Skeleton className="h-32 w-full rounded-2xl" />
+            </div>
+          ) : isBudgetError ? (
+            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
+              예산 데이터를 불러오지 못했습니다.
+            </div>
+          ) : budget ? (
+            <div className="flex flex-1 flex-col">
               <BudgetGaugeChart {...budget} />
             </div>
           ) : (
-            <div className="flex items-center justify-center h-full text-text-muted">
-              데이터가 없습니다.
+            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
+              표시할 예산 데이터가 없습니다.
             </div>
           )}
         </Card>
