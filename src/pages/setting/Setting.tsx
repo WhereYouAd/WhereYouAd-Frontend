@@ -266,7 +266,13 @@ export default function Setting() {
         )}
 
         {activeTab === "notifications" && (
-          <NotificationSection email={draftProfile.email} />
+          <>
+            {isLoading ? (
+              <div className="animate-pulse h-64 bg-surface-200 rounded-lg" />
+            ) : (
+              <NotificationSection email={draftProfile.email} />
+            )}
+          </>
         )}
       </div>
 
