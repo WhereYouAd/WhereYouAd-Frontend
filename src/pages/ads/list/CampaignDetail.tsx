@@ -20,13 +20,13 @@ import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 
 const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   naver: "NAVER",
-  kakao: "KAKAO",
+  meta: "META",
   google: "GOOGLE",
 };
 
 function providerWordmark(provider: string): string {
   const key = provider.toLowerCase() as TPlatform;
-  if (key === "naver" || key === "kakao" || key === "google") {
+  if (key === "naver" || key === "meta" || key === "google") {
     return PLATFORM_WORDMARK[key];
   }
   return provider.toUpperCase();
