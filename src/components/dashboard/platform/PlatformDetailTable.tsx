@@ -1,14 +1,18 @@
 import { useMemo } from "react";
 
-import type { IPlatformDailyPerformance } from "@/pages/dashboard/platform/platformDashboard.mock";
+import type { IPlatformDailyPerformance } from "@/types/dashboard/platform";
 
 interface IPlatformDetailTableProps {
   data: IPlatformDailyPerformance[];
+  total?: IPlatformDailyPerformance | null;
 }
 
-function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
+function PlatformDetailTable({
+  data,
+  total: totalFromApi,
+}: IPlatformDetailTableProps) {
   // 합계 계산
-  const total = useMemo(() => {
+  const computedTotal = useMemo(() => {
     if (!data.length) return null;
     const totalSpend = data.reduce((acc, curr) => acc + curr.spend, 0);
     const totalImpressions = data.reduce(
@@ -34,6 +38,8 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
           : 0,
     };
   }, [data]);
+
+  const total = totalFromApi ?? computedTotal;
 
   return (
     <div className="mt-4 flex flex-col">

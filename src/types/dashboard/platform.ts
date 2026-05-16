@@ -65,3 +65,42 @@ export interface IBudgetStatus {
   totalSpend: number;
   remainingBudget: number;
 }
+
+// API 일자별·합계
+export interface IMetricFactsRow {
+  date: string;
+  impressions: number;
+  clicks: number;
+  spend: number;
+  conversions: number;
+  revenue: number;
+  ctr: number;
+  cpa: number;
+  roas: number;
+}
+
+// /api/dashboard/{orgId}/metric-facts 응답 data
+export interface IMetricFactsResponse {
+  providerType: string;
+  startDate: string;
+  endDate: string;
+  total: IMetricFactsRow;
+  dailyMetrics: IMetricFactsRow[];
+}
+
+export interface IMetricFactsParams {
+  providerType: TProviderType;
+  days?: number;
+}
+
+// 테이블 UI row
+export interface IPlatformDailyPerformance {
+  date: string;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  cpc: number;
+  conversions: number;
+  roas: number;
+}
