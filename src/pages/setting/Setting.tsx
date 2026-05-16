@@ -74,14 +74,16 @@ export default function Setting() {
   const hasPasswordChanges =
     !!currentPassword || !!newPassword || !!confirmNewPassword;
 
-  const hasChanges = useMemo(() => {
+  const hasProfileChanges = useMemo(() => {
     return (
       savedProfile.name !== draftProfile.name ||
       savedProfile.profileImageUrl !== preview ||
-      !!file ||
-      hasPasswordChanges
+      !!file
     );
-  }, [savedProfile, draftProfile, preview, file, hasPasswordChanges]);
+  }, [savedProfile, draftProfile, preview, file]);
+
+  const hasChanges =
+    activeTab === "profile" ? hasProfileChanges : hasPasswordChanges;
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
