@@ -42,7 +42,7 @@ export default function CampaignGroup() {
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
           <p className="font-body1 leading-relaxed text-text-muted">
-            통합 캠페인 그룹의 이름과 설명을 입력하세요.
+            워크스페이스에서 묶어 관리할 통합 캠페인 그룹의 기본 정보입니다.
           </p>
         </div>
         <div className="flex w-full flex-col gap-10">
