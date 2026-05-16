@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import type { ICampaign } from "@/types/ads/campaign";
+import type { TProviderType } from "@/types/dashboard/overview";
+import { PLATFORM_MAP } from "@/types/dashboard/platform";
 
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
@@ -17,11 +19,13 @@ function visibleCampaigns(list: ICampaign[]) {
   return list.filter((c) => c.status !== "OVER");
 }
 
-const platformShort: Record<string, string> = {
-  naver: "Naver",
-  google: "Google",
-  kakao: "Kakao",
-};
+const PROVIDERS: TProviderType[] = ["GOOGLE", "NAVER", "META"];
+
+function providerDisplayName(raw: string): string | null {
+  const key = raw.toUpperCase() as TProviderType;
+  if (!PROVIDERS.includes(key)) return null;
+  return PLATFORM_MAP[key];
+}
 
 const SnapshotRow = memo(function SnapshotRow({
   campaign,
@@ -30,6 +34,10 @@ const SnapshotRow = memo(function SnapshotRow({
   campaign: ICampaign;
   onOpen: (projectId: number) => void;
 }) {
+  const providerLabels = campaign.providers
+    .map(providerDisplayName)
+    .filter((name): name is string => name != null);
+
   return (
     <button
       type="button"
@@ -41,8 +49,8 @@ const SnapshotRow = memo(function SnapshotRow({
           {campaign.name}
         </span>
         <span className="font-caption uppercase tracking-wide text-text-placeholder">
-          {campaign.providers.length > 0
-            ? campaign.providers.map((p) => platformShort[p] ?? p).join(" · ")
+          {providerLabels.length > 0
+            ? providerLabels.join(" · ")
             : "플랫폼 미지정"}
         </span>
       </div>
