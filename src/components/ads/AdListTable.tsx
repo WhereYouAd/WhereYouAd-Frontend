@@ -18,11 +18,10 @@ interface IAdsListTableProps {
 function normalizeProvider(raw: string | undefined): TPlatform | null {
   if (!raw) return null;
   const p = String(raw).trim().toLowerCase();
-  if (p === "kakao" || p === "google" || p === "naver") return p;
+  if (p === "meta" || p === "google" || p === "naver") return p;
   return null;
 }
 
-/** `provider`가 문자열이면 전체를, 배열이면 첫 요소를 사용 (문자열에 `[0]` 쓰면 첫 글자만 잡힘) */
 function firstProviderRaw(ad: IAd): string | undefined {
   if (ad.providerType) return String(ad.providerType);
   const p = ad.provider;
