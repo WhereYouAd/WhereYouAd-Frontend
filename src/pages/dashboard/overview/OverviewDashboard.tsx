@@ -11,6 +11,7 @@ import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankin
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
 import { OverviewAiDrawer } from "./OverviewAiDrawer";
+import OverviewAiSummaryCard from "./OverviewAiSummaryCard";
 import { OverviewBudgetSection } from "./OverviewBudgetSection";
 import { OverviewKpiSection } from "./OverviewKpiSection";
 import { OverviewPlatformSection } from "./OverviewPlatformSection";
@@ -109,6 +110,8 @@ export default function OverviewDashboard() {
         rankingsError={rankingsError}
         onNavigate={() => navigate("/platform")}
       />
+
+      <OverviewAiSummaryCard />
 
       <OverviewAiDrawer
         isOpen={isAiPanelOpen}

@@ -53,6 +53,26 @@ export interface IPlatformRankingItem extends IRoasRanking {
   conversionDelta?: number; // CVR 전기 대비 증감 (%)
 }
 
+// AI 요약 리포트 응답
+export interface IAiReportSection {
+  title: string;
+  content: string;
+}
+
+export interface IAiReportResponse {
+  label: string;
+  title: string;
+  strategySuggestion: {
+    title: string;
+    content: string;
+  };
+  sections: IAiReportSection[];
+  warning: {
+    title: string;
+    content: string;
+  };
+}
+
 // 클릭 스트림 데이터 항목
 export interface IClickStreamItem {
   timeSeriesData: {
