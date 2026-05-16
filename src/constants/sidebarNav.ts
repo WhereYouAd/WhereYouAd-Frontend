@@ -81,11 +81,6 @@ export const mainNav: INavItem[] = [
 
 export const footerNav: INavItem[] = [
   {
-    id: "notifications",
-    label: "알림",
-    icon: NotificationIcon,
-  },
-  {
     id: "settings",
     label: "설정",
     icon: SettingsIcon,
