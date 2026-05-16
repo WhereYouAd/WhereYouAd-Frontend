@@ -6,6 +6,7 @@ import type { IApiErrorResponse } from "@/types/common/common";
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
 import Button from "@/components/common/button/Button";
+import NotificationSection from "@/components/setting/NotificationSection";
 import PasswordSection from "@/components/setting/PasswordSection";
 import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
 import ProfileSection from "@/components/setting/ProfileSection";
@@ -206,6 +207,7 @@ export default function Setting() {
               setConfirmNewPassword={setConfirmNewPassword}
               errors={passwordErrors}
             />
+            <NotificationSection email={draftProfile.email} />
           </>
         )}
       </div>
