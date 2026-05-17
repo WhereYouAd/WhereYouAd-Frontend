@@ -30,7 +30,7 @@ function mapRow(row: IMetricFactsRow): IPlatformDailyPerformance {
     impressions: row.impressions,
     clicks: row.clicks,
     ctr: row.ctr,
-    cpc: row.cpa,
+    cpa: row.cpa,
     conversions: row.conversions,
     roas: row.roas,
   };
@@ -43,7 +43,7 @@ function mapTotalRow(total: IMetricFactsRow): IPlatformDailyPerformance {
     impressions: total.impressions,
     clicks: total.clicks,
     ctr: total.ctr,
-    cpc: total.cpa,
+    cpa: total.cpa,
     conversions: total.conversions,
     roas: total.roas,
   };

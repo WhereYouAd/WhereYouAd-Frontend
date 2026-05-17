@@ -100,7 +100,7 @@ export interface IPlatformDailyPerformance {
   impressions: number;
   clicks: number;
   ctr: number;
-  cpc: number;
+  cpa: number;
   conversions: number;
   roas: number;
 }
