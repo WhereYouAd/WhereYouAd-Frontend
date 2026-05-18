@@ -268,7 +268,7 @@ export function WorkspaceSwitcher({
                 type="button"
                 onClick={() => {
                   setIsOpen(false);
-                  navigate("/workspace");
+                  navigate("/workspace?create=1");
                 }}
                 className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-body hover:bg-surface-200 transition-colors"
               >

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -22,6 +22,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [query, setQuery] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
@@ -103,6 +104,13 @@ export default function WorkspacePage() {
     createWorkspaceMutation.reset();
     setCreateOpen(true);
   };
+
+  useEffect(() => {
+    if (searchParams.get("create") !== "1") return;
+
+    onOpenCreate();
+    setSearchParams({}, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   const onPickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
