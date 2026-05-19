@@ -135,7 +135,7 @@ function Modal({
             <motion.div
               ref={modalRef}
               className={twMerge(
-                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Medium",
+                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Soft",
                 sizeClasses[size],
                 paddingClasses[padding],
                 className,

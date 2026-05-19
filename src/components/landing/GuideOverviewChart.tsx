@@ -35,7 +35,7 @@ export default function GuideOverviewChart() {
           }
         >
           <div className="relative flex-1 pt-12">
-            <div className="absolute right-2 top-0 z-20 rounded-2xl border border-surface-400/80 bg-surface-100/95 px-4 py-3 shadow-landing-pill">
+            <div className="absolute right-2 top-0 z-20 rounded-2xl border border-surface-400/80 bg-surface-100/95 px-4 py-3 shadow-Soft">
               <p className="font-caption text-text-title">광고 클릭수 추이</p>
               <p className="mt-1 font-caption text-text-auth-sub">
                 오후 12시 기준 클릭수 48,500

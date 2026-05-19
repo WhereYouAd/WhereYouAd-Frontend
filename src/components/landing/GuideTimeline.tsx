@@ -38,7 +38,7 @@ export default function GuideTimeline() {
           <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
             Day
           </span>
-          <span className="rounded-[6px] bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-landing-pill select-none">
+          <span className="rounded-[6px] bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-Soft select-none">
             Week
           </span>
           <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
@@ -124,7 +124,7 @@ export default function GuideTimeline() {
               return (
                 <div
                   key={card.id}
-                  className="absolute flex items-center px-3 gap-2.5 rounded-[12px] h-[52px] z-20 cursor-pointer border border-surface-400/80 bg-surface-100 shadow-landing-tooltip transition-transform hover:scale-[1.01] hover:z-30"
+                  className="absolute flex items-center px-3 gap-2.5 rounded-[12px] h-[52px] z-20 cursor-pointer border border-surface-400/80 bg-surface-100 shadow-Soft transition-transform hover:scale-[1.01] hover:z-30"
                   style={{ left: `${x}px`, top: `${y}px`, width: `${width}px` }}
                 >
                   {/* Left Indicator */}

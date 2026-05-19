@@ -238,7 +238,7 @@ export default function WorkspacePage() {
                 onClick={openFile}
                 className={`group relative flex h-40 w-40 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none ${
                   logoPreview
-                    ? "border-transparent shadow-card"
+                    ? "border-transparent shadow-Soft"
                     : "border-dashed border-surface-400 bg-surface-200 hover:border-primary-400 hover:bg-primary-100/50"
                 }`}
               >

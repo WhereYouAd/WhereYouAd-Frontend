@@ -7,7 +7,7 @@ import { PLATFORM_ROAS_TABLE_COL } from "@/components/dashboard/platform/Platfor
 /** KPI StatCard 1칸 */
 export function OverviewKpiCardSkeleton() {
   return (
-    <div className="flex flex-col gap-3 rounded-3xl border border-surface-100/40 bg-surface-100/80 px-7 py-5 shadow-card backdrop-blur-sm">
+    <div className="flex flex-col gap-3 rounded-3xl border border-surface-100/40 bg-surface-100/80 px-7 py-5 shadow-Soft backdrop-blur-sm">
       <Skeleton className="h-4 w-16" />
       <Skeleton className="h-6 w-24" />
       <Skeleton className="h-6 w-14 rounded-full" />

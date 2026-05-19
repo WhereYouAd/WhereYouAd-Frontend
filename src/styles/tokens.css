@@ -55,6 +55,19 @@
     transparent
   );
 
+  /* 랜딩 섹션 배경 워시 — Guide·Pricing 오버레이 */
+  --background-image-landing-guide-wash:
+    radial-gradient(
+      900px 320px at 20% 0%,
+      color-mix(in srgb, var(--color-primary-300) 16%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 320px at 80% 10%,
+      color-mix(in srgb, var(--color-primary-300) 12%, transparent),
+      transparent 60%
+    );
+
   /* 타이포 스케일 — 유틸(.font-*)은 여기 값만 참조 */
   --type-hero-size: 54px;
   --type-hero-weight: 700;

@@ -28,9 +28,9 @@ function IntegrationGraphic() {
       viewport={{ once: true, amount: 0.45 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <motion.div className="flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-landing-pill opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
+      <motion.div className="flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-Soft opacity-60 blur-[0.5px] transition-all duration-300 relative z-0">
         <div className="flex items-center gap-3">
-          <NaverLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
+          <NaverLogo className="w-8 h-8 rounded-full shadow-Soft" />
           <div className="flex flex-col text-left">
             <span className="font-body2 text-text-muted">Naver</span>
           </div>
@@ -40,9 +40,9 @@ function IntegrationGraphic() {
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-surface-100 rounded-2xl shadow-landing-integration border border-surface-400/60 relative z-20 scale-[1.02]">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3.5 bg-surface-100 rounded-2xl shadow-Soft border border-surface-400/60 relative z-20 scale-[1.02]">
         <div className="flex items-center gap-3">
-          <div className="bg-surface-100 rounded-full w-8 h-8 flex items-center justify-center shrink-0 shadow-landing-pill overflow-hidden border border-surface-400/70">
+          <div className="bg-surface-100 rounded-full w-8 h-8 flex items-center justify-center shrink-0 shadow-Soft overflow-hidden border border-surface-400/70">
             <GoogleAdsLogo className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col text-left">
@@ -56,9 +56,9 @@ function IntegrationGraphic() {
         </div>
       </motion.div>
 
-      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-landing-pill opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
+      <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-Soft opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
         <div className="flex items-center gap-3">
-          <KakaoLogo className="w-8 h-8 rounded-full shadow-landing-pill" />
+          <KakaoLogo className="w-8 h-8 rounded-full shadow-Soft" />
           <div className="flex flex-col text-left">
             <span className="font-body2 text-text-muted">Kakao</span>
           </div>
@@ -73,10 +73,10 @@ function IntegrationGraphic() {
 
 function WorkflowGraphic() {
   return (
-    <div className="absolute left-0 bg-surface-100 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-landing-float border border-surface-400/60">
+    <div className="absolute left-0 bg-surface-100 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-Soft border border-surface-400/60">
       <div
         aria-hidden
-        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-md shadow-primary-400/20 relative overflow-hidden select-none"
+        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-Soft relative overflow-hidden select-none"
         style={{
           background:
             "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-500))",
@@ -156,7 +156,7 @@ function WorkspaceGraphic() {
   return (
     <div
       ref={containerRef}
-      className="bg-surface-100 rounded-3xl shadow-landing-card-deep w-70 p-4 flex flex-col gap-4 border border-surface-400/60"
+      className="bg-surface-100 rounded-3xl shadow-Soft w-70 p-4 flex flex-col gap-4 border border-surface-400/60"
     >
       <div className="flex gap-3">
         <div className="w-7 h-7 bg-color-primary-100 overflow-hidden shrink-0 mt-0.5 rounded-full flex items-center justify-center border border-surface-400/70">
@@ -187,7 +187,7 @@ function WorkspaceGraphic() {
         )}
         <div
           aria-hidden
-          className="w-7 h-7 rounded-full flex items-center justify-center bg-primary-500 shrink-0 shadow-landing-pill"
+          className="w-7 h-7 rounded-full flex items-center justify-center bg-primary-500 shrink-0 shadow-Soft"
         >
           <ChevronUp className="text-surface-100 w-3.5 h-3.5" />
         </div>

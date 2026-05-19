@@ -45,7 +45,7 @@ export default function Button({
     dangerSoft:
       "bg-info-red/10 text-info-red border border-info-red hover:bg-info-red/20 disabled:bg-surface-100 disabled:text-text-muted disabled:border-surface-400 disabled:hover:bg-surface-100",
     gradient:
-      "bg-gradient-to-r from-primary-400 to-primary-500 text-surface-100 border border-transparent hover:opacity-90 shadow-primary-500/30 disabled:bg-surface-200 disabled:text-text-muted disabled:border-surface-400 disabled:shadow-none disabled:hover:opacity-100",
+      "bg-linear-to-r from-primary-400 to-primary-500 text-surface-100 border border-transparent hover:opacity-90 shadow-Soft disabled:bg-surface-200 disabled:text-text-muted disabled:border-surface-400 disabled:shadow-none disabled:hover:opacity-100",
     tertiary:
       "h-7! border border-surface-400 text-text-auth-sub px-5 rounded-3xl bg-surface-100 font-body2 hover:bg-surface-200 transition-colors duration-200 ease-in-out disabled:text-text-muted disabled:bg-surface-200 disabled:hover:bg-surface-200",
     custom: "",

@@ -141,7 +141,7 @@ export default function SinglePlatformView({
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-card backdrop-blur-sm flex flex-col gap-4"
+              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
             >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-8 w-24" />
@@ -244,7 +244,7 @@ export default function SinglePlatformView({
               className={twMerge(
                 "px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 7
-                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  ? "bg-info-blue text-surface-100 shadow-Soft"
                   : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
@@ -256,7 +256,7 @@ export default function SinglePlatformView({
               className={twMerge(
                 "border-l border-surface-400 px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 30
-                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  ? "bg-info-blue text-surface-100 shadow-Soft"
                   : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
