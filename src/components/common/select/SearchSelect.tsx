@@ -113,7 +113,7 @@ export default function SearchSelect<T>({
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-sm">
+        <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-Soft">
           {filteredOptions.length > 0 ? (
             <ul
               id={listboxId}

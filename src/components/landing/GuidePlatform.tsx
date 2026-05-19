@@ -90,7 +90,7 @@ export default function GuidePlatform() {
         </button>
 
         {isMenuOpen && (
-          <div className="bg-surface-100 border border-surface-400/70 rounded-2xl shadow-landing-dropdown overflow-hidden">
+          <div className="bg-surface-100 border border-surface-400/70 rounded-2xl shadow-Soft overflow-hidden">
             <div>
               {PLATFORMS.map((platform) => {
                 const isSelected = selectedIds.includes(platform.id);

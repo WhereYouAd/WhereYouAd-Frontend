@@ -58,7 +58,7 @@ export default function LandingHeader() {
     <header
       className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-ui-smooth h-(--landing-header-height,64px) ${
         isScrolled
-          ? "bg-surface-100 shadow-landing-header border-transparent"
+          ? "bg-surface-100 shadow-Soft border-transparent"
           : "bg-surface-100/80 backdrop-blur-xl border-surface-400"
       }`}
     >
@@ -94,7 +94,7 @@ export default function LandingHeader() {
         </Link>
         <Link
           to="/signup"
-          className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-landing-pill transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5"
+          className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-Soft transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5"
         >
           회원가입
         </Link>

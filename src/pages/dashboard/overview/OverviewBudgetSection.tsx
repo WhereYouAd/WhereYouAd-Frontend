@@ -68,9 +68,9 @@ export function OverviewBudgetSection({
 }) {
   return (
     <div className="col-span-1 flex h-full min-h-0 min-w-0 flex-col gap-3 tablet:col-span-1">
-      <div className="flex min-h-0 flex-[2_1_0%] flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <Card
-          className="flex h-full min-h-0 min-w-0 flex-col pb-4!"
+          className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden pb-4!"
           title="예산 소진 현황"
           description={
             <ChartLegend
@@ -109,8 +109,8 @@ export function OverviewBudgetSection({
         </Card>
       </div>
 
-      <div className="flex min-h-60 flex-[1_1_0%] flex-col overflow-hidden">
-        <OverviewCampaignSnapshotCard className="h-full" />
+      <div className="shrink-0">
+        <OverviewCampaignSnapshotCard />
       </div>
     </div>
   );
