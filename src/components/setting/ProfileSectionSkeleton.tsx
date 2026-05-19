@@ -27,10 +27,6 @@ export default function ProfileSectionSkeleton() {
             <Skeleton className="w-full h-12 rounded-xl" />
           </div>
           <div className="col-span-2">
-            <Skeleton className="w-20 h-5 mb-2" />
-            <Skeleton className="w-full h-12 rounded-xl" />
-          </div>
-          <div className="col-span-2">
             <Skeleton className="w-24 h-5 mb-2" />
             <Skeleton className="w-full h-12 rounded-xl" />
           </div>

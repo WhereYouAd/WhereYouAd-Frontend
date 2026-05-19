@@ -23,13 +23,8 @@ const TABS: { id: TSettingTab; label: string }[] = [
   { id: "notifications", label: "알림" },
 ];
 
-interface IDraftOrganization {
-  name: string;
-  position: string;
-}
 interface IDraftProfile {
   name: string;
-  organizations: IDraftOrganization[];
   email: string;
   phoneNumber: string;
 }
@@ -47,7 +42,6 @@ export default function Setting() {
   });
   const [draftProfile, setDraftProfile] = useState<IDraftProfile>({
     name: "",
-    organizations: [],
     email: "",
     phoneNumber: "",
   });
@@ -174,11 +168,6 @@ export default function Setting() {
 
         const profileData = {
           name: res.data.name,
-          organizations:
-            res.data.organizations?.map((org) => ({
-              name: org.orgName,
-              position: org.myRole,
-            })) ?? [],
           email: res.data.email,
           phoneNumber: res.data.phoneNumber,
         };
@@ -231,7 +220,6 @@ export default function Setting() {
                 setName={(v) =>
                   setDraftProfile((prev) => ({ ...prev, name: v }))
                 }
-                organizations={draftProfile.organizations}
                 email={draftProfile.email}
                 phoneNumber={draftProfile.phoneNumber}
                 fileRef={fileRef}
