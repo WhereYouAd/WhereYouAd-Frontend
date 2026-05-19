@@ -236,7 +236,7 @@ export default function Setting() {
         )}
 
         {isLoading ? (
-          <div className="animate-pulse h-64 bg-surface-200 rounded-lg" />
+          <div className="animate-pulse h-64 rounded-lg bg-surface-200" />
         ) : (
           <NotificationSection
             email={draftProfile.email}

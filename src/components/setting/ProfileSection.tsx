@@ -55,7 +55,7 @@ export default function ProfileSection({
             type="button"
             onClick={openFilePicker}
             aria-label="프로필 이미지 업로드 또는 변경"
-            className="relative flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
+            className="relative flex h-45 w-45 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
           >
             {preview ? (
               <img
@@ -92,15 +92,15 @@ export default function ProfileSection({
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 basis-3/4 gap-y-5 w-full">
-          <div className="col-span-2">
+        <div className="grid w-full basis-3/4 grid-cols-2 gap-x-6 gap-y-4 tablet:grid-cols-1 tablet:gap-y-5">
+          <div className="col-span-2 tablet:col-span-1">
             <Input
               label="이름"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="col-span-2 group relative w-full">
+          <div className="col-span-1 group relative w-full">
             <Input
               label="이메일"
               value={email}
@@ -112,7 +112,7 @@ export default function ProfileSection({
               이메일은 변경할 수 없습니다.
             </div>
           </div>
-          <div className="col-span-2 group relative w-full">
+          <div className="col-span-1 group relative w-full">
             <Input
               label="전화번호"
               value={phoneNumber}
