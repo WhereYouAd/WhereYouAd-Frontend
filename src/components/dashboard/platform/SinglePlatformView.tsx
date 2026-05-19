@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import type { TPlatformProvider } from "@/types/dashboard/platform";
 
 import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
+import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
@@ -21,10 +22,7 @@ import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTraffi
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
-import {
-  platformDailyPerformanceMock,
-  platformTrafficMock,
-} from "@/pages/dashboard/platform/platformDashboard.mock";
+import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
   string,
@@ -92,6 +90,15 @@ export default function SinglePlatformView({
     isError: isBudgetError,
   } = usePlatformBudget(platform.toUpperCase() as TPlatformProvider);
 
+  const {
+    data: metricFacts,
+    isLoading: isMetricFactsLoading,
+    isError: isMetricFactsError,
+  } = usePlatformMetricFacts(
+    platform.toUpperCase() as TPlatformProvider,
+    viewRange,
+  );
+
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
     : 0;
@@ -103,12 +110,6 @@ export default function SinglePlatformView({
         budget.dangerThreshold,
       )
     : null;
-
-  const dailyData = useMemo(() => {
-    const key = platform?.toUpperCase();
-    const allData = key ? platformDailyPerformanceMock[key] || [] : [];
-    return allData.slice(0, viewRange);
-  }, [platform, viewRange]);
 
   const PLATFORM_THEME_COLORS: Record<string, string> = {
     GOOGLE: "#f9ab00",
@@ -264,7 +265,24 @@ export default function SinglePlatformView({
           </div>
         }
       >
-        <PlatformDetailTable data={dailyData} />
+        {isLoading || isMetricFactsLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Skeleton className="h-40 w-full rounded-2xl" />
+          </div>
+        ) : isMetricFactsError ? (
+          <div className="flex items-center justify-center py-16 text-center font-body2 text-info-red">
+            광고 현황 데이터를 불러오지 못했습니다.
+          </div>
+        ) : !metricFacts?.dailyRows.length ? (
+          <div className="flex items-center justify-center py-16 text-center font-body2 text-text-muted">
+            표시할 광고 현황 데이터가 없습니다.
+          </div>
+        ) : (
+          <PlatformDetailTable
+            data={metricFacts.dailyRows}
+            total={metricFacts.totalRow}
+          />
+        )}
       </Card>
     </div>
   );
