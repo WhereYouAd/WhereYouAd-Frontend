@@ -41,7 +41,7 @@ export default function NotificationSection({
             <p className="font-body1 text-text-title">브라우저 푸시 알림</p>
           </div>
           <div className="flex items-center gap-4">
-            {browserPush && <Badge variant="infoBlue">권한 허용됨</Badge>}
+            {browserPush && <Badge variant="infoBlue">켜짐</Badge>}
             <Toggle
               checked={browserPush}
               onToggle={() => onBrowserPushChange(!browserPush)}
