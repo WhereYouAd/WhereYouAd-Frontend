@@ -27,5 +27,10 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["vite.config.ts", "svg.d.ts"]
+  "include": [
+    "vite.config.ts",
+    "svg.d.ts",
+    "playwright.config.ts",
+    "tests/**/*.ts"
+  ]
 }
