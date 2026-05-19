@@ -12,9 +12,6 @@ import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import ChevronUpIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-/** 더 보기 접힘 시 기본 노출 문단 수 */
-const COLLAPSED_PREVIEW_PARAGRAPHS = 2;
-
 /** 줄바꿈 기준 본문 문단 분리 */
 function splitParagraphs(text: string) {
   return text
@@ -44,44 +41,6 @@ function ReportParagraphs({
           {paragraph}
         </p>
       ))}
-    </div>
-  );
-}
-
-/** 긴 본문은 일부만 보여 주고 더 보기/접기 */
-function CollapsibleReportContent({
-  content,
-  previewParagraphs = COLLAPSED_PREVIEW_PARAGRAPHS,
-  paragraphClassName,
-}: {
-  content: string;
-  previewParagraphs?: number;
-  paragraphClassName?: string;
-}) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const paragraphs = splitParagraphs(content);
-  const hasMore = paragraphs.length > previewParagraphs;
-  const visibleParagraphs =
-    hasMore && !isExpanded
-      ? paragraphs.slice(0, previewParagraphs)
-      : paragraphs;
-
-  return (
-    <div>
-      <ReportParagraphs
-        paragraphs={visibleParagraphs}
-        className={paragraphClassName}
-      />
-      {hasMore && (
-        <button
-          type="button"
-          onClick={() => setIsExpanded((prev) => !prev)}
-          className="mt-2 font-caption text-primary-500 transition-colors hover:text-primary-400"
-          aria-expanded={isExpanded}
-        >
-          {isExpanded ? "접기" : "더 보기"}
-        </button>
-      )}
     </div>
   );
 }
@@ -123,9 +82,9 @@ function AiSummaryHighlightSection({
           >
             {title}
           </h5>
-          <CollapsibleReportContent
-            content={content}
-            paragraphClassName="font-body2"
+          <ReportParagraphs
+            paragraphs={splitParagraphs(content)}
+            className="font-body2"
           />
         </div>
       </div>
@@ -187,10 +146,9 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
                   <h6 className="mb-2 font-label text-text-title">
                     {section.title}
                   </h6>
-                  <CollapsibleReportContent
-                    content={section.content}
-                    previewParagraphs={3}
-                    paragraphClassName="font-body2"
+                  <ReportParagraphs
+                    paragraphs={splitParagraphs(section.content)}
+                    className="font-body2"
                   />
                 </div>
               </div>
