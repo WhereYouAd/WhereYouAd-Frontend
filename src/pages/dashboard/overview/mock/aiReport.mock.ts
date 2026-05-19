@@ -1,6 +1,7 @@
-import type { IAiReportResponse } from "@/types/dashboard/overview";
+import type { IAiReportResponse } from "@/types/dashboard/aiReport";
 
-export const aiReportMockData: IAiReportResponse = {
+/** 통합 대시보드 AI 요약 mock — API 연동 전 */
+export const overviewAiReportMockData: IAiReportResponse = {
   label: "오늘의 데이터 요약",
   title: "AI가 오늘의 데이터를 중심으로 요약했어요",
   executiveSummary: [

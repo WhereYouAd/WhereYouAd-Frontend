@@ -1,6 +1,6 @@
 import serviceLogoSvg from "@/assets/logo/service-logo/logo.svg?raw";
 
-/** iframe 인쇄용 — SVGR 대신 인라인 SVG (SSR·PDF에서 경로/컴포넌트 누락 방지) */
+/* iframe 인쇄용 — SVGR 대신 인라인 SVG */
 export const AI_REPORT_LOGO_PRINT_SVG = serviceLogoSvg
   .replace(/fill="#2f5bea"/gi, 'fill="currentColor"')
   .replace(
@@ -8,7 +8,7 @@ export const AI_REPORT_LOGO_PRINT_SVG = serviceLogoSvg
     '<svg aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet" ',
   );
 
-/** aiReport.print.css에서 사용하는 @theme 색상 (별칭 + 원본 스케일) */
+/* aiReport.print.css에서 사용하는 @theme 색상 (별칭 + 원본 스케일) */
 const THEME_VARS_FOR_PRINT = [
   "--color-text-100",
   "--color-text-200",
@@ -41,7 +41,7 @@ function resolveThemeVarValue(name: string): string {
   return value;
 }
 
-/** 메인 문서 @theme 값을 iframe :root에 실제 색 값으로 복사 */
+/* 메인 문서 @theme 값을 iframe :root에 실제 색 값으로 복사 */
 export function buildPrintThemeStyleBlock(): string {
   const declarations = THEME_VARS_FOR_PRINT.map((name) => {
     const value = resolveThemeVarValue(name);

@@ -1,8 +1,8 @@
 /** AI 요약 보고서 인쇄·PDF 저장 전용 마크업 */
-import { AI_REPORT_LOGO_PRINT_SVG } from "../aiReport.printAssets";
-import type { TAiReportPrintDocument } from "../aiReport.utils";
+import { AI_REPORT_LOGO_PRINT_SVG } from "./printAssets";
+import type { TAiReportPrintDocument } from "../utils/aiReport.utils";
 
-type TOverviewAiSummaryPrintReportProps = {
+type TAiSummaryPrintReportProps = {
   document: TAiReportPrintDocument;
 };
 
@@ -23,12 +23,11 @@ function AiReportLogo({
   );
 }
 
-export default function OverviewAiSummaryPrintReport({
+export default function AiSummaryPrintReport({
   document: doc,
-}: TOverviewAiSummaryPrintReportProps) {
+}: TAiSummaryPrintReportProps) {
   return (
     <div className="ai-report-print-root" aria-hidden>
-      {/* 1페이지: 표지 */}
       <section className="ai-report-cover" aria-label="표지">
         <div className="ai-report-cover-main">
           <header className="ai-report-cover-top">
@@ -56,10 +55,8 @@ export default function OverviewAiSummaryPrintReport({
         </div>
       </section>
 
-      {/* 2페이지~: 요약·본문 + 하단 푸터 */}
       <section className="ai-report-document" aria-label="보고서 본문">
         <div className="ai-report-document-inner">
-          {/* 2페이지: 요약본 + 핵심 지표 */}
           <div className="ai-report-chunk ai-report-chunk--front">
             <article
               className="ai-report-section ai-report-section--lead"
@@ -103,7 +100,6 @@ export default function OverviewAiSummaryPrintReport({
             )}
           </div>
 
-          {/* 3페이지~: 본문 */}
           <div
             className="ai-report-chunk ai-report-chunk--main"
             aria-labelledby="ai-report-body-heading"

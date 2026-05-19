@@ -1,4 +1,4 @@
-import type { IAiReportResponse } from "@/types/dashboard/overview";
+import type { IAiReportResponse } from "@/types/dashboard/aiReport";
 
 export type TAiReportPrintSection = {
   title: string;
@@ -25,9 +25,18 @@ export type TAiReportPrintDocument = {
   bodySections: TAiReportPrintSection[];
 };
 
+export type TAiReportPrintOptions = {
+  documentTitle?: string;
+  brandName?: string;
+  footerTagline?: string;
+};
+
 const SECTION_TITLE_CAUSE = "왜 이렇게 나왔을까?";
 const SECTION_TITLE_PERFORMANCE = "성과 요약";
 const SECTION_TITLE_HIGHLIGHT = "성과 포인트";
+
+const DEFAULT_PRINT_DOCUMENT_TITLE = "오늘의 성과 AI 요약 보고서";
+const DEFAULT_PRINT_BRAND_NAME = "WhereYouAd";
 
 function splitParagraphs(text: string) {
   return text
@@ -57,7 +66,6 @@ function buildExecutiveSummary(data: IAiReportResponse): string[] {
   return [data.title, AI_REPORT_FOOTER_TAGLINE].slice(0, 5);
 }
 
-/** 성과 요약 → 원인 분석 → 전략 제안 → 주의사항 */
 function buildBodySections(data: IAiReportResponse): TAiReportPrintSection[] {
   const performance = findSection(data, SECTION_TITLE_PERFORMANCE);
   const highlight = findSection(data, SECTION_TITLE_HIGHLIGHT);
@@ -96,17 +104,18 @@ function buildBodySections(data: IAiReportResponse): TAiReportPrintSection[] {
   return sections;
 }
 
-/** API 응답 → 보고서 인쇄 문서 구조 */
 export function toAiReportPrintDocument(
   data: IAiReportResponse,
-  writtenDate = formatReportWrittenDate(),
+  options?: TAiReportPrintOptions & { writtenDate?: string },
 ): TAiReportPrintDocument {
+  const writtenDate = options?.writtenDate ?? formatReportWrittenDate();
+
   return {
-    documentTitle: "오늘의 성과 AI 요약 보고서",
+    documentTitle: options?.documentTitle ?? DEFAULT_PRINT_DOCUMENT_TITLE,
     label: data.label,
     writtenDate,
-    brandName: "WhereYouAd-report-ai",
-    footerTagline: AI_REPORT_FOOTER_TAGLINE,
+    brandName: options?.brandName ?? DEFAULT_PRINT_BRAND_NAME,
+    footerTagline: options?.footerTagline ?? AI_REPORT_FOOTER_TAGLINE,
     executiveSummary: buildExecutiveSummary(data),
     keyMetrics: data.keyMetrics ?? [],
     bodySections: buildBodySections(data),

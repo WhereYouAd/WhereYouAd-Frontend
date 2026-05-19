@@ -1,9 +1,9 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
-import { buildPrintThemeStyleBlock } from "./aiReport.printAssets";
-import type { TAiReportPrintDocument } from "./aiReport.utils";
-import OverviewAiSummaryPrintReport from "./print/OverviewAiSummaryPrintReport";
+import AiSummaryPrintReport from "./AiSummaryPrintReport";
+import { buildPrintThemeStyleBlock } from "./printAssets";
+import type { TAiReportPrintDocument } from "../utils/aiReport.utils";
 
 import printStyles from "@/styles/aiReport.print.css?inline";
 import tokenStyles from "@/styles/tokens.css?inline";
@@ -17,10 +17,10 @@ const FONT_FACE_STYLE = `
 }
 `;
 
-/** about:blank iframe 인쇄 — Chrome URL 머리글(localhost) 제거 */
+/* Chrome URL 머리글(localhost) 제거 */
 export function downloadAiSummaryPdf(document: TAiReportPrintDocument) {
   const reportMarkup = renderToStaticMarkup(
-    createElement(OverviewAiSummaryPrintReport, { document }),
+    createElement(AiSummaryPrintReport, { document }),
   );
 
   const iframe = window.document.createElement("iframe");

@@ -1,23 +1,41 @@
-/** 통합 대시보드 AI 요약 카드 */
+/** 대시보드 공용 — AI 요약 카드 (통합·플랫폼) */
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
-import type { IAiReportResponse } from "@/types/dashboard/overview";
+import type { IAiReportResponse } from "@/types/dashboard/aiReport";
 
 import Card from "@/components/common/card/Card";
 
-import { aiReportMockData } from "./aiReport.mock";
-import { toAiReportPrintDocument } from "./aiReport.utils";
-import { downloadAiSummaryPdf } from "./downloadAiSummaryPdf";
+import { downloadAiSummaryPdf } from "../print/downloadAiSummaryPdf";
+import {
+  type TAiReportPrintOptions,
+  toAiReportPrintDocument,
+} from "../utils/aiReport.utils";
 
 import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import ChevronUpIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
+const DEFAULT_CARD_TITLE = "오늘의 성과 AI 요약";
+const DEFAULT_COLLAPSED_HINT =
+  "펼치기를 누르면 오늘 광고 성과를 AI가 분석·요약해 드려요.";
+
 const aiSummaryActionButtonClass =
   "group inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full border-none bg-surface-200/60 px-4 font-body3 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body";
+
+export type TAiSummaryCardProps = {
+  data: IAiReportResponse;
+  /** 카드 헤더 제목 */
+  title?: string;
+  /** 접힌 상태 안내 문구 */
+  collapsedHint?: string;
+  idPrefix?: string;
+  /** PDF·인쇄 메타 */
+  print?: TAiReportPrintOptions;
+  className?: string;
+};
 
 function splitParagraphs(text: string) {
   return text
@@ -81,12 +99,18 @@ function AiSummaryHighlightSection({
   );
 }
 
-function AiReportBody({ data }: { data: IAiReportResponse }) {
+function AiReportBody({
+  data,
+  idPrefix,
+}: {
+  data: IAiReportResponse;
+  idPrefix: string;
+}) {
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 gap-3 tablet:grid-cols-1">
         <AiSummaryHighlightSection
-          id="ai-summary-strategy"
+          id={`${idPrefix}-strategy`}
           title={data.strategySuggestion.title}
           tone="primary"
           content={data.strategySuggestion.content}
@@ -97,7 +121,7 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
         />
 
         <AiSummaryHighlightSection
-          id="ai-summary-warning"
+          id={`${idPrefix}-warning`}
           title={data.warning.title}
           tone="danger"
           content={data.warning.content}
@@ -107,11 +131,11 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
       </div>
 
       <section
-        aria-labelledby="ai-summary-insights-heading"
+        aria-labelledby={`${idPrefix}-insights-heading`}
         className="rounded-xl bg-primary-500/4 p-6 text-left"
       >
         <h5
-          id="ai-summary-insights-heading"
+          id={`${idPrefix}-insights-heading`}
           className="mb-3 font-heading4 uppercase tracking-wide text-text-placeholder"
         >
           분석 인사이트
@@ -146,9 +170,11 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
 }
 
 function AiSummaryExpandToggle({
+  cardTitle,
   isExpanded,
   onToggle,
 }: {
+  cardTitle: string;
   isExpanded: boolean;
   onToggle: () => void;
 }) {
@@ -158,9 +184,7 @@ function AiSummaryExpandToggle({
       onClick={onToggle}
       className={aiSummaryActionButtonClass}
       aria-expanded={isExpanded}
-      aria-label={
-        isExpanded ? "오늘의 성과 AI 요약 접기" : "오늘의 성과 AI 요약 펼치기"
-      }
+      aria-label={isExpanded ? `${cardTitle} 접기` : `${cardTitle} 펼치기`}
     >
       <span>{isExpanded ? "접기" : "펼치기"}</span>
       <ChevronUpIcon
@@ -174,9 +198,6 @@ function AiSummaryExpandToggle({
   );
 }
 
-const AI_SUMMARY_COLLAPSED_HINT =
-  "펼치기를 누르면 오늘 광고 성과를 AI가 분석·요약해 드려요.";
-
 const panelExpandTransition = {
   height: { duration: 0.72, ease: [0.33, 1, 0.68, 1] as const },
   opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] as const, delay: 0.06 },
@@ -187,12 +208,20 @@ const panelCollapseTransition = {
   opacity: { duration: 0.28, ease: [0.4, 0, 1, 1] as const },
 };
 
-export default function OverviewAiSummaryCard() {
+export default function AiSummaryCard({
+  data,
+  title = DEFAULT_CARD_TITLE,
+  collapsedHint = DEFAULT_COLLAPSED_HINT,
+  idPrefix = "ai-summary",
+  print,
+  className,
+}: TAiSummaryCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
+
   const printDocument = useMemo(
-    () => toAiReportPrintDocument(aiReportMockData),
-    [],
+    () => toAiReportPrintDocument(data, print),
+    [data, print],
   );
 
   const handleToggle = useCallback(() => {
@@ -212,7 +241,7 @@ export default function OverviewAiSummaryCard() {
     : panelCollapseTransition;
 
   return (
-    <div className="w-full min-w-0 shrink-0 scroll-mt-20">
+    <div className={twMerge("w-full min-w-0 shrink-0 scroll-mt-20", className)}>
       <Card className="w-full min-w-0 shrink-0 border border-primary-500/15">
         <div className="relative mb-4 flex flex-wrap items-start justify-between gap-2">
           <div className="flex min-w-0 flex-col gap-1">
@@ -222,7 +251,7 @@ export default function OverviewAiSummaryCard() {
                 aria-hidden
               />
               <span className="bg-gradient-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
-                오늘의 성과 AI 요약
+                {title}
               </span>
               <span className="shrink-0 rounded-full bg-primary-500/12 px-2 py-0.5 font-caption text-primary-500">
                 AI
@@ -230,7 +259,7 @@ export default function OverviewAiSummaryCard() {
             </h3>
             {!isExpanded && (
               <p className="font-caption text-text-placeholder">
-                {AI_SUMMARY_COLLAPSED_HINT}
+                {collapsedHint}
               </p>
             )}
           </div>
@@ -239,7 +268,7 @@ export default function OverviewAiSummaryCard() {
               type="button"
               onClick={handleDownloadPdf}
               className={aiSummaryActionButtonClass}
-              aria-label="AI 요약 보고서 PDF 저장"
+              aria-label={`${title} PDF 저장`}
             >
               <DownloadIcon
                 className="h-4 w-4 shrink-0 text-current"
@@ -248,6 +277,7 @@ export default function OverviewAiSummaryCard() {
               <span>PDF 저장</span>
             </button>
             <AiSummaryExpandToggle
+              cardTitle={title}
               isExpanded={isExpanded}
               onToggle={handleToggle}
             />
@@ -258,7 +288,7 @@ export default function OverviewAiSummaryCard() {
           <AnimatePresence initial={false}>
             {isExpanded && (
               <motion.div
-                key="ai-summary-panel"
+                key={`${idPrefix}-panel`}
                 layout
                 initial={
                   prefersReducedMotion
@@ -274,7 +304,7 @@ export default function OverviewAiSummaryCard() {
                 transition={panelTransition}
                 className="overflow-hidden"
               >
-                <AiReportBody data={aiReportMockData} />
+                <AiReportBody data={data} idPrefix={idPrefix} />
               </motion.div>
             )}
           </AnimatePresence>
