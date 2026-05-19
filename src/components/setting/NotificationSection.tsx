@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -9,16 +7,26 @@ import MailIcon from "@/assets/icon/common/mail.svg?react";
 import BellIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SlackIcon from "@/assets/logo/social-logo/plain/slack.svg?react";
 
+export interface INotificationSettings {
+  browserPush: boolean;
+  emailNotif: boolean;
+}
+
 type TNotificationSectionProps = {
   email: string;
+  browserPush: boolean;
+  emailNotif: boolean;
+  onBrowserPushChange: (value: boolean) => void;
+  onEmailNotifChange: (value: boolean) => void;
 };
 
 export default function NotificationSection({
   email,
+  browserPush,
+  emailNotif,
+  onBrowserPushChange,
+  onEmailNotifChange,
 }: TNotificationSectionProps) {
-  const [browserPush, setBrowserPush] = useState(false);
-  const [emailNotif, setEmailNotif] = useState(false);
-
   return (
     <Card className="p-8 tablet:p-10">
       <header className="mb-7 flex items-center gap-4">
@@ -36,7 +44,7 @@ export default function NotificationSection({
             {browserPush && <Badge variant="infoBlue">권한 허용됨</Badge>}
             <Toggle
               checked={browserPush}
-              onToggle={() => setBrowserPush((p) => !p)}
+              onToggle={() => onBrowserPushChange(!browserPush)}
               ariaLabel="브라우저 푸시 알림 켜기/끄기"
             />
           </div>
@@ -52,7 +60,7 @@ export default function NotificationSection({
           </div>
           <Toggle
             checked={emailNotif}
-            onToggle={() => setEmailNotif((p) => !p)}
+            onToggle={() => onEmailNotifChange(!emailNotif)}
             ariaLabel="이메일 알림 켜기/끄기"
           />
         </div>
