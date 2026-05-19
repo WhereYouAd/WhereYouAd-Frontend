@@ -1,5 +1,5 @@
 /** 통합 대시보드 AI 요약 카드 */
-import { type ReactNode, useCallback, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -8,10 +8,16 @@ import type { IAiReportResponse } from "@/types/dashboard/overview";
 import Card from "@/components/common/card/Card";
 
 import { aiReportMockData } from "./aiReport.mock";
+import { toAiReportPrintDocument } from "./aiReport.utils";
+import { downloadAiSummaryPdf } from "./downloadAiSummaryPdf";
 
 import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import ChevronUpIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+
+const aiSummaryActionButtonClass =
+  "group inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full border-none bg-surface-200/60 px-4 font-body3 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body";
 
 function splitParagraphs(text: string) {
   return text
@@ -20,23 +26,11 @@ function splitParagraphs(text: string) {
     .filter(Boolean);
 }
 
-function ReportParagraphs({
-  paragraphs,
-  className,
-}: {
-  paragraphs: string[];
-  className?: string;
-}) {
+function ReportParagraphs({ paragraphs }: { paragraphs: string[] }) {
   return (
     <div className="flex flex-col gap-1.5">
       {paragraphs.map((paragraph, index) => (
-        <p
-          key={index}
-          className={twMerge(
-            "break-keep leading-relaxed text-text-body",
-            className,
-          )}
-        >
+        <p key={index} className="break-keep font-body3 text-text-body">
           {paragraph}
         </p>
       ))}
@@ -80,10 +74,7 @@ function AiSummaryHighlightSection({
           >
             {title}
           </h5>
-          <ReportParagraphs
-            paragraphs={splitParagraphs(content)}
-            className="font-body2"
-          />
+          <ReportParagraphs paragraphs={splitParagraphs(content)} />
         </div>
       </div>
     </section>
@@ -121,7 +112,7 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
       >
         <h5
           id="ai-summary-insights-heading"
-          className="mb-3 font-body2 uppercase tracking-wide text-text-placeholder"
+          className="mb-3 font-heading4 uppercase tracking-wide text-text-placeholder"
         >
           분석 인사이트
         </h5>
@@ -138,12 +129,11 @@ function AiReportBody({ data }: { data: IAiReportResponse }) {
                   </span>
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h6 className="mb-2 font-label text-text-title">
+                  <h6 className="mb-2 font-heading4 text-text-title">
                     {section.title}
                   </h6>
                   <ReportParagraphs
                     paragraphs={splitParagraphs(section.content)}
-                    className="font-body2"
                   />
                 </div>
               </div>
@@ -166,16 +156,16 @@ function AiSummaryExpandToggle({
     <button
       type="button"
       onClick={onToggle}
-      className="group flex h-8 min-w-18 shrink-0 items-center justify-center gap-1 rounded-full border-none bg-surface-200/60 px-3 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body"
+      className={aiSummaryActionButtonClass}
       aria-expanded={isExpanded}
       aria-label={
         isExpanded ? "오늘의 성과 AI 요약 접기" : "오늘의 성과 AI 요약 펼치기"
       }
     >
-      <span className="font-caption">{isExpanded ? "접기" : "펼치기"}</span>
+      <span>{isExpanded ? "접기" : "펼치기"}</span>
       <ChevronUpIcon
         className={twMerge(
-          "h-4 w-4 shrink-0 transition-transform duration-300",
+          "h-4 w-4 shrink-0 text-current transition-transform duration-300",
           !isExpanded && "rotate-180",
         )}
         aria-hidden
@@ -200,10 +190,18 @@ const panelCollapseTransition = {
 export default function OverviewAiSummaryCard() {
   const prefersReducedMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
+  const printDocument = useMemo(
+    () => toAiReportPrintDocument(aiReportMockData),
+    [],
+  );
 
   const handleToggle = useCallback(() => {
     setIsExpanded((prev) => !prev);
   }, []);
+
+  const handleDownloadPdf = useCallback(() => {
+    downloadAiSummaryPdf(printDocument);
+  }, [printDocument]);
 
   const panelTransition = prefersReducedMotion
     ? { duration: 0 }
@@ -236,10 +234,24 @@ export default function OverviewAiSummaryCard() {
               </p>
             )}
           </div>
-          <AiSummaryExpandToggle
-            isExpanded={isExpanded}
-            onToggle={handleToggle}
-          />
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              className={aiSummaryActionButtonClass}
+              aria-label="AI 요약 보고서 PDF 저장"
+            >
+              <DownloadIcon
+                className="h-4 w-4 shrink-0 text-current"
+                aria-hidden
+              />
+              <span>PDF 저장</span>
+            </button>
+            <AiSummaryExpandToggle
+              isExpanded={isExpanded}
+              onToggle={handleToggle}
+            />
+          </div>
         </div>
 
         <div className="relative">

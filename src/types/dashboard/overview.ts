@@ -59,9 +59,19 @@ export interface IAiReportSection {
   content: string;
 }
 
+export interface IAiReportKeyMetric {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
 export interface IAiReportResponse {
   label: string;
   title: string;
+  /** 본문과 중복되지 않는 요약 문장 (3~5줄) */
+  executiveSummary?: string[];
+  /** 핵심 수치 카드 */
+  keyMetrics?: IAiReportKeyMetric[];
   strategySuggestion: {
     title: string;
     content: string;

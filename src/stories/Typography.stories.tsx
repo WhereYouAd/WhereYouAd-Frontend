@@ -63,6 +63,15 @@ const fontTokens = [
     ],
   },
   {
+    className: "font-body3",
+    label: "Body 3",
+    cssVars: [
+      "--type-body3-size",
+      "--type-body3-weight",
+      "--type-body3-leading",
+    ],
+  },
+  {
     className: "font-caption",
     label: "Caption",
     cssVars: [

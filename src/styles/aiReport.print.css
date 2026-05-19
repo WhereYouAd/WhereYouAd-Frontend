@@ -1,0 +1,298 @@
+/* AI 요약 PDF — iframe 전용 */
+:root {
+  --color-text-title: #111827;
+  --color-text-body: #374151;
+  --color-text-muted: #9ca3af;
+  --color-surface-100: #ffffff;
+  --color-surface-200: #f4f6fb;
+  --color-surface-400: #dde3f0;
+
+  --print-margin-x: 16mm;
+  --print-margin-top: 18mm;
+  --print-margin-bottom: 18mm;
+  --print-footer-h: 11mm;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  @page {
+    size: A4;
+    margin: var(--print-margin-top) var(--print-margin-x)
+      calc(var(--print-margin-bottom) + var(--print-footer-h));
+  }
+
+  .ai-report-print-root {
+    color: var(--color-text-body);
+    font-family: "Pretendard", sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- 1페이지: 표지 (푸터 없음) ---------- */
+  .ai-report-cover {
+    position: relative;
+    z-index: 3;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 14mm var(--print-margin-x) 0;
+    background: var(--color-surface-100);
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .ai-report-cover::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    height: calc(var(--print-footer-h) + 4mm);
+    background: var(--color-surface-100);
+  }
+
+  .ai-report-cover-main {
+    display: flex;
+    flex-direction: column;
+    gap: 7mm;
+    width: 100%;
+    max-width: 150mm;
+    margin: 0 auto;
+  }
+
+  .ai-report-cover-top {
+    display: flex;
+  }
+
+  .ai-report-cover-divider {
+    display: block;
+    width: 18mm;
+    height: 1px;
+    margin: 0;
+    border: 0;
+    background: var(--color-surface-400);
+  }
+
+  .ai-report-cover-logo {
+    display: block;
+    width: 28mm;
+    height: auto;
+  }
+
+  .ai-report-cover-logo path {
+    fill: var(--color-text-title);
+  }
+
+  .ai-report-cover-label {
+    margin: 0 0 3mm;
+    font-size: 8pt;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-cover-title {
+    margin: 0 0 8mm;
+    font-size: 26pt;
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: -0.03em;
+    color: var(--color-text-title);
+    word-break: keep-all;
+  }
+
+  .ai-report-cover-meta-panel {
+    padding: 5mm 6mm;
+    border: 1px solid var(--color-surface-400);
+    border-radius: 2mm;
+    background: var(--color-surface-200);
+  }
+
+  .ai-report-cover-meta {
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-report-cover-meta-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4mm;
+    margin: 0;
+  }
+
+  .ai-report-cover-meta dt {
+    margin: 0;
+    min-width: 14mm;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-cover-meta dd {
+    margin: 0;
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--color-text-title);
+  }
+
+  /* ---------- 2페이지~: 본문 문서 ---------- */
+  .ai-report-document {
+    position: relative;
+  }
+
+  .ai-report-document-inner {
+    padding-bottom: 2mm;
+  }
+
+  /* 2페이지: 요약본 + 핵심 지표 */
+  .ai-report-chunk--front {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .ai-report-section--lead {
+    margin-bottom: 12mm;
+  }
+
+  .ai-report-section--metrics {
+    margin-bottom: 0;
+  }
+
+  /* 3페이지~: 본문 (break-before 사용 안 함 — front의 break-after로 분리) */
+  .ai-report-chunk--main {
+    padding-top: 2mm;
+  }
+
+  .ai-report-main-title {
+    margin: 0 0 2mm;
+    font-size: 14pt;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-text-title);
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .ai-report-main-desc {
+    margin: 0 0 6mm;
+    font-size: 9pt;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .ai-report-main-sections .ai-report-section {
+    margin-bottom: 10mm;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .ai-report-main-sections .ai-report-section:last-child {
+    margin-bottom: 0;
+  }
+
+  /* 섹션 공통 */
+  .ai-report-section-title {
+    margin: 0 0 2mm;
+    font-size: 12pt;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text-title);
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .ai-report-section-num {
+    margin-right: 2mm;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ai-report-section-desc {
+    margin: 0 0 4mm;
+    font-size: 9pt;
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-list {
+    margin: 0;
+    padding: 0 0 0 5mm;
+    list-style: disc;
+    list-style-position: outside;
+  }
+
+  .ai-report-list li {
+    margin: 0 0 2.5mm;
+    padding: 0;
+    line-height: 1.6;
+    color: var(--color-text-body);
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .ai-report-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---------- 푸터: 모든 본문 페이지 하단 고정 ---------- */
+  .ai-report-footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6mm;
+    box-sizing: border-box;
+    height: var(--print-footer-h);
+    padding: 0;
+    border-top: 1px solid var(--color-surface-400);
+    background: var(--color-surface-100);
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-footer-logo {
+    display: block;
+    flex-shrink: 0;
+    width: 16mm;
+    height: auto;
+  }
+
+  .ai-report-footer-logo path {
+    fill: var(--color-text-title);
+  }
+
+  .ai-report-footer-tagline {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-size: 7pt;
+    font-weight: 400;
+    line-height: 1.35;
+    text-align: right;
+    color: var(--color-text-muted);
+  }
+}
