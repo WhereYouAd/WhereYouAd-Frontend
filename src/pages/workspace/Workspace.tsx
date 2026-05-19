@@ -1,5 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -22,6 +29,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [query, setQuery] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
@@ -84,15 +92,19 @@ export default function WorkspacePage() {
     });
   }, [filtered, selectedOrgId]);
 
-  const onCloseCreate = () => {
-    setLogoPreview(null);
+  const openedCreateFromQueryRef = useRef(false);
+  const { reset: resetCreateMutation } = createWorkspaceMutation;
+
+  const onCloseCreate = useCallback(() => {
     setLogoPreview((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return null;
     });
+    setLogoFile(null);
     setCreateOpen(false);
-  };
-  const onOpenCreate = () => {
+  }, []);
+
+  const onOpenCreate = useCallback(() => {
     setNewName("");
     setNewDesc("");
     setLogoFile(null);
@@ -100,9 +112,21 @@ export default function WorkspacePage() {
       if (prev) URL.revokeObjectURL(prev);
       return null;
     });
-    createWorkspaceMutation.reset();
+    resetCreateMutation();
     setCreateOpen(true);
-  };
+  }, [resetCreateMutation]);
+
+  useLayoutEffect(() => {
+    if (searchParams.get("create") !== "1") {
+      openedCreateFromQueryRef.current = false;
+      return;
+    }
+    if (openedCreateFromQueryRef.current) return;
+
+    openedCreateFromQueryRef.current = true;
+    onOpenCreate();
+    setSearchParams({}, { replace: true });
+  }, [searchParams, setSearchParams, onOpenCreate]);
 
   const onPickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -189,7 +213,7 @@ export default function WorkspacePage() {
       {renderWorkspaceContent()}
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="md" padding="lg">
-        <div className="flex flex-col items-start px-2 tablet:px-0">
+        <div className="flex flex-col items-start pr-10 px-2 tablet:px-0">
           <h2 className="mb-2 font-heading3 text-text-title">
             워크스페이스 생성
           </h2>

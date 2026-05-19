@@ -160,7 +160,7 @@ function Modal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="absolute top-4 right-4 rounded-full p-1 transition-colors hover:bg-surface-200"
+                  className="absolute top-4 right-4 z-10 rounded-full p-1 transition-colors hover:bg-surface-200"
                   aria-label="모달 닫기"
                 >
                   <CloseIcon className="h-6 w-6 text-text-muted" />
