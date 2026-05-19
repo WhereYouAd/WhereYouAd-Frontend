@@ -189,78 +189,44 @@ export default function Setting() {
 
   return (
     <section className="w-full flex flex-col gap-8">
-      <nav aria-label="설정 탭" className="flex border-b border-surface-300">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={twMerge(
-              "px-5 py-3 font-body1 transition-colors duration-200 border-b-2 -mb-px",
-              activeTab === tab.id
-                ? "border-primary-400 text-primary-400"
-                : "border-transparent text-text-muted hover:text-text-title",
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-
       <div className="flex flex-col gap-6">
-        {activeTab === "profile" && (
-          <>
-            {isLoading ? (
-              <ProfileSectionSkeleton />
-            ) : (
-              <ProfileSection
-                name={draftProfile.name}
-                setName={(v) =>
-                  setDraftProfile((prev) => ({ ...prev, name: v }))
-                }
-                email={draftProfile.email}
-                phoneNumber={draftProfile.phoneNumber}
-                fileRef={fileRef}
-                preview={preview}
-                onPickFile={handlePickFile}
-                openFilePicker={openFilePicker}
-                resetImage={() => {
-                  resetImage();
-                  setIsImageDeleted(true);
-                }}
-              />
-            )}
-          </>
+        {isLoading ? (
+          <ProfileSectionSkeleton />
+        ) : (
+          <ProfileSection
+            name={draftProfile.name}
+            setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
+            email={draftProfile.email}
+            phoneNumber={draftProfile.phoneNumber}
+            fileRef={fileRef}
+            preview={preview}
+            onPickFile={handlePickFile}
+            openFilePicker={openFilePicker}
+            resetImage={() => {
+              resetImage();
+              setIsImageDeleted(true);
+            }}
+          />
         )}
 
-        {activeTab === "security" && (
-          <>
-            {isLoading ? (
-              <PasswordSectionSkeleton />
-            ) : (
-              <PasswordSection
-                currentPassword={currentPassword}
-                setCurrentPassword={setCurrentPassword}
-                newPassword={newPassword}
-                setNewPassword={setNewPassword}
-                confirmNewPassword={confirmNewPassword}
-                setConfirmNewPassword={setConfirmNewPassword}
-                errors={passwordErrors}
-              />
-            )}
-          </>
+        {isLoading ? (
+          <PasswordSectionSkeleton />
+        ) : (
+          <PasswordSection
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+            confirmNewPassword={confirmNewPassword}
+            setConfirmNewPassword={setConfirmNewPassword}
+            errors={passwordErrors}
+          />
         )}
 
-        {activeTab === "notifications" && (
-          <>
-            {isLoading ? (
-              <div className="animate-pulse h-64 bg-surface-200 rounded-lg" />
-            ) : (
-              <NotificationSection email={draftProfile.email} />
-            )}
-          </>
+        {isLoading ? (
+          <div className="animate-pulse h-64 bg-surface-200 rounded-lg" />
+        ) : (
+          <NotificationSection email={draftProfile.email} />
         )}
       </div>
 
