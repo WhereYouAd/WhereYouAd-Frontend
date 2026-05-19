@@ -7,20 +7,13 @@ import type { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
-import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import TrafficChart, {
   TrafficChartDownload,
 } from "@/components/dashboard/charts/TrafficChart";
-
-function KpiSkeletonCard() {
-  return (
-    <div className="flex flex-col gap-3 rounded-3xl border border-surface-100/40 bg-surface-100/80 px-7 py-5 shadow-Soft backdrop-blur-sm">
-      <Skeleton className="h-4 w-16" />
-      <Skeleton className="h-6 w-24" />
-      <Skeleton className="h-6 w-14 rounded-full" />
-    </div>
-  );
-}
+import {
+  OverviewKpiCardSkeleton,
+  OverviewTrafficChartSkeleton,
+} from "@/components/dashboard/overview/skeleton/OverviewSkeleton";
 
 export function OverviewKpiSection({
   kpis,
@@ -45,7 +38,7 @@ export function OverviewKpiSection({
       ) : (
         <div className="grid min-w-0 grid-cols-4 gap-4 tablet:grid-cols-2 tablet:gap-4">
           {isKpisLoading
-            ? [0, 1, 2, 3].map((i) => <KpiSkeletonCard key={i} />)
+            ? [0, 1, 2, 3].map((i) => <OverviewKpiCardSkeleton key={i} />)
             : kpiList.map((kpi) => (
                 <StatCard
                   key={`d-${kpi.title}`}
@@ -71,11 +64,7 @@ export function OverviewKpiSection({
         RightElement={<TrafficChartDownload />}
       >
         <div className="flex min-h-0 flex-1 flex-col">
-          <Suspense
-            fallback={
-              <Skeleton className="min-h-60 w-full flex-1 rounded-2xl" />
-            }
-          >
+          <Suspense fallback={<OverviewTrafficChartSkeleton />}>
             <TrafficChart />
           </Suspense>
         </div>

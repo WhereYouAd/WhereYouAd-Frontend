@@ -1,31 +1,182 @@
-/* AI 리포트 인쇄 — 드로어 패널 외 모든 요소 숨김 */
+/* AI 요약 보고서 인쇄·PDF — 화면에서는 숨김 */
+.ai-report-print-root {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 @media print {
   /*
-   * !important: 화면용 Tailwind·컴포넌트 스타일이 인쇄 시에도 적용되어 레이아웃이 어긋나는 것을
-   * 막기 위해 선언 우선순위를 올림. 인쇄 전용 규칙만 해당하며, 이 블록 안에서만 사용.
+   * !important: 화면용 Tailwind·레이아웃이 인쇄에 섞이지 않도록.
+   * 이 블록 안에서만 사용.
    */
-  body.ai-report-printing > *:not([data-drawer-portal]) {
+  body.ai-report-printing > *:not(#ai-report-print-portal) {
     display: none !important;
   }
 
-  body.ai-report-printing [data-drawer-portal] {
-    position: static !important;
+  body.ai-report-printing #ai-report-print-portal {
     display: block !important;
+    position: static !important;
   }
 
-  body.ai-report-printing [data-print-hide] {
-    display: none !important;
-  }
-
-  body.ai-report-printing [data-drawer-portal] > div:last-child {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    max-width: 100% !important;
+  body.ai-report-printing .ai-report-print-root {
+    position: static !important;
+    width: auto !important;
     height: auto !important;
-    transform: none !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+    color: var(--color-text-body);
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   @page {
-    margin: 16mm;
+    size: A4;
+    margin: 18mm 16mm 22mm;
+  }
+
+  @page :first {
+    margin-top: 0;
+  }
+
+  /* 표지 */
+  .ai-report-cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24mm 20mm;
+  }
+
+  .ai-report-cover-brand {
+    margin: 0 0 12mm;
+    font-size: 12pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .ai-report-cover-label {
+    margin: 0 0 4mm;
+    font-size: 10pt;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-cover-title {
+    margin: 0 0 10mm;
+    font-size: 26pt;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-text-title);
+  }
+
+  .ai-report-cover-date {
+    margin: 0;
+    font-size: 11pt;
+    color: var(--color-text-body);
+  }
+
+  .ai-report-cover-confidential {
+    margin: auto 0 0;
+    padding-top: 16mm;
+    font-size: 9pt;
+    color: var(--color-text-muted);
+  }
+
+  /* 본문 페이지 헤더 */
+  .ai-report-content {
+    padding: 0 2mm;
+  }
+
+  .ai-report-page-header {
+    margin-bottom: 8mm;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid var(--color-surface-400);
+  }
+
+  .ai-report-page-header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8mm;
+  }
+
+  .ai-report-page-header-title {
+    margin: 0;
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--color-text-title);
+  }
+
+  .ai-report-page-header-date {
+    margin: 0;
+    flex-shrink: 0;
+    font-size: 9pt;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-block {
+    margin-bottom: 8mm;
+    break-inside: avoid-page;
+  }
+
+  .ai-report-block-title {
+    margin: 0 0 2mm;
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--color-text-title);
+  }
+
+  .ai-report-block-desc {
+    margin: 0 0 4mm;
+    font-size: 9pt;
+    color: var(--color-text-muted);
+  }
+
+  .ai-report-exec-list {
+    margin-bottom: 2mm;
+  }
+
+  .ai-report-body-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 10mm;
+    margin-top: 2mm;
+  }
+
+  .ai-report-body-section {
+    margin: 0;
+    break-inside: avoid-page;
+  }
+
+  .ai-report-body-section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 2mm;
+    margin: 0 0 4mm;
+    font-size: 12pt;
+    font-weight: 600;
+    color: var(--color-text-title);
+  }
+
+  .ai-report-bullet-list {
+    margin: 0;
+    padding-left: 5mm;
+    list-style: disc;
+  }
+
+  .ai-report-bullet-list li {
+    margin-bottom: 2mm;
+    color: var(--color-text-body);
+  }
+
+  .ai-report-bullet-list li:last-child {
+    margin-bottom: 0;
   }
 }

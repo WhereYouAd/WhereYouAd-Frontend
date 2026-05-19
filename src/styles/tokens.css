@@ -27,7 +27,7 @@
   --color-text-placeholder: var(--color-text-200);
   --color-text-disabled: var(--color-text-100);
 
-  /* STATUS — 예산 소진: 안정=blue, 주의=yellow, 위험=red */
+  /* STATUS */
   --color-info-red: #ff2a4b;
   --color-info-blue: #0084fe;
   --color-info-yellow: #facc15;
@@ -36,14 +36,14 @@
   --color-oauth-kakao: #fee500;
   --color-oauth-naver: #03c75a;
 
-  /* 부가 카피·보조 문장 (랜딩/인증 등) — 본문보다 살짝 프라이머리 틴트 */
+  /* 부가 카피·보조 문장 (랜딩/인증 등) */
   --color-text-auth-sub: color-mix(
     in srgb,
     var(--color-text-300) 82%,
     var(--color-primary-500) 18%
   );
 
-  /* 랜딩 섹션 배경·목업 면 — brand-200 대비 살짝 구분되는 톤 */
+  /* 랜딩 섹션 배경·목업 면 */
   --color-landing-section: color-mix(
     in srgb,
     var(--color-text-400) 4%,
@@ -96,6 +96,10 @@
   --type-body2-size: 14px;
   --type-body2-weight: 500;
   --type-body2-leading: 140%;
+
+  --type-body3-size: 14px;
+  --type-body3-weight: 500;
+  --type-body3-leading: 150%;
 
   --type-caption-size: 12px;
   --type-caption-weight: 500;
