@@ -1,12 +1,5 @@
 /* AI 요약 PDF — iframe 전용 */
 :root {
-  --color-text-title: #111827;
-  --color-text-body: #374151;
-  --color-text-muted: #9ca3af;
-  --color-surface-100: #ffffff;
-  --color-surface-200: #f4f6fb;
-  --color-surface-400: #dde3f0;
-
   --print-margin-x: 16mm;
   --print-margin-top: 18mm;
   --print-margin-bottom: 18mm;
@@ -43,7 +36,7 @@
     print-color-adjust: exact;
   }
 
-  /* ---------- 1페이지: 표지 (푸터 없음) ---------- */
+  /* 표지 */
   .ai-report-cover {
     position: relative;
     z-index: 3;
@@ -94,11 +87,13 @@
   .ai-report-cover-logo {
     display: block;
     width: 28mm;
-    height: auto;
+    color: var(--color-text-title);
   }
 
-  .ai-report-cover-logo path {
-    fill: var(--color-text-title);
+  .ai-report-cover-logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .ai-report-cover-label {
@@ -154,7 +149,7 @@
     color: var(--color-text-title);
   }
 
-  /* ---------- 2페이지~: 본문 문서 ---------- */
+  /* 2페이지: 본문1 */
   .ai-report-document {
     position: relative;
   }
@@ -177,7 +172,7 @@
     margin-bottom: 0;
   }
 
-  /* 3페이지~: 본문 (break-before 사용 안 함 — front의 break-after로 분리) */
+  /* 3페이지 : 본문 */
   .ai-report-chunk--main {
     padding-top: 2mm;
   }
@@ -255,7 +250,7 @@
     margin-bottom: 0;
   }
 
-  /* ---------- 푸터: 모든 본문 페이지 하단 고정 ---------- */
+  /* 푸터 */
   .ai-report-footer {
     position: fixed;
     right: 0;
@@ -278,11 +273,13 @@
     display: block;
     flex-shrink: 0;
     width: 16mm;
-    height: auto;
+    color: var(--color-text-title);
   }
 
-  .ai-report-footer-logo path {
-    fill: var(--color-text-title);
+  .ai-report-footer-logo svg {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .ai-report-footer-tagline {

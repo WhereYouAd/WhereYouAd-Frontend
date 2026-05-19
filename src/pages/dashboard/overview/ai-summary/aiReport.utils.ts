@@ -40,7 +40,7 @@ function findSection(data: IAiReportResponse, title: string) {
   return data.sections.find((section) => section.title === title);
 }
 
-/** 인쇄·PDF용 작성일 (한국어) */
+/** 인쇄·PDF용 작성일 */
 export function formatReportWrittenDate(date = new Date()) {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
@@ -105,7 +105,7 @@ export function toAiReportPrintDocument(
     documentTitle: "오늘의 성과 AI 요약 보고서",
     label: data.label,
     writtenDate,
-    brandName: "WhereYouAd",
+    brandName: "WhereYouAd-report-ai",
     footerTagline: AI_REPORT_FOOTER_TAGLINE,
     executiveSummary: buildExecutiveSummary(data),
     keyMetrics: data.keyMetrics ?? [],

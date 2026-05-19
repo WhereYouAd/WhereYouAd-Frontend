@@ -1,10 +1,12 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { buildPrintThemeStyleBlock } from "./aiReport.printAssets";
 import type { TAiReportPrintDocument } from "./aiReport.utils";
 import OverviewAiSummaryPrintReport from "./print/OverviewAiSummaryPrintReport";
 
 import printStyles from "@/styles/aiReport.print.css?inline";
+import tokenStyles from "@/styles/tokens.css?inline";
 
 const FONT_FACE_STYLE = `
 @font-face {
@@ -35,6 +37,7 @@ export function downloadAiSummaryPdf(document: TAiReportPrintDocument) {
     return;
   }
 
+  const printThemeStyles = buildPrintThemeStyleBlock();
   const printDoc = printWindow.document;
   printDoc.open();
   printDoc.write(`<!DOCTYPE html>
@@ -42,7 +45,7 @@ export function downloadAiSummaryPdf(document: TAiReportPrintDocument) {
 <head>
 <meta charset="UTF-8" />
 <title></title>
-<style>${FONT_FACE_STYLE}${printStyles}</style>
+<style>${FONT_FACE_STYLE}${tokenStyles}${printThemeStyles}${printStyles}</style>
 </head>
 <body>${reportMarkup}</body>
 </html>`);

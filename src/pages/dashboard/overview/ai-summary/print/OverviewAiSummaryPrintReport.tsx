@@ -1,11 +1,27 @@
 /** AI 요약 보고서 인쇄·PDF 저장 전용 마크업 */
+import { AI_REPORT_LOGO_PRINT_SVG } from "../aiReport.printAssets";
 import type { TAiReportPrintDocument } from "../aiReport.utils";
-
-import ServiceLogo from "@/assets/logo/service-logo/logo.svg?react";
 
 type TOverviewAiSummaryPrintReportProps = {
   document: TAiReportPrintDocument;
 };
+
+function AiReportLogo({
+  className,
+  label,
+}: {
+  className: string;
+  label: string;
+}) {
+  return (
+    <div
+      className={className}
+      role="img"
+      aria-label={label}
+      dangerouslySetInnerHTML={{ __html: AI_REPORT_LOGO_PRINT_SVG }}
+    />
+  );
+}
 
 export default function OverviewAiSummaryPrintReport({
   document: doc,
@@ -16,10 +32,9 @@ export default function OverviewAiSummaryPrintReport({
       <section className="ai-report-cover" aria-label="표지">
         <div className="ai-report-cover-main">
           <header className="ai-report-cover-top">
-            <ServiceLogo
+            <AiReportLogo
               className="ai-report-cover-logo"
-              role="img"
-              aria-label={doc.brandName}
+              label={doc.brandName}
             />
           </header>
 
@@ -126,10 +141,9 @@ export default function OverviewAiSummaryPrintReport({
         </div>
 
         <footer className="ai-report-footer" aria-hidden="true">
-          <ServiceLogo
+          <AiReportLogo
             className="ai-report-footer-logo"
-            role="img"
-            aria-label={doc.brandName}
+            label={doc.brandName}
           />
           <p className="ai-report-footer-tagline">{doc.footerTagline}</p>
         </footer>
