@@ -6,10 +6,10 @@ import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankin
 
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
-import OverviewAiSummaryCard from "./OverviewAiSummaryCard";
-import { OverviewBudgetSection } from "./OverviewBudgetSection";
-import { OverviewKpiSection } from "./OverviewKpiSection";
-import { OverviewPlatformSection } from "./OverviewPlatformSection";
+import OverviewAiSummaryCard from "./ai-summary/OverviewAiSummaryCard";
+import { OverviewBudgetSection } from "./sections/OverviewBudgetSection";
+import { OverviewKpiSection } from "./sections/OverviewKpiSection";
+import { OverviewPlatformSection } from "./sections/OverviewPlatformSection";
 
 export default function OverviewDashboard() {
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ import BudgetGaugeChart, {
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
 
-import OverviewCampaignSnapshotCard from "@/pages/dashboard/overview/OverviewCampaignSnapshotCard";
+import OverviewCampaignSnapshotCard from "./OverviewCampaignSnapshotCard";
 
 const budgetStatusLegendItems: IChartLegendItem[] = [
   { label: "안정", colorClass: "bg-info-blue" },
