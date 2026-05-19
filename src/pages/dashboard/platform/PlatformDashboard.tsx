@@ -1,19 +1,12 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
-
-import { printAsPdf } from "@/utils/download";
 
 import Button from "@/components/common/button/Button";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import AllPlatformView from "@/components/dashboard/platform/AllPlatformView";
 import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformView";
 
-import { OverviewAiDrawer } from "../overview/OverviewAiDrawer";
-
-import AiButtonSvg from "@/assets/icon/ai/ai-요약버튼.svg?react";
-import SparkleCircleIcon from "@/assets/icon/ai/sparkle-circle.svg?react";
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
 type TDashboardHeaderContext = {
@@ -23,7 +16,6 @@ type TDashboardHeaderContext = {
 export default function PlatformDashboard() {
   const [selectedPlatform, setSelectedPlatform] = useState("전체");
   const [isLoading, setIsLoading] = useState(true);
-  const [isAiPanelOpen, setIsAiPanelOpen] = useState(false);
   const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
 
   const isAllView = selectedPlatform === "전체";
@@ -91,23 +83,6 @@ export default function PlatformDashboard() {
           }
           items={platformItems}
         />
-
-        <button
-          type="button"
-          onClick={() => setIsAiPanelOpen(true)}
-          className="group relative ml-4 -mr-2 inline-flex h-8 cursor-pointer items-center justify-center overflow-hidden rounded-2xl px-1 outline-none focus-visible:ring-2 focus-visible:ring-primary-300/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
-          aria-label="AI 요약하기"
-        >
-          <div className="pointer-events-none absolute inset-0 z-20 -translate-x-full skew-x-12 bg-linear-to-r from-transparent via-surface-100/80 to-transparent mix-blend-overlay group-hover:animate-[shimmer_1.2s_ease-out]" />
-          <div className="relative z-10">
-            <span className="sm:hidden">
-              <SparkleCircleIcon className="h-5 w-5 fill-current text-primary-500" />
-            </span>
-            <span className="hidden sm:block">
-              <AiButtonSvg className="h-6 w-auto [&>path:nth-of-type(4)]:transition-transform [&>path:nth-of-type(4)]:duration-300 group-hover:[&>path:nth-of-type(4)]:translate-x-0.5 [&>path:nth-of-type(5)]:transition-transform [&>path:nth-of-type(5)]:duration-300 group-hover:[&>path:nth-of-type(5)]:translate-x-1" />
-            </span>
-          </div>
-        </button>
       </div>,
     );
 
@@ -115,25 +90,12 @@ export default function PlatformDashboard() {
   }, [isAllView, platformItems, selectedPlatform, setHeaderRight]);
 
   return (
-    <section className="flex flex-col gap-8 w-full min-w-0">
+    <section className="flex w-full min-w-0 flex-col gap-8">
       {isAllView ? (
         <AllPlatformView isLoading={isLoading} />
       ) : (
         <SinglePlatformView platform={selectedPlatform} isLoading={isLoading} />
       )}
-
-      {/* AI 요약 패널 */}
-      <OverviewAiDrawer
-        isOpen={isAiPanelOpen}
-        onClose={() => setIsAiPanelOpen(false)}
-        onShareLink={() => {
-          navigator.clipboard
-            .writeText(window.location.href)
-            .then(() => toast.success("링크가 복사되었습니다."))
-            .catch(() => toast.error("링크 복사에 실패했습니다."));
-        }}
-        onDownloadPdf={() => printAsPdf("ai-report-printing")}
-      />
     </section>
   );
 }
