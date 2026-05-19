@@ -9,7 +9,7 @@ import Tablet960Avif from "@/assets/mockup/optimized/landing/device-tablet-960.a
 import Tablet960Webp from "@/assets/mockup/optimized/landing/device-tablet-960.webp";
 
 const MOCKUP_OVERLAY_CLASS =
-  "absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent";
+  "absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent";
 
 export default function LandingMultiDevice() {
   return (

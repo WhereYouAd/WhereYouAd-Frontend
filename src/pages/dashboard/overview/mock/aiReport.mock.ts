@@ -1,6 +1,20 @@
-export const aiReportMockData = {
+import type { IAiReportResponse } from "@/types/dashboard/aiReport";
+
+/** 통합 대시보드 AI 요약 mock — API 연동 전 */
+export const overviewAiReportMockData: IAiReportResponse = {
   label: "오늘의 데이터 요약",
   title: "AI가 오늘의 데이터를 중심으로 요약했어요",
+  executiveSummary: [
+    "오늘 광고 성과는 전반적으로 안정적이며, 트래픽과 전환 지표 모두 긍정적인 신호가 관측됩니다.",
+    "클릭수는 전일 대비 약 13% 증가했고, 전환율은 평균 이상을 유지해 질적 성장도 함께 확인됩니다.",
+    "오후 시간대 클릭 집중과 일부 매체의 전환 효율 하락은 단기 모니터링이 필요한 변수입니다.",
+    "상위 캠페인 중심의 예산 배분 점검과 저효율 시간대 테스트를 병행하는 것이 권장됩니다.",
+  ],
+  keyMetrics: [
+    { label: "클릭수", value: "+13%", detail: "전일 대비" },
+    { label: "전환율", value: "평균 이상", detail: "목표 대비 안정" },
+    { label: "노출·클릭", value: "안정 유지", detail: "일중 변동 완만" },
+  ],
   strategySuggestion: {
     title: "전략 제안",
     content:
@@ -15,7 +29,7 @@ export const aiReportMockData = {
     {
       title: "왜 이렇게 나왔을까?",
       content:
-        "오늘 클릭수 증가는 상위 성과 캠페인의 노출 비중이 확대된 영향으로 보입니다.\n특히 오후 시간대에 클릭이 집중되면서 전체 트래픽이 증가했으나,\n같은 구간에서 전환수는 상대적으로 완만한 증가세를 보였습니다.\n이는 클릭 대비 전환 효율이 시간대별로 다르게 나타났기 때문으로 추정됩니다.",
+        "오늘 클릭수 증가는 상위 성과 캠페인의 노출 비중이 확대된 영향으로 보입니다.\n특히 오후 시간대에 클릭이 집중되면서 전체 트래픽이 증가했습니다.",
     },
     {
       title: "성과 포인트",

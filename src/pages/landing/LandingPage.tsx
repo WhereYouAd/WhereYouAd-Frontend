@@ -18,7 +18,7 @@ function SectionFallback({ height = 96 }: { height?: number }) {
   return (
     <div className="w-full" style={{ height }} aria-hidden>
       <div className="h-full w-full rounded-[28px] border border-surface-400/60 bg-surface-100/55 backdrop-blur-sm shadow-card overflow-hidden">
-        <div className="h-full w-full animate-pulse bg-linear-to-r from-primary-100/40 via-surface-100/40 to-primary-100/40" />
+        <div className="h-full w-full animate-pulse bg-gradient-to-r from-primary-100/40 via-surface-100/40 to-primary-100/40" />
       </div>
     </div>
   );

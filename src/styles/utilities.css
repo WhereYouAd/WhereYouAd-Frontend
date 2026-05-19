@@ -43,6 +43,12 @@
     line-height: var(--type-body2-leading);
   }
 
+  .font-body3 {
+    font-size: var(--type-body3-size);
+    font-weight: var(--type-body3-weight);
+    line-height: var(--type-body3-leading);
+  }
+
   .font-caption {
     font-size: var(--type-caption-size);
     font-weight: var(--type-caption-weight);
