@@ -2,7 +2,6 @@ import type { INavItem } from "@/types/navigation/navItem";
 
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
-import NotificationIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SettingsIcon from "@/assets/icon/sidebar/setting.svg?react";
 import WorkspaceIcon from "@/assets/icon/sidebar/workspace.svg?react";
 
@@ -81,11 +80,6 @@ export const mainNav: INavItem[] = [
 ];
 
 export const footerNav: INavItem[] = [
-  {
-    id: "notifications",
-    label: "알림",
-    icon: NotificationIcon,
-  },
   {
     id: "settings",
     label: "설정",

@@ -17,20 +17,16 @@ export default function ProfileSectionSkeleton() {
             <Skeleton className="w-16 h-7 rounded-component-lg" />
           </div>
         </div>
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 basis-3/4 gap-y-5 w-full">
-          <div className="col-span-2">
+        <div className="grid w-full basis-3/4 grid-cols-2 gap-x-6 gap-y-4 tablet:grid-cols-1 tablet:gap-y-5">
+          <div className="col-span-2 tablet:col-span-1">
             <Skeleton className="w-16 h-5 mb-2" />
             <Skeleton className="w-full h-12 rounded-xl" />
           </div>
-          <div className="col-span-2">
+          <div className="col-span-1">
             <Skeleton className="w-20 h-5 mb-2" />
             <Skeleton className="w-full h-12 rounded-xl" />
           </div>
-          <div className="col-span-2">
-            <Skeleton className="w-20 h-5 mb-2" />
-            <Skeleton className="w-full h-12 rounded-xl" />
-          </div>
-          <div className="col-span-2">
+          <div className="col-span-1">
             <Skeleton className="w-24 h-5 mb-2" />
             <Skeleton className="w-full h-12 rounded-xl" />
           </div>
