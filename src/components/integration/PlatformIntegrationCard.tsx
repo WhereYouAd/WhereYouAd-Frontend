@@ -80,7 +80,7 @@ function PlatformIntegrationCard({
         </div>
         <Badge
           variant={CONNECTION_STATUS_BADGE[status]}
-          className="h-8 shrink-0 px-3.5 font-body2"
+          className="h-8 shrink-0 font-body2"
         >
           {STATUS_LABEL[status]}
         </Badge>

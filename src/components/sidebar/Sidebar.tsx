@@ -10,7 +10,13 @@ import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
+import {
+  needsIntegrationAttention,
+  usePlatformConnections,
+} from "@/hooks/integration/usePlatformConnections";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
+
+import Badge from "@/components/common/badge/Badge";
 
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
@@ -71,6 +77,12 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const { data: platformConnections } = usePlatformConnections();
+  const showIntegrationsAttention = useMemo(
+    () => needsIntegrationAttention(platformConnections),
+    [platformConnections],
+  );
+
   const mainNavWithWorkspace = useMemo(
     () => applyWorkspacePathsToNav(mainNav, selectedOrgId),
     [selectedOrgId],
@@ -198,6 +210,13 @@ export default function Sidebar() {
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
                   onClick={handleFooterItemClick}
+                  trailing={
+                    item.id === "integrations" &&
+                    showIntegrationsAttention &&
+                    !isCollapsed ? (
+                      <Badge variant="infoRed">연동 필요</Badge>
+                    ) : undefined
+                  }
                 />
               </div>
             );
