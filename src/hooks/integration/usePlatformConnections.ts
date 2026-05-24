@@ -17,7 +17,9 @@ export function usePlatformConnections() {
   return useCoreQuery(
     ["platform-connections", orgId],
     async () => {
-      // TODO: GET /api/orgs/{orgId}/integrations
+      await new Promise((resolve) => {
+        setTimeout(resolve, 800);
+      });
       return platformConnectionsMock;
     },
     { enabled: orgId != null },
