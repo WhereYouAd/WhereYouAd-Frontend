@@ -15,9 +15,9 @@ export default function PlatformIntegrationsPage() {
           >
             <PlatformIntegrationCard
               {...item}
-              onConnect={() => toast.message("연동하기 (mock)")}
-              onReconnect={() => toast.message("재연동 (mock)")}
-              onDisconnect={() => toast.message("연결 해제 (mock)")}
+              onConnect={() => toast.message("연동하기")}
+              onReconnect={() => toast.message("재연동")}
+              onDisconnect={() => toast.message("연결 해제")}
             />
           </li>
         ))}
