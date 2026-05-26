@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import type { ReactElement, ReactNode } from "react";
+import { Navigate } from "react-router-dom";
 
 import type { TMemberRole } from "@/types/workspace/workspace";
 
@@ -10,8 +10,10 @@ interface IRoleGuardProps {
   allowedRoles: TMemberRole[];
 }
 
-function RoleGuard({ children, allowedRoles }: IRoleGuardProps) {
-  const navigate = useNavigate();
+function RoleGuard({
+  children,
+  allowedRoles,
+}: IRoleGuardProps): ReactElement | null {
   const myRole = useWorkspaceStore((s) => s.myRole);
 
   //워크스페이스 초기화 전(null)에 랜더 보류
@@ -21,7 +23,7 @@ function RoleGuard({ children, allowedRoles }: IRoleGuardProps) {
 
   //허용되지 않는 역할 -> 대시보드로 리다이렉트
   if (!allowedRoles.includes(myRole)) {
-    return navigate("/dashboard", { replace: true });
+    return <Navigate to="/dashboard" replace />;
   }
   return <>{children}</>;
 }
