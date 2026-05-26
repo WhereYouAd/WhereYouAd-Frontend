@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import type { TAiAnalysisProvider } from "@/types/dashboard/aiAnalysis";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import { formatAiAnalysisPeriodLabel } from "@/constants/dashboard/overviewMetricsRange";
 
 import { useAiAnalysisReport } from "@/hooks/dashboard/useAiAnalysisReport";

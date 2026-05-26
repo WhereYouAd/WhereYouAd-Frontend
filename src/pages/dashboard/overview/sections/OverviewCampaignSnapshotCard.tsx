@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import type { ICampaign } from "@/types/ads/campaign";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";

@@ -4,7 +4,7 @@ import type {
   IPlatformRankingItem,
   TProviderType,
 } from "@/types/dashboard/overview";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
 

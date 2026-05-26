@@ -5,8 +5,8 @@ import type { ApexOptions } from "apexcharts";
 import {
   PLATFORM_CHART_COLORS,
   PLATFORM_MAP,
-  PLATFORM_PROVIDERS,
-} from "@/types/dashboard/platform";
+  PROVIDER_TYPES,
+} from "@/types/dashboard/provider";
 
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
@@ -21,7 +21,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
 }: IAllPlatformTrafficChartProps) {
   // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
   const seriesData = useMemo(() => {
-    return PLATFORM_PROVIDERS.map((platform) => {
+    return PROVIDER_TYPES.map((platform) => {
       const data = platformTrafficMock[platform];
       return {
         name: PLATFORM_MAP[platform],

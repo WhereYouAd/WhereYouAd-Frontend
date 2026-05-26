@@ -1,21 +1,6 @@
-import { PROVIDER_TYPES, type TProviderType } from "./provider";
+import type { TProviderType } from "./provider";
 
 export type { TProviderType } from "./provider";
-
-/* API·상태 식별자 → 화면 표시명  */
-export const PLATFORM_MAP: Record<TProviderType, string> = {
-  GOOGLE: "Google",
-  NAVER: "NAVER",
-  META: "Meta",
-};
-
-export const PLATFORM_CHART_COLORS: Record<TProviderType, string> = {
-  GOOGLE: "#f9ab00",
-  NAVER: "#03c75a",
-  META: "#1877f2",
-};
-
-export const PLATFORM_PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
 
 // ROAS 성과 순위
 export interface IRoasRanking {

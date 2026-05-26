@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/overview";
-import { PLATFORM_MAP, PLATFORM_PROVIDERS } from "@/types/dashboard/platform";
+import { PLATFORM_MAP, PROVIDER_TYPES } from "@/types/dashboard/provider";
 
 import Button from "@/components/common/button/Button";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
@@ -28,7 +28,7 @@ export default function PlatformDashboard() {
 
   const platformItems = useMemo(
     () =>
-      PLATFORM_PROVIDERS.map((value) => ({
+      PROVIDER_TYPES.map((value) => ({
         label: PLATFORM_MAP[value],
         onClick: () => setSelectedPlatform(value),
       })),

@@ -1,6 +1,20 @@
-/* 광고 플랫폼 API */
+/* API 플랫폼 코드 목록 */
 export const PROVIDER_TYPES = ["GOOGLE", "NAVER", "META"] as const;
+/* 단일 플랫폼 (GOOGLE | NAVER | META) */
 export type TProviderType = (typeof PROVIDER_TYPES)[number];
-
-/* AI 분석 요청용 — 단일 플랫폼 + ALL */
+/* AI 분석용 — 플랫폼 하나 또는 통합(ALL) */
 export type TAiAnalysisProvider = TProviderType | "ALL";
+
+/* 화면에 보이는 이름 */
+export const PLATFORM_MAP: Record<TProviderType, string> = {
+  GOOGLE: "Google",
+  NAVER: "NAVER",
+  META: "Meta",
+};
+
+/* 차트 범례·시리즈 색 */
+export const PLATFORM_CHART_COLORS: Record<TProviderType, string> = {
+  GOOGLE: "#f9ab00",
+  NAVER: "#03c75a",
+  META: "#1877f2",
+};

@@ -1,8 +1,8 @@
 import {
   PLATFORM_CHART_COLORS,
   PLATFORM_MAP,
-  PLATFORM_PROVIDERS,
-} from "@/types/dashboard/platform";
+  PROVIDER_TYPES,
+} from "@/types/dashboard/provider";
 
 import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
 import { usePlatformPerformance } from "@/hooks/dashboard/usePlatformPerformance";
@@ -24,7 +24,7 @@ import {
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
-const platformChartLegendItems = PLATFORM_PROVIDERS.map((provider) => ({
+const platformChartLegendItems = PROVIDER_TYPES.map((provider) => ({
   label: PLATFORM_MAP[provider],
   color: PLATFORM_CHART_COLORS[provider],
 }));
