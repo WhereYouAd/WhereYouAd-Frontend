@@ -6,7 +6,7 @@ interface IWorkspaceState {
   selectedOrgId: number | null;
   myRole: TMemberRole | null;
   setSelectedOrgId: (orgId: number) => void;
-  setMyRole: (role: TMemberRole) => void;
+  setMyRole: (role: TMemberRole | null) => void;
 }
 
 const useWorkspaceStore = create<IWorkspaceState>((set) => ({
