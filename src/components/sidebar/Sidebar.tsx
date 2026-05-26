@@ -3,6 +3,8 @@ import { useCallback, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
+import type { INavItem } from "@/types/navigation/navItem";
+import type { TMemberRole } from "@/types/workspace/workspace";
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
@@ -19,6 +21,20 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+function filterNavByRole(
+  items: INavItem[],
+  myRole: TMemberRole | null,
+): INavItem[] {
+  return items
+    .filter((item) => !item.requiredRole || item.requiredRole === myRole)
+    .map((item) => ({
+      ...item,
+      children: item.children
+        ? filterNavByRole(item.children, myRole)
+        : undefined,
+    }));
+}
 
 function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
   return twMerge(
@@ -71,9 +87,11 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const myRole = useWorkspaceStore((s) => s.myRole);
   const mainNavWithWorkspace = useMemo(
-    () => applyWorkspacePathsToNav(mainNav, selectedOrgId),
-    [selectedOrgId],
+    () =>
+      filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
+    [selectedOrgId, myRole],
   );
 
   const handleFooterItemClick = useCallback(
