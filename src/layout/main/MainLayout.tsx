@@ -38,6 +38,7 @@ export default function MainLayout() {
   >(null);
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
+  const setMyRole = useWorkspaceStore((s) => s.setMyRole);
 
   const savedWorkspaceQuery = useCoreQuery(
     ["savedWorkspace"],
@@ -59,20 +60,25 @@ export default function MainLayout() {
     const savedId = savedData?.orgId;
     const isExist = workspaces.some((w) => w.orgId === savedId);
 
-    // 1. 현재 워크스페이스 조회 API 데이터
+    // 1. 현재 워크스페이스 조회 API 데이터 (저장된 워크스페이스가 있는 경우)
     if (savedId !== undefined && isExist) {
+      const workspace = workspaces.find((w) => w.orgId === savedId);
       setSelectedOrgId(savedId);
+      if (workspace) setMyRole(workspace.myRole);
     }
     // 2. isCurrentWorkspace 또는 첫 번째
     else {
-      const currentOrg = workspaces.find((w) => w.isCurrentWorkspace);
-      setSelectedOrgId(currentOrg?.orgId || workspaces[0].orgId);
+      const currentOrg =
+        workspaces.find((w) => w.isCurrentWorkspace) ?? workspaces[0];
+      setSelectedOrgId(currentOrg.orgId);
+      setMyRole(currentOrg.myRole);
     }
   }, [
     workspaces,
     savedWorkspaceQuery.isFetched,
     savedData,
     setSelectedOrgId,
+    setMyRole,
     selectedOrgId,
   ]);
 
