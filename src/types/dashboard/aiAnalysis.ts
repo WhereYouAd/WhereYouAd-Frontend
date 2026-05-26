@@ -1,7 +1,6 @@
-/** 분석 대상 플랫폼 (ALL = 통합) */
-export type TAiAnalysisProvider = "NAVER" | "META" | "GOOGLE" | "ALL";
+import type { TAiAnalysisProvider } from "./provider";
 
-/** 리포트 작업 상태 */
+export type { TAiAnalysisProvider };
 export type TAiReportJobStatus = "PENDING" | "SUCCESS" | "FAILED";
 
 /** POST /analysis 요청 body */
@@ -20,7 +19,7 @@ export interface IAnalysisResponse {
   cautionPoint: string[];
 }
 
-/** GET /reports/{accessToken} 응답 data */
+/** GET 응답 data */
 export interface IReportStatusResponse {
   accessToken: string;
   status: TAiReportJobStatus;

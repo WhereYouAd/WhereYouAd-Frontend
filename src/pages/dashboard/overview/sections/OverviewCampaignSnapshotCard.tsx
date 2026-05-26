@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import type { ICampaign } from "@/types/ads/campaign";
-import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
@@ -19,11 +19,9 @@ function visibleCampaigns(list: ICampaign[]) {
   return list.filter((c) => c.status !== "OVER");
 }
 
-const PROVIDERS: TProviderType[] = ["GOOGLE", "NAVER", "META"];
-
 function providerDisplayName(raw: string): string | null {
   const key = raw.toUpperCase() as TProviderType;
-  if (!PROVIDERS.includes(key)) return null;
+  if (!(PROVIDER_TYPES as readonly string[]).includes(key)) return null;
   return PLATFORM_MAP[key];
 }
 

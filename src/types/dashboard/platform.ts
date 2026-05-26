@@ -1,8 +1,8 @@
-import type { TProviderType } from "./overview";
+import { PROVIDER_TYPES, type TProviderType } from "./provider";
 
-export type TPlatformProvider = TProviderType;
+export type { TProviderType } from "./provider";
 
-/** API·상태 식별자 → 화면 표시명 (내부는 TProviderType/TAiAnalysisProvider 코드만 사용) */
+/* API·상태 식별자 → 화면 표시명  */
 export const PLATFORM_MAP: Record<TProviderType, string> = {
   GOOGLE: "Google",
   NAVER: "NAVER",
@@ -15,7 +15,7 @@ export const PLATFORM_CHART_COLORS: Record<TProviderType, string> = {
   META: "#1877f2",
 };
 
-export const PLATFORM_PROVIDERS: TProviderType[] = ["GOOGLE", "NAVER", "META"];
+export const PLATFORM_PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
 
 // ROAS 성과 순위
 export interface IRoasRanking {
@@ -29,7 +29,7 @@ export interface IRoasRanking {
 
 // 플랫폼 광고 소재 개수
 export interface IAdCount {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   count: number;
 }
 
@@ -49,7 +49,7 @@ export interface IAdCountParams {
 
 // 플랫폼별 성과
 export interface IPlatformPerformance {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   clicks: number;
   clickChangeRate: number;
   impressions: number;

@@ -1,7 +1,5 @@
-import type {
-  IPlatformRankingItem,
-  TProviderType,
-} from "@/types/dashboard/overview";
+import type { IPlatformRankingItem } from "@/types/dashboard/overview";
+import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 import { OVERVIEW_DAILY_METRICS_RANGE } from "@/constants/dashboard/overviewMetricsRange";
 
 import { useCoreQuery } from "@/hooks/customQuery";
@@ -9,7 +7,7 @@ import { useCoreQuery } from "@/hooks/customQuery";
 import { getOverview, getRoasRankings } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const PROVIDERS: TProviderType[] = ["GOOGLE", "NAVER", "META"];
+const PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
 
 export function useOverviewRoasRankings() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);

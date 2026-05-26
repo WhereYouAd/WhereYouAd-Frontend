@@ -1,7 +1,4 @@
-import type { TAiAnalysisProvider } from "./aiAnalysis";
-
-// 광고 플랫폼
-export type TProviderType = Exclude<TAiAnalysisProvider, "ALL">;
+export type { TProviderType } from "./provider";
 
 // 전체 지표 집계 응답
 export interface IMetricsResponse {
