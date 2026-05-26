@@ -2,6 +2,12 @@ import { memo, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
+import {
+  PLATFORM_CHART_COLORS,
+  PLATFORM_MAP,
+  PLATFORM_PROVIDERS,
+} from "@/types/dashboard/platform";
+
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -10,29 +16,16 @@ interface IAllPlatformTrafficChartProps {
   isLoading?: boolean;
 }
 
-const PLATFORM_COLORS = {
-  GOOGLE: "#f9ab00",
-  NAVER: "#03c75a",
-  META: "#1877f2",
-};
-
 const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
   isLoading,
 }: IAllPlatformTrafficChartProps) {
   // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
   const seriesData = useMemo(() => {
-    const platforms = ["GOOGLE", "NAVER", "META"] as const;
-
-    return platforms.map((platform) => {
+    return PLATFORM_PROVIDERS.map((platform) => {
       const data = platformTrafficMock[platform];
       return {
-        name:
-          platform === "GOOGLE"
-            ? "Google"
-            : platform === "NAVER"
-              ? "NAVER"
-              : "Meta",
-        color: PLATFORM_COLORS[platform],
+        name: PLATFORM_MAP[platform],
+        color: PLATFORM_CHART_COLORS[platform],
         data: data.timeSeriesData.map((d) => {
           const year = parseInt(d.minute.slice(0, 4), 10);
           const month = parseInt(d.minute.slice(4, 6), 10) - 1;

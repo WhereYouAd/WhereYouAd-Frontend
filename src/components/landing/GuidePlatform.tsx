@@ -5,7 +5,6 @@ import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
 import GoogleAdsPlain from "@/assets/logo/social-logo/plain/google_ads.png";
 import MetaPlain from "@/assets/logo/social-logo/plain/meta.svg?react";
 import GoogleWordmark from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
-import KakaoWordmark from "@/assets/logo/social-logo/wordmark/kakao-wordmark.svg?react";
 import NaverWordmarkPng from "@/assets/logo/social-logo/wordmark/naver-wordmark.png";
 
 type TPlatform = {
@@ -26,11 +25,6 @@ const PLATFORMS: TPlatform[] = [
         className="h-[13px] w-auto object-contain"
       />
     ),
-  },
-  {
-    id: "kakao",
-    label: "Kakao",
-    content: <KakaoWordmark className="h-[18px] w-auto" />,
   },
   {
     id: "google",

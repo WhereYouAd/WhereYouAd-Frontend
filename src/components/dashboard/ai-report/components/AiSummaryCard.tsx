@@ -1,48 +1,64 @@
-/** 대시보드 공용 — AI 요약 카드 (통합·플랫폼) */
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
-import type { IAiReportResponse } from "@/types/dashboard/aiReport";
+import type { IAnalysisResponse } from "@/types/dashboard/aiAnalysis";
 
 import Card from "@/components/common/card/Card";
+import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import { downloadAiSummaryPdf } from "../print/downloadAiSummaryPdf";
 import {
   type TAiReportPrintOptions,
   toAiReportPrintDocument,
 } from "../utils/aiReport.utils";
+import {
+  ensureStringList,
+  formatNumberedList,
+  splitParagraphs,
+} from "../utils/aiReportText.utils";
 
 import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import ChevronUpIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import DownloadIcon from "@/assets/icon/common/download.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-const DEFAULT_CARD_TITLE = "오늘의 성과 AI 요약";
+const DEFAULT_CARD_TITLE = "광고 성과 AI 요약";
 const DEFAULT_COLLAPSED_HINT =
-  "펼치기를 누르면 오늘 광고 성과를 AI가 분석·요약해 드려요.";
+  "펼치기를 누르면 선택 기간의 광고 성과를 AI가 분석·요약해 드려요.";
 
 const aiSummaryActionButtonClass =
   "group inline-flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-full border-none bg-surface-200/60 px-4 font-body3 text-text-muted transition-colors hover:bg-surface-200 hover:text-text-body";
 
 export type TAiSummaryCardProps = {
-  data: IAiReportResponse;
+  data?: IAnalysisResponse;
+  isLoading?: boolean;
+  loadingMessage?: string | null;
+  isError?: boolean;
+  errorMessage?: string | null;
+  onRetry?: () => void;
+  /** 접힌 상태에서 펼칠 때 (분석 요청 등) */
+  onExpand?: () => void;
   /** 카드 헤더 제목 */
   title?: string;
   /** 접힌 상태 안내 문구 */
   collapsedHint?: string;
+  /** 데이터 없을 때 접힌 안내 */
+  emptyHint?: string;
   idPrefix?: string;
   /** PDF·인쇄 메타 */
   print?: TAiReportPrintOptions;
+  /** 분석 기간 표시 (예: 분석 기준 2026.02.22 ~ 2026.03.22) */
+  periodLabel?: string;
   className?: string;
 };
-
-function splitParagraphs(text: string) {
-  return text
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-}
 
 function ReportParagraphs({ paragraphs }: { paragraphs: string[] }) {
   return (
@@ -99,21 +115,43 @@ function AiSummaryHighlightSection({
   );
 }
 
+const INSIGHT_ITEMS = [
+  {
+    title: "성과 요약",
+    content: (data: IAnalysisResponse) => data.performanceSummary,
+  },
+  {
+    title: "왜 이렇게 나왔을까?",
+    content: (data: IAnalysisResponse) => data.analysisReason,
+  },
+  {
+    title: "성과 포인트",
+    content: (data: IAnalysisResponse) =>
+      formatNumberedList(data.performancePoint),
+  },
+] as const;
+
 function AiReportBody({
   data,
   idPrefix,
 }: {
-  data: IAiReportResponse;
+  data: IAnalysisResponse;
   idPrefix: string;
 }) {
+  const cautionPoints = ensureStringList(data.cautionPoint);
+  const cautionContent =
+    cautionPoints.length > 0
+      ? formatNumberedList(cautionPoints)
+      : "특별히 주의가 필요한 항목이 없습니다.";
+
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-2 gap-3 tablet:grid-cols-1">
         <AiSummaryHighlightSection
           id={`${idPrefix}-strategy`}
-          title={data.strategySuggestion.title}
+          title="전략 제안"
           tone="primary"
-          content={data.strategySuggestion.content}
+          content={data.strategySuggestion}
           className="bg-primary-500/6"
           icon={
             <SparkleIcon className="h-4.5 w-4.5 fill-current text-primary-500" />
@@ -122,9 +160,9 @@ function AiReportBody({
 
         <AiSummaryHighlightSection
           id={`${idPrefix}-warning`}
-          title={data.warning.title}
+          title="주의가 필요한 부분"
           tone="danger"
-          content={data.warning.content}
+          content={cautionContent}
           className="bg-info-red/6"
           icon={<WarnCircleIcon className="h-4.5 w-4.5 text-info-red" />}
         />
@@ -141,8 +179,8 @@ function AiReportBody({
           분석 인사이트
         </h5>
         <ul className="grid list-none grid-cols-3 gap-4 p-0 tablet:grid-cols-1">
-          {data.sections.map((section, index) => (
-            <li key={section.title} className="min-w-0">
+          {INSIGHT_ITEMS.map((item, index) => (
+            <li key={item.title} className="min-w-0">
               <div className="flex items-start gap-2">
                 <span
                   className="flex w-4.5 shrink-0 justify-center pt-0.5"
@@ -154,10 +192,10 @@ function AiReportBody({
                 </span>
                 <div className="min-w-0 flex-1">
                   <h6 className="mb-2 font-heading4 text-text-title">
-                    {section.title}
+                    {item.title}
                   </h6>
                   <ReportParagraphs
-                    paragraphs={splitParagraphs(section.content)}
+                    paragraphs={splitParagraphs(item.content(data))}
                   />
                 </div>
               </div>
@@ -208,29 +246,95 @@ const panelCollapseTransition = {
   opacity: { duration: 0.28, ease: [0.4, 0, 1, 1] as const },
 };
 
+function AiSummaryCardSkeleton() {
+  return (
+    <div
+      className="flex flex-col gap-4"
+      aria-busy="true"
+      aria-label="AI 요약 로딩"
+    >
+      <Skeleton className="h-24 w-full rounded-xl" />
+      <div className="grid grid-cols-2 gap-3 tablet:grid-cols-1">
+        <Skeleton className="h-28 w-full rounded-xl" />
+        <Skeleton className="h-28 w-full rounded-xl" />
+      </div>
+      <Skeleton className="h-40 w-full rounded-xl" />
+    </div>
+  );
+}
+
 export default function AiSummaryCard({
   data,
+  isLoading = false,
+  loadingMessage,
+  isError = false,
+  errorMessage,
+  onRetry,
+  onExpand,
   title = DEFAULT_CARD_TITLE,
   collapsedHint = DEFAULT_COLLAPSED_HINT,
+  emptyHint = DEFAULT_COLLAPSED_HINT,
   idPrefix = "ai-summary",
   print,
+  periodLabel,
   className,
 }: TAiSummaryCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isExpanded, setIsExpanded] = useState(false);
+  const autoExpandOnResultRef = useRef(false);
+
+  useEffect(() => {
+    if (data && autoExpandOnResultRef.current) {
+      setIsExpanded(true);
+      autoExpandOnResultRef.current = false;
+    }
+    if (!data && !isLoading) {
+      autoExpandOnResultRef.current = false;
+    }
+  }, [data, isLoading]);
 
   const printDocument = useMemo(
-    () => toAiReportPrintDocument(data, print),
+    () => (data ? toAiReportPrintDocument(data, print) : null),
     [data, print],
   );
 
   const handleToggle = useCallback(() => {
-    setIsExpanded((prev) => !prev);
-  }, []);
+    setIsExpanded((prev) => {
+      const next = !prev;
+      if (next) {
+        onExpand?.();
+        if (!data) autoExpandOnResultRef.current = true;
+      } else if (isLoading) {
+        autoExpandOnResultRef.current = false;
+      }
+      return next;
+    });
+  }, [data, isLoading, onExpand]);
 
   const handleDownloadPdf = useCallback(() => {
+    if (!printDocument) return;
     downloadAiSummaryPdf(printDocument);
   }, [printDocument]);
+
+  const collapsedMessage = useMemo(() => {
+    if (isLoading) {
+      return (
+        loadingMessage ??
+        "AI가 광고 성과를 분석하고 있어요. 보통 10~30초 걸려요."
+      );
+    }
+    if (isError && errorMessage) return errorMessage;
+    if (!data) return emptyHint;
+    return collapsedHint;
+  }, [
+    collapsedHint,
+    data,
+    emptyHint,
+    errorMessage,
+    isError,
+    isLoading,
+    loadingMessage,
+  ]);
 
   const panelTransition = prefersReducedMotion
     ? { duration: 0 }
@@ -257,17 +361,41 @@ export default function AiSummaryCard({
                 AI
               </span>
             </h3>
-            {!isExpanded && (
+            {periodLabel ? (
               <p className="font-caption text-text-placeholder">
-                {collapsedHint}
+                {periodLabel}
+              </p>
+            ) : null}
+            {!isExpanded && (
+              <p
+                className={twMerge(
+                  "font-caption",
+                  isError ? "text-info-red" : "text-text-placeholder",
+                )}
+              >
+                {collapsedMessage}
               </p>
             )}
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            {isError && onRetry ? (
+              <button
+                type="button"
+                onClick={onRetry}
+                className={aiSummaryActionButtonClass}
+              >
+                다시 시도
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={handleDownloadPdf}
-              className={aiSummaryActionButtonClass}
+              disabled={!printDocument || isLoading}
+              className={twMerge(
+                aiSummaryActionButtonClass,
+                (!printDocument || isLoading) &&
+                  "pointer-events-none opacity-50",
+              )}
               aria-label={`${title} PDF 저장`}
             >
               <DownloadIcon
@@ -304,7 +432,22 @@ export default function AiSummaryCard({
                 transition={panelTransition}
                 className="overflow-hidden"
               >
-                <AiReportBody data={data} idPrefix={idPrefix} />
+                {isLoading ? (
+                  <div className="flex flex-col gap-4">
+                    {loadingMessage ? (
+                      <p className="text-center font-body3 text-text-muted">
+                        {loadingMessage}
+                      </p>
+                    ) : null}
+                    <AiSummaryCardSkeleton />
+                  </div>
+                ) : isError && errorMessage ? (
+                  <p className="py-6 text-center font-body3 text-info-red">
+                    {errorMessage}
+                  </p>
+                ) : data ? (
+                  <AiReportBody data={data} idPrefix={idPrefix} />
+                ) : null}
               </motion.div>
             )}
           </AnimatePresence>

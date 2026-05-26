@@ -1,6 +1,10 @@
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 
-import type { IPlatformRankingItem } from "@/types/dashboard/overview";
+import type {
+  IPlatformRankingItem,
+  TProviderType,
+} from "@/types/dashboard/overview";
+import { PLATFORM_MAP } from "@/types/dashboard/platform";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
 
@@ -8,29 +12,27 @@ import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
-const platformLogoMap = {
-  Google: <GoogleLogo className="h-7 w-auto" />,
+const platformLogoMap: Record<TProviderType, ReactNode> = {
+  GOOGLE: <GoogleLogo className="h-7 w-auto" />,
   NAVER: <NaverLogo className="h-7 w-auto" />,
-  Meta: <MetaLogo className="h-7 w-auto" />,
+  META: <MetaLogo className="h-7 w-auto" />,
 };
 
-type TPlatformName = keyof typeof platformLogoMap;
-
-const providerDisplayMap: Record<string, string> = {
-  GOOGLE: "Google",
-  NAVER: "NAVER",
-  META: "Meta",
-};
+function toProviderType(provider: string): TProviderType | null {
+  const key = provider.toUpperCase();
+  if (key in PLATFORM_MAP) return key as TProviderType;
+  return null;
+}
 
 function getDisplayName(provider: string): string {
-  return providerDisplayMap[provider.toUpperCase()] ?? provider;
+  const key = toProviderType(provider);
+  return key ? PLATFORM_MAP[key] : provider;
 }
 
 function getPlatformLogo(provider: string) {
+  const key = toProviderType(provider);
+  if (key) return platformLogoMap[key];
   const name = getDisplayName(provider);
-  if (name in platformLogoMap) {
-    return platformLogoMap[name as TPlatformName];
-  }
   return (
     <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
       {name[0]}

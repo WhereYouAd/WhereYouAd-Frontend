@@ -2,6 +2,9 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
+import type { TProviderType } from "@/types/dashboard/overview";
+import { PLATFORM_MAP, PLATFORM_PROVIDERS } from "@/types/dashboard/platform";
+
 import Button from "@/components/common/button/Button";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import AllPlatformView from "@/components/dashboard/platform/AllPlatformView";
@@ -9,25 +12,33 @@ import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformVi
 
 import ChevronDownIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 
+type TPlatformView = "전체" | TProviderType;
+
 type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
 };
 
 export default function PlatformDashboard() {
-  const [selectedPlatform, setSelectedPlatform] = useState("전체");
+  const [selectedPlatform, setSelectedPlatform] =
+    useState<TPlatformView>("전체");
   const [isLoading, setIsLoading] = useState(true);
   const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
 
   const isAllView = selectedPlatform === "전체";
 
   const platformItems = useMemo(
-    () => [
-      { label: "Google", onClick: () => setSelectedPlatform("Google") },
-      { label: "NAVER", onClick: () => setSelectedPlatform("NAVER") },
-      { label: "Meta", onClick: () => setSelectedPlatform("Meta") },
-    ],
+    () =>
+      PLATFORM_PROVIDERS.map((value) => ({
+        label: PLATFORM_MAP[value],
+        onClick: () => setSelectedPlatform(value),
+      })),
     [],
   );
+
+  const selectedPlatformLabel =
+    selectedPlatform === "전체"
+      ? "플랫폼 선택"
+      : PLATFORM_MAP[selectedPlatform];
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1600);
@@ -71,7 +82,7 @@ export default function PlatformDashboard() {
                   isAllView ? "text-text-muted" : "text-surface-100",
                 )}
               >
-                {isAllView ? "플랫폼 선택" : selectedPlatform}
+                {selectedPlatformLabel}
               </span>
               <ChevronDownIcon
                 className={twMerge(
@@ -87,7 +98,7 @@ export default function PlatformDashboard() {
     );
 
     return () => setHeaderRight(null);
-  }, [isAllView, platformItems, selectedPlatform, setHeaderRight]);
+  }, [isAllView, platformItems, selectedPlatformLabel, setHeaderRight]);
 
   return (
     <section className="flex w-full min-w-0 flex-col gap-8">

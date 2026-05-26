@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { TPlatformProvider } from "@/types/dashboard/platform";
+import type { TProviderType } from "@/types/dashboard/overview";
 
 import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
@@ -12,6 +12,7 @@ import Card from "@/components/common/card/Card";
 import StatCard, { type ITrend } from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
+import DashboardAiSummarySection from "@/components/dashboard/ai-report/DashboardAiSummarySection";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
@@ -34,7 +35,7 @@ const PLATFORM_LOGOS: Record<
 };
 
 interface ISinglePlatformViewProps {
-  platform: string;
+  platform: TProviderType;
   isLoading: boolean;
 }
 
@@ -48,7 +49,7 @@ export default function SinglePlatformView({
     data: platformData,
     isLoading: isMetricsLoading,
     isError: isMetricsError,
-  } = usePlatformMetrics(platform.toUpperCase() as TPlatformProvider);
+  } = usePlatformMetrics(platform);
 
   const toTrend = (changeRate: number): ITrend => ({
     direction: changeRate >= 0 ? "up" : "down",
@@ -82,22 +83,19 @@ export default function SinglePlatformView({
     ];
   }, [platformData]);
 
-  const logoInfo = PLATFORM_LOGOS[platform.toUpperCase()];
+  const logoInfo = PLATFORM_LOGOS[platform];
 
   const {
     data: budget,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
-  } = usePlatformBudget(platform.toUpperCase() as TPlatformProvider);
+  } = usePlatformBudget(platform);
 
   const {
     data: metricFacts,
     isLoading: isMetricFactsLoading,
     isError: isMetricFactsError,
-  } = usePlatformMetricFacts(
-    platform.toUpperCase() as TPlatformProvider,
-    viewRange,
-  );
+  } = usePlatformMetricFacts(platform, viewRange);
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -117,8 +115,7 @@ export default function SinglePlatformView({
     META: "#1877f2",
   };
 
-  const platformColor =
-    PLATFORM_THEME_COLORS[platform.toUpperCase()] || "#1877f2";
+  const platformColor = PLATFORM_THEME_COLORS[platform] || "#1877f2";
 
   return (
     <div className="flex flex-col gap-8">
@@ -183,8 +180,8 @@ export default function SinglePlatformView({
           }
         >
           <PlatformTrafficChart
-            data={platformTrafficMock[platform.toUpperCase()] || null}
-            platform={platform.toUpperCase()}
+            data={platformTrafficMock[platform] || null}
+            platform={platform}
             isLoading={isLoading}
           />
         </Card>
@@ -284,6 +281,11 @@ export default function SinglePlatformView({
           />
         )}
       </Card>
+
+      <DashboardAiSummarySection
+        provider={platform}
+        idPrefix={`platform-ai-${platform.toLowerCase()}`}
+      />
     </div>
   );
 }
