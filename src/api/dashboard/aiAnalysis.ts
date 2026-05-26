@@ -28,6 +28,6 @@ export const getAiReportByAccessToken = async (
 ): Promise<IReportStatusResponse> => {
   const { data } = await axiosInstance.get<
     ICommonResponse<IReportStatusResponse>
-  >(`/api/ai/reports/${accessToken}`);
+  >(`/api/ai/reports/${encodeURIComponent(accessToken)}`);
   return data.data;
 };
