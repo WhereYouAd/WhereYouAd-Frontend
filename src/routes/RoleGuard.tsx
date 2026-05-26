@@ -19,15 +19,21 @@ function RoleGuard({
 }: IRoleGuardProps): ReactElement | null {
   const { workspaceId } = useParams<{ workspaceId?: string }>();
   const myRole = useWorkspaceStore((s) => s.myRole);
-  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  const {
+    data: workspaces,
+    isPending,
+    isError,
+  } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
 
   //URL에 workspaceId가 있는 경우 -> URL 기준 워크스페이스의 role로 판정
   if (workspaceId) {
     //워크스페이스 목록 로드 전 -> 랜더 보류
-    if (!workspaces) {
+    if (isPending) {
       return null;
     }
-
+    if (isError || !workspaces) {
+      return <Navigate to="/dashboard" replace />;
+    }
     const targetWorkspace = workspaces.find(
       (w) => w.orgId === Number(workspaceId),
     );
