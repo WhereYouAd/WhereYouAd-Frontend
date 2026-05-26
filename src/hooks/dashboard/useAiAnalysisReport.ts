@@ -130,6 +130,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
   const requestAnalysis = useCallback(
     (params?: TRequestAiAnalysisParams) => {
       if (!orgId) {
+        reset();
         setWorkspaceErrorShown(true);
         toast.error(WORKSPACE_REQUIRED_MESSAGE);
         return;
