@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 import type { TAiAnalysisProvider } from "@/types/dashboard/aiAnalysis";
 import { PLATFORM_MAP } from "@/types/dashboard/platform";
@@ -6,12 +6,16 @@ import { formatAiAnalysisPeriodLabel } from "@/constants/dashboard/overviewMetri
 
 import { useAiAnalysisReport } from "@/hooks/dashboard/useAiAnalysisReport";
 
-import AiSummaryCard from "./components/AiSummaryCard";
-import { getAiSummaryPrintOptions } from "./utils/aiReport.utils";
+import AiSummaryCard from "./AiSummaryCard";
 
 function getAiSummaryTitle(provider: TAiAnalysisProvider): string {
   if (provider === "ALL") return "통합 광고 성과 AI 요약";
   return `${PLATFORM_MAP[provider]} 광고 성과 AI 요약`;
+}
+
+function getAiSummaryDocumentTitle(provider: TAiAnalysisProvider): string {
+  if (provider === "ALL") return "통합 광고 성과 AI 요약 보고서";
+  return `${PLATFORM_MAP[provider]} 광고 성과 AI 요약 보고서`;
 }
 
 type TDashboardAiSummarySectionProps = {
@@ -46,13 +50,6 @@ export default function DashboardAiSummarySection({
     requestAnalysis();
   }, [reset, requestAnalysis]);
 
-  const printOptions = useMemo(
-    () => getAiSummaryPrintOptions(provider),
-    [provider],
-  );
-
-  const periodLabel = useMemo(() => formatAiAnalysisPeriodLabel(), []);
-
   return (
     <AiSummaryCard
       data={reportData}
@@ -64,8 +61,8 @@ export default function DashboardAiSummarySection({
       onRetry={handleRetry}
       title={title ?? getAiSummaryTitle(provider)}
       idPrefix={idPrefix}
-      print={printOptions}
-      periodLabel={periodLabel}
+      print={{ documentTitle: getAiSummaryDocumentTitle(provider) }}
+      periodLabel={formatAiAnalysisPeriodLabel()}
     />
   );
 }

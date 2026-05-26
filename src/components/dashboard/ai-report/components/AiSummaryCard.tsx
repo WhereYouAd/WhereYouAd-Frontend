@@ -16,14 +16,11 @@ import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import { downloadAiSummaryPdf } from "../print/downloadAiSummaryPdf";
 import {
+  formatNumberedList,
+  splitParagraphs,
   type TAiReportPrintOptions,
   toAiReportPrintDocument,
 } from "../utils/aiReport.utils";
-import {
-  ensureStringList,
-  formatNumberedList,
-  splitParagraphs,
-} from "../utils/aiReportText.utils";
 
 import SparkleIcon from "@/assets/icon/ai/sparkle.svg?react";
 import ChevronUpIcon from "@/assets/icon/chevron/chevron-up.svg?react";
@@ -138,11 +135,9 @@ function AiReportBody({
   data: IAnalysisResponse;
   idPrefix: string;
 }) {
-  const cautionPoints = ensureStringList(data.cautionPoint);
+  const cautionList = formatNumberedList(data.cautionPoint);
   const cautionContent =
-    cautionPoints.length > 0
-      ? formatNumberedList(cautionPoints)
-      : "특별히 주의가 필요한 항목이 없습니다.";
+    cautionList === "—" ? "특별히 주의가 필요한 항목이 없습니다." : cautionList;
 
   return (
     <div className="flex flex-col gap-5">

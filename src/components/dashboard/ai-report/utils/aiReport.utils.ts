@@ -1,14 +1,4 @@
-import type {
-  IAnalysisResponse,
-  TAiAnalysisProvider,
-} from "@/types/dashboard/aiAnalysis";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
-
-import {
-  ensureStringList,
-  numberedParagraphs,
-  splitParagraphs,
-} from "./aiReportText.utils";
+import type { IAnalysisResponse } from "@/types/dashboard/aiAnalysis";
 
 export type TAiReportPrintSection = {
   title: string;
@@ -38,20 +28,32 @@ const DEFAULT_PRINT_DOCUMENT_TITLE = "통합 광고 성과 AI 요약 보고서";
 const DEFAULT_PRINT_BRAND_NAME = "WhereYouAd";
 const DEFAULT_PRINT_LABEL = "광고 성과 AI 요약";
 
-export function getAiSummaryPrintOptions(
-  provider: TAiAnalysisProvider,
-): TAiReportPrintOptions {
-  if (provider === "ALL") {
-    return { documentTitle: DEFAULT_PRINT_DOCUMENT_TITLE };
-  }
-  const platformLabel = PLATFORM_MAP[provider];
-  return {
-    documentTitle: `${platformLabel} 광고 성과 AI 요약 보고서`,
-  };
+export function splitParagraphs(text: string) {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
 }
 
-/** 인쇄·PDF용 작성일 */
-export function formatReportWrittenDate(date = new Date()) {
+function toNumberedLines(items: string[] | null | undefined) {
+  const lines = (items ?? []).map((item) => item.trim()).filter(Boolean);
+  if (!lines.length) return [];
+  return lines.map((line, index) => `${index + 1}. ${line}`);
+}
+
+/** 카드 표시용 */
+export function formatNumberedList(items: string[] | null | undefined) {
+  const lines = toNumberedLines(items);
+  return lines.length ? lines.join("\n") : "—";
+}
+
+/** PDF·인쇄용 */
+function numberedParagraphs(items: string[] | null | undefined) {
+  const lines = toNumberedLines(items);
+  return lines.length ? lines : ["—"];
+}
+
+function formatReportWrittenDate(date = new Date()) {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "long",
@@ -71,7 +73,7 @@ export function toAiReportPrintDocument(
       title: "성과 요약",
       paragraphs: [
         ...splitParagraphs(data.performanceSummary),
-        ...numberedParagraphs(ensureStringList(data.performancePoint)),
+        ...numberedParagraphs(data.performancePoint),
       ],
     },
     {
@@ -84,7 +86,7 @@ export function toAiReportPrintDocument(
     },
     {
       title: "주의사항",
-      paragraphs: numberedParagraphs(ensureStringList(data.cautionPoint)),
+      paragraphs: numberedParagraphs(data.cautionPoint),
     },
   ];
 

@@ -12,7 +12,7 @@ import Card from "@/components/common/card/Card";
 import StatCard, { type ITrend } from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
-import DashboardAiSummarySection from "@/components/dashboard/ai-report/DashboardAiSummarySection";
+import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,

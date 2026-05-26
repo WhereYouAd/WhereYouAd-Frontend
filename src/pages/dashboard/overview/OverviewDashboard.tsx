@@ -4,7 +4,7 @@ import { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
-import DashboardAiSummarySection from "@/components/dashboard/ai-report/DashboardAiSummarySection";
+import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
 import { OverviewBudgetSection } from "./sections/OverviewBudgetSection";

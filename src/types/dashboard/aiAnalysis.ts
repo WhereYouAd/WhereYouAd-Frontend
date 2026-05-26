@@ -11,7 +11,7 @@ export interface IAnalysisRequest {
   provider: TAiAnalysisProvider;
 }
 
-/** 분석 완료 시 result (카드·PDF도 이 구조 그대로 사용) */
+/** 분석 완료 시 result */
 export interface IAnalysisResponse {
   strategySuggestion: string;
   performanceSummary: string;
