@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/overview";
+import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
 import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
@@ -109,13 +110,7 @@ export default function SinglePlatformView({
       )
     : null;
 
-  const PLATFORM_THEME_COLORS: Record<string, string> = {
-    GOOGLE: "#f9ab00",
-    NAVER: "#03c75a",
-    META: "#1877f2",
-  };
-
-  const platformColor = PLATFORM_THEME_COLORS[platform] || "#1877f2";
+  const platformColor = PLATFORM_CHART_COLORS[platform];
 
   return (
     <div className="flex flex-col gap-8">
