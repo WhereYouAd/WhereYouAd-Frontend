@@ -14,7 +14,7 @@ export const PLATFORM_MAP: Record<TProviderType, string> = {
 
 /* 차트 범례·시리즈 색 */
 export const PLATFORM_CHART_COLORS: Record<TProviderType, string> = {
-  GOOGLE: "#f9ab00",
-  NAVER: "#03c75a",
-  META: "#1877f2",
+  GOOGLE: "var(--color-platform-google)",
+  NAVER: "var(--color-oauth-naver)",
+  META: "var(--color-platform-meta)",
 };
