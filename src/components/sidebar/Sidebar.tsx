@@ -1,5 +1,6 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
 import { useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -12,12 +13,14 @@ import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
+import { useCoreQuery } from "@/hooks/customQuery";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
+import { getMyWorkspaces } from "@/api/workspace/org";
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -87,7 +90,15 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
-  const myRole = useWorkspaceStore((s) => s.myRole);
+  const myRoleFromStore = useWorkspaceStore((s) => s.myRole);
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+
+  const myRole = useMemo(() => {
+    if (!workspaceId || !workspaces) return null;
+    const workspace = workspaces.find((w) => w.orgId === Number(workspaceId));
+    return workspace?.myRole ?? myRoleFromStore;
+  }, [workspaceId, workspaces, myRoleFromStore]);
   const mainNavWithWorkspace = useMemo(
     () =>
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
