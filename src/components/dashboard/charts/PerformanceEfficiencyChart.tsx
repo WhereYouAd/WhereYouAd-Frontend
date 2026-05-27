@@ -1,7 +1,7 @@
 import { lazy, memo, Suspense, useMemo } from "react";
 
 import type { IPlatformPerformance } from "@/types/dashboard/platform";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 
 import { getMixedChartOptions } from "./performanceEfficiencyChart.config";
 

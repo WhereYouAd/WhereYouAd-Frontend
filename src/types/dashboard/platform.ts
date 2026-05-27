@@ -1,12 +1,6 @@
-import type { TProviderType } from "./overview";
+import type { TProviderType } from "./provider";
 
-export type TPlatformProvider = TProviderType;
-
-export const PLATFORM_MAP: Record<string, string> = {
-  GOOGLE: "Google",
-  NAVER: "NAVER",
-  META: "Meta",
-};
+export type { TProviderType } from "./provider";
 
 // ROAS 성과 순위
 export interface IRoasRanking {
@@ -20,7 +14,7 @@ export interface IRoasRanking {
 
 // 플랫폼 광고 소재 개수
 export interface IAdCount {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   count: number;
 }
 
@@ -40,7 +34,7 @@ export interface IAdCountParams {
 
 // 플랫폼별 성과
 export interface IPlatformPerformance {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   clicks: number;
   clickChangeRate: number;
   impressions: number;

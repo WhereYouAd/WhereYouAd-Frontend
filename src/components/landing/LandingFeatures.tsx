@@ -9,8 +9,8 @@ import ChevronRight from "@/assets/icon/chevron/chevron-right.svg?react";
 import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 import GoogleAdsLogo from "@/assets/logo/social-logo/circle/googleAds-circle.svg?react";
+import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-import KakaoLogo from "@/assets/logo/social-logo/plain/kakao.svg?react";
 
 type TFeatureCardProps = {
   delay: number;
@@ -58,9 +58,9 @@ function IntegrationGraphic() {
 
       <motion.div className="-mt-3 flex items-center justify-between px-4 py-3 bg-surface-100/80 rounded-2xl border border-surface-400/70 shadow-Soft opacity-60 blur-[0.5px] transition-all duration-300 relative z-10">
         <div className="flex items-center gap-3">
-          <KakaoLogo className="w-8 h-8 rounded-full shadow-Soft" />
+          <MetaLogo className="w-8 h-8 rounded-full shadow-Soft" />
           <div className="flex flex-col text-left">
-            <span className="font-body2 text-text-muted">Kakao</span>
+            <span className="font-body2 text-text-muted">Meta</span>
           </div>
         </div>
         <div className="w-7 h-7 rounded-xl border border-surface-400/70 bg-surface-100/70 flex items-center justify-center shrink-0">
