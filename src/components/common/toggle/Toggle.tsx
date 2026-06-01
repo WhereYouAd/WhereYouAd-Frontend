@@ -34,7 +34,7 @@ export default function Toggle({
     >
       <span
         className={twMerge(
-          "inline-block h-6 w-6 transform rounded-full bg-surface-100 shadow-sm transition-transform",
+          "inline-block h-6 w-6 transform rounded-full bg-surface-100 shadow-Soft transition-transform",
           checked ? "translate-x-7.5" : "translate-x-1.5",
           thumbClassName,
         )}

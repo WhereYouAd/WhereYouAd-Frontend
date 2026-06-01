@@ -12,7 +12,6 @@ import UserProfileCircleIcon from "@/assets/icon/common/userProfileCircle.svg?re
 type TProfileSectionProps = {
   name: string;
   setName: (v: string) => void;
-  organizations: { name: string; position: string }[];
   email: string;
   phoneNumber: string;
   fileRef: React.RefObject<HTMLInputElement | null>;
@@ -24,7 +23,6 @@ type TProfileSectionProps = {
 export default function ProfileSection({
   name,
   setName,
-  organizations,
   email,
   phoneNumber,
   fileRef,
@@ -57,7 +55,7 @@ export default function ProfileSection({
             type="button"
             onClick={openFilePicker}
             aria-label="프로필 이미지 업로드 또는 변경"
-            className="relative flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
+            className="relative flex h-45 w-45 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
           >
             {preview ? (
               <img
@@ -94,42 +92,15 @@ export default function ProfileSection({
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-x-6 basis-3/4 gap-y-5 w-full">
-          <div className="col-span-2">
+        <div className="grid w-full basis-3/4 grid-cols-2 gap-x-6 gap-y-4 tablet:grid-cols-1 tablet:gap-y-5">
+          <div className="col-span-2 tablet:col-span-1">
             <Input
               label="이름"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="col-span-2">
-            <div className="mb-2 ml-1 text-text-title">소속 조직</div>
-            {organizations.length === 0 ? (
-              <div className="ml-1 font-body2 text-text-muted">
-                소속된 조직이 없습니다.
-              </div>
-            ) : (
-              <>
-                <div className="group relative flex flex-col gap-4">
-                  {organizations.map((org, idx) => (
-                    <div key={idx}>
-                      <Input
-                        value={`${org.name}  (${org.position})`}
-                        disabled
-                        containerClassName="bg-surface-200"
-                        readOnly
-                      />
-                    </div>
-                  ))}
-
-                  <div className="pointer-events-none absolute top-full mt-1 whitespace-nowrap rounded bg-surface-500 px-2 py-1 font-caption text-surface-100 opacity-0 transition-opacity group-hover:opacity-100">
-                    조직 정보는 별도 조직페이지에서 수정할 수 있습니다.
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-          <div className="col-span-2 group relative w-full">
+          <div className="col-span-1 group relative w-full">
             <Input
               label="이메일"
               value={email}
@@ -141,7 +112,7 @@ export default function ProfileSection({
               이메일은 변경할 수 없습니다.
             </div>
           </div>
-          <div className="col-span-2 group relative w-full">
+          <div className="col-span-1 group relative w-full">
             <Input
               label="전화번호"
               value={phoneNumber}

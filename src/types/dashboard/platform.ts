@@ -1,12 +1,6 @@
-import type { TProviderType } from "./overview";
+import type { TProviderType } from "./provider";
 
-export type TPlatformProvider = TProviderType;
-
-export const PLATFORM_MAP: Record<string, string> = {
-  GOOGLE: "Google",
-  NAVER: "NAVER",
-  META: "Meta",
-};
+export type { TProviderType } from "./provider";
 
 // ROAS 성과 순위
 export interface IRoasRanking {
@@ -20,7 +14,7 @@ export interface IRoasRanking {
 
 // 플랫폼 광고 소재 개수
 export interface IAdCount {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   count: number;
 }
 
@@ -40,7 +34,7 @@ export interface IAdCountParams {
 
 // 플랫폼별 성과
 export interface IPlatformPerformance {
-  provider: TPlatformProvider;
+  provider: TProviderType;
   clicks: number;
   clickChangeRate: number;
   impressions: number;
@@ -64,4 +58,43 @@ export interface IBudgetStatus {
   totalBudget: number;
   totalSpend: number;
   remainingBudget: number;
+}
+
+// API 일자별·합계
+export interface IMetricFactsRow {
+  date: string;
+  impressions: number;
+  clicks: number;
+  spend: number;
+  conversions: number;
+  revenue: number;
+  ctr: number;
+  cpa: number;
+  roas: number;
+}
+
+// /api/dashboard/{orgId}/metric-facts 응답 data
+export interface IMetricFactsResponse {
+  providerType: string;
+  startDate: string;
+  endDate: string;
+  total: IMetricFactsRow;
+  dailyMetrics: IMetricFactsRow[];
+}
+
+export interface IMetricFactsParams {
+  providerType: TProviderType;
+  days?: number;
+}
+
+// 테이블 UI row
+export interface IPlatformDailyPerformance {
+  date: string;
+  spend: number;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  cpa: number;
+  conversions: number;
+  roas: number;
 }

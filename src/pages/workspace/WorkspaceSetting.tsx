@@ -5,6 +5,8 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
+import useIsAdmin from "@/hooks/auth/useIsAdmin";
+
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
@@ -23,6 +25,7 @@ import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 export default function WorkspaceSetting() {
+  const isAdmin = useIsAdmin();
   const navigate = useNavigate();
   const { workspaceId } = useParams();
   const queryClient = useQueryClient();
@@ -221,7 +224,7 @@ export default function WorkspaceSetting() {
                 <button
                   type="button"
                   onClick={openFilePicker}
-                  disabled={saving || deleting}
+                  disabled={!isAdmin || saving || deleting}
                   aria-label="로고 이미지 업로드 또는 변경"
                   className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
                 >
@@ -254,7 +257,7 @@ export default function WorkspaceSetting() {
                     className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
-                    disabled={saving || deleting}
+                    disabled={!isAdmin || saving || deleting}
                   >
                     업로드
                   </Button>
@@ -264,7 +267,7 @@ export default function WorkspaceSetting() {
                     className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
-                    disabled={saving || deleting}
+                    disabled={!isAdmin || saving || deleting}
                   >
                     초기화
                   </Button>
@@ -276,7 +279,7 @@ export default function WorkspaceSetting() {
                   value={name}
                   placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
                   onChange={(e) => setName(e.target.value)}
-                  disabled={saving || deleting}
+                  disabled={!isAdmin || saving || deleting}
                 />
                 <TextareaField
                   id="workspace-setting-desc"
@@ -286,33 +289,35 @@ export default function WorkspaceSetting() {
                   onChange={(e) => setDesc(e.target.value)}
                   minRows={4}
                   className="min-h-90"
-                  disabled={saving || deleting}
+                  disabled={!isAdmin || saving || deleting}
                 />
               </div>
             </div>
-            <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
-              <Button
-                type="button"
-                variant="dangerSoft"
-                size="big"
-                onClick={openDeleteModal}
-                disabled={saving || deleting}
-                className="w-auto tablet:w-full"
-              >
-                워크스페이스 삭제
-              </Button>
-              <Button
-                size="big"
-                variant="primary"
-                type="button"
-                onClick={onSave}
-                disabled={!name.trim() || saving || deleting}
-                aria-label="변경사항 저장하기"
-                className="w-auto tablet:w-full"
-              >
-                {saving ? "저장 중.." : "변경사항 저장하기"}
-              </Button>
-            </div>
+            {isAdmin && (
+              <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
+                <Button
+                  type="button"
+                  variant="dangerSoft"
+                  size="big"
+                  onClick={openDeleteModal}
+                  disabled={saving || deleting}
+                  className="w-auto tablet:w-full"
+                >
+                  워크스페이스 삭제
+                </Button>
+                <Button
+                  size="big"
+                  variant="primary"
+                  type="button"
+                  onClick={onSave}
+                  disabled={!name.trim() || saving || deleting}
+                  aria-label="변경사항 저장하기"
+                  className="w-auto tablet:w-full"
+                >
+                  {saving ? "저장 중.." : "변경사항 저장하기"}
+                </Button>
+              </div>
+            )}
           </Card>
 
           <Modal

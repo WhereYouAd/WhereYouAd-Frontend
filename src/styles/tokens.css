@@ -27,23 +27,25 @@
   --color-text-placeholder: var(--color-text-200);
   --color-text-disabled: var(--color-text-100);
 
-  /* STATUS — 예산 소진: 안정=blue, 주의=yellow, 위험=red */
+  /* STATUS */
   --color-info-red: #ff2a4b;
   --color-info-blue: #0084fe;
   --color-info-yellow: #facc15;
 
-  /* OAuth 소셜 로그인 (카카오·네이버 브랜드 가이드 색) */
+  /* 브랜드 */
   --color-oauth-kakao: #fee500;
   --color-oauth-naver: #03c75a;
+  --color-platform-google: #f9ab00;
+  --color-platform-meta: #1877f2;
 
-  /* 부가 카피·보조 문장 (랜딩/인증 등) — 본문보다 살짝 프라이머리 틴트 */
+  /* 부가 카피·보조 문장 (랜딩/인증 등) */
   --color-text-auth-sub: color-mix(
     in srgb,
     var(--color-text-300) 82%,
     var(--color-primary-500) 18%
   );
 
-  /* 랜딩 섹션 배경·목업 면 — brand-200 대비 살짝 구분되는 톤 */
+  /* 랜딩 섹션 배경·목업 면 */
   --color-landing-section: color-mix(
     in srgb,
     var(--color-text-400) 4%,
@@ -54,6 +56,19 @@
     var(--color-text-400) 6%,
     transparent
   );
+
+  /* 랜딩 섹션 배경 워시 — Guide·Pricing 오버레이 */
+  --background-image-landing-guide-wash:
+    radial-gradient(
+      900px 320px at 20% 0%,
+      color-mix(in srgb, var(--color-primary-300) 16%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 320px at 80% 10%,
+      color-mix(in srgb, var(--color-primary-300) 12%, transparent),
+      transparent 60%
+    );
 
   /* 타이포 스케일 — 유틸(.font-*)은 여기 값만 참조 */
   --type-hero-size: 54px;
@@ -83,6 +98,10 @@
   --type-body2-size: 14px;
   --type-body2-weight: 500;
   --type-body2-leading: 140%;
+
+  --type-body3-size: 14px;
+  --type-body3-weight: 500;
+  --type-body3-leading: 150%;
 
   --type-caption-size: 12px;
   --type-caption-weight: 500;

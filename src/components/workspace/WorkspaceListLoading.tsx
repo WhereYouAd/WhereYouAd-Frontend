@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/common/skeleton/Skeleton";
 function WorkspaceCardSkeleton() {
   return (
     <>
-      <li className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-card tablet:px-4 tablet:py-4">
+      <li className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-Soft tablet:px-4 tablet:py-4">
         <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
           <Skeleton className="w-24 h-24 shrink-0 rounded-lg tablet:h-18 tablet:w-18" />
           <div className="flex flex-col gap-2 min-w-0">

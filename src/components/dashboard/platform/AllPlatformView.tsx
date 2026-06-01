@@ -1,3 +1,9 @@
+import {
+  PLATFORM_CHART_COLORS,
+  PLATFORM_MAP,
+  PROVIDER_TYPES,
+} from "@/types/dashboard/provider";
+
 import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
 import { usePlatformPerformance } from "@/hooks/dashboard/usePlatformPerformance";
 import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
@@ -17,6 +23,11 @@ import {
   TopPerformanceListSkeleton,
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
+
+const platformChartLegendItems = PROVIDER_TYPES.map((provider) => ({
+  label: PLATFORM_MAP[provider],
+  color: PLATFORM_CHART_COLORS[provider],
+}));
 
 interface IAllPlatformViewProps {
   isLoading: boolean;
@@ -79,11 +90,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           description={
             <ChartLegend
               className="[&_div]:rounded-none"
-              items={[
-                { label: "Google", color: "#f9ab00" },
-                { label: "NAVER", color: "#03c75a" },
-                { label: "Meta", color: "#1877f2" },
-              ]}
+              items={platformChartLegendItems}
             />
           }
           RightElement={
@@ -146,15 +153,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
       <Card
         title="플랫폼별 실시간 클릭수 비교"
         className="h-120 flex flex-col"
-        description={
-          <ChartLegend
-            items={[
-              { label: "Google", color: "#f9ab00" },
-              { label: "NAVER", color: "#03c75a" },
-              { label: "Meta", color: "#1877f2" },
-            ]}
-          />
-        }
+        description={<ChartLegend items={platformChartLegendItems} />}
       >
         <div className="flex-1 min-h-0">
           <AllPlatformTrafficChart isLoading={isLoading} />

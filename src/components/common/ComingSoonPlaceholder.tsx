@@ -52,7 +52,7 @@ const ComingSoonPlaceholder = memo(function ComingSoonPlaceholder({
       )}
     >
       <motion.div
-        className="flex w-full max-w-[420px] flex-col items-center rounded-[32px] bg-surface-100 px-8 py-12 text-center shadow-card transition-ui-smooth hover:shadow-card-hover tablet:px-6"
+        className="flex w-full max-w-[420px] flex-col items-center rounded-[32px] bg-surface-100 px-8 py-12 text-center shadow-Soft transition-ui-smooth tablet:px-6"
         role="status"
         aria-live="polite"
         initial="hidden"

@@ -9,7 +9,7 @@ import Tablet960Avif from "@/assets/mockup/optimized/landing/device-tablet-960.a
 import Tablet960Webp from "@/assets/mockup/optimized/landing/device-tablet-960.webp";
 
 const MOCKUP_OVERLAY_CLASS =
-  "absolute inset-0 bg-linear-to-t from-black/70 via-black/15 to-transparent";
+  "absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent";
 
 export default function LandingMultiDevice() {
   return (
@@ -23,7 +23,7 @@ export default function LandingMultiDevice() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-card min-h-[360px]">
+          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-Soft min-h-[360px]">
             <picture>
               <source type="image/avif" srcSet={Mobile640Avif} />
               <source type="image/webp" srcSet={Mobile640Webp} />
@@ -41,7 +41,7 @@ export default function LandingMultiDevice() {
             </div>
           </article>
 
-          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-card min-h-[360px]">
+          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-Soft min-h-[360px]">
             <picture>
               <source type="image/avif" srcSet={Tablet960Avif} />
               <source type="image/webp" srcSet={Tablet960Webp} />
@@ -59,7 +59,7 @@ export default function LandingMultiDevice() {
             </div>
           </article>
 
-          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-card min-h-[360px]">
+          <article className="relative overflow-hidden rounded-3xl bg-surface-500 shadow-Soft min-h-[360px]">
             <picture>
               <source type="image/avif" srcSet={Desktop960Avif} />
               <source type="image/webp" srcSet={Desktop960Webp} />

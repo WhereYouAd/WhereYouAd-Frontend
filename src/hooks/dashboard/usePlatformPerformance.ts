@@ -1,12 +1,12 @@
-import type { TProviderType } from "@/types/dashboard/overview";
 import type { IPlatformPerformance } from "@/types/dashboard/platform";
+import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getOverview } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const PROVIDERS: TProviderType[] = ["GOOGLE", "NAVER", "META"];
+const PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
 
 // 플랫폼별 성과 효율 (3개 플랫폼 병렬 조회 후 병합)
 export function usePlatformPerformance() {

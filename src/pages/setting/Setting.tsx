@@ -6,6 +6,9 @@ import type { IApiErrorResponse } from "@/types/common/common";
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 
 import Button from "@/components/common/button/Button";
+import NotificationSection, {
+  type INotificationSettings,
+} from "@/components/setting/NotificationSection";
 import PasswordSection from "@/components/setting/PasswordSection";
 import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
 import ProfileSection from "@/components/setting/ProfileSection";
@@ -13,13 +16,13 @@ import ProfileSectionSkeleton from "@/components/setting/ProfileSectionSkeleton"
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 
-interface IDraftOrganization {
-  name: string;
-  position: string;
-}
+const DEFAULT_NOTIFICATION_SETTINGS: INotificationSettings = {
+  browserPush: false,
+  emailNotif: false,
+};
+
 interface IDraftProfile {
   name: string;
-  organizations: IDraftOrganization[];
   email: string;
   phoneNumber: string;
 }
@@ -36,13 +39,16 @@ export default function Setting() {
   });
   const [draftProfile, setDraftProfile] = useState<IDraftProfile>({
     name: "",
-    organizations: [],
     email: "",
     phoneNumber: "",
   });
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [savedNotification, setSavedNotification] =
+    useState<INotificationSettings>(DEFAULT_NOTIFICATION_SETTINGS);
+  const [draftNotification, setDraftNotification] =
+    useState<INotificationSettings>(DEFAULT_NOTIFICATION_SETTINGS);
   const [isImageDeleted, setIsImageDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -63,20 +69,31 @@ export default function Setting() {
   const hasPasswordChanges =
     !!currentPassword || !!newPassword || !!confirmNewPassword;
 
-  const hasChanges = useMemo(() => {
+  const hasProfileChanges = useMemo(() => {
     return (
       savedProfile.name !== draftProfile.name ||
       savedProfile.profileImageUrl !== preview ||
-      !!file ||
-      hasPasswordChanges
+      !!file
     );
-  }, [savedProfile, draftProfile, preview, file, hasPasswordChanges]);
+  }, [savedProfile, draftProfile, preview, file]);
+
+  const hasNotificationChanges = useMemo(() => {
+    return (
+      savedNotification.browserPush !== draftNotification.browserPush ||
+      savedNotification.emailNotif !== draftNotification.emailNotif
+    );
+  }, [savedNotification, draftNotification]);
+
+  const hasAccountChanges = hasProfileChanges || hasPasswordChanges;
+
+  const hasChanges = hasAccountChanges || hasNotificationChanges;
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
+
   const validatePassword = () => {
     const errors = {
       currentPassword: "",
@@ -114,27 +131,41 @@ export default function Setting() {
       });
     }
     try {
-      const res = await updateMyInfo({
-        name: draftProfile.name,
-        oldPassword: currentPassword || undefined,
-        newPassword: newPassword || undefined,
-        isImageDeleted,
-        imageFile: file,
-      });
-      setSavedProfile({
-        name: res.data.name,
-        profileImageUrl: res.data.profileImageUrl,
-      });
-      setDraftProfile((prev) => ({
-        ...prev,
-        name: res.data.name,
-      }));
-      setPreview(res.data.profileImageUrl);
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmNewPassword("");
-      toast.success("회원정보가 수정되었습니다");
-      setIsImageDeleted(false);
+      if (hasAccountChanges) {
+        const res = await updateMyInfo({
+          name: draftProfile.name,
+          oldPassword: currentPassword || undefined,
+          newPassword: newPassword || undefined,
+          isImageDeleted,
+          imageFile: file,
+        });
+        setSavedProfile({
+          name: res.data.name,
+          profileImageUrl: res.data.profileImageUrl,
+        });
+        setDraftProfile((prev) => ({
+          ...prev,
+          name: res.data.name,
+        }));
+        setPreview(res.data.profileImageUrl);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
+        setIsImageDeleted(false);
+      }
+
+      if (hasNotificationChanges) {
+        setSavedNotification(draftNotification);
+        // TODO: 알림 설정 API 연동
+      }
+
+      toast.success(
+        hasAccountChanges && hasNotificationChanges
+          ? "설정이 저장되었습니다"
+          : hasNotificationChanges
+            ? "알림 설정이 저장되었습니다"
+            : "회원정보가 수정되었습니다",
+      );
     } catch (e) {
       const error = e as IApiErrorResponse;
       toast.error(error.message ?? "회원정보수정에 실패했습니다");
@@ -149,11 +180,6 @@ export default function Setting() {
 
         const profileData = {
           name: res.data.name,
-          organizations:
-            res.data.organizations?.map((org) => ({
-              name: org.orgName,
-              position: org.myRole,
-            })) ?? [],
           email: res.data.email,
           phoneNumber: res.data.phoneNumber,
         };
@@ -172,43 +198,60 @@ export default function Setting() {
     };
     fetchMyInfo();
   }, [setPreview]);
+
   return (
     <section className="w-full flex flex-col gap-8">
       <div className="flex flex-col gap-6">
         {isLoading ? (
-          <>
-            <ProfileSectionSkeleton />
-            <PasswordSectionSkeleton />
-          </>
+          <ProfileSectionSkeleton />
         ) : (
-          <>
-            <ProfileSection
-              name={draftProfile.name}
-              setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
-              organizations={draftProfile.organizations}
-              email={draftProfile.email}
-              phoneNumber={draftProfile.phoneNumber}
-              fileRef={fileRef}
-              preview={preview}
-              onPickFile={handlePickFile}
-              openFilePicker={openFilePicker}
-              resetImage={() => {
-                resetImage();
-                setIsImageDeleted(true);
-              }}
-            />
-            <PasswordSection
-              currentPassword={currentPassword}
-              setCurrentPassword={setCurrentPassword}
-              newPassword={newPassword}
-              setNewPassword={setNewPassword}
-              confirmNewPassword={confirmNewPassword}
-              setConfirmNewPassword={setConfirmNewPassword}
-              errors={passwordErrors}
-            />
-          </>
+          <ProfileSection
+            name={draftProfile.name}
+            setName={(v) => setDraftProfile((prev) => ({ ...prev, name: v }))}
+            email={draftProfile.email}
+            phoneNumber={draftProfile.phoneNumber}
+            fileRef={fileRef}
+            preview={preview}
+            onPickFile={handlePickFile}
+            openFilePicker={openFilePicker}
+            resetImage={() => {
+              resetImage();
+              setIsImageDeleted(true);
+            }}
+          />
+        )}
+
+        {isLoading ? (
+          <PasswordSectionSkeleton />
+        ) : (
+          <PasswordSection
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+            confirmNewPassword={confirmNewPassword}
+            setConfirmNewPassword={setConfirmNewPassword}
+            errors={passwordErrors}
+          />
+        )}
+
+        {isLoading ? (
+          <div className="animate-pulse h-64 rounded-lg bg-surface-200" />
+        ) : (
+          <NotificationSection
+            email={draftProfile.email}
+            browserPush={draftNotification.browserPush}
+            emailNotif={draftNotification.emailNotif}
+            onBrowserPushChange={(value) =>
+              setDraftNotification((prev) => ({ ...prev, browserPush: value }))
+            }
+            onEmailNotifChange={(value) =>
+              setDraftNotification((prev) => ({ ...prev, emailNotif: value }))
+            }
+          />
         )}
       </div>
+
       <div className="flex justify-end">
         <Button
           variant="primary"

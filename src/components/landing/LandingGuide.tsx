@@ -46,7 +46,7 @@ export default function LandingGuide() {
                 className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
                   page.useTimeline || page.usePlatform || page.useOverview
                     ? "bg-transparent shadow-none"
-                    : "bg-surface-100 shadow-card border border-surface-400/70"
+                    : "bg-surface-100 shadow-Soft border border-surface-400/70"
                 }`}
                 initial={{ opacity: 0, x: page.reverse ? 42 : -42 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -91,7 +91,7 @@ export default function LandingGuide() {
                   <span className="select-none font-heading1 leading-none text-primary-400">
                     {page.number}
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 font-caption text-surface-100 shadow-landing-pill tracking-wide">
+                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 font-caption text-surface-100 shadow-Soft tracking-wide">
                     {page.label}
                   </span>
                 </div>

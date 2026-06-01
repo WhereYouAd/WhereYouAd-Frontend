@@ -68,12 +68,12 @@ export default function LandingPricing() {
               }}
               className={`bg-surface-100 rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
                 plan.featured
-                  ? "order-first md:order-0 border border-primary-400/55 shadow-landing-featured-plan -translate-y-1"
-                  : "border border-surface-400/70 shadow-card hover:shadow-card-hover"
+                  ? "order-first md:order-0 border border-primary-400/55 shadow-Soft -translate-y-1"
+                  : "border border-surface-400/70 shadow-Soft"
               }`}
             >
               {plan.featured && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[99px] bg-primary-400 px-4 py-1.5 font-caption text-surface-100 shadow-landing-pill">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[99px] bg-primary-400 px-4 py-1.5 font-caption text-surface-100 shadow-Soft">
                   인기 플랜
                 </div>
               )}
@@ -108,7 +108,7 @@ export default function LandingPricing() {
                   href={proMailtoHref}
                   className={`mb-4 inline-flex h-12 w-full items-center justify-center rounded-2xl font-heading4 transition-colors ${
                     plan.featured
-                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
+                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-Soft"
                       : "bg-text-disabled text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
                   } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100`}
                 >
@@ -120,7 +120,7 @@ export default function LandingPricing() {
                   onClick={handleCta}
                   className={`mb-4 h-12 w-full rounded-2xl font-heading4 transition-colors ${
                     plan.featured
-                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-landing-cta"
+                      ? "bg-primary-400 text-surface-100 hover:bg-primary-500 shadow-Soft"
                       : "bg-text-disabled/50 text-text-title hover:brightness-95 active:brightness-90 border border-surface-400/70"
                   } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100`}
                 >

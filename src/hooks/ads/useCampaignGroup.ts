@@ -11,7 +11,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const NONE_OPTION: IPlatformCampaign = {
   adCampaignId: -1,
-  name: "선택 안 함",
+  name: "연결 안 함",
   description: "",
 };
 
@@ -28,7 +28,7 @@ export const useCampaignGroup = () => {
   const [naverSelected, setNaverSelected] = useState<IPlatformCampaign | null>(
     null,
   );
-  const [kakaoSelected, setKakaoSelected] = useState<IPlatformCampaign | null>(
+  const [metaSelected, setMetaSelected] = useState<IPlatformCampaign | null>(
     null,
   );
 
@@ -50,24 +50,22 @@ export const useCampaignGroup = () => {
     enabled: !!orgId,
   });
 
-  const { data: kakaoData = [] } = useQuery<
+  const { data: metaData = [] } = useQuery<
     IPlatformCampaign[],
     IApiErrorResponse
   >({
-    queryKey: ["platformCampaigns", orgId, "KAKAO"],
-    queryFn: () => getPlatformCampaigns(orgId!, "KAKAO"),
+    queryKey: ["platformCampaigns", orgId, "META"],
+    queryFn: () => getPlatformCampaigns(orgId!, "META"),
     enabled: !!orgId,
   });
 
-  // '선택 안 함'이 포함된 리스트 생성
   const googleCampaigns = [NONE_OPTION, ...googleData];
   const naverCampaigns = [NONE_OPTION, ...naverData];
-  const kakaoCampaigns = [NONE_OPTION, ...kakaoData];
+  const metaCampaigns = [NONE_OPTION, ...metaData];
 
-  // 유효성 검사 (실제 캠페인이 하나라도 선택되었는지 확인)
   const isFormValid =
     name.trim() !== "" &&
-    [googleSelected, naverSelected, kakaoSelected].some(
+    [googleSelected, naverSelected, metaSelected].some(
       (sel) => sel !== null && sel.adCampaignId !== -1,
     );
 
@@ -81,7 +79,7 @@ export const useCampaignGroup = () => {
       const campaignIds: number[] = [
         googleSelected?.adCampaignId,
         naverSelected?.adCampaignId,
-        kakaoSelected?.adCampaignId,
+        metaSelected?.adCampaignId,
       ].filter(
         (id): id is number => id !== undefined && id !== null && id !== -1,
       );
@@ -120,11 +118,11 @@ export const useCampaignGroup = () => {
     setGoogleSelected,
     naverSelected,
     setNaverSelected,
-    kakaoSelected,
-    setKakaoSelected,
+    metaSelected,
+    setMetaSelected,
     googleCampaigns,
     naverCampaigns,
-    kakaoCampaigns,
+    metaCampaigns,
     isFormValid,
     isCreating,
     handleComplete,

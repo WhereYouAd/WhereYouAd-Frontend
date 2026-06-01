@@ -2,7 +2,6 @@ import type { INavItem } from "@/types/navigation/navItem";
 
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
-import NotificationIcon from "@/assets/icon/sidebar/notification.svg?react";
 import SettingsIcon from "@/assets/icon/sidebar/setting.svg?react";
 import WorkspaceIcon from "@/assets/icon/sidebar/workspace.svg?react";
 
@@ -40,6 +39,7 @@ export const mainNav: INavItem[] = [
         id: "ads-list",
         label: "캠페인 목록",
         path: "/ads",
+        pathExact: true,
       },
       {
         id: "ads-campaign-group",
@@ -69,22 +69,19 @@ export const mainNav: INavItem[] = [
         id: "workspace-members",
         label: "멤버 관리",
         workspaceSubpath: "members",
+        requiredRole: "ADMIN",
       },
       {
         id: "workspace-billing",
         label: "플랜 및 결제",
         workspaceSubpath: "billing",
+        requiredRole: "ADMIN",
       },
     ],
   },
 ];
 
 export const footerNav: INavItem[] = [
-  {
-    id: "notifications",
-    label: "알림",
-    icon: NotificationIcon,
-  },
   {
     id: "settings",
     label: "설정",

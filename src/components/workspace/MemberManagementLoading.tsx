@@ -3,7 +3,7 @@ import { Skeleton, SkeletonCircle } from "../common/skeleton/Skeleton";
 
 function MemberRowSkeleton() {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-card tablet:px-4 tablet:py-4">
+    <div className="flex items-center justify-between rounded-2xl border border-surface-400 bg-surface-100 px-6 py-5 shadow-Soft tablet:px-4 tablet:py-4">
       <div className="flex items-center gap-4 min-w-0">
         <SkeletonCircle className="w-12 h-12 shrink-0 tablet:w-10 tablet:h-10" />
         <div className="flex flex-col gap-2 min-w-0">

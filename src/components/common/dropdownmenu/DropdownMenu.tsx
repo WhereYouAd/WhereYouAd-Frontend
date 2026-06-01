@@ -82,7 +82,7 @@ export function DropdownMenu({
               transformOrigin: fullWidth ? "top center" : "top right",
             }}
             className={twMerge(
-              "absolute z-50 mt-2 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Medium",
+              "absolute z-50 mt-2 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Soft",
               fullWidth
                 ? "left-0 right-0 top-full w-full"
                 : "right-0 top-full w-56 max-w-[calc(100vw-40px)]",

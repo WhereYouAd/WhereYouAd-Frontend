@@ -2,7 +2,6 @@ import type {
   IMetricsResponse,
   TProviderType,
 } from "@/types/dashboard/overview";
-import type { TPlatformProvider } from "@/types/dashboard/platform";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -10,12 +9,12 @@ import { getOverview } from "@/api/dashboard/overview";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 // 단일 플랫폼 지표 조회
-export function usePlatformMetrics(provider: TPlatformProvider) {
+export function usePlatformMetrics(provider: TProviderType) {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   return useCoreQuery<IMetricsResponse>(
     ["platform", "metrics", orgId, provider],
-    () => getOverview(orgId!, provider as TProviderType),
+    () => getOverview(orgId!, provider),
     {
       enabled: !!orgId && !!provider,
     },

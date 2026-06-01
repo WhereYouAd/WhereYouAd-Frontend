@@ -21,7 +21,7 @@ const Card = memo(function Card({
   return (
     <div
       className={twMerge(
-        "relative w-full rounded-3xl bg-surface-100 p-7 shadow-card transition-shadow duration-300 hover:shadow-card-hover",
+        "relative w-full rounded-3xl bg-surface-100 p-7 shadow-Soft",
         className,
       )}
       {...rest}

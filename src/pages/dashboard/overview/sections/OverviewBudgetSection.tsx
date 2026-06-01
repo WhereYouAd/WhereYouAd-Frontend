@@ -7,51 +7,19 @@ import Card from "@/components/common/card/Card";
 import ChartLegend, {
   type IChartLegendItem,
 } from "@/components/common/chart/ChartLegend";
-import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import type { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 import BudgetGaugeChart, {
   statusBadgeVariant,
 } from "@/components/dashboard/charts/BudgetGaugeChart";
+import { OverviewBudgetGaugeSkeleton } from "@/components/dashboard/overview/skeleton/OverviewSkeleton";
 
-import OverviewCampaignSnapshotCard from "@/pages/dashboard/overview/OverviewCampaignSnapshotCard";
+import OverviewCampaignSnapshotCard from "./OverviewCampaignSnapshotCard";
 
 const budgetStatusLegendItems: IChartLegendItem[] = [
   { label: "안정", colorClass: "bg-info-blue" },
   { label: "주의", colorClass: "bg-info-yellow" },
   { label: "위험", colorClass: "bg-info-red" },
 ];
-
-function BudgetGaugeSkeleton() {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3 pt-1">
-      <div className="flex shrink-0 flex-col gap-2">
-        <Skeleton className="h-4 w-20" />
-        <Skeleton className="h-8 w-24" />
-        <Skeleton className="h-2 w-full rounded-full" />
-        <div className="flex justify-between gap-3">
-          <div className="flex flex-col gap-1">
-            <Skeleton className="h-3 w-10" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-          <div className="flex flex-col items-end gap-1">
-            <Skeleton className="h-3 w-14" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-        </div>
-      </div>
-      <div className="flex shrink-0 flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/40 p-4">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-7 w-36" />
-        </div>
-        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
-          <Skeleton className="size-5 shrink-0 rounded-full" />
-          <Skeleton className="h-10 flex-1 rounded-md" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function OverviewBudgetSection({
   budget,
@@ -68,9 +36,9 @@ export function OverviewBudgetSection({
 }) {
   return (
     <div className="col-span-1 flex h-full min-h-0 min-w-0 flex-col gap-3 tablet:col-span-1">
-      <div className="flex min-h-0 flex-[2_1_0%] flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <Card
-          className="flex h-full min-h-0 min-w-0 flex-col pb-4!"
+          className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden pb-4!"
           title="예산 소진 현황"
           description={
             <ChartLegend
@@ -101,7 +69,7 @@ export function OverviewBudgetSection({
                 )}
               </div>
             ) : isBudgetLoading ? (
-              <BudgetGaugeSkeleton />
+              <OverviewBudgetGaugeSkeleton />
             ) : budget ? (
               <BudgetGaugeChart {...budget} />
             ) : null}
@@ -109,8 +77,8 @@ export function OverviewBudgetSection({
         </Card>
       </div>
 
-      <div className="flex min-h-60 flex-[1_1_0%] flex-col overflow-hidden">
-        <OverviewCampaignSnapshotCard className="h-full" />
+      <div className="shrink-0">
+        <OverviewCampaignSnapshotCard />
       </div>
     </div>
   );

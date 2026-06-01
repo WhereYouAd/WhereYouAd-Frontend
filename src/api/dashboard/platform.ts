@@ -1,5 +1,10 @@
 import type { ICommonResponse } from "@/types/common/common";
-import type { IAdCountParams, IAdStatusData } from "@/types/dashboard/platform";
+import type {
+  IAdCountParams,
+  IAdStatusData,
+  IMetricFactsParams,
+  IMetricFactsResponse,
+} from "@/types/dashboard/platform";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 
@@ -12,5 +17,16 @@ export const getAdCount = async (
     `/api/dashboard/${orgId}/ad-count`,
     { params },
   );
+  return data.data;
+};
+
+// 광고 현황 상세 일별 조회 API
+export const getMetricFacts = async (
+  orgId: number,
+  params?: IMetricFactsParams,
+): Promise<IMetricFactsResponse> => {
+  const { data } = await axiosInstance.get<
+    ICommonResponse<IMetricFactsResponse>
+  >(`/api/dashboard/${orgId}/metric-facts`, { params });
   return data.data;
 };

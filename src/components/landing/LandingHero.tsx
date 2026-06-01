@@ -43,7 +43,7 @@ export default function LandingHero() {
         />
       </picture>
       <div
-        className="pointer-events-none absolute inset-0 z-1 bg-landing-hero-scrim"
+        className="pointer-events-none absolute inset-0 z-1 bg-text-400/64"
         aria-hidden
       />
       <motion.div

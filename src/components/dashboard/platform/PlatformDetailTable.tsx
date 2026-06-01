@@ -1,14 +1,18 @@
 import { useMemo } from "react";
 
-import type { IPlatformDailyPerformance } from "@/pages/dashboard/platform/platformDashboard.mock";
+import type { IPlatformDailyPerformance } from "@/types/dashboard/platform";
 
 interface IPlatformDetailTableProps {
   data: IPlatformDailyPerformance[];
+  total?: IPlatformDailyPerformance | null;
 }
 
-function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
+function PlatformDetailTable({
+  data,
+  total: totalFromApi,
+}: IPlatformDetailTableProps) {
   // 합계 계산
-  const total = useMemo(() => {
+  const computedTotal = useMemo(() => {
     if (!data.length) return null;
     const totalSpend = data.reduce((acc, curr) => acc + curr.spend, 0);
     const totalImpressions = data.reduce(
@@ -25,7 +29,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
       impressions: totalImpressions,
       clicks: totalClicks,
       ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
-      cpc: totalClicks > 0 ? totalSpend / totalClicks : 0,
+      cpa: totalConversions > 0 ? totalSpend / totalConversions : 0,
       conversions: totalConversions,
       roas:
         totalSpend > 0
@@ -34,6 +38,8 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
           : 0,
     };
   }, [data]);
+
+  const total = totalFromApi ?? computedTotal;
 
   return (
     <div className="mt-4 flex flex-col">
@@ -57,7 +63,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
                 CTR(클릭률)
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                CPC
+                CPA
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
                 전환 수
@@ -85,7 +91,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
                   {total.ctr.toFixed(2)}%
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  ₩{Math.round(total.cpc).toLocaleString()}
+                  ₩{Math.round(total.cpa).toLocaleString()}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
                   {total.conversions.toLocaleString()}
@@ -117,7 +123,7 @@ function PlatformDetailTable({ data }: IPlatformDetailTableProps) {
                   {row.ctr.toFixed(2)}%
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  ₩{row.cpc.toLocaleString()}
+                  ₩{row.cpa.toLocaleString()}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
                   {row.conversions.toLocaleString()}

@@ -94,79 +94,7 @@ export const budgetStatusMock: IBudgetStatus[] = [
   },
 ];
 
-export interface IPlatformDailyPerformance {
-  date: string;
-  spend: number;
-  impressions: number;
-  clicks: number;
-  ctr: number;
-  cpc: number;
-  conversions: number;
-  roas: number;
-}
-
-// 최근 30일 데이터 생성 함수 (5/5)
-const generateRecentData = (
-  baseSpend: number,
-  baseImp: number,
-  baseClicks: number,
-  baseConv: number,
-) => {
-  const data: IPlatformDailyPerformance[] = [];
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-
-  const today = new Date(2026, 4, 5); // 5월 index 4
-
-  for (let i = 0; i < 30; i++) {
-    const targetDate = new Date(today);
-    targetDate.setDate(today.getDate() - i);
-
-    const year = targetDate.getFullYear().toString().slice(-2);
-    const month = (targetDate.getMonth() + 1).toString().padStart(2, "0");
-    const date = targetDate.getDate().toString().padStart(2, "0");
-    const dayName = days[targetDate.getDay()];
-
-    const isWeekend = targetDate.getDay() === 0 || targetDate.getDay() === 6;
-    const multiplier = isWeekend ? 0.85 : 1.05;
-
-    const spend = Math.floor(
-      baseSpend * multiplier * (0.9 + Math.random() * 0.2),
-    );
-    const impressions = Math.floor(
-      baseImp * multiplier * (0.9 + Math.random() * 0.2),
-    );
-    const clicks = Math.floor(
-      baseClicks * multiplier * (0.9 + Math.random() * 0.2),
-    );
-    const conversions = Math.floor(
-      baseConv * multiplier * (0.9 + Math.random() * 0.2),
-    );
-
-    data.push({
-      date: `${year}.${month}.${date}(${dayName})`,
-      spend,
-      impressions,
-      clicks,
-      ctr: Number(((clicks / impressions) * 100).toFixed(2)),
-      cpc: Math.floor(spend / clicks),
-      conversions,
-      roas: Math.floor(((conversions * 50000) / spend) * 100),
-    });
-  }
-  return data;
-};
-
-export const platformDailyPerformanceMock: Record<
-  string,
-  IPlatformDailyPerformance[]
-> = {
-  GOOGLE: generateRecentData(5000000, 1000000, 15000, 500),
-  NAVER: generateRecentData(2000000, 500000, 5000, 200),
-  META: generateRecentData(3000000, 300000, 18000, 300),
-};
-
 // 실시간 트래픽 데이터 추가
-
 export interface ITimeSeriesData {
   minute: string; // YYYYMMDDHHmm
   count: number;

@@ -4,12 +4,8 @@ const shadowTokens = [
   {
     className: "shadow-Soft",
     label: "Soft",
-    value: "0px 0px 16px 0px rgba(0, 0, 0, 0.1)",
-  },
-  {
-    className: "shadow-Medium",
-    label: "Medium",
-    value: "0px 0px 16px 0px rgba(0, 0, 0, 0.2)",
+    value:
+      "0 1px 2px color-mix(text-400 4%), 0 4px 20px color-mix(text-400 6%)",
   },
 ];
 

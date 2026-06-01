@@ -27,6 +27,7 @@ export function WorkspaceSwitcher({
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
+  const setMyRole = useWorkspaceStore((s) => s.setMyRole);
 
   const { data: workspaces, isPending } = useCoreQuery(
     ["my-workspaces"],
@@ -52,12 +53,15 @@ export function WorkspaceSwitcher({
     const fallback =
       workspaceList.find((w) => w.isCurrentWorkspace) || workspaceList[0];
     setSelectedOrgId(fallback.orgId);
-  }, [selectedOrgId, workspaceList, setSelectedOrgId]);
+    setMyRole(fallback.myRole);
+  }, [selectedOrgId, workspaceList, setSelectedOrgId, setMyRole]);
 
   const { mutate: saveWorkspace } = useMutation({
     mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
     onSuccess: async (_data, orgId) => {
+      const workspace = workspaceList.find((w) => w.orgId === orgId);
       setSelectedOrgId(orgId);
+      if (workspace) setMyRole(workspace.myRole);
       setIsOpen(false);
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["my-workspaces"] }),
@@ -268,7 +272,7 @@ export function WorkspaceSwitcher({
                 type="button"
                 onClick={() => {
                   setIsOpen(false);
-                  navigate("/workspace");
+                  navigate("/workspace?create=1");
                 }}
                 className="flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-body hover:bg-surface-200 transition-colors"
               >

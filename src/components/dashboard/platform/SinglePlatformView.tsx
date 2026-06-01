@@ -1,9 +1,11 @@
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { TPlatformProvider } from "@/types/dashboard/platform";
+import type { TProviderType } from "@/types/dashboard/overview";
+import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
 import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
+import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
@@ -11,6 +13,7 @@ import Card from "@/components/common/card/Card";
 import StatCard, { type ITrend } from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
+import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import BudgetGaugeChart, {
   getBudgetStatus,
   statusBadgeVariant,
@@ -21,10 +24,7 @@ import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTraffi
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
-import {
-  platformDailyPerformanceMock,
-  platformTrafficMock,
-} from "@/pages/dashboard/platform/platformDashboard.mock";
+import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
   string,
@@ -36,7 +36,7 @@ const PLATFORM_LOGOS: Record<
 };
 
 interface ISinglePlatformViewProps {
-  platform: string;
+  platform: TProviderType;
   isLoading: boolean;
 }
 
@@ -50,7 +50,7 @@ export default function SinglePlatformView({
     data: platformData,
     isLoading: isMetricsLoading,
     isError: isMetricsError,
-  } = usePlatformMetrics(platform.toUpperCase() as TPlatformProvider);
+  } = usePlatformMetrics(platform);
 
   const toTrend = (changeRate: number): ITrend => ({
     direction: changeRate >= 0 ? "up" : "down",
@@ -84,13 +84,19 @@ export default function SinglePlatformView({
     ];
   }, [platformData]);
 
-  const logoInfo = PLATFORM_LOGOS[platform.toUpperCase()];
+  const logoInfo = PLATFORM_LOGOS[platform];
 
   const {
     data: budget,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
-  } = usePlatformBudget(platform.toUpperCase() as TPlatformProvider);
+  } = usePlatformBudget(platform);
+
+  const {
+    data: metricFacts,
+    isLoading: isMetricFactsLoading,
+    isError: isMetricFactsError,
+  } = usePlatformMetricFacts(platform, viewRange);
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -104,20 +110,7 @@ export default function SinglePlatformView({
       )
     : null;
 
-  const dailyData = useMemo(() => {
-    const key = platform?.toUpperCase();
-    const allData = key ? platformDailyPerformanceMock[key] || [] : [];
-    return allData.slice(0, viewRange);
-  }, [platform, viewRange]);
-
-  const PLATFORM_THEME_COLORS: Record<string, string> = {
-    GOOGLE: "#f9ab00",
-    NAVER: "#03c75a",
-    META: "#1877f2",
-  };
-
-  const platformColor =
-    PLATFORM_THEME_COLORS[platform.toUpperCase()] || "#1877f2";
+  const platformColor = PLATFORM_CHART_COLORS[platform];
 
   return (
     <div className="flex flex-col gap-8">
@@ -140,7 +133,7 @@ export default function SinglePlatformView({
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-card backdrop-blur-sm flex flex-col gap-4"
+              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
             >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-8 w-24" />
@@ -182,8 +175,8 @@ export default function SinglePlatformView({
           }
         >
           <PlatformTrafficChart
-            data={platformTrafficMock[platform.toUpperCase()] || null}
-            platform={platform.toUpperCase()}
+            data={platformTrafficMock[platform] || null}
+            platform={platform}
             isLoading={isLoading}
           />
         </Card>
@@ -243,7 +236,7 @@ export default function SinglePlatformView({
               className={twMerge(
                 "px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 7
-                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  ? "bg-info-blue text-surface-100 shadow-Soft"
                   : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
@@ -255,7 +248,7 @@ export default function SinglePlatformView({
               className={twMerge(
                 "border-l border-surface-400 px-4 py-2 font-body2 transition-all duration-200",
                 viewRange === 30
-                  ? "bg-info-blue text-surface-100 shadow-sm"
+                  ? "bg-info-blue text-surface-100 shadow-Soft"
                   : "bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
             >
@@ -264,8 +257,30 @@ export default function SinglePlatformView({
           </div>
         }
       >
-        <PlatformDetailTable data={dailyData} />
+        {isLoading || isMetricFactsLoading ? (
+          <div className="flex items-center justify-center py-16">
+            <Skeleton className="h-40 w-full rounded-2xl" />
+          </div>
+        ) : isMetricFactsError ? (
+          <div className="flex items-center justify-center py-16 text-center font-body2 text-info-red">
+            광고 현황 데이터를 불러오지 못했습니다.
+          </div>
+        ) : !metricFacts?.dailyRows.length ? (
+          <div className="flex items-center justify-center py-16 text-center font-body2 text-text-muted">
+            표시할 광고 현황 데이터가 없습니다.
+          </div>
+        ) : (
+          <PlatformDetailTable
+            data={metricFacts.dailyRows}
+            total={metricFacts.totalRow}
+          />
+        )}
       </Card>
+
+      <DashboardAiSummarySection
+        provider={platform}
+        idPrefix={`platform-ai-${platform.toLowerCase()}`}
+      />
     </div>
   );
 }
