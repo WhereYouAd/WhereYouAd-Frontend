@@ -1,8 +1,10 @@
 import type { IPlatformConnectionItem } from "@/types/integration/platformConnection";
 
+import { mapPlatformAccountsToConnections } from "@/utils/integration/mapPlatformAccounts";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import { platformConnectionsMock } from "@/pages/integration/platformIntegrations.mock";
+import { platformAccountsApiMock } from "@/pages/integration/platformIntegrations.mock";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function needsIntegrationAttention(
@@ -20,7 +22,7 @@ export function usePlatformConnections() {
       await new Promise((resolve) => {
         setTimeout(resolve, 800);
       });
-      return platformConnectionsMock;
+      return mapPlatformAccountsToConnections(platformAccountsApiMock);
     },
     { enabled: orgId != null },
   );

@@ -19,8 +19,10 @@ export function PlatformIntegrationCardSkeleton() {
         <Skeleton className="h-8 w-16 shrink-0 rounded-full" />
       </div>
 
-      <div className="flex w-full flex-col gap-3">
-        <Skeleton className="h-4 w-full max-w-60" />
+      <div className="flex w-full flex-col gap-2">
+        <Skeleton className="h-4 w-full max-w-56" />
+        <Skeleton className="h-4 w-full max-w-48" />
+        <Skeleton className="h-4 w-full max-w-40" />
       </div>
 
       <div className="flex-1" aria-hidden />

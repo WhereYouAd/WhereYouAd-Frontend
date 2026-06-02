@@ -4,6 +4,10 @@ import { usePlatformConnections } from "@/hooks/integration/usePlatformConnectio
 
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
 import PlatformIntegrationsPageSkeleton from "@/components/integration/skeleton/PlatformIntegrationsSkeleton";
+import {
+  ComingSoonUpcomingCard,
+  KakaoUpcomingCard,
+} from "@/components/integration/UpcomingPlatformCard";
 
 export default function PlatformIntegrationsPage() {
   const {
@@ -25,21 +29,39 @@ export default function PlatformIntegrationsPage() {
           </p>
         </div>
       ) : (
-        <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
-          {platformConnections.map((item) => (
-            <li
-              key={item.provider}
-              className="flex h-full min-h-0 w-full min-w-0"
-            >
-              <PlatformIntegrationCard
-                {...item}
-                onConnect={() => toast.message("연동하기")}
-                onReconnect={() => toast.message("재연동")}
-                onDisconnect={() => toast.message("연결 해제")}
-              />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
+            {platformConnections.map((item) => (
+              <li
+                key={item.provider}
+                className="flex h-full min-h-0 w-full min-w-0"
+              >
+                <PlatformIntegrationCard
+                  {...item}
+                  onConnect={() => toast.message("연동하기")}
+                  onReconnect={() => toast.message("재연동")}
+                  onDisconnect={() => toast.message("연결 해제")}
+                />
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15">
+            <p className="w-full text-center font-body1 text-text-muted/70">
+              더 많은 플랫폼 연동을 준비하고 있어요. 지원 범위는 변경될 수
+              있습니다.
+            </p>
+
+            <ul className="m-0 flex w-full min-w-0 list-none flex-wrap justify-center gap-6 p-0 tablet:flex-col">
+              <li className="flex h-full min-h-0 w-full min-w-0 max-w-96 tablet:max-w-none">
+                <KakaoUpcomingCard />
+              </li>
+              <li className="flex h-full min-h-0 w-full min-w-0 max-w-96 tablet:max-w-none">
+                <ComingSoonUpcomingCard />
+              </li>
+            </ul>
+          </div>
+        </>
       )}
     </section>
   );

@@ -1,19 +1,29 @@
-import type { IPlatformConnectionItem } from "@/types/integration/platformConnection";
+import type { IPlatformAccountApi } from "@/types/integration/platformConnection";
 
-export const platformConnectionsMock: IPlatformConnectionItem[] = [
+import { mapPlatformAccountsToConnections } from "@/utils/integration/mapPlatformAccounts";
+
+/** 목록 API `data.platformAccounts` mock */
+export const platformAccountsApiMock: IPlatformAccountApi[] = [
   {
+    platformAccountId: 1,
+    externalAccountId: "act_2847193056",
     provider: "META",
-    status: "connected",
-    lastSyncedAt: "2026-05-18T14:32:00",
+    authType: "OAUTH",
+    status: "ACTIVE",
+    tokenExpireAt: "2026-08-18",
+    syncedAt: "2026-05-18T14:32:00",
   },
   {
-    provider: "GOOGLE",
-    status: "disconnected",
-  },
-  {
+    platformAccountId: 3,
+    externalAccountId: "naver-ad-882910",
     provider: "NAVER",
-    status: "error",
-    errorMessage: "토큰이 만료되었습니다. 다시 연동해 주세요.",
-    lastSyncedAt: "2026-05-10T12:09:00",
+    authType: "OAUTH",
+    status: "EXPIRED",
+    tokenExpireAt: "2026-05-20",
+    syncedAt: "2026-05-10T12:09:00",
   },
 ];
+
+export const platformConnectionsMock = mapPlatformAccountsToConnections(
+  platformAccountsApiMock,
+);
