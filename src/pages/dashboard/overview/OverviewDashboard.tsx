@@ -4,10 +4,9 @@ import { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
-import AiSummaryCard from "@/components/dashboard/ai-report/components/AiSummaryCard";
+import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
-import { overviewAiReportMockData } from "./mock/aiReport.mock";
 import { OverviewBudgetSection } from "./sections/OverviewBudgetSection";
 import { OverviewKpiSection } from "./sections/OverviewKpiSection";
 import { OverviewPlatformSection } from "./sections/OverviewPlatformSection";
@@ -73,8 +72,8 @@ export default function OverviewDashboard() {
         onNavigate={() => navigate("/platform")}
       />
 
-      <AiSummaryCard
-        data={overviewAiReportMockData}
+      <DashboardAiSummarySection
+        provider="ALL"
         idPrefix="overview-ai-summary"
       />
     </section>

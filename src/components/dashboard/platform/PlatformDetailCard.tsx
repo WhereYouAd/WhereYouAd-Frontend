@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 import type { IPlatformPerformance } from "@/types/dashboard/platform";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";

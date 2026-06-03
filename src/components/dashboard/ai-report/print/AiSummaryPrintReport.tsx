@@ -75,29 +75,6 @@ export default function AiSummaryPrintReport({
                 ))}
               </ul>
             </article>
-
-            {doc.keyMetrics.length > 0 && (
-              <article
-                className="ai-report-section ai-report-section--metrics"
-                aria-labelledby="ai-report-metrics-heading"
-              >
-                <h3
-                  id="ai-report-metrics-heading"
-                  className="ai-report-section-title"
-                >
-                  핵심 지표
-                </h3>
-                <p className="ai-report-section-desc">오늘의 주요 수치</p>
-                <ul className="ai-report-list">
-                  {doc.keyMetrics.map((metric) => (
-                    <li key={metric.label}>
-                      {metric.label}: {metric.value}
-                      {metric.detail ? ` (${metric.detail})` : ""}
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            )}
           </div>
 
           <div

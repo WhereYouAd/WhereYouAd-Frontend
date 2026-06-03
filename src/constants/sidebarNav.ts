@@ -70,11 +70,13 @@ export const mainNav: INavItem[] = [
         id: "workspace-members",
         label: "멤버 관리",
         workspaceSubpath: "members",
+        requiredRole: "ADMIN",
       },
       {
         id: "workspace-billing",
         label: "플랜 및 결제",
         workspaceSubpath: "billing",
+        requiredRole: "ADMIN",
       },
     ],
   },

@@ -1,18 +1,12 @@
-import type { IAiReportResponse } from "@/types/dashboard/aiReport";
+import type { IAnalysisResponse } from "@/types/dashboard/aiAnalysis";
 
 export type TAiReportPrintSection = {
   title: string;
   paragraphs: string[];
 };
 
-export type TAiReportPrintMetric = {
-  label: string;
-  value: string;
-  detail?: string;
-};
-
 export const AI_REPORT_FOOTER_TAGLINE =
-  "오늘 광고 성과의 핵심 흐름을 요약한 보고서입니다. 상세 분석은 본문을 참고해 주세요.";
+  "광고 성과의 핵심 흐름을 요약한 보고서입니다. 상세 분석은 본문을 참고해 주세요.";
 
 export type TAiReportPrintDocument = {
   documentTitle: string;
@@ -21,7 +15,6 @@ export type TAiReportPrintDocument = {
   brandName: string;
   footerTagline: string;
   executiveSummary: string[];
-  keyMetrics: TAiReportPrintMetric[];
   bodySections: TAiReportPrintSection[];
 };
 
@@ -31,26 +24,36 @@ export type TAiReportPrintOptions = {
   footerTagline?: string;
 };
 
-const SECTION_TITLE_CAUSE = "왜 이렇게 나왔을까?";
-const SECTION_TITLE_PERFORMANCE = "성과 요약";
-const SECTION_TITLE_HIGHLIGHT = "성과 포인트";
-
-const DEFAULT_PRINT_DOCUMENT_TITLE = "오늘의 성과 AI 요약 보고서";
+const DEFAULT_PRINT_DOCUMENT_TITLE = "통합 광고 성과 AI 요약 보고서";
 const DEFAULT_PRINT_BRAND_NAME = "WhereYouAd";
+const DEFAULT_PRINT_LABEL = "광고 성과 AI 요약";
 
-function splitParagraphs(text: string) {
+export function splitParagraphs(text: string) {
   return text
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
 }
 
-function findSection(data: IAiReportResponse, title: string) {
-  return data.sections.find((section) => section.title === title);
+function toNumberedLines(items: string[] | null | undefined) {
+  const lines = (items ?? []).map((item) => item.trim()).filter(Boolean);
+  if (!lines.length) return [];
+  return lines.map((line, index) => `${index + 1}. ${line}`);
 }
 
-/** 인쇄·PDF용 작성일 */
-export function formatReportWrittenDate(date = new Date()) {
+/** 카드 표시용 */
+export function formatNumberedList(items: string[] | null | undefined) {
+  const lines = toNumberedLines(items);
+  return lines.length ? lines.join("\n") : "—";
+}
+
+/** PDF·인쇄용 */
+function numberedParagraphs(items: string[] | null | undefined) {
+  const lines = toNumberedLines(items);
+  return lines.length ? lines : ["—"];
+}
+
+function formatReportWrittenDate(date = new Date()) {
   return new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "long",
@@ -58,66 +61,44 @@ export function formatReportWrittenDate(date = new Date()) {
   }).format(date);
 }
 
-function buildExecutiveSummary(data: IAiReportResponse): string[] {
-  if (data.executiveSummary?.length) {
-    return data.executiveSummary.slice(0, 5);
-  }
-
-  return [data.title, AI_REPORT_FOOTER_TAGLINE].slice(0, 5);
-}
-
-function buildBodySections(data: IAiReportResponse): TAiReportPrintSection[] {
-  const performance = findSection(data, SECTION_TITLE_PERFORMANCE);
-  const highlight = findSection(data, SECTION_TITLE_HIGHLIGHT);
-  const cause = findSection(data, SECTION_TITLE_CAUSE);
-
-  const sections: TAiReportPrintSection[] = [];
-
-  if (performance || highlight) {
-    const paragraphs = [
-      ...(performance ? splitParagraphs(performance.content) : []),
-      ...(highlight ? splitParagraphs(highlight.content) : []),
-    ];
-    sections.push({
-      title: "성과 요약",
-      paragraphs,
-    });
-  }
-
-  if (cause) {
-    sections.push({
-      title: "원인 분석",
-      paragraphs: splitParagraphs(cause.content),
-    });
-  }
-
-  sections.push({
-    title: data.strategySuggestion.title,
-    paragraphs: splitParagraphs(data.strategySuggestion.content),
-  });
-
-  sections.push({
-    title: "주의사항",
-    paragraphs: splitParagraphs(data.warning.content),
-  });
-
-  return sections;
-}
-
 export function toAiReportPrintDocument(
-  data: IAiReportResponse,
+  data: IAnalysisResponse,
   options?: TAiReportPrintOptions & { writtenDate?: string },
 ): TAiReportPrintDocument {
   const writtenDate = options?.writtenDate ?? formatReportWrittenDate();
+  const summaryLines = splitParagraphs(data.performanceSummary);
+
+  const bodySections: TAiReportPrintSection[] = [
+    {
+      title: "성과 요약",
+      paragraphs: [
+        ...splitParagraphs(data.performanceSummary),
+        ...numberedParagraphs(data.performancePoint),
+      ],
+    },
+    {
+      title: "원인 분석",
+      paragraphs: splitParagraphs(data.analysisReason),
+    },
+    {
+      title: "전략 제안",
+      paragraphs: splitParagraphs(data.strategySuggestion),
+    },
+    {
+      title: "주의사항",
+      paragraphs: numberedParagraphs(data.cautionPoint),
+    },
+  ];
 
   return {
     documentTitle: options?.documentTitle ?? DEFAULT_PRINT_DOCUMENT_TITLE,
-    label: data.label,
+    label: DEFAULT_PRINT_LABEL,
     writtenDate,
     brandName: options?.brandName ?? DEFAULT_PRINT_BRAND_NAME,
     footerTagline: options?.footerTagline ?? AI_REPORT_FOOTER_TAGLINE,
-    executiveSummary: buildExecutiveSummary(data),
-    keyMetrics: data.keyMetrics ?? [],
-    bodySections: buildBodySections(data),
+    executiveSummary: summaryLines.length
+      ? summaryLines.slice(0, 5)
+      : [AI_REPORT_FOOTER_TAGLINE],
+    bodySections,
   };
 }

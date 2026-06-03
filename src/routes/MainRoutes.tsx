@@ -5,6 +5,8 @@ import { loadable } from "@/utils/loadable";
 
 import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
 
+import RoleGuard from "./RoleGuard";
+
 import WorkspaceBillingRedirect from "@/pages/workspace/WorkspaceBillingRedirect";
 
 const OverviewDashboard = loadable(
@@ -77,7 +79,11 @@ const MainRoutes: RouteObject[] = [
   },
   {
     path: "workspace/billing",
-    element: <WorkspaceBillingRedirect />,
+    element: (
+      <RoleGuard allowedRoles={["ADMIN"]}>
+        <WorkspaceBillingRedirect />
+      </RoleGuard>
+    ),
   },
   {
     path: "workspace/:workspaceId",
@@ -85,8 +91,22 @@ const MainRoutes: RouteObject[] = [
     children: [
       { index: true, element: <Navigate to="settings" replace /> },
       { path: "settings", element: <WorkspaceSetting /> },
-      { path: "members", element: <MemberManagement /> },
-      { path: "billing", element: <Billing /> },
+      {
+        path: "members",
+        element: (
+          <RoleGuard allowedRoles={["ADMIN"]}>
+            <MemberManagement />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "billing",
+        element: (
+          <RoleGuard allowedRoles={["ADMIN"]}>
+            <Billing />
+          </RoleGuard>
+        ),
+      },
     ],
   },
   {

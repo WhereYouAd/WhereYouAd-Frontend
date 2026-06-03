@@ -1,6 +1,6 @@
 import { memo, type ReactNode } from "react";
 
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import type {
   IPlatformConnectionItem,
   TIntegrationProvider,

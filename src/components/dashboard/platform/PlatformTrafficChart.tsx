@@ -2,6 +2,9 @@ import { memo, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
+import type { TProviderType } from "@/types/dashboard/overview";
+import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
+
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -11,12 +14,6 @@ interface IPlatformTrafficChartProps {
   platform: string;
   isLoading?: boolean;
 }
-
-const PLATFORM_COLORS: Record<string, string> = {
-  GOOGLE: "#f9ab00",
-  NAVER: "#03c75a",
-  META: "#1877f2",
-};
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
@@ -48,7 +45,9 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     };
   }, [seriesData]);
 
-  const platformColor = PLATFORM_COLORS[platform] || "var(--color-info-blue)";
+  const platformColor =
+    PLATFORM_CHART_COLORS[platform as TProviderType] ??
+    PLATFORM_CHART_COLORS.META;
 
   // Y축 최대값 계산
   const yMax = useMemo(() => {

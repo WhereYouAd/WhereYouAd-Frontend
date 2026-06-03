@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 import type { IRoasRanking } from "@/types/dashboard/platform";
-import { PLATFORM_MAP } from "@/types/dashboard/platform";
+import { PLATFORM_MAP } from "@/types/dashboard/provider";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
 

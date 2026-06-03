@@ -1,5 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 
+import type { TMemberRole } from "../workspace/workspace";
+
 export interface INavItem {
   id: string;
   label: string;
@@ -10,4 +12,9 @@ export interface INavItem {
   /** true면 `path`와 pathname이 정확히 일치할 때만 매칭 (워크스페이스 목록 등) */
   pathExact?: boolean;
   children?: INavItem[];
+  /**
+   * 이 필드가 있으면 -> 해당 역할만 메뉴표시
+   * 이 필드가 없으면 -> 역할 상관없이 모두에게 표시
+   */
+  requiredRole?: TMemberRole;
 }

@@ -1,5 +1,4 @@
-// 광고 플랫폼 종류
-export type TProviderType = "META" | "NAVER" | "GOOGLE";
+export type { TProviderType } from "./provider";
 
 // 전체 지표 집계 응답
 export interface IMetricsResponse {
@@ -52,12 +51,6 @@ export interface IPlatformRankingItem extends IRoasRanking {
   conversionRate?: number; // CVR (%)
   conversionDelta?: number; // CVR 전기 대비 증감 (%)
 }
-
-export type {
-  IAiReportKeyMetric,
-  IAiReportResponse,
-  IAiReportSection,
-} from "./aiReport";
 
 // 클릭 스트림 데이터 항목
 export interface IClickStreamItem {

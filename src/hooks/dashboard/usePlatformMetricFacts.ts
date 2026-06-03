@@ -3,7 +3,6 @@ import type {
   IMetricFactsResponse,
   IMetricFactsRow,
   IPlatformDailyPerformance,
-  TPlatformProvider,
 } from "@/types/dashboard/platform";
 
 import { useCoreQuery } from "@/hooks/customQuery";
@@ -54,17 +53,14 @@ export type TMetricFactsViewModel = {
   totalRow: IPlatformDailyPerformance;
 };
 
-export function usePlatformMetricFacts(
-  provider: TPlatformProvider,
-  days: 7 | 30,
-) {
+export function usePlatformMetricFacts(provider: TProviderType, days: 7 | 30) {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   return useCoreQuery<IMetricFactsResponse, TMetricFactsViewModel>(
     ["platform", "metricFacts", orgId, provider, days],
     () =>
       getMetricFacts(orgId!, {
-        providerType: provider as TProviderType,
+        providerType: provider,
         days,
       }),
     {
