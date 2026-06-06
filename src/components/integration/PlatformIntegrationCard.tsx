@@ -33,7 +33,6 @@ const STATUS_LABEL: Record<TPlatformConnectionStatus, string> = {
   syncing: "동기화 중",
 };
 
-/** 안정=infoBlue · 주의=infoYellow · 위험=infoRed · 중립=surface (Badge variant 추가 없음) */
 const CONNECTION_STATUS_BADGE: Record<
   TPlatformConnectionStatus,
   TBadgeVariant
