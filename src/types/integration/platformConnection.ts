@@ -22,11 +22,7 @@ export interface IPlatformAccountsResponseData {
 }
 
 /** 카드 UI용 연동 상태 */
-export type TPlatformConnectionStatus =
-  | "disconnected"
-  | "connected"
-  | "error"
-  | "syncing";
+export type TPlatformConnectionStatus = "disconnected" | "connected" | "error";
 
 export interface IPlatformConnectionItem {
   provider: TIntegrationProvider;

@@ -12,8 +12,26 @@ const INTEGRATION_PROVIDERS: TIntegrationProvider[] = [
 ];
 
 const TOKEN_EXPIRE_WARNING_DAYS = 7;
+const DATE_ONLY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 
+/** date-only(YYYY-MM-DD)는 UTC가 아닌 로컬 달력 날짜로 파싱 */
 function parseDate(value: string): Date | null {
+  const dateOnly = DATE_ONLY_PATTERN.exec(value);
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]);
+    const day = Number(dateOnly[3]);
+    const date = new Date(year, month - 1, day);
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      return null;
+    }
+    return date;
+  }
+
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
 }

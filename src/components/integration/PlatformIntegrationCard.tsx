@@ -30,7 +30,6 @@ const STATUS_LABEL: Record<TPlatformConnectionStatus, string> = {
   disconnected: "미연동",
   connected: "연동됨",
   error: "연동 오류",
-  syncing: "동기화 중",
 };
 
 const CONNECTION_STATUS_BADGE: Record<
@@ -38,7 +37,6 @@ const CONNECTION_STATUS_BADGE: Record<
   TBadgeVariant
 > = {
   connected: "infoBlue",
-  syncing: "infoYellow",
   error: "infoRed",
   disconnected: "surface",
 };
@@ -215,12 +213,6 @@ function PlatformIntegrationCard({
               onClick={onReconnect}
             >
               재연동
-            </Button>
-          ) : null}
-
-          {status === "syncing" ? (
-            <Button type="button" size="small" fullWidth disabled>
-              동기화 중…
             </Button>
           ) : null}
         </div>

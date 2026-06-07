@@ -58,7 +58,7 @@ export default function UpcomingPlatformCard({
       <p className="font-body2 text-text-muted">{description}</p>
 
       <div className="mt-auto flex w-full">
-        <Button type="button" size="big" fullWidth disabled>
+        <Button type="button" size="big" fullWidth disabled={disabled}>
           준비 중
         </Button>
       </div>
