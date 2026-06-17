@@ -95,10 +95,12 @@ export default function Sidebar() {
   const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
 
   const myRole = useMemo(() => {
-    if (!workspaceId || !workspaces) return null;
-    const workspace = workspaces.find((w) => w.orgId === Number(workspaceId));
+    if (!workspaces) return null;
+
+    const roleSourceId = workspaceId ? Number(workspaceId) : selectedOrgId;
+    const workspace = workspaces.find((w) => w.orgId === roleSourceId);
     return workspace?.myRole ?? myRoleFromStore;
-  }, [workspaceId, workspaces, myRoleFromStore]);
+  }, [workspaceId, selectedOrgId, workspaces, myRoleFromStore]);
   const mainNavWithWorkspace = useMemo(
     () =>
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
