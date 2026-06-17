@@ -22,7 +22,6 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   platform,
   isLoading,
 }: IPlatformTrafficChartProps) {
-  // 데이터 변환: minute 문자열 -> 타임스탬프
   const seriesData = useMemo(() => {
     if (!data) return [];
     return data.timeSeriesData.map((d) => ({
