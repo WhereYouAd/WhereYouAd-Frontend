@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
-import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
+import { useBudget } from "@/hooks/dashboard/useBudget";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
@@ -90,7 +90,7 @@ export default function SinglePlatformView({
     data: budget,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
-  } = usePlatformBudget(platform);
+  } = useBudget(platform);
 
   const {
     data: metricFacts,
