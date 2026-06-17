@@ -4,13 +4,15 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
+
 import { useBudget } from "@/hooks/dashboard/useBudget";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
-import StatCard, { type ITrend } from "@/components/common/card/StatCard";
+import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
@@ -52,37 +54,10 @@ export default function SinglePlatformView({
     isError: isMetricsError,
   } = usePlatformMetrics(platform);
 
-  const toTrend = (changeRate: number): ITrend => ({
-    direction: changeRate >= 0 ? "up" : "down",
-    value: `${Math.abs(changeRate).toFixed(2)}%`,
-  });
-
-  const kpis = useMemo(() => {
-    if (!platformData) return [];
-
-    return [
-      {
-        title: "노출수",
-        value: platformData.impressions.toLocaleString(),
-        trend: toTrend(platformData.impressionChangeRate),
-      },
-      {
-        title: "클릭수 (CTR)",
-        value: platformData.clicks.toLocaleString(),
-        trend: toTrend(platformData.clickChangeRate),
-      },
-      {
-        title: "전환율 (CVR)",
-        value: `${platformData.conversion}%`,
-        trend: toTrend(platformData.cvrChangeRate),
-      },
-      {
-        title: "광고비 대비 매출 (ROAS)",
-        value: `${platformData.ROAS}%`,
-        trend: toTrend(platformData.ROASChangeRate),
-      },
-    ];
-  }, [platformData]);
+  const kpis = useMemo(
+    () => (platformData ? metricsToKpis(platformData) : []),
+    [platformData],
+  );
 
   const logoInfo = PLATFORM_LOGOS[platform];
 
