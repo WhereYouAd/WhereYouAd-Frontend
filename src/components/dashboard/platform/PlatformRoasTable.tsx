@@ -24,11 +24,11 @@ function getPlatformLogo(provider: string) {
   const key = toProviderType(provider);
   if (key) {
     const Logo = PLATFORM_CIRCLE_LOGO_MAP[key];
-    return <Logo className="h-7 w-auto" />;
+    return <Logo className="h-8 w-8" />;
   }
   const name = getDisplayName(provider);
   return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
       {name[0]}
     </span>
   );
