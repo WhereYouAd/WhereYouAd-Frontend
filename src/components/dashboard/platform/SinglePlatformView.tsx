@@ -108,7 +108,7 @@ export default function SinglePlatformView({
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
+              className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
             >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-8 w-24" />
