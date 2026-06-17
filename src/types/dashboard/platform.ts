@@ -1,7 +1,7 @@
 import type { IMetricsResponse } from "./common";
 import type { TProviderType } from "./provider";
 
-export type { IMetricsResponse, IRoasRanking } from "./common";
+export type { IBudgetResponse, IMetricsResponse, IRoasRanking } from "./common";
 export type { TProviderType };
 
 // 플랫폼 광고 소재 개수
@@ -33,15 +33,6 @@ export interface IPlatformPerformance extends IMetricsResponse {
 export interface IPlatformEfficiencyData {
   status: string;
   data: IPlatformPerformance[];
-}
-
-// 예산 소진 현황
-export interface IBudgetStatus {
-  providerType: string;
-  usagePercentage: number;
-  totalBudget: number;
-  totalSpend: number;
-  remainingBudget: number;
 }
 
 // API 일자별·합계

@@ -1,16 +1,7 @@
-import type { IMetricsResponse, IRoasRanking } from "./common";
+import type { IBudgetResponse, IMetricsResponse, IRoasRanking } from "./common";
 
-export type { IMetricsResponse, IRoasRanking };
+export type { IBudgetResponse, IMetricsResponse, IRoasRanking };
 export type { TProviderType } from "./provider";
-
-// 예산 집계 응답
-export interface IBudgetsResponse {
-  providerType: string;
-  usagePercentage: number;
-  totalBudget: number;
-  totalSpend: number;
-  remainingBudget: number;
-}
 
 // ROAS 순위 조회 요청 파라미터
 export interface IRoasRankingsParams {

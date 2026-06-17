@@ -10,6 +10,15 @@ export interface IMetricsResponse {
   ROASChangeRate: number;
 }
 
+// 예산 소진 현황
+export interface IBudgetResponse {
+  providerType: string;
+  usagePercentage: number;
+  totalBudget: number;
+  totalSpend: number;
+  remainingBudget: number;
+}
+
 // ROAS 순위 항목
 export interface IRoasRanking {
   rank: number;
