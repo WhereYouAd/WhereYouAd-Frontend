@@ -25,7 +25,7 @@ export default function WorkspaceManageLayout() {
       ]);
     },
     onError: () => {
-      toast.error("워크스페이스 변경에 실패헀습니다. 다시 시도해 주세요");
+      toast.error("워크스페이스 변경에 실패했습니다. 다시 시도해 주세요");
     },
   });
 

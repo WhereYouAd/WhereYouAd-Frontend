@@ -22,6 +22,6 @@ button:not(:disabled) {
   cursor: pointer;
 }
 
-button:disabled {
+button:disabled:not(.cursor-wait) {
   cursor: not-allowed;
 }
