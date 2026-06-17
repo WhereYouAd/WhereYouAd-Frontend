@@ -1,4 +1,7 @@
+import type { IRoasRanking } from "./provider";
+
 export type { TProviderType } from "./provider";
+export type { IRoasRanking };
 
 // 전체 지표 집계 응답
 export interface IMetricsResponse {
@@ -32,16 +35,6 @@ export interface IRoasRankingsResponse {
   startDate: string;
   endDate: string;
   rankings: IRoasRanking[];
-}
-
-// ROAS 순위 항목
-export interface IRoasRanking {
-  rank: number;
-  provider: string;
-  roas: number;
-  diffRate: number | null;
-  revenue: number;
-  adSpend: number;
 }
 
 // 플랫폼별 ROAS 순위 + 지표(CTR/CVR) 통합 항목

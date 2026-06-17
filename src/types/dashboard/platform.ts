@@ -1,16 +1,7 @@
 import type { TProviderType } from "./provider";
 
-export type { TProviderType } from "./provider";
-
-// ROAS 성과 순위
-export interface IRoasRanking {
-  rank: number;
-  provider: string;
-  roas: number;
-  diffRate: number | null;
-  revenue: number;
-  adSpend: number;
-}
+export type { TProviderType };
+export type { IRoasRanking } from "./provider";
 
 // 플랫폼 광고 소재 개수
 export interface IAdCount {
