@@ -1,19 +1,7 @@
-import type { IRoasRanking } from "./provider";
+import type { IMetricsResponse, IRoasRanking } from "./common";
 
+export type { IMetricsResponse, IRoasRanking };
 export type { TProviderType } from "./provider";
-export type { IRoasRanking };
-
-// 전체 지표 집계 응답
-export interface IMetricsResponse {
-  clicks: number;
-  clickChangeRate: number;
-  impressions: number;
-  impressionChangeRate: number;
-  conversion: number;
-  cvrChangeRate: number;
-  ROAS: number;
-  ROASChangeRate: number;
-}
 
 // 예산 집계 응답
 export interface IBudgetsResponse {

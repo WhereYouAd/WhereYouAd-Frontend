@@ -1,7 +1,8 @@
+import type { IMetricsResponse } from "./common";
 import type { TProviderType } from "./provider";
 
+export type { IMetricsResponse, IRoasRanking } from "./common";
 export type { TProviderType };
-export type { IRoasRanking } from "./provider";
 
 // 플랫폼 광고 소재 개수
 export interface IAdCount {
@@ -24,16 +25,8 @@ export interface IAdCountParams {
 }
 
 // 플랫폼별 성과
-export interface IPlatformPerformance {
+export interface IPlatformPerformance extends IMetricsResponse {
   provider: TProviderType;
-  clicks: number;
-  clickChangeRate: number;
-  impressions: number;
-  impressionChangeRate: number;
-  conversion: number;
-  cvrChangeRate: number;
-  ROAS: number;
-  ROASChangeRate: number;
 }
 
 // 플랫폼별 성과 효율 비교
