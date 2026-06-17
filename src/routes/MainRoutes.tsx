@@ -43,6 +43,9 @@ const MemberManagement = loadable(
 const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
+const PlatformIntegrationsPage = loadable(
+  lazy(() => import("@/pages/integration/PlatformIntegrationsPage")),
+);
 
 const MainRoutes: RouteObject[] = [
   {
@@ -105,6 +108,10 @@ const MainRoutes: RouteObject[] = [
         ),
       },
     ],
+  },
+  {
+    path: "integrations",
+    element: <PlatformIntegrationsPage />,
   },
   {
     path: "setting",
