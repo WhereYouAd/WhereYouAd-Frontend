@@ -1,0 +1,83 @@
+---
+description: WhereYouAd 팀 공용 Cursor 규칙 — 레포를 열면 자동 적용
+alwaysApply: true
+---
+
+# WhereYouAd Frontend — 팀 공용 Cursor 규칙
+
+## 강제 규칙 (에이전트 최우선)
+
+1. **색**: `src/styles/tokens.css` `@theme` 토큰만. 토큰 **이름 변경·임의 색 추가 금지**.
+2. **스타일링**: `var(--*)`·인라인 hex·임의 `bg-[#...]` **금지** → `bg-*` `text-*` `border-*` 유틸만. 조건부 클래스는 `twMerge`.
+3. **SVG**: `fill`/`stroke="currentColor"`, 색은 `text-*`. React는 `*.svg?react` + `@/` import.
+4. **"디자인 변경 금지"** 요청 시: **색상 클래스만** (spacing·타이포·DOM 변경 금지).
+5. **상태**: UI → Zustand (`src/store/`) · 서버 → react-query (`src/hooks/`) · 폼 → RHF. 스토어에 서버 데이터·전역 폼값 금지.
+6. **범위**: 요청·연 파일 기준 최소 diff. 요청 없는 파일 수정·리팩터·README 등 문서 생성 금지.
+7. **커밋**: 사용자 요청 시만. 제목 **1줄** `type: subject` (commitlint). `push`·PR·`commit --amend`·`push --force`는 요청 없으면 금지.
+8. **머지·리베이스 충돌**: UI·레이아웃·간격·타이포·`rounded` 등 **디자인은 현재 브랜치 우선**. API·타입·버그픽스는 합리적으로 합침. 색·토큰은 1–2 유지.
+
+```tsx
+// ❌ bg-[#4b74f5]  style={{ color: "var(--color-primary-400)" }}
+// ✅ twMerge("bg-primary-400", disabled && "opacity-50")
+
+// ❌ <Icon fill="#1877f2" />          // ❌ useQuery를 컴포넌트에서 직접 정의
+// ✅ <Icon className="text-platform-meta" />   // ✅ useCoreQuery (customQuery.ts)
+```
+
+---
+
+## 코딩 패턴
+
+### 데이터·API
+
+- **API 호출**: `src/api/`만. `axiosInstance`(일반) / `authInstance`(쿠키·인증) 사용.
+- **서버 상태 훅**: `useCoreQuery` · `useCoreMutation` (`src/hooks/customQuery.ts`). `useQuery`/`useMutation` 직접 사용 지양.
+- **환경 변수**: `VITE_API_BASE_URL` 등 `import.meta.env.VITE_*`만. `.env` 커밋 금지.
+- **목 데이터**: `*.mock.ts`로 분리. 프로덕션 API·훅에 mock 혼입 금지.
+
+### 타입·import
+
+- API·요청/응답: `I*` (예: `ILoginRequest`) · 유니온·옵션: `T*` · props: `I*Props`.
+- 공통 타입 `src/types/` · 도메인별 `src/types/{도메인}/` · props 등 로컬 타입은 파일 상단.
+- import는 `@/` 별칭. 저장 시 `eslint-plugin-simple-import-sort` 자동 정렬 (수동 정렬 불필요).
+
+### UI·컴포넌트
+
+- 버튼·입력·모달·카드 등은 `components/common/` **재사용 우선**. 없을 때만 도메인 폴더에 추가.
+- 페이지 `pages/` · 조각 UI `components/{도메인}/` · 라우트·가드 `routes/`.
+- 로딩: `components/common/skeleton/Skeleton` + 도메인 `*Skeleton.tsx`.
+- 사용자 알림: `sonner` `toast`. 차트·외부 라이브러리 색도 `@theme` 토큰에 맞출 것.
+
+---
+
+## 프로젝트·환경
+
+광고 성과·워크스페이스 관리 FE (2026 Capstone) · 팀: 서제경, 박재선, 임예림
+
+| Core | React 19, TS, Vite, react-router-dom v7 |
+| State | zustand · react-query · RHF + zod |
+| Style | Tailwind v4 — `tokens.css` · `utilities.css` · `base.css` → `index.css` |
+| Quality | ESLint, Prettier, husky, lint-staged, commitlint, Playwright |
+
+**Node** v20 LTS · **pnpm** · `dev` / `build` / `lint` / `test:e2e` / `storybook`
+
+**브랜치**: `main` · `develop` · `feature/#N` · `fix/#N` · `refactor/#N`
+
+```
+src/api  assets  components  constants  hooks  layout  lib  pages  routes  store  types  utils
+```
+
+---
+
+## Git·PR·Cursor 활용
+
+**commit type**: `feat` `fix` `docs` `style` `refactor` `test` `chore` `ci` `setting`
+
+**PR**: `[Type/#이슈번호] 작업 요약` · P1 필수 · P2 권장 · P3 제안 · P4 Nit
+
+**팀원 프롬프트 팁** (규칙 대체 아님, 요청 품질용):
+
+- 이슈 번호·브랜치·**관련 파일 @참조**를 함께 적기 (`@LandingGuide.tsx` 등).
+- UI 작업 시 **"디자인 변경 금지"** / **"색만 변경"** 등 제약을 명시.
+- API·타입 변경 시 백엔드 스펙·에러 케이스를 함께 전달.
+- 작업 후 `pnpm run lint` 통과 확인. E2E는 `E2E_USER_EMAIL` / `E2E_USER_PASSWORD` 필요.
