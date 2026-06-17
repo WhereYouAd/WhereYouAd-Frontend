@@ -1,26 +1,14 @@
-import React, { memo } from "react";
+import { memo } from "react";
 
 import type { IRoasRanking } from "@/types/dashboard/platform";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
+import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
-
-import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 interface ITopPerformanceListProps {
   rankings: IRoasRanking[];
 }
-
-const PlatformInfo: Record<string, { name: string; logo: React.ReactNode }> = {
-  GOOGLE: {
-    name: PLATFORM_MAP.GOOGLE,
-    logo: <GoogleLogo className="w-8 h-8" />,
-  },
-  NAVER: { name: PLATFORM_MAP.NAVER, logo: <NaverLogo className="w-8 h-8" /> },
-  META: { name: PLATFORM_MAP.META, logo: <MetaLogo className="w-8 h-8" /> },
-};
 
 export const TopPerformanceList = memo(function TopPerformanceList({
   rankings,
@@ -28,10 +16,13 @@ export const TopPerformanceList = memo(function TopPerformanceList({
   return (
     <div className="flex-1 flex flex-col justify-center gap-6 w-full pt-3">
       {rankings.map((item) => {
-        const info = PlatformInfo[item.provider] || {
-          name: item.provider,
-          logo: null,
-        };
+        const Logo =
+          PLATFORM_CIRCLE_LOGO_MAP[
+            item.provider as keyof typeof PLATFORM_CIRCLE_LOGO_MAP
+          ];
+        const name =
+          PLATFORM_MAP[item.provider as keyof typeof PLATFORM_MAP] ??
+          item.provider;
 
         return (
           <div key={item.provider} className="flex items-center gap-4 w-full">
@@ -39,9 +30,11 @@ export const TopPerformanceList = memo(function TopPerformanceList({
               <span className="font-body1 text-text-muted w-4 shrink-0">
                 {item.rank}
               </span>
-              <div className="shrink-0">{info.logo}</div>
+              <div className="shrink-0">
+                {Logo && <Logo className="w-8 h-8" />}
+              </div>
               <span className="font-body1 text-text-title truncate">
-                {info.name}
+                {name}
               </span>
             </div>
             <div className="flex items-center gap-4 shrink-0">
