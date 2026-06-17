@@ -261,7 +261,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={!isAdmin || saving || deleting}
@@ -271,7 +271,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={!isAdmin || saving || deleting}
