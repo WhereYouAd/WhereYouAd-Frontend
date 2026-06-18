@@ -1,5 +1,5 @@
 import type {
-  IBudgetStatus,
+  IBudgetResponse,
   IPlatformPerformance,
   IRoasRanking,
 } from "@/types/dashboard/platform";
@@ -70,7 +70,7 @@ export const performanceEfficiencyMock: IPlatformPerformance[] = [
 ];
 
 // 예산 소진 현황
-export const budgetStatusMock: IBudgetStatus[] = [
+export const budgetStatusMock: IBudgetResponse[] = [
   {
     providerType: "GOOGLE",
     usagePercentage: 0.75,

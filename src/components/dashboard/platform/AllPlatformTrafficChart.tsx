@@ -8,6 +8,8 @@ import {
   PROVIDER_TYPES,
 } from "@/types/dashboard/provider";
 
+import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
+
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -26,17 +28,10 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
       return {
         name: PLATFORM_MAP[platform],
         color: PLATFORM_CHART_COLORS[platform],
-        data: data.timeSeriesData.map((d) => {
-          const year = parseInt(d.minute.slice(0, 4), 10);
-          const month = parseInt(d.minute.slice(4, 6), 10) - 1;
-          const day = parseInt(d.minute.slice(6, 8), 10);
-          const hour = parseInt(d.minute.slice(8, 10), 10);
-          const min = parseInt(d.minute.slice(10, 12), 10);
-          return {
-            x: new Date(year, month, day, hour, min).getTime(),
-            y: d.count,
-          };
-        }),
+        data: data.timeSeriesData.map((d) => ({
+          x: parseMinuteToTimestamp(d.minute),
+          y: d.count,
+        })),
       };
     });
   }, []);

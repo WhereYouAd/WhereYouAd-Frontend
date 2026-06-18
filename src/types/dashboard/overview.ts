@@ -1,25 +1,7 @@
+import type { IBudgetResponse, IMetricsResponse, IRoasRanking } from "./common";
+
+export type { IBudgetResponse, IMetricsResponse, IRoasRanking };
 export type { TProviderType } from "./provider";
-
-// 전체 지표 집계 응답
-export interface IMetricsResponse {
-  clicks: number;
-  clickChangeRate: number;
-  impressions: number;
-  impressionChangeRate: number;
-  conversion: number;
-  cvrChangeRate: number;
-  ROAS: number;
-  ROASChangeRate: number;
-}
-
-// 예산 집계 응답
-export interface IBudgetsResponse {
-  providerType: string;
-  usagePercentage: number;
-  totalBudget: number;
-  totalSpend: number;
-  remainingBudget: number;
-}
 
 // ROAS 순위 조회 요청 파라미터
 export interface IRoasRankingsParams {
@@ -32,16 +14,6 @@ export interface IRoasRankingsResponse {
   startDate: string;
   endDate: string;
   rankings: IRoasRanking[];
-}
-
-// ROAS 순위 항목
-export interface IRoasRanking {
-  rank: number;
-  provider: string;
-  roas: number;
-  diffRate: number | null;
-  revenue: number;
-  adSpend: number;
 }
 
 // 플랫폼별 ROAS 순위 + 지표(CTR/CVR) 통합 항목

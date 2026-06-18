@@ -1,6 +1,6 @@
 import type { ICommonResponse } from "@/types/common/common";
 import type {
-  IBudgetsResponse,
+  IBudgetResponse,
   IMetricsResponse,
   IRoasRankingsParams,
   IRoasRankingsResponse,
@@ -25,8 +25,8 @@ export const getOverview = async (
 export const getBudget = async (
   orgId: number,
   providerType?: TProviderType,
-): Promise<IBudgetsResponse> => {
-  const { data } = await axiosInstance.get<ICommonResponse<IBudgetsResponse>>(
+): Promise<IBudgetResponse> => {
+  const { data } = await axiosInstance.get<ICommonResponse<IBudgetResponse>>(
     `/api/dashboard/budgets`,
     { params: { orgId, ...(providerType ? { providerType } : {}) } },
   );
