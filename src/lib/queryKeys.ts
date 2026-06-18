@@ -69,7 +69,7 @@ export const QUERY_KEYS = {
 
   ai: {
     /** AI 분석 리포트 폴링 쿼리 */
-    report: (provider: string, accessToken: string) =>
-      ["ai", "report", provider, accessToken] as const,
+    report: (provider: string, orgId: number | null) =>
+      ["ai", "report", provider, orgId] as const,
   },
 } as const;
