@@ -31,21 +31,21 @@ export default function PlatformIntegrationsPage() {
       return;
     }
 
-    if (provider === "GOOGLE") {
-      try {
-        await startPlatformConnect("GOOGLE", orgId);
-      } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : ((err as IApiErrorResponse)?.message ??
-              "Google 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
-        toast.error(message);
-      }
+    if (provider === "NAVER") {
+      toast.message("준비 중인 플랫폼입니다.");
       return;
     }
 
-    toast.message("준비 중인 플랫폼입니다.");
+    try {
+      await startPlatformConnect(provider, orgId);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : ((err as IApiErrorResponse)?.message ??
+            "플랫폼 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
+      toast.error(message);
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import type { TIntegrationProvider } from "@/types/integration/platformConnection";
 
 import { startGoogleOAuthLogin } from "@/api/integration/google";
+import { startMetaOAuthLogin } from "@/api/integration/meta";
 
 export async function startPlatformConnect(
   provider: TIntegrationProvider,
@@ -11,8 +12,10 @@ export async function startPlatformConnect(
       await startGoogleOAuthLogin(orgId);
       return;
     case "META":
+      await startMetaOAuthLogin(orgId);
+      return;
     case "NAVER":
-      // TODO: Meta/Naver login URL
+      // TODO: Naver login URL
       return;
     default:
       return;

@@ -1,12 +1,16 @@
 import type { Plugin } from "vite";
 
+const OAUTH_START_PATHS = new Set(["/api/google/login", "/api/meta/auth-url"]);
+
 /**
- * 로컬 dev 전용: /api/google/login 302 Location을 서버에서 읽어 JSON으로 반환.
- * 브라우저 XHR이 Google로 따라가 403 나는 문제를 막습니다.
+ * 로컬 dev 전용: OAuth 시작 API의 302 Location을 서버에서 읽어 JSON으로 반환.
+ * 브라우저 XHR이 OAuth 제공자로 따라가 CORS/403 나는 문제를 막습니다.
  */
-export function googleOAuthDevPlugin(apiTargetUrl: string | undefined): Plugin {
+export function oauthRedirectDevPlugin(
+  apiTargetUrl: string | undefined,
+): Plugin {
   return {
-    name: "google-oauth-dev-bff",
+    name: "oauth-redirect-dev-bff",
     apply: "serve",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
@@ -17,7 +21,7 @@ export function googleOAuthDevPlugin(apiTargetUrl: string | undefined): Plugin {
           }
 
           const url = new URL(req.url ?? "/", "http://localhost");
-          if (url.pathname !== "/api/google/login" || req.method !== "GET") {
+          if (!OAUTH_START_PATHS.has(url.pathname) || req.method !== "GET") {
             next();
             return;
           }
@@ -43,7 +47,7 @@ export function googleOAuthDevPlugin(apiTargetUrl: string | undefined): Plugin {
 
           try {
             const target = apiTargetUrl.replace(/\/$/, "");
-            const backendUrl = `${target}/api/google/login?orgId=${encodeURIComponent(orgId)}`;
+            const backendUrl = `${target}${url.pathname}?orgId=${encodeURIComponent(orgId)}`;
 
             const backendRes = await fetch(backendUrl, {
               method: "GET",
@@ -63,7 +67,10 @@ export function googleOAuthDevPlugin(apiTargetUrl: string | undefined): Plugin {
                 res.end(
                   JSON.stringify({
                     status: "OK",
-                    data: { redirectUrl },
+                    data:
+                      url.pathname === "/api/meta/auth-url"
+                        ? { authUrl: redirectUrl }
+                        : { redirectUrl },
                   }),
                 );
                 return;
