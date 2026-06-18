@@ -4,7 +4,7 @@ import { mapPlatformAccountsToConnections } from "@/utils/integration/mapPlatfor
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import { platformAccountsApiMock } from "@/pages/integration/platformIntegrations.mock";
+import { getPlatformAccounts } from "@/api/integration/platformAccounts";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function needsIntegrationAttention(
@@ -19,10 +19,8 @@ export function usePlatformConnections() {
   return useCoreQuery(
     ["platform-connections", orgId],
     async () => {
-      await new Promise((resolve) => {
-        setTimeout(resolve, 800);
-      });
-      return mapPlatformAccountsToConnections(platformAccountsApiMock);
+      const { platformAccounts } = await getPlatformAccounts(orgId!);
+      return mapPlatformAccountsToConnections(platformAccounts);
     },
     { enabled: orgId != null },
   );
