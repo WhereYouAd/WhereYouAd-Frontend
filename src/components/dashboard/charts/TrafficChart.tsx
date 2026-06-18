@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
+
 import { useClickStream } from "@/hooks/dashboard/useClickStream";
 
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
@@ -122,15 +124,11 @@ const TrafficChart = memo(function TrafficChart() {
 
     const chartData = items
       .filter((d) => (d.minute?.length ?? 0) >= 12)
-      .map((d) => {
-        const year = parseInt(d.minute.slice(0, 4), 10);
-        const month = parseInt(d.minute.slice(4, 6), 10) - 1;
-        const day = parseInt(d.minute.slice(6, 8), 10);
-        const hour = parseInt(d.minute.slice(8, 10), 10);
-        const min = parseInt(d.minute.slice(10, 12), 10);
-        const x = new Date(year, month, day, hour, min).getTime();
-        return { x, y: d.count, minute: d.minute };
-      })
+      .map((d) => ({
+        x: parseMinuteToTimestamp(d.minute),
+        y: d.count,
+        minute: d.minute,
+      }))
       .filter((p) => !Number.isNaN(p.x));
 
     // 해당 일 00:00 (데이터 없으면 오늘)

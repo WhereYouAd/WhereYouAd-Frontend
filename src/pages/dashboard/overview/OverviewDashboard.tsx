@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
+import { useBudget } from "@/hooks/dashboard/useBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
@@ -25,7 +25,7 @@ export default function OverviewDashboard() {
     isLoading: isBudgetLoading,
     isError: isBudgetError,
     error: budgetError,
-  } = useOverviewBudget();
+  } = useBudget();
   const {
     data: roasRankingsData,
     isLoading: isRankingsLoading,

@@ -1,22 +1,13 @@
-import { memo, type ReactNode } from "react";
+import { memo } from "react";
 
 import type {
   IPlatformRankingItem,
   TProviderType,
 } from "@/types/dashboard/overview";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
+import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
-
-import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-
-const platformLogoMap: Record<TProviderType, ReactNode> = {
-  GOOGLE: <GoogleLogo className="h-7 w-auto" />,
-  NAVER: <NaverLogo className="h-7 w-auto" />,
-  META: <MetaLogo className="h-7 w-auto" />,
-};
 
 function toProviderType(provider: string): TProviderType | null {
   const key = provider.toUpperCase();
@@ -31,10 +22,16 @@ function getDisplayName(provider: string): string {
 
 function getPlatformLogo(provider: string) {
   const key = toProviderType(provider);
-  if (key) return platformLogoMap[key];
+  if (key) {
+    const Logo = PLATFORM_CIRCLE_LOGO_MAP[key];
+    return <Logo className="h-8 w-8" aria-hidden="true" />;
+  }
   const name = getDisplayName(provider);
   return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
+    <span
+      aria-hidden="true"
+      className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted"
+    >
       {name[0]}
     </span>
   );

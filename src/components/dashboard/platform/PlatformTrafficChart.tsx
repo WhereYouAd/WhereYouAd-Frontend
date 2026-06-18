@@ -5,6 +5,8 @@ import type { ApexOptions } from "apexcharts";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
+
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -20,20 +22,12 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   platform,
   isLoading,
 }: IPlatformTrafficChartProps) {
-  // 데이터 변환: minute 문자열 -> 타임스탬프
   const seriesData = useMemo(() => {
     if (!data) return [];
-    return data.timeSeriesData.map((d) => {
-      const year = parseInt(d.minute.slice(0, 4), 10);
-      const month = parseInt(d.minute.slice(4, 6), 10) - 1;
-      const day = parseInt(d.minute.slice(6, 8), 10);
-      const hour = parseInt(d.minute.slice(8, 10), 10);
-      const min = parseInt(d.minute.slice(10, 12), 10);
-      return {
-        x: new Date(year, month, day, hour, min).getTime(),
-        y: d.count,
-      };
-    });
+    return data.timeSeriesData.map((d) => ({
+      x: parseMinuteToTimestamp(d.minute),
+      y: d.count,
+    }));
   }, [data]);
 
   // X축 범위 계산 (최근 60분)
