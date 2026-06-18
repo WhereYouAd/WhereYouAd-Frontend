@@ -96,8 +96,6 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
-
-  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const myRoleFromStore = useWorkspaceStore((s) => s.myRole);
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
@@ -123,7 +121,6 @@ export default function Sidebar() {
     () => needsIntegrationAttention(platformConnections),
     [platformConnections],
   );
-  
   const mainNavWithWorkspace = useMemo(
     () =>
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
