@@ -16,6 +16,7 @@ import {
   requestAiAnalysis,
 } from "@/api/dashboard/aiAnalysis";
 import { queryClient } from "@/lib/queryClient";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 /** 폴링 간격 및 최대 대기(ms) */
@@ -31,7 +32,7 @@ const WORKSPACE_REQUIRED_MESSAGE =
 export type TRequestAiAnalysisParams = Partial<IAnalysisRequest>;
 
 function aiReportQueryKey(provider: TAiAnalysisProvider, accessToken: string) {
-  return ["ai", "report", provider, accessToken] as const;
+  return QUERY_KEYS.ai.report(provider, accessToken);
 }
 
 /** AI 요약: POST 요청 → accessToken → GET 폴링 → reportData */
