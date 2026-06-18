@@ -24,6 +24,7 @@ import {
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
@@ -108,7 +109,9 @@ export default function WorkspaceSetting() {
         imageFile: logoFile,
         isImageDeleted,
       });
-      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.workspace.list(),
+      });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
@@ -131,7 +134,9 @@ export default function WorkspaceSetting() {
     setDeleting(true);
     try {
       await deleteWorkspace(orgId);
-      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.workspace.list(),
+      });
       toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });

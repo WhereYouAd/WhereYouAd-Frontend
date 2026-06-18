@@ -4,6 +4,7 @@ import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getOverview } from "@/api/dashboard/overview";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
@@ -13,7 +14,7 @@ export function usePlatformPerformance() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   return useCoreQuery(
-    ["platform", "performance", orgId],
+    QUERY_KEYS.platform.performance(orgId),
     async (): Promise<IPlatformPerformance[]> => {
       const settled = await Promise.allSettled(
         PROVIDERS.map((provider) =>
