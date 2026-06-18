@@ -47,7 +47,7 @@ export default function TextareaField({
         rows={minRows}
         value={value}
         className={twMerge(
-          "w-full rounded-2xl px-5 py-4 ring-1 ring-primary-400/30 outline-none transition-colors duration-200 ease-out overflow-hidden placeholder:text-text-placeholder text-text-title font-body1",
+          "w-full rounded-2xl px-5 py-4 ring-1 ring-primary-400/30 outline-none transition-colors duration-200 ease-out overflow-hidden placeholder:text-text-placeholder text-text-title disabled:text-text-muted font-body1",
           disabled
             ? "bg-surface-200 cursor-not-allowed"
             : "hover:bg-surface-200 hover:ring-primary-400/40 focus-within:bg-surface-100 focus-within:ring-2 focus-within:ring-primary-400/50",

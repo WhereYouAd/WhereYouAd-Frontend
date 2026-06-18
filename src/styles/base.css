@@ -18,6 +18,10 @@ body,
   padding: 0;
 }
 
-button {
+button:not(:disabled) {
   cursor: pointer;
+}
+
+button:disabled:not(.cursor-wait) {
+  cursor: not-allowed;
 }
