@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -29,18 +29,22 @@ export default function WorkspaceManageLayout() {
     },
   });
 
-  useEffect(() => {
+  const parsedWorkspaceId = useMemo(() => {
     const id = workspaceId ? Number(workspaceId) : NaN;
-    if (!Number.isFinite(id) || id <= 0) return;
+    return Number.isFinite(id) && id > 0 ? id : null;
+  }, [workspaceId]);
 
-    //화면용 store 즉시 반영
-    setSelectedOrgId(id);
+  useEffect(() => {
+    if (parsedWorkspaceId === null) return;
+    setSelectedOrgId(parsedWorkspaceId);
+    saveWorkspace(parsedWorkspaceId);
+  }, [parsedWorkspaceId, setSelectedOrgId, saveWorkspace]);
 
-    const workspace = workspaces?.find((w) => w.orgId === id);
+  useEffect(() => {
+    if (parsedWorkspaceId == null || !workspaces) return;
+    const workspace = workspaces.find((w) => w.orgId === parsedWorkspaceId);
     if (workspace) setMyRole(workspace.myRole);
-
-    saveWorkspace(id);
-  }, [workspaceId, workspaces, setSelectedOrgId, setMyRole, saveWorkspace]);
+  }, [parsedWorkspaceId, workspaces, setMyRole]);
 
   return (
     <section className="flex w-full min-w-0 flex-col">

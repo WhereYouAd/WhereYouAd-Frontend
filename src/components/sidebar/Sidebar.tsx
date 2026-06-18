@@ -97,9 +97,17 @@ export default function Sidebar() {
   const myRole = useMemo(() => {
     if (!workspaces) return null;
 
-    const roleSourceId = workspaceId ? Number(workspaceId) : selectedOrgId;
-    const workspace = workspaces.find((w) => w.orgId === roleSourceId);
-    return workspace?.myRole ?? myRoleFromStore;
+    const parsedWorkspaceId = workspaceId ? Number(workspaceId) : null;
+    const getRoleByOrgId = (orgId: number | null) => {
+      if (orgId == null || !Number.isFinite(orgId) || orgId <= 0) return null;
+      return workspaces.find((w) => w.orgId === orgId)?.myRole ?? null;
+    };
+
+    return (
+      getRoleByOrgId(parsedWorkspaceId) ??
+      getRoleByOrgId(selectedOrgId) ??
+      myRoleFromStore
+    );
   }, [workspaceId, selectedOrgId, workspaces, myRoleFromStore]);
   const mainNavWithWorkspace = useMemo(
     () =>
