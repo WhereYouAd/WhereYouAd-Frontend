@@ -1,5 +1,10 @@
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+import type { TIntegrationProvider } from "@/types/integration/platformConnection";
+
+import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
+
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
@@ -9,13 +14,39 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
+import useWorkspaceStore from "@/store/useWorkspaceStore";
+
 export default function PlatformIntegrationsPage() {
+  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const {
     data: platformConnections = [],
     isLoading,
     isError,
     error,
   } = usePlatformConnections();
+
+  const handleConnect = async (provider: TIntegrationProvider) => {
+    if (orgId == null) {
+      toast.error("워크스페이스를 선택해 주세요.");
+      return;
+    }
+
+    if (provider === "GOOGLE") {
+      try {
+        await startPlatformConnect("GOOGLE", orgId);
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : ((err as IApiErrorResponse)?.message ??
+              "Google 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
+        toast.error(message);
+      }
+      return;
+    }
+
+    toast.message("준비 중인 플랫폼입니다.");
+  };
 
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
@@ -38,8 +69,8 @@ export default function PlatformIntegrationsPage() {
               >
                 <PlatformIntegrationCard
                   {...item}
-                  onConnect={() => toast.message("연동하기")}
-                  onReconnect={() => toast.message("재연동")}
+                  onConnect={() => handleConnect(item.provider)}
+                  onReconnect={() => handleConnect(item.provider)}
                   onDisconnect={() => toast.message("연결 해제")}
                 />
               </li>
