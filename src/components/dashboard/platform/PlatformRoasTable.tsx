@@ -7,6 +7,11 @@ import type {
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 
+import {
+  formatPercentDeltaCompact,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
+
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 function toProviderType(provider: string): TProviderType | null {
@@ -42,7 +47,7 @@ const Delta = memo(function Delta({ value }: { value: number }) {
   return (
     <TrendBadge
       direction={isPos ? "up" : "down"}
-      value={`${Math.abs(value).toFixed(1)}%`}
+      value={formatPercentDeltaCompact(value)}
     />
   );
 });
@@ -68,16 +73,16 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
           </span>
           <span className="min-w-0 font-caption">플랫폼</span>
           <span className="flex min-h-5 items-center justify-center px-2 font-caption tabular-nums @2xl:px-3">
-            ROAS(%)
+            {M.roas.label}(%)
           </span>
           <span className="hidden min-w-0 pl-1 text-center font-caption @2xl:block @2xl:pl-0">
-            CTR(클릭률)
+            {M.ctr.label}
           </span>
           <span className="hidden min-w-0 text-center font-caption @2xl:block">
-            CVR(전환율)
+            {M.conversion.label}
           </span>
           <span className="min-w-0 whitespace-nowrap text-right font-caption">
-            매출 / 광고비
+            {M.revenue.label} / {M.adSpend.label}
           </span>
         </div>
 
@@ -112,7 +117,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               {/* ROAS */}
               <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
                 <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
-                  {item.roas.toLocaleString()}%
+                  {M.roas.formatGrouped(item.roas)}
                 </span>
               </div>
 
@@ -121,7 +126,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 {item.clickRate !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {item.clickRate.toFixed(1)}%
+                      {M.ctr.formatCompact(item.clickRate)}
                     </span>
                     {item.ctrDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
@@ -139,7 +144,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 {item.conversionRate !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {item.conversionRate.toFixed(1)}%
+                      {M.conversion.formatCompact(item.conversionRate)}
                     </span>
                     {item.conversionDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
@@ -155,12 +160,12 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               {/* 매출/광고비 */}
               <div className="flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
                 <span className="font-heading4 w-full truncate text-right tabular-nums text-text-title">
-                  ₩{item.revenue.toLocaleString()}
+                  {M.revenue.format(item.revenue)}
                 </span>
                 <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
-                  <span className="whitespace-nowrap">광고비</span>
+                  <span className="whitespace-nowrap">{M.adSpend.label}</span>
                   <span className="tabular-nums truncate">
-                    ₩{item.adSpend.toLocaleString()}
+                    {M.adSpend.format(item.adSpend)}
                   </span>
                 </div>
               </div>

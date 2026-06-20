@@ -3,6 +3,11 @@ import React, { memo } from "react";
 import type { IPlatformPerformance } from "@/types/dashboard/platform";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
 
+import {
+  formatPercentDeltaCompact,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
+
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 
@@ -46,52 +51,52 @@ export const PlatformDetailCard = memo(
         {/* 지표 */}
         <div className="grid grid-cols-2 gap-2">
           <StatCard
-            title="노출수"
-            value={impressions.toLocaleString()}
+            title={M.impressions.label}
+            value={M.impressions.format(impressions)}
             trend={
               impressionChangeRate !== 0
                 ? {
                     direction: impressionChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(impressionChangeRate).toFixed(1)}%`,
+                    value: formatPercentDeltaCompact(impressionChangeRate),
                   }
                 : undefined
             }
             className={innerCardClass}
           />
           <StatCard
-            title="클릭수"
-            value={clicks.toLocaleString()}
+            title={M.clicks.label}
+            value={M.clicks.format(clicks)}
             trend={
               clickChangeRate !== 0
                 ? {
                     direction: clickChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(clickChangeRate).toFixed(1)}%`,
+                    value: formatPercentDeltaCompact(clickChangeRate),
                   }
                 : undefined
             }
             className={innerCardClass}
           />
           <StatCard
-            title="전환율"
-            value={`${conversion}%`}
+            title={M.conversion.kpiLabel}
+            value={M.conversion.formatCard(conversion)}
             trend={
               cvrChangeRate !== 0
                 ? {
                     direction: cvrChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(cvrChangeRate).toFixed(1)}%`,
+                    value: M.conversion.formatDeltaCompact(cvrChangeRate),
                   }
                 : undefined
             }
             className={innerCardClass}
           />
           <StatCard
-            title="ROAS"
-            value={`${ROAS.toLocaleString()}%`}
+            title={M.roas.label}
+            value={M.roas.formatGrouped(ROAS)}
             trend={
               ROASChangeRate !== 0
                 ? {
                     direction: ROASChangeRate > 0 ? "up" : "down",
-                    value: `${Math.abs(ROASChangeRate).toFixed(1)}%`,
+                    value: formatPercentDeltaCompact(ROASChangeRate),
                   }
                 : undefined
             }

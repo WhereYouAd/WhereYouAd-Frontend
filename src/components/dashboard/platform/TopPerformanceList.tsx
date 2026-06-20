@@ -4,6 +4,8 @@ import type { IRoasRanking } from "@/types/dashboard/platform";
 import { PLATFORM_MAP, type TProviderType } from "@/types/dashboard/provider";
 import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import { TrendBadge } from "@/components/common/card/StatCard";
 
 function toProviderType(provider: string): TProviderType | null {
@@ -41,7 +43,7 @@ export const TopPerformanceList = memo(function TopPerformanceList({
             </div>
             <div className="flex items-center gap-4 shrink-0">
               <span className="font-heading4 text-text-title tabular-nums whitespace-nowrap">
-                {item.roas.toFixed(2)}%
+                {M.roas.format(item.roas)}
               </span>
               {item.diffRate !== null && item.diffRate !== 0 && (
                 <TrendBadge

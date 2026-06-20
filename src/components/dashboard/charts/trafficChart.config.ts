@@ -1,6 +1,11 @@
 import type { ApexOptions } from "apexcharts";
 
 import {
+  formatCountChartAxis,
+  formatCountChartTooltip,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
+import {
   downloadChartCsv,
   downloadChartPng,
   downloadChartSvg,
@@ -81,7 +86,7 @@ export function buildChartOptions(params: {
             filename: `overview-traffic-data-${TODAY}`,
             columnDelimiter: ",",
             headerCategory: "시간",
-            headerValue: "클릭수",
+            headerValue: M.clicks.label,
           },
         },
       },
@@ -158,12 +163,7 @@ export function buildChartOptions(params: {
       max: yMax,
       tickAmount: 5,
       labels: {
-        formatter: (val: number) => {
-          if (val === 0) return "";
-          const rounded = Math.round(val);
-          if (rounded < 1000) return rounded.toLocaleString();
-          return `${Math.round(rounded / 1000)}K`;
-        },
+        formatter: formatCountChartAxis,
         style: { colors: "var(--color-text-muted)", fontSize: "12px" },
       },
     },
@@ -178,7 +178,7 @@ export function buildChartOptions(params: {
     tooltip: {
       x: { show: false },
       y: {
-        formatter: (val: number) => val.toLocaleString(),
+        formatter: (val: number) => formatCountChartTooltip(val),
       },
       style: { fontFamily: "Pretendard" },
     },

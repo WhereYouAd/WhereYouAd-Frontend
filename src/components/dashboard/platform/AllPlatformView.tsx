@@ -4,6 +4,8 @@ import {
   PROVIDER_TYPES,
 } from "@/types/dashboard/provider";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
 import { usePlatformPerformance } from "@/hooks/dashboard/usePlatformPerformance";
 import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
@@ -126,9 +128,9 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           description={
             <ChartLegend
               items={[
-                { label: "클릭률", colorClass: "bg-info-blue" },
-                { label: "전환율", colorClass: "bg-primary-500" },
-                { label: "노출수", colorClass: "bg-primary-300" },
+                { label: M.ctr.label, colorClass: "bg-info-blue" },
+                { label: M.conversion.label, colorClass: "bg-primary-500" },
+                { label: M.impressions.label, colorClass: "bg-primary-300" },
               ]}
             />
           }

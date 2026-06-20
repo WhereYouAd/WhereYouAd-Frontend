@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 import type { IPlatformDailyPerformance } from "@/types/dashboard/platform";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 interface IPlatformDetailTableProps {
   data: IPlatformDailyPerformance[];
   total?: IPlatformDailyPerformance | null;
@@ -51,25 +53,25 @@ function PlatformDetailTable({
                 날짜
               </th>
               <th className="w-[14%] border-b border-surface-400 px-4 py-4 text-right">
-                비용(지출)
+                {M.spend.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                노출 수
+                {M.impressions.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                클릭 수
+                {M.clicks.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                CTR(클릭률)
+                {M.ctr.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                CPA
+                {M.cpa.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                전환 수
+                {M.conversions.label}
               </th>
               <th className="w-[12%] border-b border-surface-400 px-4 py-4 text-right">
-                ROAS
+                {M.roas.label}
               </th>
             </tr>
           </thead>
@@ -79,25 +81,25 @@ function PlatformDetailTable({
               <tr className="sticky top-13 z-10 border-b-2 border-surface-400 bg-surface-100/95 font-body1 backdrop-blur-sm">
                 <td className="px-4 py-5 border-b border-surface-400">합계</td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
-                  ₩{total.spend.toLocaleString()}
+                  {M.spend.format(total.spend)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  {total.impressions.toLocaleString()}
+                  {M.impressions.format(total.impressions)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  {total.clicks.toLocaleString()}
+                  {M.clicks.format(total.clicks)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  {total.ctr.toFixed(2)}%
+                  {M.ctr.format(total.ctr)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  ₩{Math.round(total.cpa).toLocaleString()}
+                  {M.cpa.format(total.cpa)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400">
-                  {total.conversions.toLocaleString()}
+                  {M.conversions.format(total.conversions)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
-                  {Math.round(total.roas)}%
+                  {M.roas.formatTableTotal(total.roas)}
                 </td>
               </tr>
             )}
@@ -111,25 +113,25 @@ function PlatformDetailTable({
                   {row.date}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  ₩{row.spend.toLocaleString()}
+                  {M.spend.format(row.spend)}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  {row.impressions.toLocaleString()}
+                  {M.impressions.format(row.impressions)}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  {row.clicks.toLocaleString()}
+                  {M.clicks.format(row.clicks)}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  {row.ctr.toFixed(2)}%
+                  {M.ctr.format(row.ctr)}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  ₩{row.cpa.toLocaleString()}
+                  {M.cpa.format(row.cpa)}
                 </td>
                 <td className="px-4 py-4 text-right tabular-nums text-text-title border-b border-surface-400/20">
-                  {row.conversions.toLocaleString()}
+                  {M.conversions.format(row.conversions)}
                 </td>
                 <td className="border-b border-surface-400/20 px-4 py-4 text-right tabular-nums text-text-title">
-                  {row.roas}%
+                  {M.roas.formatTableRow(row.roas)}
                 </td>
               </tr>
             ))}

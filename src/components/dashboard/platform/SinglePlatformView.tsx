@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
 
 import { useBudget } from "@/hooks/dashboard/useBudget";
@@ -143,7 +144,7 @@ export default function SinglePlatformView({
           description={
             <ChartLegend
               items={[
-                { label: "클릭수", color: platformColor },
+                { label: M.clicks.label, color: platformColor },
                 { label: "이상 클릭 탐지", colorClass: "bg-info-red" },
               ]}
             />
