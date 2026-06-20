@@ -30,13 +30,3 @@ export function downloadChartSvg(containerId: string, filename: string) {
 export function downloadChartCsv(chartId: string) {
   ApexCharts.exec(chartId, "exportToCSV");
 }
-
-export function printAsPdf(printClass: string) {
-  document.body.classList.add(printClass);
-  const cleanup = () => {
-    document.body.classList.remove(printClass);
-    window.removeEventListener("afterprint", cleanup);
-  };
-  window.addEventListener("afterprint", cleanup);
-  setTimeout(() => window.print(), 150);
-}
