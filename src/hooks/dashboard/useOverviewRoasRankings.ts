@@ -2,11 +2,7 @@ import type { IPlatformRankingItem } from "@/types/dashboard/overview";
 import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
 import { OVERVIEW_DAILY_METRICS_RANGE } from "@/constants/dashboard/overviewMetricsRange";
 
-import {
-  calcClickRate,
-  calcCtrChangeRate,
-  fetchPlatformMetrics,
-} from "@/utils/dashboard/platformMetricsQuery";
+import { fetchPlatformMetrics } from "@/utils/dashboard/platformMetricsQuery";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -35,11 +31,15 @@ export function useOverviewRoasRankings() {
 
       return rankingsRes.rankings.map((item) => {
         const metrics = metricsMap[item.provider.toUpperCase()];
+        const clickRate =
+          metrics && metrics.impressions > 0
+            ? (metrics.clicks / metrics.impressions) * 100
+            : undefined;
 
         return {
           ...item,
-          clickRate: metrics ? calcClickRate(metrics) : undefined,
-          ctrDelta: metrics ? calcCtrChangeRate(metrics) : undefined,
+          clickRate,
+          ctrDelta: metrics ? metrics.clickChangeRate : undefined,
           conversionRate: metrics ? metrics.conversion : undefined,
           conversionDelta: metrics ? metrics.cvrChangeRate : undefined,
         };
