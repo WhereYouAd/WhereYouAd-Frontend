@@ -7,10 +7,7 @@ import type {
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 
-import {
-  formatPercentDeltaCompact,
-  METRIC_REGISTRY as M,
-} from "@/utils/dashboard/metricRegistry";
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
 
@@ -47,7 +44,7 @@ const Delta = memo(function Delta({ value }: { value: number }) {
   return (
     <TrendBadge
       direction={isPos ? "up" : "down"}
-      value={formatPercentDeltaCompact(value)}
+      value={M.ctr.formatDelta(value)}
     />
   );
 });

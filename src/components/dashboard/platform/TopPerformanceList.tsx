@@ -48,7 +48,7 @@ export const TopPerformanceList = memo(function TopPerformanceList({
               {item.diffRate !== null && item.diffRate !== 0 && (
                 <TrendBadge
                   direction={item.diffRate > 0 ? "up" : "down"}
-                  value={`${Math.abs(item.diffRate)}%`}
+                  value={M.roas.formatDelta(item.diffRate)}
                 />
               )}
             </div>

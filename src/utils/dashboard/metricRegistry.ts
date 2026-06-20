@@ -14,14 +14,13 @@ function formatCurrencyRounded(v: number): string {
   return `₩${formatNumber(Math.round(v))}`;
 }
 
-/** KPI·통합 대시보드 트렌드 — 소수 2자리 */
+/* KPI·통합 대시보드 트렌드 — 소수 2자리 */
 const formatPercentDelta = (v: number) => `${Math.abs(v).toFixed(2)}%`;
 
-/** 플랫폼 카드·랭킹 테이블 트렌드 — 소수 1자리 */
-export const formatPercentDeltaCompact = (v: number) =>
-  `${Math.abs(v).toFixed(1)}%`;
+/* 플랫폼 카드·랭킹 테이블 트렌드 — 소수 1자리 */
+const formatPercentDeltaCompact = (v: number) => `${Math.abs(v).toFixed(1)}%`;
 
-/** 트래픽 차트 Y축 — 1,000 미만 locale, 이상 K 축약 */
+/* 트래픽 차트 Y축 — 1,000 미만 locale, 이상 K 축약 */
 export function formatCountChartAxis(val: number): string {
   const rounded = Math.round(val);
   if (rounded <= 0) return "";
@@ -29,7 +28,7 @@ export function formatCountChartAxis(val: number): string {
   return `${Math.round(rounded / 1000)}K`;
 }
 
-/** 트래픽 차트 툴팁 — unit 생략 시 숫자만 */
+/* 트래픽 차트 툴팁 — unit 생략 시 숫자만 */
 export function formatCountChartTooltip(val: number, unit?: string): string {
   const formatted = formatNumber(val);
   return unit ? `${formatted} ${unit}` : formatted;
@@ -49,12 +48,12 @@ interface IKpiMetricMeta extends IMetricMetaWithDelta {
 }
 
 interface IConversionMetricMeta extends IKpiMetricMeta {
-  formatCard: (v: number) => string;
+  /* 랭킹 테이블 등 좁은 영역 — 소수 1자리 */
   formatCompact: (v: number) => string;
-  formatDeltaCompact: (v: number) => string;
 }
 
 interface IRoasMetricMeta extends IMetricMetaWithDelta {
+  /* 랭킹 테이블 ROAS — locale 그룹핑 */
   formatGrouped: (v: number) => string;
   formatTableTotal: (v: number) => string;
   formatTableRow: (v: number) => string;
@@ -91,10 +90,8 @@ export const METRIC_REGISTRY = {
     label: "CVR(전환율)",
     kpiLabel: "전환율",
     format: (v) => `${v.toFixed(2)}%`,
-    formatCard: (v) => `${v}%`,
     formatCompact: (v) => `${v.toFixed(1)}%`,
     formatDelta: formatPercentDelta,
-    formatDeltaCompact: formatPercentDeltaCompact,
   } satisfies IConversionMetricMeta,
 
   roas: {
