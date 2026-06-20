@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { loginSchema } from "@/utils/validation";
+import { loginSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";

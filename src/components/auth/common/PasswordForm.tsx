@@ -3,7 +3,7 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 
-import { signupPasswordSchema } from "@/utils/validation";
+import { signupPasswordSchema } from "@/utils/auth/validation";
 
 import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";

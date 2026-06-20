@@ -1,15 +1,15 @@
 import type { ApexOptions } from "apexcharts";
 
 import {
+  downloadChartCsv,
+  downloadChartPng,
+  downloadChartSvg,
+} from "@/utils/dashboard/downloadChart";
+import {
   formatCountChartAxis,
   formatCountChartTooltip,
   METRIC_REGISTRY as M,
 } from "@/utils/dashboard/metricRegistry";
-import {
-  downloadChartCsv,
-  downloadChartPng,
-  downloadChartSvg,
-} from "@/utils/download";
 
 // 차트 고유 ID
 export const CHART_ID = "traffic-chart";

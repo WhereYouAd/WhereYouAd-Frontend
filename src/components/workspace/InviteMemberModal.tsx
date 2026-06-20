@@ -8,7 +8,7 @@ import type {
   TInviteMemberRequest,
 } from "@/types/workspace/workspace";
 
-import { emailSchema } from "@/utils/validation";
+import { emailSchema } from "@/utils/auth/validation";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
