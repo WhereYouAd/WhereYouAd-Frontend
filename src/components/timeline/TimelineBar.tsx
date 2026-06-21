@@ -18,7 +18,7 @@ interface ITimelineBarProps {
   onMenuClick?: (bar: ITimelineCampaignBar) => void; //선택, 추후 이슈로 다룰 예정
 }
 
-export default function ({
+export default function TimelineBar({
   bar,
   colWidth = TIMELINE_COL_WIDTH,
   rowHeight = TIMELINE_ROW_HEIGHT,

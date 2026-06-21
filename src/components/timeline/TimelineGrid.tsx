@@ -29,7 +29,7 @@ export default function TimelineGrid({
   const bodyHeight = rowOffset + rowCount * rowHeight;
   return (
     <div className={twMerge("relative flex-1 bg-surface-100", className)}>
-      <div style={{ minHeight: bodyHeight }}>
+      <div className="relative" style={{ minHeight: bodyHeight }}>
         {Array.from({ length: columnCount }).map((_, i) => (
           <div
             key={i}
