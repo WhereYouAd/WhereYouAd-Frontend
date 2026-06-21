@@ -80,7 +80,7 @@ export const TIMELINE_CREATE_RESPONSE_MOCK: ITimelineMutationResponse = {
 /*UI 그리드 mock*/
 export const TIMELINE_GRID_MOCK: ITimelineGridData = {
   viewUnit: "WEEK",
-  periodLabel: "27 Dec - 4 Jan",
+  periodLabel: "30 Dec - 5 Jan",
   columns: [
     { day: "M", date: 30, isWeekend: false },
     { day: "T", date: 31, isWeekend: false },
