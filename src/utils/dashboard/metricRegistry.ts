@@ -53,8 +53,6 @@ interface IConversionMetricMeta extends IKpiMetricMeta {
 }
 
 interface IRoasMetricMeta extends IMetricMetaWithDelta {
-  /* 랭킹 테이블 ROAS — locale 그룹핑 */
-  formatGrouped: (v: number) => string;
   formatTableTotal: (v: number) => string;
   formatTableRow: (v: number) => string;
 }
@@ -97,7 +95,6 @@ export const METRIC_REGISTRY = {
   roas: {
     label: "ROAS",
     format: (v) => `${v.toFixed(2)}%`,
-    formatGrouped: (v) => `${formatNumber(v)}%`,
     formatTableTotal: (v) => `${Math.round(v)}%`,
     formatTableRow: (v) => `${v}%`,
     formatDelta: formatPercentDelta,

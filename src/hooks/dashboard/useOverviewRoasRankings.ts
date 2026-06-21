@@ -1,5 +1,9 @@
 import type { IPlatformRankingItem } from "@/types/dashboard/overview";
-import { PROVIDER_TYPES, type TProviderType } from "@/types/dashboard/provider";
+import {
+  PLATFORM_MAP,
+  PROVIDER_TYPES,
+  type TProviderType,
+} from "@/types/dashboard/provider";
 import { OVERVIEW_DAILY_METRICS_RANGE } from "@/constants/dashboard/overviewMetricsRange";
 
 import { fetchPlatformMetrics } from "@/utils/dashboard/platformMetricsQuery";
@@ -11,6 +15,12 @@ import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const PROVIDERS: readonly TProviderType[] = PROVIDER_TYPES;
+
+function toProviderType(provider: string): TProviderType | null {
+  const key = provider.toUpperCase();
+  if (key in PLATFORM_MAP) return key as TProviderType;
+  return null;
+}
 
 export function useOverviewRoasRankings() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
@@ -30,18 +40,15 @@ export function useOverviewRoasRankings() {
       );
 
       return rankingsRes.rankings.map((item) => {
-        const metrics = metricsMap[item.provider.toUpperCase()];
-        const clickRate =
-          metrics && metrics.impressions > 0
-            ? (metrics.clicks / metrics.impressions) * 100
-            : undefined;
+        const providerKey = toProviderType(item.provider);
+        const metrics = providerKey ? metricsMap[providerKey] : undefined;
 
         return {
           ...item,
-          clickRate,
-          ctrDelta: metrics ? metrics.clickChangeRate : undefined,
-          conversionRate: metrics ? metrics.conversion : undefined,
-          conversionDelta: metrics ? metrics.cvrChangeRate : undefined,
+          clicks: metrics?.clicks,
+          clickDelta: metrics?.clickChangeRate,
+          conversionRate: metrics?.conversion,
+          conversionDelta: metrics?.cvrChangeRate,
         };
       });
     },

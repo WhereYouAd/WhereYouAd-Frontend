@@ -73,7 +73,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
             {M.roas.label}(%)
           </span>
           <span className="hidden min-w-0 pl-1 text-center font-caption @2xl:block @2xl:pl-0">
-            {M.ctr.label}
+            {M.clicks.label}
           </span>
           <span className="hidden min-w-0 text-center font-caption @2xl:block">
             {M.conversion.label}
@@ -114,20 +114,20 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               {/* ROAS */}
               <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
                 <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
-                  {M.roas.formatGrouped(item.roas)}
+                  {M.roas.format(item.roas)}
                 </span>
               </div>
 
-              {/* CTR */}
+              {/* 클릭수 */}
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
-                {item.clickRate !== undefined ? (
+                {item.clicks !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {M.ctr.formatCompact(item.clickRate)}
+                      {M.clicks.format(item.clicks)}
                     </span>
-                    {item.ctrDelta !== undefined && (
+                    {item.clickDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                        <Delta value={item.ctrDelta} />
+                        <Delta value={item.clickDelta} />
                       </div>
                     )}
                   </>

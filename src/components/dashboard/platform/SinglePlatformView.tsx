@@ -40,12 +40,10 @@ const PLATFORM_LOGOS: Record<
 
 interface ISinglePlatformViewProps {
   platform: TProviderType;
-  isLoading: boolean;
 }
 
 export default function SinglePlatformView({
   platform,
-  isLoading,
 }: ISinglePlatformViewProps) {
   const [viewRange, setViewRange] = React.useState<7 | 30>(7);
 
@@ -105,7 +103,7 @@ export default function SinglePlatformView({
 
       {/* top */}
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {isLoading || isMetricsLoading ? (
+        {isMetricsLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
@@ -153,7 +151,6 @@ export default function SinglePlatformView({
           <PlatformTrafficChart
             data={platformTrafficMock[platform] || null}
             platform={platform}
-            isLoading={isLoading}
           />
         </Card>
 
@@ -180,7 +177,7 @@ export default function SinglePlatformView({
             )
           }
         >
-          {isLoading || isBudgetLoading ? (
+          {isBudgetLoading ? (
             <div className="flex flex-1 items-center justify-center p-8">
               <Skeleton className="h-32 w-full rounded-2xl" />
             </div>
@@ -233,7 +230,7 @@ export default function SinglePlatformView({
           </div>
         }
       >
-        {isLoading || isMetricFactsLoading ? (
+        {isMetricFactsLoading ? (
           <div className="flex items-center justify-center py-16">
             <Skeleton className="h-40 w-full rounded-2xl" />
           </div>

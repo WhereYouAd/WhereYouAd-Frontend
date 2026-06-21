@@ -19,13 +19,11 @@ import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDa
 interface IPlatformTrafficChartProps {
   data: IClickStreamResponse | null;
   platform: string;
-  isLoading?: boolean;
 }
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
   platform,
-  isLoading,
 }: IPlatformTrafficChartProps) {
   const seriesData = useMemo(() => {
     if (!data) return [];
@@ -139,7 +137,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
   ];
 
-  if (isLoading || !data) {
+  if (!data) {
     return <Skeleton className="w-full h-75 rounded-xl" />;
   }
 

@@ -15,17 +15,9 @@ import {
 } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
-import { Skeleton } from "@/components/common/skeleton/Skeleton";
-
 import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
-interface IAllPlatformTrafficChartProps {
-  isLoading?: boolean;
-}
-
-const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
-  isLoading,
-}: IAllPlatformTrafficChartProps) {
+const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
   // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
   const seriesData = useMemo(() => {
     return PROVIDER_TYPES.map((platform) => {
@@ -134,10 +126,6 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
     },
     legend: { show: false },
   };
-
-  if (isLoading) {
-    return <Skeleton className="w-full h-full rounded-xl" />;
-  }
 
   return (
     <div className="w-full h-full min-h-75">
