@@ -14,10 +14,10 @@ function formatCurrencyRounded(v: number): string {
   return `₩${formatNumber(Math.round(v))}`;
 }
 
-/* KPI·통합 대시보드 트렌드 — 소수 2자리 */
+/* KPI StatCard 트렌드 — 소수 2자리 */
 const formatPercentDelta = (v: number) => `${Math.abs(v).toFixed(2)}%`;
 
-/* 플랫폼 카드·랭킹 테이블 트렌드 — 소수 1자리 */
+/* 테이블·좁은 영역 트렌드 — 소수 1자리 */
 const formatPercentDeltaCompact = (v: number) => `${Math.abs(v).toFixed(1)}%`;
 
 /* 트래픽 차트 Y축 — 1,000 미만 locale, 이상 K 축약 */
@@ -28,33 +28,35 @@ export function formatCountChartAxis(val: number): string {
   return `${Math.round(rounded / 1000)}K`;
 }
 
-/* 트래픽 차트 툴팁 — unit 생략 시 숫자만 */
+/* 트래픽 차트 툴팁 */
 export function formatCountChartTooltip(val: number, unit?: string): string {
   const formatted = formatNumber(val);
   return unit ? `${formatted} ${unit}` : formatted;
 }
 
+/** 기본: 레이블 + 값 포맷 */
 interface IMetricMeta {
   label: string;
   format: (v: number) => string;
 }
 
+/** 증감률(%) 포맷 포함 */
 interface IMetricMetaWithDelta extends IMetricMeta {
   formatDelta: (v: number) => string;
 }
 
+/** KPI 카드용 — conversion만 kpiLabel로 카드 제목 분리 */
 interface IKpiMetricMeta extends IMetricMetaWithDelta {
   kpiLabel: string;
 }
 
 interface IConversionMetricMeta extends IKpiMetricMeta {
-  /* 랭킹 테이블 등 좁은 영역 — 소수 1자리 */
-  formatCompact: (v: number) => string;
+  formatCompact: (v: number) => string; // 테이블 등 — 소수 1자리
 }
 
 interface IRoasMetricMeta extends IMetricMetaWithDelta {
-  formatTableTotal: (v: number) => string;
-  formatTableRow: (v: number) => string;
+  formatTableTotal: (v: number) => string; // 일별 테이블 합계 행
+  formatTableRow: (v: number) => string; // 일별 테이블 데이터 행
 }
 
 interface ICtrMetricMeta extends IMetricMetaWithDelta {
@@ -70,6 +72,10 @@ const currencyFormat = { format: formatCurrency } satisfies Pick<
   "format"
 >;
 
+/**
+ * Registry 키 = FE 내부 식별자.
+ * label = 화면 표시명, format* = 컨텍스트별 표시 규칙
+ */
 export const METRIC_REGISTRY = {
   clicks: {
     label: "클릭수",
@@ -85,8 +91,8 @@ export const METRIC_REGISTRY = {
   } satisfies IMetricMetaWithDelta,
 
   conversion: {
-    label: "CVR(전환율)",
-    kpiLabel: "전환율",
+    label: "CVR(전환율)", // 테이블·차트
+    kpiLabel: "전환율", // KPI 카드 제목
     format: (v) => `${v.toFixed(2)}%`,
     formatCompact: (v) => `${v.toFixed(1)}%`,
     formatDelta: formatPercentDelta,
@@ -94,7 +100,7 @@ export const METRIC_REGISTRY = {
 
   roas: {
     label: "ROAS",
-    format: (v) => `${v.toFixed(2)}%`,
+    format: (v) => `${v.toFixed(2)}%`, // KPI·순위
     formatTableTotal: (v) => `${Math.round(v)}%`,
     formatTableRow: (v) => `${v}%`,
     formatDelta: formatPercentDelta,
@@ -133,6 +139,7 @@ export const METRIC_REGISTRY = {
   } satisfies IMetricMeta,
 } as const;
 
+/* KPI StatCard 4종 — metricsToKpis 전용 */
 type TKpiMetricKey = "clicks" | "impressions" | "conversion" | "roas";
 
 export function getKpiMetric(key: TKpiMetricKey): IMetricMetaWithDelta {
@@ -141,13 +148,17 @@ export function getKpiMetric(key: TKpiMetricKey): IMetricMetaWithDelta {
 
 type TMetricApiField = keyof IMetricsResponse;
 
+/**
+ * API 필드(getOverview) ↔ Registry 키 연결.
+ * registryKey: 포맷·레이블, valueField/deltaField: 응답 JSON 필드명.
+ */
 interface IOverviewKpiBinding {
   registryKey: TKpiMetricKey;
   valueField: TMetricApiField;
   deltaField: TMetricApiField;
 }
 
-/** 통합·플랫폼 KPI StatCard 구성 */
+/** metricsToKpis가 순회 — 통합·단일·전체 보기 KPI 공통 */
 export const OVERVIEW_KPI_BINDINGS: readonly IOverviewKpiBinding[] = [
   {
     registryKey: "clicks",
@@ -171,6 +182,7 @@ export const OVERVIEW_KPI_BINDINGS: readonly IOverviewKpiBinding[] = [
   },
 ];
 
+/** KPI 카드 제목 — conversion만 kpiLabel 사용 */
 export function getMetricKpiTitle(key: TKpiMetricKey): string {
   if (key === "conversion") {
     return METRIC_REGISTRY.conversion.kpiLabel;
