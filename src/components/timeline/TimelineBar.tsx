@@ -36,6 +36,7 @@ export default function TimelineBar({
     (bar.row - 1) * rowHeight +
     (rowHeight - TIMELINE_BAR_HEIGHT) / 2;
   return (
+    /*카드 클릭하면 성과요약 패널 나오도록 핸들러 구현 예정 */
     <div
       className={twMerge(
         "absolute z-20 flex cursor-pointer items-start gap-2.5 rounded-xl px-3 py-2.5 transition-shadow hover:z-30 hover:shadow-Soft",

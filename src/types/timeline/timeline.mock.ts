@@ -87,7 +87,7 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
     { day: "화", date: 23, isWeekend: false },
     { day: "수", date: 24, isWeekend: false },
     { day: "목", date: 25, isWeekend: false },
-    { day: "금", date: 26, isWeekend: true },
+    { day: "금", date: 26, isWeekend: false },
     { day: "토", date: 27, isWeekend: true, isToday: true },
   ],
   bars: [
