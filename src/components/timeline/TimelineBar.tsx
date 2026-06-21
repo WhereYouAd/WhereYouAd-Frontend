@@ -47,7 +47,7 @@ export default function TimelineBar({
     >
       <div
         className={twMerge(
-          "mt-0.5 h-12 w-1 shrink-0 rounded-full",
+          "mt-0.5 h-14 w-1 shrink-0 rounded-full",
           status.accent,
         )}
       />
@@ -61,11 +61,11 @@ export default function TimelineBar({
           {status.label}
         </span>
       </div>
-      <div className="ml-auto flex shrink-0 items-center">
+      <div className="ml-auto flex shrink-0 self-center items-center">
         <button
           type="button"
           aria-label="캠페인 메뉴"
-          className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-text-placeholder transition-colors hover:bg-surface-500/5"
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
           onClick={() => onMenuClick?.(bar)}
         >
           <KebabIcon className="h-3.5 w-3.5" />
