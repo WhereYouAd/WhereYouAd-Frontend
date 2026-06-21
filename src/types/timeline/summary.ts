@@ -13,7 +13,7 @@ export interface ITimelineSummaryMetric {
 /*플랫폼 기여도*/
 export interface ITimelineSummaryPlatformShare {
   provider: TProviderType;
-  contributatioln: number; /*기여도*/
+  contributionRate: number; /*기여도*/
 }
 
 /*성과 요약 패널 전체*/

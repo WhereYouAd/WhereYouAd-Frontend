@@ -33,7 +33,7 @@ export const TIMELINE_DETAIL_MOCK: ITimelineDetail = {
   performanceStatus: "ON_TRACK",
   metrics: ["CLICK", "CONVERSION", "ROAS"],
   summary:
-    "Google Ada 전환이 전주 대비 12% 상승했습니다. Meta는 노출은 늘었으나 ROAS가 소폭 하락했습니다.",
+    "Google Ads 전환이 전주 대비 12% 상승했습니다. Meta는 노출은 늘었으나 ROAS가 소폭 하락했습니다.",
   dailyTrend: [
     {
       date: "2026-06-18",
@@ -57,7 +57,7 @@ export const TIMELINE_DETAIL_MOCK: ITimelineDetail = {
       roas: 2.9,
     },
   ],
-  platformContribution: [
+  platformContributions: [
     { platform: "GOOGLE", contributionRate: 0.52 },
     { platform: "META", contributionRate: 0.31 },
     { platform: "NAVER", contributionRate: 0.17 },
@@ -134,8 +134,8 @@ export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
     },
   ],
   platformShare: [
-    { provider: "GOOGLE", contributatioln: 0.52 },
-    { provider: "META", contributatioln: 0.31 },
-    { provider: "NAVER", contributatioln: 0.17 },
+    { provider: "GOOGLE", contributionRate: 0.52 },
+    { provider: "META", contributionRate: 0.31 },
+    { provider: "NAVER", contributionRate: 0.17 },
   ],
 };

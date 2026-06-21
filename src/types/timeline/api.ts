@@ -20,7 +20,7 @@ export type TTimelinePerformanceStatus =
 export const TIMELINE_COMPARISON_PERIOD_TYPES = [
   "LAST_WEEK",
   "LAST_MONTH",
-  "PERVIOUS_PERIOD",
+  "PREVIOUS_PERIOD",
 ] as const;
 export type TTimelineComparisonPeriodType =
   (typeof TIMELINE_COMPARISON_PERIOD_TYPES)[number];
@@ -55,7 +55,7 @@ export interface ITimelineDetail {
   metrics: TTimelineMetric[];
   summary: string;
   dailyTrend: ITimelineDailyTrend[];
-  platformContribution: ITimelinePlatformContribution[];
+  platformContributions: ITimelinePlatformContribution[];
 }
 
 /* Request body*/
