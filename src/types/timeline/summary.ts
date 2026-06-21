@@ -13,7 +13,7 @@ export interface ITimelineSummaryMetric {
 /*플랫폼 기여도*/
 export interface ITimelineSummaryPlatformShare {
   provider: TProviderType;
-  contributation: number; /*기여도*/
+  contributatioln: number; /*기여도*/
 }
 
 /*성과 요약 패널 전체*/
@@ -21,6 +21,6 @@ export interface ITimelineSummaryPanelData {
   timelineName: string;
   periodLabel: string;
   aiSummary: string;
-  mertrics: ITimelineSummaryMetric[];
+  metrics: ITimelineSummaryMetric[];
   platformShare: ITimelineSummaryPlatformShare[];
 }

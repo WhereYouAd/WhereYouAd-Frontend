@@ -27,7 +27,7 @@ export interface ITimelineCampaignBar {
 }
 
 /*그리드 + 바 묶음*/
-export interface ITimelineGridDate {
+export interface ITimelineGridData {
   viewUnit: TTimelineViewUnit;
   periodLabel: string;
   columns: ITimelineGridColumn[];
