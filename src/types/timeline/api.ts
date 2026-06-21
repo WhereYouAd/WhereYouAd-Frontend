@@ -1,3 +1,5 @@
+import type { TProviderType } from "../dashboard/provider";
+
 /*타임라인 추적 지표*/
 export const TIMELINE_METRICS = [
   "CLICK",
@@ -42,7 +44,7 @@ export interface ITimelineDailyTrend {
 }
 
 export interface ITimelinePlatformContribution {
-  platform: string;
+  platform: TProviderType;
   contributionRate: number;
 }
 
