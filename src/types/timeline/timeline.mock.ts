@@ -118,6 +118,7 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
 export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
   timelineName: TIMELINE_DETAIL_MOCK.name,
   periodLabel: "2026.06.01 ~ 2026.06.30",
+  performanceStatus: "ABOVE_AVERAGE",
   aiSummary: TIMELINE_DETAIL_MOCK.summary,
   metrics: [
     { metric: "CLICK", label: "클릭", value: 3730, changeRate: 0.08 },
