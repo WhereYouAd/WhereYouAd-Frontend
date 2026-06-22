@@ -6,7 +6,7 @@ export interface ITimelineViewUnitOptions {
 }
 
 export const TIMELINE_VIEW_UNIT_OPTIONS: ITimelineViewUnitOptions[] = [
-  { value: "DAY", label: "Day" },
-  { value: "WEEK", label: "Week" },
-  { value: "MONTH", label: "Month" },
+  { value: "DAY", label: "일" },
+  { value: "WEEK", label: "주" },
+  { value: "MONTH", label: "월" },
 ];
