@@ -94,7 +94,11 @@ export default function TimelinePeriodSelector({
             className="absolute right-0 top-full z-50 mt-2 w-30 rounded-2xl border border-surface-300 bg-surface-100 py-3 shadow-Soft"
           >
             <p className="px-4 pb-2 font-caption text-text-muted">시간</p>
-            <div className="space-y-1 px-1">
+            <div
+              role="group"
+              aria-label="보기 단위 옵션"
+              className="space-y-1 px-1"
+            >
               {TIMELINE_VIEW_UNIT_OPTIONS.map((option) => {
                 const isSelected = viewUnit == option.value;
                 return (

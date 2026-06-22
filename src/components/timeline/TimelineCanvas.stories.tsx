@@ -9,7 +9,7 @@ import TimelineBar from "./TimelineBar";
 import TimelineGrid from "./TimelineGrid";
 
 const { columns, bars } = TIMELINE_GRID_MOCK;
-const maxRow = Math.max(...bars.map((bar) => bar.row));
+const maxRow = bars.length > 0 ? Math.max(...bars.map((bar) => bar.row)) : 0;
 const totalWidth = columns.length * TIMELINE_COL_WIDTH;
 
 function TimelineCanvasPreview() {
