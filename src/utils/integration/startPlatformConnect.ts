@@ -15,8 +15,7 @@ export async function startPlatformConnect(
       await startMetaOAuthLogin(orgId);
       return;
     case "NAVER":
-      // TODO: Naver login URL
-      return;
+      throw new Error("네이버 연동은 모달에서 처리합니다.");
     default:
       return;
   }

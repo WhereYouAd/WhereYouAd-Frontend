@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
-import type { TIntegrationProvider } from "@/types/integration/platformConnection";
+import type {
+  TIntegrationProvider,
+  TPlatformConnectionStatus,
+} from "@/types/integration/platformConnection";
 
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
+import NaverConnectModal from "@/components/integration/NaverConnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
 import PlatformIntegrationsPageSkeleton from "@/components/integration/skeleton/PlatformIntegrationsSkeleton";
 import {
@@ -18,6 +23,8 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function PlatformIntegrationsPage() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
+
   const {
     data: platformConnections = [],
     isLoading,
@@ -25,17 +32,22 @@ export default function PlatformIntegrationsPage() {
     error,
   } = usePlatformConnections();
 
-  const handleConnect = async (provider: TIntegrationProvider) => {
+  const handleConnect = async (
+    provider: TIntegrationProvider,
+    status: TPlatformConnectionStatus,
+  ) => {
     if (orgId == null) {
       toast.error("워크스페이스를 선택해 주세요.");
       return;
     }
-
     if (provider === "NAVER") {
-      toast.message("준비 중인 플랫폼입니다.");
+      if (status !== "disconnected") {
+        toast.message("네이버 재연동 구현 예정");
+        return;
+      }
+      setIsNaverModalOpen(true);
       return;
     }
-
     try {
       await startPlatformConnect(provider, orgId);
     } catch (err) {
@@ -69,8 +81,8 @@ export default function PlatformIntegrationsPage() {
               >
                 <PlatformIntegrationCard
                   {...item}
-                  onConnect={() => handleConnect(item.provider)}
-                  onReconnect={() => handleConnect(item.provider)}
+                  onConnect={() => handleConnect(item.provider, item.status)}
+                  onReconnect={() => handleConnect(item.provider, item.status)}
                   onDisconnect={() => toast.message("연결 해제")}
                 />
               </li>
@@ -94,6 +106,13 @@ export default function PlatformIntegrationsPage() {
           </div>
         </>
       )}
+      {orgId != null ? (
+        <NaverConnectModal
+          isOpen={isNaverModalOpen}
+          onClose={() => setIsNaverModalOpen(false)}
+          orgId={orgId}
+        />
+      ) : null}
     </section>
   );
 }
