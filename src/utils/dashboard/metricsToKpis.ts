@@ -1,12 +1,12 @@
 import type { IMetricsResponse } from "@/types/dashboard/common";
 
-import type { IStatCardProps } from "@/components/common/card/StatCard";
-
 import {
   getKpiMetric,
   getMetricKpiTitle,
   OVERVIEW_KPI_BINDINGS,
-} from "./metricRegistry";
+} from "@/utils/dashboard/metricRegistry";
+
+import type { IStatCardProps } from "@/components/common/card/StatCard";
 
 /**
  * API 응답 → KPI StatCard Props 변환.

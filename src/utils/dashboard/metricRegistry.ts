@@ -6,10 +6,6 @@ function formatNumber(v: number): string {
   return v.toLocaleString(METRIC_LOCALE);
 }
 
-function formatCurrency(v: number): string {
-  return `₩${formatNumber(v)}`;
-}
-
 function formatCurrencyRounded(v: number): string {
   return `₩${formatNumber(Math.round(v))}`;
 }
@@ -50,7 +46,7 @@ interface IClicksMetricMeta extends IMetricMetaWithDelta {
   chartTooltipUnit: string;
 }
 
-const currencyFormat = { format: formatCurrency } satisfies Pick<
+const currencyFormat = { format: formatCurrencyRounded } satisfies Pick<
   IMetricMeta,
   "format"
 >;
