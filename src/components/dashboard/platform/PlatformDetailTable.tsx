@@ -99,7 +99,7 @@ function PlatformDetailTable({
                   {M.conversions.format(total.conversions)}
                 </td>
                 <td className="px-4 py-5 text-right tabular-nums border-b border-surface-400 text-primary-500">
-                  {M.roas.formatTableTotal(total.roas)}
+                  {M.roas.format(total.roas)}
                 </td>
               </tr>
             )}
@@ -131,7 +131,7 @@ function PlatformDetailTable({
                   {M.conversions.format(row.conversions)}
                 </td>
                 <td className="border-b border-surface-400/20 px-4 py-4 text-right tabular-nums text-text-title">
-                  {M.roas.formatTableRow(row.roas)}
+                  {M.roas.format(row.roas)}
                 </td>
               </tr>
             ))}

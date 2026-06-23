@@ -48,7 +48,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     {
       seriesName: M.ctr.label,
       labels: {
-        formatter: (val) => M.ctr.formatCompact(val),
+        formatter: (val) => M.ctr.format(val),
         style: {
           colors: "var(--color-text-muted)",
           fontSize: "12px",

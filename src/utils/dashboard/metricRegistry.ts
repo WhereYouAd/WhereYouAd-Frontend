@@ -14,11 +14,7 @@ function formatCurrencyRounded(v: number): string {
   return `₩${formatNumber(Math.round(v))}`;
 }
 
-/* KPI StatCard 트렌드 — 소수 2자리 */
 const formatPercentDelta = (v: number) => `${Math.abs(v).toFixed(2)}%`;
-
-/* 테이블·좁은 영역 트렌드 — 소수 1자리 */
-const formatPercentDeltaCompact = (v: number) => `${Math.abs(v).toFixed(1)}%`;
 
 /* 트래픽 차트 Y축 — 1,000 미만 locale, 이상 K 축약 */
 export function formatCountChartAxis(val: number): string {
@@ -50,19 +46,6 @@ interface IKpiMetricMeta extends IMetricMetaWithDelta {
   kpiLabel: string;
 }
 
-interface IConversionMetricMeta extends IKpiMetricMeta {
-  formatCompact: (v: number) => string; // 테이블 등 — 소수 1자리
-}
-
-interface IRoasMetricMeta extends IMetricMetaWithDelta {
-  formatTableTotal: (v: number) => string; // 일별 테이블 합계 행
-  formatTableRow: (v: number) => string; // 일별 테이블 데이터 행
-}
-
-interface ICtrMetricMeta extends IMetricMetaWithDelta {
-  formatCompact: (v: number) => string;
-}
-
 interface IClicksMetricMeta extends IMetricMetaWithDelta {
   chartTooltipUnit: string;
 }
@@ -74,7 +57,13 @@ const currencyFormat = { format: formatCurrency } satisfies Pick<
 
 /**
  * Registry 키 = FE 내부 식별자.
- * label = 화면 표시명, format* = 컨텍스트별 표시 규칙
+ * label = 화면 표시명, format = 값 표시, formatDelta = 증감률 표시
+ *
+ * 포맷 기준:
+ *   정수형 카운트  → 천 단위 콤마 (toLocaleString)
+ *   비율/퍼센트   → toFixed(2)%
+ *   금액 (KRW)   → Math.round + 천 단위 콤마 + ₩
+ *   증감률        → toFixed(2)% + 절댓값
  */
 export const METRIC_REGISTRY = {
   clicks: {
@@ -91,20 +80,17 @@ export const METRIC_REGISTRY = {
   } satisfies IMetricMetaWithDelta,
 
   conversion: {
-    label: "CVR(전환율)", // 테이블·차트
-    kpiLabel: "전환율", // KPI 카드 제목
+    label: "CVR(전환율)",
+    kpiLabel: "전환율",
     format: (v) => `${v.toFixed(2)}%`,
-    formatCompact: (v) => `${v.toFixed(1)}%`,
     formatDelta: formatPercentDelta,
-  } satisfies IConversionMetricMeta,
+  } satisfies IKpiMetricMeta,
 
   roas: {
     label: "ROAS",
-    format: (v) => `${v.toFixed(2)}%`, // KPI·순위
-    formatTableTotal: (v) => `${Math.round(v)}%`,
-    formatTableRow: (v) => `${v}%`,
+    format: (v) => `${v.toFixed(2)}%`,
     formatDelta: formatPercentDelta,
-  } satisfies IRoasMetricMeta,
+  } satisfies IMetricMetaWithDelta,
 
   spend: {
     label: "비용(지출)",
@@ -114,9 +100,8 @@ export const METRIC_REGISTRY = {
   ctr: {
     label: "CTR(클릭률)",
     format: (v) => `${v.toFixed(2)}%`,
-    formatCompact: (v) => `${v.toFixed(1)}%`,
-    formatDelta: formatPercentDeltaCompact,
-  } satisfies ICtrMetricMeta,
+    formatDelta: formatPercentDelta,
+  } satisfies IMetricMetaWithDelta,
 
   cpa: {
     label: "CPA",

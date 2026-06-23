@@ -141,7 +141,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 {item.conversionRate !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {M.conversion.formatCompact(item.conversionRate)}
+                      {M.conversion.format(item.conversionRate)}
                     </span>
                     {item.conversionDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
