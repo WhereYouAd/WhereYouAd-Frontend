@@ -2,6 +2,8 @@ import { Suspense } from "react";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import type { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 
 import Card from "@/components/common/card/Card";
@@ -31,7 +33,7 @@ export function OverviewKpiSection({
   return (
     <div className="col-span-3 flex h-full min-h-0 min-w-0 flex-col gap-6 tablet:col-span-1">
       {isKpisError ? (
-        <div className="flex items-center justify-center rounded-[24px] border border-surface-100/40 bg-surface-100/80 py-8 font-body2 text-info-red">
+        <div className="flex items-center justify-center rounded-3xl border border-surface-100/40 bg-surface-100/80 py-8 font-body2 text-info-red">
           {kpisError?.message ??
             "지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
         </div>
@@ -56,7 +58,7 @@ export function OverviewKpiSection({
         description={
           <ChartLegend
             items={[
-              { label: "클릭수", colorClass: "bg-info-blue" },
+              { label: M.clicks.label, colorClass: "bg-info-blue" },
               { label: "이상 클릭 탐지", colorClass: "bg-info-red" },
             ]}
           />

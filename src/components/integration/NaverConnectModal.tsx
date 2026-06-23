@@ -7,7 +7,7 @@ import type { z } from "zod";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import { naverConnectSchema } from "@/utils/validation";
+import { naverConnectSchema } from "@/utils/auth/validation";
 
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";

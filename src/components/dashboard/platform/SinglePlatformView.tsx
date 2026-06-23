@@ -4,13 +4,16 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
-import { usePlatformBudget } from "@/hooks/dashboard/usePlatformBudget";
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
+
+import { useBudget } from "@/hooks/dashboard/useBudget";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
-import StatCard, { type ITrend } from "@/components/common/card/StatCard";
+import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
@@ -37,12 +40,10 @@ const PLATFORM_LOGOS: Record<
 
 interface ISinglePlatformViewProps {
   platform: TProviderType;
-  isLoading: boolean;
 }
 
 export default function SinglePlatformView({
   platform,
-  isLoading,
 }: ISinglePlatformViewProps) {
   const [viewRange, setViewRange] = React.useState<7 | 30>(7);
 
@@ -52,37 +53,10 @@ export default function SinglePlatformView({
     isError: isMetricsError,
   } = usePlatformMetrics(platform);
 
-  const toTrend = (changeRate: number): ITrend => ({
-    direction: changeRate >= 0 ? "up" : "down",
-    value: `${Math.abs(changeRate).toFixed(2)}%`,
-  });
-
-  const kpis = useMemo(() => {
-    if (!platformData) return [];
-
-    return [
-      {
-        title: "노출수",
-        value: platformData.impressions.toLocaleString(),
-        trend: toTrend(platformData.impressionChangeRate),
-      },
-      {
-        title: "클릭수 (CTR)",
-        value: platformData.clicks.toLocaleString(),
-        trend: toTrend(platformData.clickChangeRate),
-      },
-      {
-        title: "전환율 (CVR)",
-        value: `${platformData.conversion}%`,
-        trend: toTrend(platformData.cvrChangeRate),
-      },
-      {
-        title: "광고비 대비 매출 (ROAS)",
-        value: `${platformData.ROAS}%`,
-        trend: toTrend(platformData.ROASChangeRate),
-      },
-    ];
-  }, [platformData]);
+  const kpis = useMemo(
+    () => (platformData ? metricsToKpis(platformData) : []),
+    [platformData],
+  );
 
   const logoInfo = PLATFORM_LOGOS[platform];
 
@@ -90,7 +64,7 @@ export default function SinglePlatformView({
     data: budget,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
-  } = usePlatformBudget(platform);
+  } = useBudget(platform);
 
   const {
     data: metricFacts,
@@ -129,11 +103,11 @@ export default function SinglePlatformView({
 
       {/* top */}
       <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {isLoading || isMetricsLoading ? (
+        {isMetricsLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="rounded-[24px] border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
+              className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
             >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-8 w-24" />
@@ -168,7 +142,7 @@ export default function SinglePlatformView({
           description={
             <ChartLegend
               items={[
-                { label: "클릭수", color: platformColor },
+                { label: M.clicks.label, color: platformColor },
                 { label: "이상 클릭 탐지", colorClass: "bg-info-red" },
               ]}
             />
@@ -177,7 +151,6 @@ export default function SinglePlatformView({
           <PlatformTrafficChart
             data={platformTrafficMock[platform] || null}
             platform={platform}
-            isLoading={isLoading}
           />
         </Card>
 
@@ -204,7 +177,7 @@ export default function SinglePlatformView({
             )
           }
         >
-          {isLoading || isBudgetLoading ? (
+          {isBudgetLoading ? (
             <div className="flex flex-1 items-center justify-center p-8">
               <Skeleton className="h-32 w-full rounded-2xl" />
             </div>
@@ -257,7 +230,7 @@ export default function SinglePlatformView({
           </div>
         }
       >
-        {isLoading || isMetricFactsLoading ? (
+        {isMetricFactsLoading ? (
           <div className="flex items-center justify-center py-16">
             <Skeleton className="h-40 w-full rounded-2xl" />
           </div>

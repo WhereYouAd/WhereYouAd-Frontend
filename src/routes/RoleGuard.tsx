@@ -6,6 +6,7 @@ import type { TMemberRole } from "@/types/workspace/workspace";
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getMyWorkspaces } from "@/api/workspace/org";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 interface IRoleGuardProps {
@@ -23,7 +24,7 @@ function RoleGuard({
     data: workspaces,
     isPending,
     isError,
-  } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  } = useCoreQuery(QUERY_KEYS.workspace.list(), getMyWorkspaces);
 
   //URL에 workspaceId가 있는 경우 -> URL 기준 워크스페이스의 role로 판정
   if (workspaceId) {

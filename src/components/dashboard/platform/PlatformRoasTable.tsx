@@ -1,22 +1,15 @@
-import { memo, type ReactNode } from "react";
+import { memo } from "react";
 
 import type {
   IPlatformRankingItem,
   TProviderType,
 } from "@/types/dashboard/overview";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
+import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
+
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
-
-import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
-import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
-import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
-
-const platformLogoMap: Record<TProviderType, ReactNode> = {
-  GOOGLE: <GoogleLogo className="h-7 w-auto" />,
-  NAVER: <NaverLogo className="h-7 w-auto" />,
-  META: <MetaLogo className="h-7 w-auto" />,
-};
 
 function toProviderType(provider: string): TProviderType | null {
   const key = provider.toUpperCase();
@@ -31,10 +24,16 @@ function getDisplayName(provider: string): string {
 
 function getPlatformLogo(provider: string) {
   const key = toProviderType(provider);
-  if (key) return platformLogoMap[key];
+  if (key) {
+    const Logo = PLATFORM_CIRCLE_LOGO_MAP[key];
+    return <Logo className="h-8 w-8" aria-hidden="true" />;
+  }
   const name = getDisplayName(provider);
   return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted">
+    <span
+      aria-hidden="true"
+      className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-300 font-caption text-text-muted"
+    >
       {name[0]}
     </span>
   );
@@ -45,7 +44,7 @@ const Delta = memo(function Delta({ value }: { value: number }) {
   return (
     <TrendBadge
       direction={isPos ? "up" : "down"}
-      value={`${Math.abs(value).toFixed(1)}%`}
+      value={M.ctr.formatDelta(value)}
     />
   );
 });
@@ -71,16 +70,16 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
           </span>
           <span className="min-w-0 font-caption">플랫폼</span>
           <span className="flex min-h-5 items-center justify-center px-2 font-caption tabular-nums @2xl:px-3">
-            ROAS(%)
+            {M.roas.label}(%)
           </span>
           <span className="hidden min-w-0 pl-1 text-center font-caption @2xl:block @2xl:pl-0">
-            CTR(클릭률)
+            {M.clicks.label}
           </span>
           <span className="hidden min-w-0 text-center font-caption @2xl:block">
-            CVR(전환율)
+            {M.conversion.label}
           </span>
           <span className="min-w-0 whitespace-nowrap text-right font-caption">
-            매출 / 광고비
+            {M.revenue.label} / {M.adSpend.label}
           </span>
         </div>
 
@@ -115,20 +114,20 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               {/* ROAS */}
               <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
                 <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
-                  {item.roas.toLocaleString()}%
+                  {M.roas.format(item.roas)}
                 </span>
               </div>
 
-              {/* CTR */}
+              {/* 클릭수 */}
               <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
-                {item.clickRate !== undefined ? (
+                {item.clicks !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {item.clickRate.toFixed(1)}%
+                      {M.clicks.format(item.clicks)}
                     </span>
-                    {item.ctrDelta !== undefined && (
+                    {item.clickDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                        <Delta value={item.ctrDelta} />
+                        <Delta value={item.clickDelta} />
                       </div>
                     )}
                   </>
@@ -142,7 +141,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
                 {item.conversionRate !== undefined ? (
                   <>
                     <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {item.conversionRate.toFixed(1)}%
+                      {M.conversion.format(item.conversionRate)}
                     </span>
                     {item.conversionDelta !== undefined && (
                       <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
@@ -158,12 +157,12 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
               {/* 매출/광고비 */}
               <div className="flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
                 <span className="font-heading4 w-full truncate text-right tabular-nums text-text-title">
-                  ₩{item.revenue.toLocaleString()}
+                  {M.revenue.format(item.revenue)}
                 </span>
                 <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
-                  <span className="whitespace-nowrap">광고비</span>
+                  <span className="whitespace-nowrap">{M.adSpend.label}</span>
                   <span className="tabular-nums truncate">
-                    ₩{item.adSpend.toLocaleString()}
+                    {M.adSpend.format(item.adSpend)}
                   </span>
                 </div>
               </div>

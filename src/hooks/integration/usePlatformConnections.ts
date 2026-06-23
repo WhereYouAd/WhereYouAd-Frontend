@@ -5,6 +5,7 @@ import { mapPlatformAccountsToConnections } from "@/utils/integration/mapPlatfor
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getPlatformAccounts } from "@/api/integration/platformAccounts";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function needsIntegrationAttention(
@@ -17,7 +18,7 @@ export function usePlatformConnections() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   return useCoreQuery(
-    ["platform-connections", orgId],
+    QUERY_KEYS.platform.connections(orgId),
     async () => {
       const { platformAccounts } = await getPlatformAccounts(orgId!);
       return mapPlatformAccountsToConnections(platformAccounts);

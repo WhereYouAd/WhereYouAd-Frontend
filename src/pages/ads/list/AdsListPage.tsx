@@ -13,6 +13,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import { updateAllCampaignStatus, updateCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function AdsListPage() {
@@ -30,7 +31,9 @@ export default function AdsListPage() {
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
 
   const invalidateCampaigns = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
+    queryClient.invalidateQueries({
+      queryKey: QUERY_KEYS.campaign.list(orgId),
+    });
   }, [queryClient, orgId]);
 
   const clearSelection = useCallback(() => {

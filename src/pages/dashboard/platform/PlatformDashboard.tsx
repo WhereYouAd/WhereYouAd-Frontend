@@ -21,7 +21,6 @@ type TDashboardHeaderContext = {
 export default function PlatformDashboard() {
   const [selectedPlatform, setSelectedPlatform] =
     useState<TPlatformView>("전체");
-  const [isLoading, setIsLoading] = useState(true);
   const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
 
   const isAllView = selectedPlatform === "전체";
@@ -39,11 +38,6 @@ export default function PlatformDashboard() {
     selectedPlatform === "전체"
       ? "플랫폼 선택"
       : PLATFORM_MAP[selectedPlatform];
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1600);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (!setHeaderRight) return;
@@ -103,9 +97,9 @@ export default function PlatformDashboard() {
   return (
     <section className="flex w-full min-w-0 flex-col gap-8">
       {isAllView ? (
-        <AllPlatformView isLoading={isLoading} />
+        <AllPlatformView />
       ) : (
-        <SinglePlatformView platform={selectedPlatform} isLoading={isLoading} />
+        <SinglePlatformView platform={selectedPlatform} />
       )}
     </section>
   );

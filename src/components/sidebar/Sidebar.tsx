@@ -1,5 +1,6 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
 import { useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -12,6 +13,7 @@ import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
+import { useCoreQuery } from "@/hooks/customQuery";
 import {
   needsIntegrationAttention,
   usePlatformConnections,
@@ -24,6 +26,7 @@ import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
+import { getMyWorkspaces } from "@/api/workspace/org";
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -93,7 +96,26 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
-  const myRole = useWorkspaceStore((s) => s.myRole);
+  const myRoleFromStore = useWorkspaceStore((s) => s.myRole);
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+
+  const myRole = useMemo(() => {
+    if (!workspaces) return null;
+
+    const parsedWorkspaceId = workspaceId ? Number(workspaceId) : null;
+    const getRoleByOrgId = (orgId: number | null) => {
+      if (orgId == null || !Number.isFinite(orgId) || orgId <= 0) return null;
+      return workspaces.find((w) => w.orgId === orgId)?.myRole ?? null;
+    };
+
+    return (
+      getRoleByOrgId(parsedWorkspaceId) ??
+      getRoleByOrgId(selectedOrgId) ??
+      myRoleFromStore
+    );
+  }, [workspaceId, selectedOrgId, workspaces, myRoleFromStore]);
+
   const { data: platformConnections } = usePlatformConnections();
   const showIntegrationsAttention = useMemo(
     () => needsIntegrationAttention(platformConnections),
