@@ -4,6 +4,7 @@ import {
   type QueryKey,
   useMutation,
   useQuery,
+  useQueryClient,
   type UseQueryResult,
 } from "@tanstack/react-query";
 
@@ -12,8 +13,6 @@ import type {
   TUseMutationCustomOptions,
   TUseQueryCustomOptions,
 } from "@/types/common/common";
-
-import { queryClient } from "@/lib/queryClient";
 
 export function useCoreQuery<TQueryFnData, TData = TQueryFnData>(
   keyName: QueryKey,
@@ -43,6 +42,8 @@ export function useCoreMutation<
     TCache
   >,
 ) {
+  const queryClient = useQueryClient();
+
   const {
     optimisticUpdate,
     invalidateKeys,
