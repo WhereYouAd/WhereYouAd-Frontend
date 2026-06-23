@@ -16,7 +16,9 @@ export async function startPlatformConnect(
       return;
     case "NAVER":
       throw new Error("네이버 연동은 모달에서 처리합니다.");
-    default:
-      return;
+    default: {
+      const _exhaustive: never = provider;
+      throw new Error(`지원하지 않는 플랫폼입니다: ${String(_exhaustive)}`);
+    }
   }
 }
