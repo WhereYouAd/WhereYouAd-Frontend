@@ -146,9 +146,9 @@ interface IOverviewKpiBinding {
 /** metricsToKpis가 순회 — 통합·단일·전체 보기 KPI 공통 */
 export const OVERVIEW_KPI_BINDINGS: readonly IOverviewKpiBinding[] = [
   {
-    registryKey: "clicks",
-    valueField: "clicks",
-    deltaField: "clickChangeRate",
+    registryKey: "clicks", // 어느 레지스트리 항목에서 포맷·label을 가져올지
+    valueField: "clicks", // 응답에서 "값"을 꺼낼 필드명
+    deltaField: "clickChangeRate", // 응답에서 "증감률"을 꺼낼 필드명
   },
   {
     registryKey: "impressions",
