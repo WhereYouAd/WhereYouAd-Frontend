@@ -17,6 +17,7 @@ interface ITimelineBarProps {
   rowHeight?: number;
   rowOffset?: number;
   className?: string;
+  onBarClick?: (bar: ITimelineCampaignBar) => void;
   onMenuClick?: (bar: ITimelineCampaignBar) => void; //선택, 추후 이슈로 다룰 예정
 }
 
@@ -26,6 +27,7 @@ export default function TimelineBar({
   rowHeight = TIMELINE_ROW_HEIGHT,
   rowOffset = TIMELINE_ROW_OFFSET,
   className,
+  onBarClick,
   onMenuClick,
 }: ITimelineBarProps) {
   const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
@@ -43,6 +45,7 @@ export default function TimelineBar({
         status.barBg,
         className,
       )}
+      onClick={() => onBarClick?.(bar)}
       style={{ left, top, width, height: TIMELINE_BAR_HEIGHT }}
     >
       <div
@@ -66,7 +69,10 @@ export default function TimelineBar({
           type="button"
           aria-label="캠페인 메뉴"
           className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
-          onClick={() => onMenuClick?.(bar)}
+          onClick={(event) => {
+            event.stopPropagation();
+            onMenuClick?.(bar);
+          }}
         >
           <KebabIcon className="h-3.5 w-3.5" />
         </button>

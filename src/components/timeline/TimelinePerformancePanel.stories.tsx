@@ -32,7 +32,7 @@ function ClosedPreivew() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="rounded-log bg-primary-400 px-4 py-2 font-body2 text-surface-100"
+          className="rounded-lg bg-primary-400 px-4 py-2 font-body2 text-surface-100"
         >
           패널 열기
         </button>

@@ -128,9 +128,11 @@ export function DropdownMenu({
                         <span
                           className={twMerge(
                             "inline-flex h-5 w-5 items-center justify-center text-text-body",
-                            it.active
-                              ? "text-info-blue"
-                              : "group-hover:text-info-blue",
+                            it.danger
+                              ? "text-info-red group-hover:text-info-red"
+                              : it.active
+                                ? "text-info-blue"
+                                : "group-hover:text-info-blue",
                           )}
                           aria-hidden="true"
                         >

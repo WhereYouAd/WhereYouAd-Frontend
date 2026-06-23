@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/provider";
@@ -122,6 +122,8 @@ export default function TimelinePerformancePanel({
   className,
 }: ITimelinePerformancePanelProps) {
   const [aiState, setAiState] = useState<TAiSummaryUiState>("idle");
+  const [generatedSummary, setGeneratedSummary] = useState("");
+  const summaryTimerRef = useRef<number | null>(null);
   const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>("WEEK");
   const [chartPeriodIndex, setChartPeriodIndex] = useState(0);
 
@@ -132,11 +134,22 @@ export default function TimelinePerformancePanel({
   useEffect(() => {
     if (!isOpen) return;
     setAiState(data.aiSummary.trim() ? "done" : "idle");
+    setGeneratedSummary("");
   }, [isOpen, data.aiSummary]);
 
+  useEffect(() => {
+    return () => {
+      if (summaryTimerRef.current !== null) {
+        window.clearTimeout(summaryTimerRef.current);
+      }
+    };
+  }, []);
   const handleGenerateSummary = () => {
     setAiState("loading");
-    window.setTimeout(() => {
+    summaryTimerRef.current = window.setTimeout(() => {
+      setGeneratedSummary(
+        data.aiSummary.trim() || "AI 요약이 생성되었습니다.(API연동전 임시)",
+      );
       setAiState("done");
     }, AI_SUMMARY_LOADING_MS);
   };
@@ -261,14 +274,14 @@ export default function TimelinePerformancePanel({
             </div>
           )}
 
-          {aiState === "done" && data.aiSummary && (
+          {aiState === "done" && (data.aiSummary || generatedSummary) && (
             <p
               className={twMerge(
                 SOFT_CARD_CLASS,
                 "px-5 py-4 font-body1 text-text-body break-keep leading-relaxed",
               )}
             >
-              {data.aiSummary}
+              {data.aiSummary || generatedSummary}
             </p>
           )}
         </section>
