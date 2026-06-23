@@ -138,3 +138,8 @@ export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
     { provider: "NAVER", contributionRate: 0.17 },
   ],
 };
+
+export const TIMELINE_SUMMARY_PANEL_NO_AI_MOCK: ITimelineSummaryPanelData = {
+  ...TIMELINE_SUMMARY_PANEL_MOCK,
+  aiSummary: "",
+};

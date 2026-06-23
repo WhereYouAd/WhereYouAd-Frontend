@@ -83,142 +83,148 @@ export default function TimelinePerformancePanel({
     },
   ];
   return (
-    <div>
-      <Drawer
-        isOpen={isOpen}
-        onClose={onClose}
-        hideHeader
-        className={className}
-      >
-        <div>
-          <header>
-            <div>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="요약 패널 닫기"
-              >
-                <span>
-                  <ChevronRightIcon className="h-3.5 w-3.5" />
-                  <ChevronRightIcon className="h-3.5 w-3.5" />
-                </span>
-              </button>
-              <DropdownMenu
-                trigger={<MoreIcon className="h-4 w-4 text-text-disabled" />}
-                aria-label="더보기"
-                items={menuItems}
-              />
+    <Drawer isOpen={isOpen} onClose={onClose} hideHeader className={className}>
+      <div className="flex flex-col gap-6 px-5 pb-8 pt-4">
+        <header className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="요약 패널 닫기"
+              className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-surface-200"
+            >
+              <span className="flex items-center -space-x-2 text-text-disabled">
+                <ChevronRightIcon className="h-3.5 w-3.5" />
+                <ChevronRightIcon className="h-3.5 w-3.5" />
+              </span>
+            </button>
+            <DropdownMenu
+              trigger={<MoreIcon className="h-4 w-4 text-text-disabled" />}
+              aria-label="더보기"
+              items={menuItems}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-surface-200"
+            />
+          </div>
+          <h2 className="font-heading2 text-text-title">{data.timelineName}</h2>
+          <dl className="grid grid-cols-[5.5rem_1fr] gap-y-3 font-body2">
+            <dt className="text-text-muted">기간</dt>
+            <dd className="text-text-title">{data.periodLabel}</dd>
+            <dt className="text-text-muted">성과 상태</dt>
+            <dd>
+              <span className="inline-flex items-center gap-1.5 font-caption text-text-body">
+                <span
+                  className={twMerge(
+                    "h-1.5 w-1.5 rounded-full",
+                    statusStyle.dot,
+                  )}
+                />
+              </span>
+            </dd>
+            <dt className="text-text-muted">성과 지표</dt>
+            <dd className="flex flex-wrap gap-2">
+              {data.metrics.map((metric) => (
+                <Badge key={metric.label} variant="surface">
+                  {metric.label}
+                </Badge>
+              ))}
+            </dd>
+          </dl>
+        </header>
+
+        {/* AI 요약 파트 */}
+        <section className="flex flex-col gap-3">
+          {aiState === "idle" && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="small"
+              fullWidth
+              onClick={handleGenerateSummary}
+            >
+              요약하기 생성
+            </Button>
+          )}
+
+          {aiState === "loading" && (
+            <div aria-busy="true" className="flex flex-col gap-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6" />
+              <Skeleton className="h-4 w-4/6" />
             </div>
-            <h2>{data.timelineName}</h2>
-            <dl>
-              <dt>기간</dt>
-              <dd>{data.periodLabel}</dd>
-              <dt>성과 상태</dt>
-              <dd>
-                <span>
-                  <span
-                    className={twMerge(
-                      "h-1.5 w-1.5 rounded-full",
-                      statusStyle.dot,
-                    )}
-                  />
-                </span>
-              </dd>
-              <dt>성과 지표</dt>
-              <dd>
-                {data.metrics.map((metric) => (
-                  <Badge key={metric.label} variant="surface">
-                    {metric.label}
-                  </Badge>
-                ))}
-              </dd>
-            </dl>
-          </header>
+          )}
 
-          {/* AI 요약 파트 */}
-          <section>
-            {aiState === "idle" && (
-              <Button
-                type="button"
-                variant="secondary"
-                size="small"
-                fullWidth
-                onClick={handleGenerateSummary}
-              >
-                요약하기 생성
-              </Button>
-            )}
+          {aiState === "done" && data.aiSummary && (
+            <p className="rounded-2xl bg-surface-200/60 px-4 py-3 font-body2 text-text-body">
+              {data.aiSummary}
+            </p>
+          )}
+        </section>
 
-            {aiState === "loading" && (
-              <div aria-busy="true">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-5/6" />
-                <Skeleton className="h-4 w-4/6" />
-              </div>
-            )}
+        {/* KPI 카드 */}
+        <section className="grid grid-cols-2 gap-3">
+          {data.metrics.map((metric) => (
+            <StatCard
+              key={metric.metric}
+              title={metric.label}
+              value={formatMetricValue(metric.value, metric.unit)}
+              compact
+              trend={
+                metric.changeRate !== undefined
+                  ? {
+                      direction: metric.changeRate >= 0 ? "up" : "down",
+                      value: formatChangeRate(metric.changeRate),
+                    }
+                  : undefined
+              }
+              className="p-5"
+            />
+          ))}
+        </section>
 
-            {aiState === "done" && data.aiSummary && <p>{data.aiSummary}</p>}
-          </section>
+        {/* 차트 */}
+        <Card
+          title="일별 변화 추이"
+          className="p-5"
+          description={
+            <ChartLegend
+              items={[
+                { label: "클릭수", colorClass: "bg-primary-400" },
+                { label: "예산 수정 시점", colorClass: "bg-info-red" },
+              ]}
+            />
+          }
+          RightElement={
+            <TimelinePeriodSelector
+              viewUnit={viewUnit}
+              periodLabel="오늘"
+              onViewUnitChange={setViewUnit}
+              onPrevPeriod={() => {}}
+              onNextPeriod={() => {}}
+            />
+          }
+        >
+          <div className="flex g-48 items-center justify-center rounded-2xl border border-dashed border-surface-400 bg-surface-200/50">
+            <span className="font-caption text-text-muted">
+              차트 영역 (ApexChart 연동예정)
+            </span>
+          </div>
+        </Card>
 
-          {/* KPI 카드 */}
-          <section>
-            {data.metrics.map((metric) => (
-              <StatCard
-                key={metric.metric}
-                title={metric.label}
-                value={formatMetricValue(metric.value, metric.unit)}
-                compact
-                trend={
-                  metric.changeRate !== undefined
-                    ? {
-                        direction: metric.changeRate >= 0 ? "up" : "down",
-                        value: formatChangeRate(metric.changeRate),
-                      }
-                    : undefined
-                }
-                className="p-5"
-              />
-            ))}
-          </section>
-
-          {/* 차트 */}
-          <Card
-            title="일별 변화 추이"
-            description={
-              <ChartLegend
-                items={[
-                  { label: "클릭수", colorClass: "bg-primary-400" },
-                  { label: "예산 수정 시점", colorClass: "bg-info-red" },
-                ]}
-              />
-            }
-            RightElement={
-              <TimelinePeriodSelector
-                viewUnit={viewUnit}
-                periodLabel="오늘"
-                onViewUnitChange={setViewUnit}
-                onPrevPeriod={() => {}}
-                onNextPeriod={() => {}}
-              />
-            }
-          >
-            <div className="font-caption text-text-muted">
-              <span>차트 영역 (ApexChart 연동예정)</span>
-            </div>
-          </Card>
-
-          {/* 플랫폼 기여 파트 */}
-          <section>
-            <h3 className="font-heading4 text-text-title">플랫폼 기여 정보</h3>
+        {/* 플랫폼 기여 파트 */}
+        <section className="flex flex-col gap-4">
+          <h3 className="font-heading4 text-text-title">플랫폼 기여 정보</h3>
+          <div className="flex flex-col gap-3">
             {data.platformShare.map(({ provider, contributionRate }) => (
               <div key={provider} className="flex items-center gap-3">
-                <span>{PLATFORM_MAP[provider]}</span>
+                <span className="w-16 shrink-0 font-body2 text-text-muted">
+                  {PLATFORM_MAP[provider]}
+                </span>
                 <ProgressBar value={Math.round(contributionRate * 100)} />
               </div>
             ))}
-          </section>
-        </div>
-      </Drawer>
-    </div>
+          </div>
+        </section>
+      </div>
+    </Drawer>
   );
 }
