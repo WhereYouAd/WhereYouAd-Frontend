@@ -9,11 +9,15 @@ export const TIMELINE_METRICS = [
 ] as const;
 export type TTimelineMetric = (typeof TIMELINE_METRICS)[number];
 
-/*성과 상태*/
+/*성과 상태
+ * ON_TRACK: 최근 추세와 유사한 수준 유지
+ * ABOVE_AVERAGE: 최근 평균 대비 눈에 띄게 좋음
+ * AT_RISK: 최근 평균 대비 눈에 띄게 낮음
+ */
 export const TIMELINE_PERFORMANCE_STATUS = [
   "ON_TRACK",
+  "ABOVE_AVERAGE",
   "AT_RISK",
-  "OFF_TRACK",
 ] as const;
 export type TTimelinePerformanceStatus =
   (typeof TIMELINE_PERFORMANCE_STATUS)[number];

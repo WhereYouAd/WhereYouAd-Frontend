@@ -22,8 +22,7 @@ export interface ITimelineCampaignBar {
   colStart: number; //그리드 시작 위치
   colEnd: number;
   row: number;
-  colorClass: string;
-  performanceStatus?: TTimelinePerformanceStatus;
+  performanceStatus: TTimelinePerformanceStatus;
 }
 
 /*그리드 + 바 묶음*/
