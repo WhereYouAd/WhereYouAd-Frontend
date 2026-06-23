@@ -92,7 +92,7 @@ export const useCampaignGroup = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
+      void queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.campaign.list(orgId),
       });
       setIsSuccessModalOpen(true);
