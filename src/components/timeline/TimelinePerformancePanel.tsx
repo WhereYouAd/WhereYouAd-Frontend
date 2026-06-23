@@ -168,7 +168,12 @@ export default function TimelinePerformancePanel({
   ];
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} hideHeader className={className}>
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      hideHeader
+      className={twMerge("max-w-2xl", className)}
+    >
       <div className="flex flex-col gap-7 px-7 pb-10 pt-6">
         {/* 헤더 */}
         <header className="flex flex-col gap-5">
