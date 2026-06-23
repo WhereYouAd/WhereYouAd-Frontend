@@ -54,8 +54,8 @@ export default function WorkspacePage() {
       return createWorkspace({ name, description, imageFile: logoFile });
     },
 
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.workspace.list(),
       });
       setCreateOpen(false);
