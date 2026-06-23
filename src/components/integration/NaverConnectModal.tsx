@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import type { z } from "zod";
 
 import type { IApiErrorResponse } from "@/types/common/common";
+import type { INaverCredentialsResponseData } from "@/types/integration/naver";
 
 import { naverConnectSchema } from "@/utils/validation";
 
@@ -51,9 +52,12 @@ export default function NaverConnectModal({
     }
   }, [isOpen, reset]);
 
-  const connectMutation = useMutation({
-    mutationFn: (body: TNaverConnectFormValues) =>
-      connectNaverAccount(orgId, body),
+  const connectMutation = useMutation<
+    INaverCredentialsResponseData,
+    IApiErrorResponse,
+    TNaverConnectFormValues
+  >({
+    mutationFn: (body) => connectNaverAccount(orgId, body),
     onSuccess: () => {
       toast.success("네이버 광고 계정을 연동했습니다.");
       reset();
@@ -62,7 +66,7 @@ export default function NaverConnectModal({
         queryKey: ["platform-connections", orgId],
       });
     },
-    onError: (error: IApiErrorResponse) => {
+    onError: (error) => {
       toast.error(error.message ?? "네이버 연동에 실패했습니다.");
     },
   });
