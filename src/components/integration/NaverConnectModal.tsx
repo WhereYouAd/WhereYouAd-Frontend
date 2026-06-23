@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import type { z } from "zod";
 
 import type { IApiErrorResponse } from "@/types/common/common";
-import type { INaverCredentialsResponseData } from "@/types/integration/naver";
 
 import { naverConnectSchema } from "@/utils/validation";
 
@@ -53,7 +52,7 @@ export default function NaverConnectModal({
   }, [isOpen, reset]);
 
   const connectMutation = useMutation<
-    INaverCredentialsResponseData,
+    void,
     IApiErrorResponse,
     TNaverConnectFormValues
   >({
