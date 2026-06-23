@@ -63,7 +63,6 @@ export function WorkspaceSwitcher({
       const workspace = workspaceList.find((w) => w.orgId === orgId);
       setSelectedOrgId(orgId);
       if (workspace) setMyRole(workspace.myRole);
-      setIsOpen(false);
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: QUERY_KEYS.workspace.list(),
@@ -72,6 +71,7 @@ export function WorkspaceSwitcher({
           queryKey: QUERY_KEYS.workspace.saved(),
         }),
       ]);
+      setIsOpen(false);
     },
     onError: (error) => {
       console.error("워크스페이스 저장 실패:", error);
