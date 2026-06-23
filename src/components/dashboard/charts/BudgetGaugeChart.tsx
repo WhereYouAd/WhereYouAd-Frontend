@@ -1,6 +1,8 @@
 import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import { useIsMounted } from "@/hooks/common/useIsMounted";
 
 import { type TBadgeVariant } from "@/components/common/badge/Badge";
@@ -118,8 +120,8 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
 
         <div className="mt-3 flex items-center justify-between font-body2 text-text-body">
-          <span className="tabular-nums">₩{spent.toLocaleString()}</span>
-          <span className="tabular-nums">₩{totalBudget.toLocaleString()}</span>
+          <span className="tabular-nums">{M.spend.format(spent)}</span>
+          <span className="tabular-nums">{M.spend.format(totalBudget)}</span>
         </div>
       </div>
 
@@ -132,7 +134,8 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
               isOverBudget && "text-info-red",
             )}
           >
-            {isOverBudget ? "-" : ""}₩{remaining.toLocaleString()}
+            {isOverBudget ? "-" : ""}
+            {M.spend.format(remaining)}
           </span>
         </div>
 

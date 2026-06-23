@@ -3,9 +3,10 @@ import type {
   TProviderType,
 } from "@/types/dashboard/overview";
 
+import { platformMetricsQueryFn } from "@/utils/dashboard/platformMetricsQuery";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import { getOverview } from "@/api/dashboard/overview";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -15,7 +16,7 @@ export function usePlatformMetrics(provider: TProviderType) {
 
   return useCoreQuery<IMetricsResponse>(
     QUERY_KEYS.platform.metrics(orgId, provider),
-    () => getOverview(orgId!, provider),
+    () => platformMetricsQueryFn(orgId!, provider),
     {
       enabled: !!orgId && !!provider,
     },

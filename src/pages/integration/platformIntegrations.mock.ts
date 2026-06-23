@@ -1,7 +1,5 @@
 import type { IPlatformAccountApi } from "@/types/integration/platformConnection";
 
-import { mapPlatformAccountsToConnections } from "@/utils/integration/mapPlatformAccounts";
-
 /** 목록 API `data.platformAccounts` mock */
 export const platformAccountsApiMock: IPlatformAccountApi[] = [
   {
@@ -23,7 +21,3 @@ export const platformAccountsApiMock: IPlatformAccountApi[] = [
     syncedAt: "2026-05-10T12:09:00",
   },
 ];
-
-export const platformConnectionsMock = mapPlatformAccountsToConnections(
-  platformAccountsApiMock,
-);

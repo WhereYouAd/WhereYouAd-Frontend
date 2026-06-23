@@ -62,11 +62,6 @@ export function PerformanceEfficiencyChartSkeleton() {
   );
 }
 
-// 실시간 트래픽 변화
-export function TrafficChartSkeleton() {
-  return <Skeleton className="flex-1 h-90 w-full rounded-2xl" />;
-}
-
 export function BadgeSkeleton({ className }: { className?: string }) {
   return <Skeleton className={twMerge("w-14 h-6 rounded-lg", className)} />;
 }
