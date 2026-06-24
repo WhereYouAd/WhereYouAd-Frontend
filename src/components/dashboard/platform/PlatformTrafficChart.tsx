@@ -5,6 +5,11 @@ import type { ApexOptions } from "apexcharts";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import {
+  formatCountChartAxis,
+  formatCountChartTooltip,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
@@ -14,13 +19,11 @@ import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDa
 interface IPlatformTrafficChartProps {
   data: IClickStreamResponse | null;
   platform: string;
-  isLoading?: boolean;
 }
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
   platform,
-  isLoading,
 }: IPlatformTrafficChartProps) {
   const seriesData = useMemo(() => {
     if (!data) return [];
@@ -105,12 +108,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       tickAmount: 5,
       labels: {
         style: { colors: "var(--color-text-muted)", fontSize: "12px" },
-        formatter: (val) => {
-          const rounded = Math.round(val);
-          if (rounded <= 0) return "";
-          if (rounded < 1000) return rounded.toLocaleString();
-          return `${Math.round(rounded / 1000)}K`;
-        },
+        formatter: formatCountChartAxis,
       },
     },
     grid: {
@@ -124,19 +122,22 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
     tooltip: {
       x: { show: false },
-      y: { formatter: (val) => `${val.toLocaleString()} 클릭` },
+      y: {
+        formatter: (val) =>
+          formatCountChartTooltip(val, M.clicks.chartTooltipUnit),
+      },
       theme: "light",
     },
   };
 
   const series = [
     {
-      name: "클릭수",
+      name: M.clicks.label,
       data: seriesData,
     },
   ];
 
-  if (isLoading || !data) {
+  if (!data) {
     return <Skeleton className="w-full h-75 rounded-xl" />;
   }
 

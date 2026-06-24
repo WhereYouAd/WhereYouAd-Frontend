@@ -2,6 +2,8 @@ import { Suspense } from "react";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import type { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 
 import Card from "@/components/common/card/Card";
@@ -56,7 +58,7 @@ export function OverviewKpiSection({
         description={
           <ChartLegend
             items={[
-              { label: "클릭수", colorClass: "bg-info-blue" },
+              { label: M.clicks.label, colorClass: "bg-info-blue" },
               { label: "이상 클릭 탐지", colorClass: "bg-info-red" },
             ]}
           />

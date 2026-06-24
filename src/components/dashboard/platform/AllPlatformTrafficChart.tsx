@@ -8,19 +8,16 @@ import {
   PROVIDER_TYPES,
 } from "@/types/dashboard/provider";
 
+import {
+  formatCountChartAxis,
+  formatCountChartTooltip,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
-
-import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
-interface IAllPlatformTrafficChartProps {
-  isLoading?: boolean;
-}
-
-const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
-  isLoading,
-}: IAllPlatformTrafficChartProps) {
+const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
   // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
   const seriesData = useMemo(() => {
     return PROVIDER_TYPES.map((platform) => {
@@ -105,12 +102,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
       tickAmount: 5,
       labels: {
         style: { colors: "var(--color-text-muted)", fontSize: "12px" },
-        formatter: (val) => {
-          const rounded = Math.round(val);
-          if (rounded <= 0) return "";
-          if (rounded < 1000) return rounded.toLocaleString();
-          return `${Math.round(rounded / 1000)}K`;
-        },
+        formatter: formatCountChartAxis,
       },
     },
     grid: {
@@ -126,15 +118,14 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart({
       shared: true, // 여러 플랫폼 동시 비교 가능
       intersect: false,
       x: { show: false },
-      y: { formatter: (val) => `${val.toLocaleString()} 클릭` },
+      y: {
+        formatter: (val) =>
+          formatCountChartTooltip(val, M.clicks.chartTooltipUnit),
+      },
       theme: "light",
     },
     legend: { show: false },
   };
-
-  if (isLoading) {
-    return <Skeleton className="w-full h-full rounded-xl" />;
-  }
 
   return (
     <div className="w-full h-full min-h-75">

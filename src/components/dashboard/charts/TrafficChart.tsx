@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
 import { useClickStream } from "@/hooks/dashboard/useClickStream";
@@ -198,7 +199,7 @@ const TrafficChart = memo(function TrafficChart() {
     return {
       series: [
         {
-          name: "클릭수",
+          name: M.clicks.label,
           data: chartData.map(({ x, y }) => ({ x, y })),
         },
       ],
