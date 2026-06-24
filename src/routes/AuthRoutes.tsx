@@ -1,12 +1,12 @@
 import { lazy, Suspense } from "react";
 import { type RouteObject, useLocation } from "react-router-dom";
 
-import { loadable } from "@/utils/loadable";
-
 import AuthFormSkeleton from "@/components/auth/skeleton/AuthFormSkeleton";
 import LoginPageSkeleton from "@/components/auth/skeleton/LoginPageSkeleton";
 import SignupEmailStepSkeleton from "@/components/auth/skeleton/SignupEmailStepSkeleton";
 import SignupPageSkeleton from "@/components/auth/skeleton/SignupPageSkeleton";
+
+import { loadable } from "@/lib/loadable";
 
 const FindEmail = loadable(
   lazy(() => import("@/pages/auth/FindEmail")),

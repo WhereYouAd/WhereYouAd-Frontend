@@ -8,7 +8,7 @@ import type { z } from "zod";
 import type { IEmailSendRequest, IEmailSendResponse } from "@/types/auth/auth";
 import type { IApiErrorResponse, ICommonResponse } from "@/types/common/common";
 
-import { signupEmailSchema } from "@/utils/validation";
+import { signupEmailSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useTimer } from "@/hooks/common/useTimer";

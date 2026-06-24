@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { stripPhoneHyphens } from "@/utils/formatPhoneNumber";
-import { findEmailSchema } from "@/utils/validation";
+import { stripPhoneHyphens } from "@/utils/auth/formatPhoneNumber";
+import { findEmailSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useTimer } from "@/hooks/common/useTimer";

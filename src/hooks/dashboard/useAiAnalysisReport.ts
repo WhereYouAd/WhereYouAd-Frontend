@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -15,7 +16,6 @@ import {
   getAiReportByAccessToken,
   requestAiAnalysis,
 } from "@/api/dashboard/aiAnalysis";
-import { queryClient } from "@/lib/queryClient";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -33,6 +33,7 @@ export type TRequestAiAnalysisParams = Partial<IAnalysisRequest>;
 
 /** AI 요약: POST 요청 → accessToken → GET 폴링 → reportData */
 export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
+  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [pollStartedAt, setPollStartedAt] = useState<number | null>(null);

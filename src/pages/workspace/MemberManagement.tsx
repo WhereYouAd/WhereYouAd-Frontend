@@ -109,13 +109,15 @@ export default function MemberManagement() {
 
   const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
     mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.members(orgId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.memberCount(orgId),
-      });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.members(orgId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.memberCount(orgId),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message ?? "멤버 삭제에 실패했습니다.");

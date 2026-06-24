@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import formatPhoneNumber from "@/utils/formatPhoneNumber";
+import formatPhoneNumber from "@/utils/auth/formatPhoneNumber";
 
 import Input, { type IInputProps } from "@/components/common/input/Input";
 

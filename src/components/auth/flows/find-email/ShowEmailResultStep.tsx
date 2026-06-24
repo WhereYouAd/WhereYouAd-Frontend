@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { maskEmail } from "@/utils/maskEmail";
+import { maskEmail } from "@/utils/auth/maskEmail";
 
 import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import Button from "@/components/common/button/Button";
