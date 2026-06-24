@@ -68,16 +68,25 @@ function SubmittingPreview() {
 
     const timer = window.setTimeout(() => {
       const nameInput = document.querySelector<HTMLInputElement>(
-        'input[placeholder="예) 6월 봄 프로모션"]',
+        'input[placeholder="ex. 6월 봄 프로모션"]',
       );
       const startInput =
         document.querySelector<HTMLInputElement>('input[type="date"]');
       const endInputs =
         document.querySelectorAll<HTMLInputElement>('input[type="date"]');
 
-      if (nameInput) nameInput.value = "스토리북 테스트";
-      if (startInput) startInput.value = "2026-06-01";
-      if (endInputs) endInputs[1].value = "2026-06-30";
+      if (nameInput) {
+        nameInput.value = "스토리북 테스트";
+        nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (startInput) {
+        startInput.value = "2026-06-01";
+        startInput.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (endInputs) {
+        endInputs[1].value = "2026-06-30";
+        endInputs[1].dispatchEvent(new Event("input", { bubbles: true }));
+      }
 
       const metricButton = document.querySelector<HTMLButtonElement>(
         'button[aria-pressed="false"]',

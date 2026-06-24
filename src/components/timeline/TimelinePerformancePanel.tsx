@@ -131,7 +131,13 @@ export default function TimelinePerformancePanel({
     CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      if (summaryTimerRef.current !== null) {
+        window.clearTimeout(summaryTimerRef.current);
+        summaryTimerRef.current = null;
+      }
+      return;
+    }
     setAiState(data.aiSummary.trim() ? "done" : "idle");
     setGeneratedSummary("");
   }, [isOpen, data.aiSummary]);
@@ -144,12 +150,16 @@ export default function TimelinePerformancePanel({
     };
   }, []);
   const handleGenerateSummary = () => {
+    if (summaryTimerRef.current !== null) {
+      window.clearTimeout(summaryTimerRef.current);
+    }
     setAiState("loading");
     summaryTimerRef.current = window.setTimeout(() => {
       setGeneratedSummary(
         data.aiSummary.trim() || "AI 요약이 생성되었습니다.(API연동전 임시)",
       );
       setAiState("done");
+      summaryTimerRef.current = null;
     }, AI_SUMMARY_LOADING_MS);
   };
 

@@ -19,7 +19,7 @@ export const TIMELINE_COMPARISON_PERIOD_OPTIONS: ReadonlyArray<{
   value: TTimelineComparisonPeriodType;
   label: string;
 }> = [
-  { value: "LAST_MONTH", label: "지난주 대비" },
+  { value: "LAST_WEEK", label: "지난주 대비" },
   { value: "LAST_MONTH", label: "지난달 대비" },
   { value: "PREVIOUS_PERIOD", label: "이전 동일 기간 대비" },
 ] as const;
