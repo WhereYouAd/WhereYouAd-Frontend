@@ -33,8 +33,7 @@ const SECTION_SHELL_CLASS =
 
 const SECTION_INNER_CLASS = "flex flex-col gap-5 px-6 py-6";
 
-const SOFT_CARD_CLASS =
-  "rounded-2xl border border-surface-300/70 bg-surface-100";
+const SOFT_CARD_CLASS = "rounded-2xl bg-surface-100 shadow-Soft";
 
 const PLATFORM_WORDMARKS: Record<
   TProviderType,
@@ -296,23 +295,27 @@ export default function TimelinePerformancePanel({
                 "flex min-w-0 flex-1 flex-col gap-1 px-4 py-3.5",
               )}
             >
-              <span className="truncate font-body2 text-text-muted">
-                {metric.label}
-              </span>
-              <span className="truncate text-text-title tracking-tight font-heading4">
-                {formatMetricValue(metric.value, metric.unit)}
-              </span>
-              {metric.changeRate !== undefined && (
-                <span
-                  className={twMerge(
-                    "font-body2",
-                    metric.changeRate >= 0 ? "text-info-red" : "text-info-blue",
-                  )}
-                >
-                  {metric.changeRate >= 0 ? "▲" : "▼"}{" "}
-                  {formatChangeRate(metric.changeRate)}
+              <span className="ml-1 flex flex-col">
+                <span className="truncate font-body2 text-text-muted">
+                  {metric.label}
                 </span>
-              )}
+                <span className="truncate  text-text-title tracking-tight font-heading4">
+                  {formatMetricValue(metric.value, metric.unit)}
+                </span>
+                {metric.changeRate !== undefined && (
+                  <span
+                    className={twMerge(
+                      "font-body2 ",
+                      metric.changeRate >= 0
+                        ? "text-info-red"
+                        : "text-info-blue",
+                    )}
+                  >
+                    {metric.changeRate >= 0 ? "▲" : "▼"}{" "}
+                    {formatChangeRate(metric.changeRate)}
+                  </span>
+                )}
+              </span>
             </div>
           ))}
         </section>
