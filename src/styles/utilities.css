@@ -68,12 +68,6 @@
       0 4px 20px color-mix(in srgb, var(--color-text-400) 6%, transparent);
   }
 
-  .shadow-Soft-xs {
-    box-shadow:
-      0 1px 2px color-mix(in srgb, var(--color-text-400) 3%, transparent),
-      0 2px 8px color-mix(in srgb, var(--color-text-400) 4%, transparent);
-  }
-
   /* UI 트랜지션  */
   .transition-ui-smooth {
     transition-property: transform, opacity, background-color, border-color, color,

@@ -29,12 +29,12 @@ const AI_SUMMARY_LOADING_MS = 1500;
 const CHART_PERIOD_LABELS = ["오늘", "1월 21일 → 25일", "1월 14일 → 20일"];
 
 const SECTION_SHELL_CLASS =
-  "rounded-3xl border border-surface-300/50 bg-surface-100 shadow-Soft-xs";
+  "rounded-3xl border border-surface-300/70 bg-surface-100";
 
 const SECTION_INNER_CLASS = "flex flex-col gap-5 px-6 py-6";
 
 const SOFT_CARD_CLASS =
-  "rounded-2xl border border-surface-300/40 bg-surface-100 shadow-Soft-xs";
+  "rounded-2xl border border-surface-300/70 bg-surface-100";
 
 const PLATFORM_WORDMARKS: Record<
   TProviderType,
