@@ -1,5 +1,7 @@
 import type { ApexOptions } from "apexcharts";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   chart: {
     type: "line",
@@ -44,9 +46,9 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   },
   yaxis: [
     {
-      seriesName: "클릭률(CTR)",
+      seriesName: M.ctr.label,
       labels: {
-        formatter: (val) => `${val.toFixed(1)}%`,
+        formatter: (val) => M.ctr.format(val),
         style: {
           colors: "var(--color-text-muted)",
           fontSize: "12px",
@@ -54,15 +56,15 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
       },
     },
     {
-      seriesName: "클릭률(CTR)",
+      seriesName: M.ctr.label,
       show: false,
     },
     {
       opposite: true,
-      seriesName: "노출수",
+      seriesName: M.impressions.label,
       labels: {
         offsetX: -10,
-        formatter: (val) => val.toLocaleString("ko-KR"),
+        formatter: (val) => M.impressions.format(val),
         style: {
           colors: "var(--color-text-muted)",
           fontSize: "12px",
@@ -75,10 +77,13 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     intersect: false,
     y: {
       formatter: (val, { seriesIndex }) => {
-        if (seriesIndex === 0 || seriesIndex === 1) {
-          return `${val.toFixed(2)}%`;
+        if (seriesIndex === 0) {
+          return M.ctr.format(val);
         }
-        return val.toLocaleString("ko-KR");
+        if (seriesIndex === 1) {
+          return M.conversion.format(val);
+        }
+        return M.impressions.format(val);
       },
     },
   },

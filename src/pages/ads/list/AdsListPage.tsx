@@ -31,7 +31,7 @@ export default function AdsListPage() {
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
 
   const invalidateCampaigns = useCallback(() => {
-    queryClient.invalidateQueries({
+    void queryClient.invalidateQueries({
       queryKey: QUERY_KEYS.campaign.list(orgId),
     });
   }, [queryClient, orgId]);

@@ -16,10 +16,10 @@ export interface IRoasRankingsResponse {
   rankings: IRoasRanking[];
 }
 
-// 플랫폼별 ROAS 순위 + 지표(CTR/CVR) 통합 항목
+// 플랫폼별 ROAS 순위 + 지표(클릭수/CVR) 통합 항목
 export interface IPlatformRankingItem extends IRoasRanking {
-  clickRate?: number; // CTR (%)
-  ctrDelta?: number; // CTR 전기 대비 증감 (%)
+  clicks?: number;
+  clickDelta?: number; // 클릭수 전기 대비 증감 (%)
   conversionRate?: number; // CVR (%)
   conversionDelta?: number; // CVR 전기 대비 증감 (%)
 }

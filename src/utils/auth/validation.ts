@@ -69,3 +69,13 @@ export const findEmailSchema = z.object({
   phoneNum: phoneSchema,
   code: codeSchema,
 });
+
+export const naverConnectSchema = z.object({
+  customerId: z
+    .string()
+    .trim()
+    .min(1, "고객 ID를 입력해 주세요.")
+    .regex(/^\d+$/, "고객 ID는 숫자만 입력해 주세요."),
+  apiKey: z.string().trim().min(1, "API Key를 입력해 주세요."),
+  secretKey: z.string().trim().min(1, "Secret Key를 입력해 주세요."),
+});

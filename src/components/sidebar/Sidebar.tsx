@@ -267,8 +267,10 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "inline-flex h-14 w-full items-center rounded-2xl font-body2 transition-all duration-200",
-                isCollapsed ? "justify-center px-0" : "gap-4 px-3",
+                "flex h-[55px] items-center rounded-2xl font-body2 transition-all duration-200",
+                isCollapsed
+                  ? "mx-auto w-[55px] justify-center px-0"
+                  : "w-full gap-4 px-3",
                 "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
             >
