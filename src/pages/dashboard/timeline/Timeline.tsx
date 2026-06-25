@@ -101,15 +101,15 @@ export default function Timeline() {
               onClick={() => setIsCreateOpen(true)}
               leftIcon={
                 <PlusIcon
-                  className="h-4 w-4 shrink-0 text-primary-400"
+                  className="h-4 w-4 shrink-0 text-primary-450"
                   aria-hidden
                 />
               }
               className={twMerge(
                 "h-10 rounded-2xl px-4",
-                "bg-primary-400/12 text-primary-400",
+                "bg-primary-400/20 text-primary-500",
                 "font-body2 shadow-Soft",
-                "transition-ui-smooth hover:bg-primary-400/18",
+                "transition-ui-smooth hover:bg-primary-500/30",
               )}
             >
               타임라인 생성
