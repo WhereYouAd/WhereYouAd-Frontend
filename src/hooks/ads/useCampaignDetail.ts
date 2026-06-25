@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getCampaignDetail } from "@/api/ads/ads";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 export const useCampaignDetail = () => {
   const { orgId, projectId } = useParams<{
@@ -22,7 +23,7 @@ export const useCampaignDetail = () => {
     parsedProjectId > 0;
 
   return useCoreQuery(
-    ["campaignDetail", parsedOrgId, parsedProjectId],
+    QUERY_KEYS.campaign.detail(parsedOrgId, parsedProjectId),
     () => getCampaignDetail(parsedOrgId, parsedProjectId),
     { enabled: isValid },
   );

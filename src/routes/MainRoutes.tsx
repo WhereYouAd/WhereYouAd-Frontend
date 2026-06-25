@@ -1,12 +1,11 @@
 import { lazy } from "react";
 import { Navigate, type RouteObject } from "react-router-dom";
 
-import { loadable } from "@/utils/loadable";
-
 import WorkspaceListLoading from "@/components/workspace/WorkspaceListLoading";
 
 import RoleGuard from "./RoleGuard";
 
+import { loadable } from "@/lib/loadable";
 import WorkspaceBillingRedirect from "@/pages/workspace/WorkspaceBillingRedirect";
 
 const OverviewDashboard = loadable(
@@ -43,6 +42,9 @@ const MemberManagement = loadable(
 const Billing = loadable(lazy(() => import("@/pages/workspace/Billing")));
 
 const Setting = loadable(lazy(() => import("@/pages/setting/Setting")));
+const PlatformIntegrationsPage = loadable(
+  lazy(() => import("@/pages/integration/PlatformIntegrationsPage")),
+);
 
 const MainRoutes: RouteObject[] = [
   {
@@ -105,6 +107,10 @@ const MainRoutes: RouteObject[] = [
         ),
       },
     ],
+  },
+  {
+    path: "integrations",
+    element: <PlatformIntegrationsPage />,
   },
   {
     path: "setting",

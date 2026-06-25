@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -10,6 +10,7 @@ interface ISidebarItemProps {
   isOpen?: boolean;
   className: string;
   onClick: (id: string, hasChildren: boolean) => void;
+  trailing?: ReactNode;
 }
 
 export const SidebarItem = memo(function SidebarItem({
@@ -18,30 +19,28 @@ export const SidebarItem = memo(function SidebarItem({
   isOpen,
   className,
   onClick,
+  trailing,
 }: ISidebarItemProps) {
   const hasChildren = !!item.children?.length;
   const Icon = item.icon;
 
-  const content = (
-    <div
-      className={twMerge(
-        "flex items-center w-full",
-        isCollapsed ? "justify-center" : "gap-4",
-      )}
-    >
-      {Icon && (
-        <Icon
-          className={twMerge("h-6 w-6 shrink-0", isCollapsed ? "" : "ml-2")}
-        />
-      )}
-      <span
-        className={twMerge(
-          "whitespace-nowrap transition-opacity duration-200",
-          isCollapsed ? "opacity-0 w-0 invisible" : "opacity-100 ml-0",
-        )}
-      >
+  const itemClassName = twMerge(
+    className,
+    "flex items-center",
+    isCollapsed ? "justify-center" : "",
+  );
+
+  const content = isCollapsed ? (
+    Icon ? (
+      <Icon className="h-6 w-6 shrink-0" aria-hidden />
+    ) : null
+  ) : (
+    <div className="flex min-w-0 w-full items-center gap-2">
+      {Icon ? <Icon className="ml-2 h-6 w-6 shrink-0" aria-hidden /> : null}
+      <span className="min-w-0 flex-1 truncate whitespace-nowrap">
         {item.label}
       </span>
+      {trailing ? <span className="ml-1 shrink-0">{trailing}</span> : null}
     </div>
   );
 
@@ -49,7 +48,7 @@ export const SidebarItem = memo(function SidebarItem({
     return (
       <NavLink
         to={item.path}
-        className={twMerge(className, "flex items-center")}
+        className={itemClassName}
         onClick={(e) => {
           if (e.defaultPrevented) return;
           onClick(item.id, hasChildren);
@@ -65,7 +64,7 @@ export const SidebarItem = memo(function SidebarItem({
       type="button"
       aria-haspopup={hasChildren ? "menu" : undefined}
       aria-expanded={hasChildren ? isOpen : undefined}
-      className={twMerge(className, "flex items-center text-left")}
+      className={twMerge(itemClassName, "text-left")}
       onClick={(e) => {
         if (e.defaultPrevented) return;
         onClick(item.id, hasChildren);

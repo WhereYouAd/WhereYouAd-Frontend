@@ -22,6 +22,7 @@ import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export type TMainLayoutOutletContext = {
@@ -30,7 +31,7 @@ export type TMainLayoutOutletContext = {
 };
 
 export default function MainLayout() {
-  useCoreQuery(["myInfo"], getMyInfo);
+  useCoreQuery(QUERY_KEYS.auth.myInfo(), getMyInfo);
   const location = useLocation();
   const [headerRight, setHeaderRight] = useState<ReactNode | null>(null);
   const [campaignDetailHeaderTitle, setCampaignDetailHeaderTitle] = useState<
@@ -41,11 +42,14 @@ export default function MainLayout() {
   const setMyRole = useWorkspaceStore((s) => s.setMyRole);
 
   const savedWorkspaceQuery = useCoreQuery(
-    ["savedWorkspace"],
+    QUERY_KEYS.workspace.saved(),
     getSavedWorkspace,
   );
   const { data: savedData } = savedWorkspaceQuery;
-  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  const { data: workspaces } = useCoreQuery(
+    QUERY_KEYS.workspace.list(),
+    getMyWorkspaces,
+  );
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const navForHeader = useMemo(
@@ -205,13 +209,15 @@ export default function MainLayout() {
             <div className="flex items-center gap-2">{headerRight}</div>
           </div>
         </header>
-        <div className="mx-auto w-full max-w-400 min-w-0 px-8 py-6 tablet:px-6">
-          <Outlet
-            context={{
-              setHeaderRight,
-              setCampaignDetailHeaderTitle,
-            }}
-          />
+        <div className="w-full min-w-0 px-8 py-6 tablet:px-6">
+          <div className="w-full max-w-400 min-w-0">
+            <Outlet
+              context={{
+                setHeaderRight,
+                setCampaignDetailHeaderTitle,
+              }}
+            />
+          </div>
         </div>
       </main>
     </div>

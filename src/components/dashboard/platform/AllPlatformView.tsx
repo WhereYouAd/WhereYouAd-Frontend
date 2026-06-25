@@ -4,6 +4,8 @@ import {
   PROVIDER_TYPES,
 } from "@/types/dashboard/provider";
 
+import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
+
 import { usePlatformAdCount } from "@/hooks/dashboard/usePlatformAdCount";
 import { usePlatformPerformance } from "@/hooks/dashboard/usePlatformPerformance";
 import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankings";
@@ -29,11 +31,7 @@ const platformChartLegendItems = PROVIDER_TYPES.map((provider) => ({
   color: PLATFORM_CHART_COLORS[provider],
 }));
 
-interface IAllPlatformViewProps {
-  isLoading: boolean;
-}
-
-export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
+export default function AllPlatformView() {
   const {
     data: roasRankings,
     isLoading: isRankingsLoading,
@@ -59,17 +57,13 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
         <Card
           title="성과 우수 플랫폼"
           RightElement={
-            isLoading ? (
-              <BadgeSkeleton className="w-28" />
-            ) : (
-              <Badge variant="surface" className="text-text-auth-sub">
-                ROAS 기준 상위 3
-              </Badge>
-            )
+            <Badge variant="surface" className="text-text-auth-sub">
+              ROAS 기준 상위 3
+            </Badge>
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isLoading || isRankingsLoading ? (
+          {isRankingsLoading ? (
             <TopPerformanceListSkeleton />
           ) : isRankingsError || !roasRankings ? (
             <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
@@ -94,7 +88,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
             />
           }
           RightElement={
-            isLoading || isAdStatusLoading ? (
+            isAdStatusLoading ? (
               <BadgeSkeleton className="w-14" />
             ) : adStatus ? (
               <Badge variant="surface" className="text-text-auth-sub">
@@ -104,7 +98,7 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isLoading || isAdStatusLoading ? (
+          {isAdStatusLoading ? (
             <AdStatusChartSkeleton />
           ) : isAdStatusError || !adStatus ? (
             <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
@@ -126,14 +120,14 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
           description={
             <ChartLegend
               items={[
-                { label: "클릭률", colorClass: "bg-info-blue" },
-                { label: "전환율", colorClass: "bg-primary-500" },
-                { label: "노출수", colorClass: "bg-primary-300" },
+                { label: M.ctr.label, colorClass: "bg-info-blue" },
+                { label: M.conversion.label, colorClass: "bg-primary-500" },
+                { label: M.impressions.label, colorClass: "bg-primary-300" },
               ]}
             />
           }
         >
-          {isLoading || isPerformanceLoading ? (
+          {isPerformanceLoading ? (
             <PerformanceEfficiencyChartSkeleton />
           ) : isPerformanceError || !platformPerformance ? (
             <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
@@ -156,13 +150,13 @@ export default function AllPlatformView({ isLoading }: IAllPlatformViewProps) {
         description={<ChartLegend items={platformChartLegendItems} />}
       >
         <div className="flex-1 min-h-0">
-          <AllPlatformTrafficChart isLoading={isLoading} />
+          <AllPlatformTrafficChart />
         </div>
       </Card>
 
       {/* 개별 플랫폼 상세 */}
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-        {isLoading || isPerformanceLoading ? (
+        {isPerformanceLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
             <PlatformDetailCardSkeleton key={i} />
           ))

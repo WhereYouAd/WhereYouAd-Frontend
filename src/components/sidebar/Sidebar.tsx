@@ -1,5 +1,6 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
 import { useCallback, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
@@ -12,12 +13,20 @@ import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
 import { useComingSoon } from "@/hooks/common/useComingSoon";
+import { useCoreQuery } from "@/hooks/customQuery";
+import {
+  needsIntegrationAttention,
+  usePlatformConnections,
+} from "@/hooks/integration/usePlatformConnections";
 import { useSidebar } from "@/hooks/sidebar/useSidebar";
+
+import Badge from "@/components/common/badge/Badge";
 
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 
+import { getMyWorkspaces } from "@/api/workspace/org";
 import CollapseIcon from "@/assets/icon/chevron/chervon-left.svg?react";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -87,7 +96,31 @@ export default function Sidebar() {
   const { showComingSoon } = useComingSoon();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
-  const myRole = useWorkspaceStore((s) => s.myRole);
+  const myRoleFromStore = useWorkspaceStore((s) => s.myRole);
+  const { workspaceId } = useParams<{ workspaceId: string }>();
+  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+
+  const myRole = useMemo(() => {
+    if (!workspaces) return null;
+
+    const parsedWorkspaceId = workspaceId ? Number(workspaceId) : null;
+    const getRoleByOrgId = (orgId: number | null) => {
+      if (orgId == null || !Number.isFinite(orgId) || orgId <= 0) return null;
+      return workspaces.find((w) => w.orgId === orgId)?.myRole ?? null;
+    };
+
+    return (
+      getRoleByOrgId(parsedWorkspaceId) ??
+      getRoleByOrgId(selectedOrgId) ??
+      myRoleFromStore
+    );
+  }, [workspaceId, selectedOrgId, workspaces, myRoleFromStore]);
+
+  const { data: platformConnections } = usePlatformConnections();
+  const showIntegrationsAttention = useMemo(
+    () => needsIntegrationAttention(platformConnections),
+    [platformConnections],
+  );
   const mainNavWithWorkspace = useMemo(
     () =>
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
@@ -216,6 +249,13 @@ export default function Sidebar() {
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
                   onClick={handleFooterItemClick}
+                  trailing={
+                    item.id === "integrations" &&
+                    showIntegrationsAttention &&
+                    !isCollapsed ? (
+                      <Badge variant="infoRed">연동 필요</Badge>
+                    ) : undefined
+                  }
                 />
               </div>
             );
@@ -227,8 +267,10 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "inline-flex h-14 w-full items-center rounded-2xl font-body2 transition-all duration-200",
-                isCollapsed ? "justify-center px-0" : "gap-4 px-3",
+                "flex h-[55px] items-center rounded-2xl font-body2 transition-all duration-200",
+                isCollapsed
+                  ? "mx-auto w-[55px] justify-center px-0"
+                  : "w-full gap-4 px-3",
                 "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
             >

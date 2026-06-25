@@ -8,6 +8,7 @@ import type {
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getMetricFacts } from "@/api/dashboard/platform";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"] as const;
@@ -57,7 +58,7 @@ export function usePlatformMetricFacts(provider: TProviderType, days: 7 | 30) {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   return useCoreQuery<IMetricFactsResponse, TMetricFactsViewModel>(
-    ["platform", "metricFacts", orgId, provider, days],
+    QUERY_KEYS.platform.metricFacts(orgId, provider, days),
     () =>
       getMetricFacts(orgId!, {
         providerType: provider,

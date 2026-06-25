@@ -25,6 +25,7 @@ import { createWorkspace, getMyWorkspaces } from "@/api/workspace/org";
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import SearchIcon from "@/assets/icon/common/search.svg?react";
 import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function WorkspacePage() {
@@ -42,7 +43,7 @@ export default function WorkspacePage() {
 
   const queryClient = useQueryClient();
   const workspacesQuery = useQuery<TWorkspace[], IApiErrorResponse>({
-    queryKey: ["my-workspaces"],
+    queryKey: QUERY_KEYS.workspace.list(),
     queryFn: getMyWorkspaces,
   });
 
@@ -53,8 +54,10 @@ export default function WorkspacePage() {
       return createWorkspace({ name, description, imageFile: logoFile });
     },
 
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.workspace.list(),
+      });
       setCreateOpen(false);
     },
   });

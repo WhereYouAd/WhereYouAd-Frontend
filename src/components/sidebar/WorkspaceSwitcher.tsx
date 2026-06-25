@@ -11,6 +11,7 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getMyWorkspaces, saveSelectedWorkspace } from "@/api/workspace/org";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function WorkspaceSwitcher({
@@ -30,7 +31,7 @@ export function WorkspaceSwitcher({
   const setMyRole = useWorkspaceStore((s) => s.setMyRole);
 
   const { data: workspaces, isPending } = useCoreQuery(
-    ["my-workspaces"],
+    QUERY_KEYS.workspace.list(),
     getMyWorkspaces,
   );
 
@@ -62,11 +63,15 @@ export function WorkspaceSwitcher({
       const workspace = workspaceList.find((w) => w.orgId === orgId);
       setSelectedOrgId(orgId);
       if (workspace) setMyRole(workspace.myRole);
-      setIsOpen(false);
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["my-workspaces"] }),
-        queryClient.invalidateQueries({ queryKey: ["savedWorkspace"] }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.list(),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.saved(),
+        }),
       ]);
+      setIsOpen(false);
     },
     onError: (error) => {
       console.error("워크스페이스 저장 실패:", error);

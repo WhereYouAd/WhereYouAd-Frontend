@@ -1,18 +1,23 @@
+import type { TProviderType } from "@/types/dashboard/overview";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getBudget } from "@/api/dashboard/overview";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-// 예산 소진율 임계값
 const WARNING_THRESHOLD = 50;
 const DANGER_THRESHOLD = 75;
 
-// 예산 소진 현황 조회
-export function useOverviewBudget() {
+export function useBudget(provider?: TProviderType) {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  return useCoreQuery(["overview", "budget", orgId], () => getBudget(orgId!), {
-    enabled: !!orgId,
+  const queryKey = provider
+    ? QUERY_KEYS.platform.budget(orgId, provider)
+    : QUERY_KEYS.overview.budget(orgId);
+
+  return useCoreQuery(queryKey, () => getBudget(orgId!, provider), {
+    enabled: !!orgId && (provider ? !!provider : true),
     select: (data) => ({
       totalBudget: data.totalBudget,
       spent: data.totalSpend,

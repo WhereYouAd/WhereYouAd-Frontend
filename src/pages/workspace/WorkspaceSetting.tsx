@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import useIsAdmin from "@/hooks/auth/useIsAdmin";
+import { useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -17,17 +17,25 @@ import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoad
 
 import {
   deleteWorkspace,
+  getMyWorkspaces,
   getWorkspace,
   updateWorkspace,
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 export default function WorkspaceSetting() {
-  const isAdmin = useIsAdmin();
   const navigate = useNavigate();
   const { workspaceId } = useParams();
+
+  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  const isAdmin = useMemo(() => {
+    if (!workspaceId || !workspaces) return false;
+    const workspace = workspaces.find((w) => w.orgId === Number(workspaceId));
+    return workspace?.myRole === "ADMIN";
+  }, [workspaceId, workspaces]);
   const queryClient = useQueryClient();
 
   const orgId = useMemo(() => {
@@ -101,7 +109,9 @@ export default function WorkspaceSetting() {
         imageFile: logoFile,
         isImageDeleted,
       });
-      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.workspace.list(),
+      });
       toast.success("변경사항이 저장되었습니다");
       await fetchWorkspaceDetail();
     } catch (e) {
@@ -124,7 +134,9 @@ export default function WorkspaceSetting() {
     setDeleting(true);
     try {
       await deleteWorkspace(orgId);
-      await queryClient.invalidateQueries({ queryKey: ["my-workspaces"] });
+      await queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.workspace.list(),
+      });
       toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
@@ -254,7 +266,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
                     onClick={openFilePicker}
                     aria-label="로고 이미지 업로드 버튼"
                     disabled={!isAdmin || saving || deleting}
@@ -264,7 +276,7 @@ export default function WorkspaceSetting() {
                   <Button
                     variant="custom"
                     type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200"
+                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
                     onClick={onResetLogo}
                     aria-label="로고 이미지 초기화 버튼"
                     disabled={!isAdmin || saving || deleting}

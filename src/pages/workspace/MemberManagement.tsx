@@ -27,6 +27,7 @@ import {
   getWorkspaceMembers,
   updateWorkspaceMemberPermission,
 } from "@/api/workspace/org";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 const PAGE_SIZE = 20;
 
@@ -45,12 +46,12 @@ export default function MemberManagement() {
     Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
     IApiErrorResponse
   >({
-    queryKey: ["workspaceMemberCount", orgId],
+    queryKey: QUERY_KEYS.workspace.memberCount(orgId),
     queryFn: () => getWorkspaceMemberCount(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
   const membersQuery = useInfiniteQuery({
-    queryKey: ["workspaceMembers", orgId, PAGE_SIZE],
+    queryKey: QUERY_KEYS.workspace.membersWithPageSize(orgId, PAGE_SIZE),
     queryFn: ({ pageParam }: { pageParam: string | null }) =>
       getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
     initialPageParam: null,
@@ -75,7 +76,7 @@ export default function MemberManagement() {
     Awaited<ReturnType<typeof getPendingMember>>,
     IApiErrorResponse
   >({
-    queryKey: ["workspacePendingMembers", orgId],
+    queryKey: QUERY_KEYS.workspace.pendingMembers(orgId),
     queryFn: () => getPendingMember(orgId),
     enabled: Number.isFinite(orgId) && orgId > 0,
   });
@@ -98,7 +99,7 @@ export default function MemberManagement() {
       updateWorkspaceMemberPermission(orgId, memberId, body),
     onSuccess: () => {
       void queryClient.invalidateQueries({
-        queryKey: ["workspaceMembers", orgId],
+        queryKey: QUERY_KEYS.workspace.members(orgId),
       });
     },
     onError: (error) => {
@@ -108,13 +109,15 @@ export default function MemberManagement() {
 
   const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
     mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["workspaceMembers", orgId],
-      });
-      void queryClient.invalidateQueries({
-        queryKey: ["workspaceMemberCount", orgId],
-      });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.members(orgId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.workspace.memberCount(orgId),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message ?? "멤버 삭제에 실패했습니다.");

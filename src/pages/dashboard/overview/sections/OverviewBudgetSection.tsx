@@ -1,6 +1,6 @@
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import type { useOverviewBudget } from "@/hooks/dashboard/useOverviewBudget";
+import type { useBudget } from "@/hooks/dashboard/useBudget";
 
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
@@ -28,7 +28,7 @@ export function OverviewBudgetSection({
   budgetError,
   budgetStatus,
 }: {
-  budget: ReturnType<typeof useOverviewBudget>["data"];
+  budget: ReturnType<typeof useBudget>["data"];
   isBudgetLoading: boolean;
   isBudgetError: boolean;
   budgetError: IApiErrorResponse | null;

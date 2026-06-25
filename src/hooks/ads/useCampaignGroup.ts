@@ -7,6 +7,7 @@ import type { IPlatformCampaign } from "@/types/ads/campaign";
 import type { IApiErrorResponse } from "@/types/common/common";
 
 import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const NONE_OPTION: IPlatformCampaign = {
@@ -36,7 +37,7 @@ export const useCampaignGroup = () => {
     IPlatformCampaign[],
     IApiErrorResponse
   >({
-    queryKey: ["platformCampaigns", orgId, "GOOGLE"],
+    queryKey: QUERY_KEYS.campaign.platformList(orgId, "GOOGLE"),
     queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
     enabled: !!orgId,
   });
@@ -45,7 +46,7 @@ export const useCampaignGroup = () => {
     IPlatformCampaign[],
     IApiErrorResponse
   >({
-    queryKey: ["platformCampaigns", orgId, "NAVER"],
+    queryKey: QUERY_KEYS.campaign.platformList(orgId, "NAVER"),
     queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
     enabled: !!orgId,
   });
@@ -54,7 +55,7 @@ export const useCampaignGroup = () => {
     IPlatformCampaign[],
     IApiErrorResponse
   >({
-    queryKey: ["platformCampaigns", orgId, "META"],
+    queryKey: QUERY_KEYS.campaign.platformList(orgId, "META"),
     queryFn: () => getPlatformCampaigns(orgId!, "META"),
     enabled: !!orgId,
   });
@@ -91,7 +92,9 @@ export const useCampaignGroup = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["campaigns", orgId] });
+      void queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.campaign.list(orgId),
+      });
       setIsSuccessModalOpen(true);
     },
     onError: (error) => {

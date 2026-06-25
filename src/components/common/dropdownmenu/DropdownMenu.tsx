@@ -7,6 +7,8 @@ export type TMenuItem = {
   icon?: React.ReactNode;
   onClick: () => void;
   active?: boolean;
+  danger?: boolean;
+  labelClassName?: string;
 };
 
 const easeOut = [0, 0, 0.2, 1] as const;
@@ -114,9 +116,11 @@ export function DropdownMenu({
                     }}
                     className={twMerge(
                       "group flex w-full items-center justify-between rounded-2xl px-5 py-4 text-left font-body2 transition-ui-fast",
-                      it.active
-                        ? "bg-info-blue/10 text-info-blue"
-                        : "text-text-body hover:bg-primary-100/50 hover:text-info-blue",
+                      it.danger
+                        ? "text-info-red hover:bg-info-red/10 hover:text-info-red"
+                        : it.active
+                          ? "bg-info-blue/10 text-info-blue"
+                          : "text-text-body hover:bg-primary-100/50 hover:text-info-blue",
                     )}
                   >
                     <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -124,9 +128,11 @@ export function DropdownMenu({
                         <span
                           className={twMerge(
                             "inline-flex h-5 w-5 items-center justify-center text-text-body",
-                            it.active
-                              ? "text-info-blue"
-                              : "group-hover:text-info-blue",
+                            it.danger
+                              ? "text-info-red group-hover:text-info-red"
+                              : it.active
+                                ? "text-info-blue"
+                                : "group-hover:text-info-blue",
                           )}
                           aria-hidden="true"
                         >
@@ -137,6 +143,9 @@ export function DropdownMenu({
                         className={twMerge(
                           "min-w-0 truncate font-body2 text-left",
                           it.active && "font-label",
+                          it.danger &&
+                            "text-info-red group-hover:text-info-red",
+                          it.labelClassName,
                         )}
                       >
                         {it.label}

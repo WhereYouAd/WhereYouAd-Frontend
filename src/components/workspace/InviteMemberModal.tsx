@@ -8,7 +8,7 @@ import type {
   TInviteMemberRequest,
 } from "@/types/workspace/workspace";
 
-import { emailSchema } from "@/utils/validation";
+import { emailSchema } from "@/utils/auth/validation";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
@@ -18,6 +18,7 @@ import Modal from "../common/modal/Modal";
 import { postInviteEmail } from "@/api/workspace/org";
 import CopyIcon from "@/assets/icon/common/link.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 type TInviteMemberModalProps = {
   isOpen: boolean;
@@ -49,13 +50,13 @@ export default function InviteMemberModal({
       setForm({ email: "" });
 
       void queryClient.invalidateQueries({
-        queryKey: ["workspacePendingMembers", orgId],
+        queryKey: QUERY_KEYS.workspace.pendingMembers(orgId),
       });
       void queryClient.invalidateQueries({
-        queryKey: ["workspaceMembers", orgId],
+        queryKey: QUERY_KEYS.workspace.members(orgId),
       });
       void queryClient.invalidateQueries({
-        queryKey: ["workspaceMemberCount", orgId],
+        queryKey: QUERY_KEYS.workspace.memberCount(orgId),
       });
     },
     onError: (error) => {

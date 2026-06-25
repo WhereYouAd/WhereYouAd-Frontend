@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -15,7 +16,7 @@ import {
   getAiReportByAccessToken,
   requestAiAnalysis,
 } from "@/api/dashboard/aiAnalysis";
-import { queryClient } from "@/lib/queryClient";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 /** 폴링 간격 및 최대 대기(ms) */
@@ -30,12 +31,9 @@ const WORKSPACE_REQUIRED_MESSAGE =
 /** 분석 요청 시 body 일부만 덮어쓸 때 */
 export type TRequestAiAnalysisParams = Partial<IAnalysisRequest>;
 
-function aiReportQueryKey(provider: TAiAnalysisProvider, accessToken: string) {
-  return ["ai", "report", provider, accessToken] as const;
-}
-
 /** AI 요약: POST 요청 → accessToken → GET 폴링 → reportData */
 export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
+  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [pollStartedAt, setPollStartedAt] = useState<number | null>(null);
@@ -53,15 +51,12 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
   }, [provider, reset]);
 
   useEffect(() => {
-    const token = accessToken;
-    if (!token) return;
-
     return () => {
       void queryClient.removeQueries({
-        queryKey: aiReportQueryKey(provider, token),
+        queryKey: QUERY_KEYS.ai.report(provider, orgId),
       });
     };
-  }, [accessToken, provider]);
+  }, [provider, orgId]);
 
   /** POST /analysis — accessToken 발급 */
   const requestMutation = useCoreMutation(
@@ -80,7 +75,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
         setAccessToken(token);
         setPollStartedAt(Date.now());
         void queryClient.fetchQuery({
-          queryKey: aiReportQueryKey(provider, token),
+          queryKey: QUERY_KEYS.ai.report(provider, orgId),
           queryFn: () => getAiReportByAccessToken(token),
           staleTime: 0,
         });
@@ -93,7 +88,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
 
   /** GET /reports/{token} — PENDING이면 주기적으로 재조회 */
   const reportQuery = useCoreQuery(
-    aiReportQueryKey(provider, accessToken ?? ""),
+    QUERY_KEYS.ai.report(provider, orgId),
     () => getAiReportByAccessToken(accessToken!),
     {
       enabled: !!accessToken,

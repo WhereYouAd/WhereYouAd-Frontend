@@ -5,6 +5,13 @@ import type { ApexOptions } from "apexcharts";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import {
+  formatCountChartAxis,
+  formatCountChartTooltip,
+  METRIC_REGISTRY as M,
+} from "@/utils/dashboard/metricRegistry";
+import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
+
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDashboard.mock";
@@ -12,28 +19,18 @@ import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDa
 interface IPlatformTrafficChartProps {
   data: IClickStreamResponse | null;
   platform: string;
-  isLoading?: boolean;
 }
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
   platform,
-  isLoading,
 }: IPlatformTrafficChartProps) {
-  // 데이터 변환: minute 문자열 -> 타임스탬프
   const seriesData = useMemo(() => {
     if (!data) return [];
-    return data.timeSeriesData.map((d) => {
-      const year = parseInt(d.minute.slice(0, 4), 10);
-      const month = parseInt(d.minute.slice(4, 6), 10) - 1;
-      const day = parseInt(d.minute.slice(6, 8), 10);
-      const hour = parseInt(d.minute.slice(8, 10), 10);
-      const min = parseInt(d.minute.slice(10, 12), 10);
-      return {
-        x: new Date(year, month, day, hour, min).getTime(),
-        y: d.count,
-      };
-    });
+    return data.timeSeriesData.map((d) => ({
+      x: parseMinuteToTimestamp(d.minute),
+      y: d.count,
+    }));
   }, [data]);
 
   // X축 범위 계산 (최근 60분)
@@ -111,12 +108,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       tickAmount: 5,
       labels: {
         style: { colors: "var(--color-text-muted)", fontSize: "12px" },
-        formatter: (val) => {
-          const rounded = Math.round(val);
-          if (rounded <= 0) return "";
-          if (rounded < 1000) return rounded.toLocaleString();
-          return `${Math.round(rounded / 1000)}K`;
-        },
+        formatter: formatCountChartAxis,
       },
     },
     grid: {
@@ -130,19 +122,22 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
     tooltip: {
       x: { show: false },
-      y: { formatter: (val) => `${val.toLocaleString()} 클릭` },
+      y: {
+        formatter: (val) =>
+          formatCountChartTooltip(val, M.clicks.chartTooltipUnit),
+      },
       theme: "light",
     },
   };
 
   const series = [
     {
-      name: "클릭수",
+      name: M.clicks.label,
       data: seriesData,
     },
   ];
 
-  if (isLoading || !data) {
+  if (!data) {
     return <Skeleton className="w-full h-75 rounded-xl" />;
   }
 
