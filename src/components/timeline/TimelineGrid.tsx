@@ -36,7 +36,7 @@ export default function TimelineGrid({
           <div
             key={`col-${column.isoDate ?? i}`}
             className={twMerge(
-              "absolute top-0 bottom-0 border-r border-surface-400/80",
+              "absolute top-0 bottom-0 border-r border-surface-400/40",
               column.isToday && "bg-primary-400/8",
             )}
             style={{ left: i * colWidth, width: colWidth }}

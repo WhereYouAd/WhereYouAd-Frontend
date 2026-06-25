@@ -9,6 +9,8 @@ import {
 } from "@/constants/timeline/layout";
 import { TIMELINE_PERFORMANCE_STATUS_STYLE } from "@/constants/timeline/statusStyle";
 
+import { DropdownMenu } from "../common/dropdownmenu/DropdownMenu";
+
 import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 
 interface ITimelineBarProps {
@@ -18,7 +20,8 @@ interface ITimelineBarProps {
   rowOffset?: number;
   className?: string;
   onBarClick?: (bar: ITimelineCampaignBar) => void;
-  onMenuClick?: (bar: ITimelineCampaignBar) => void; //선택, 추후 이슈로 다룰 예정
+  onEdit?: (bar: ITimelineCampaignBar) => void;
+  onDelete?: (bar: ITimelineCampaignBar) => void;
 }
 
 export default function TimelineBar({
@@ -28,7 +31,8 @@ export default function TimelineBar({
   rowOffset = TIMELINE_ROW_OFFSET,
   className,
   onBarClick,
-  onMenuClick,
+  onEdit,
+  onDelete,
 }: ITimelineBarProps) {
   const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
   const left = (bar.colStart - 1) * colWidth;
@@ -65,17 +69,28 @@ export default function TimelineBar({
         </span>
       </div>
       <div className="ml-auto flex shrink-0 self-center items-center">
-        <button
-          type="button"
+        <DropdownMenu
           aria-label="캠페인 메뉴"
-          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
-          onClick={(event) => {
-            event.stopPropagation();
-            onMenuClick?.(bar);
-          }}
-        >
-          <KebabIcon className="h-3.5 w-3.5" />
-        </button>
+          trigger={
+            <button
+              type="button"
+              aria-label="캠페인 메뉴"
+              className="flex h-7 w-7 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <KebabIcon className="h-4 w-4" />
+            </button>
+          }
+          items={[
+            { label: "수정하기", onClick: () => onEdit?.(bar) },
+            {
+              label: "삭제하기",
+              danger: true,
+              labelClassName: "text-info-red",
+              onClick: () => onDelete?.(bar),
+            },
+          ]}
+        />
       </div>
     </div>
   );
