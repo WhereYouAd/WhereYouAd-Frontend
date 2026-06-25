@@ -18,7 +18,7 @@ export interface ITimelineCampaignBar {
   id: number;
   title: string;
   subtitle: string;
-  provider?: TProviderType;
+  providers?: TProviderType[];
   colStart: number; //그리드 시작 위치
   colEnd: number;
   row: number;

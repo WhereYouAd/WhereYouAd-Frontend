@@ -95,7 +95,7 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
       id: 1,
       title: "평일 성과 요약",
       subtitle: "06.22 - 06.26",
-      provider: "GOOGLE",
+      providers: ["GOOGLE"],
       colStart: 2,
       colEnd: 7,
       row: 1,
@@ -105,13 +105,19 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
       id: 2,
       title: "리타겟팅 캠페인",
       subtitle: "06.25 - 06.27",
-      provider: "META",
+      providers: ["GOOGLE", "META", "NAVER"],
       colStart: 5,
       colEnd: 8,
       row: 2,
       performanceStatus: "ON_TRACK",
     },
   ],
+};
+
+/*UI 그리드 빈 상태 확인용 — Timeline에서 TIMELINE_GRID_MOCK 대신 사용*/
+export const TIMELINE_GRID_EMPTY_MOCK: ITimelineGridData = {
+  ...TIMELINE_GRID_MOCK,
+  bars: [],
 };
 
 /*성과 요약 패널 mock*/

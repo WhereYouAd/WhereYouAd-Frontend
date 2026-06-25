@@ -20,7 +20,7 @@ export default function TimelineAxis({
   return (
     <div
       className={twMerge(
-        "relative z-10 flex shrink-0 border-b border-surface-400/80 bg-surface-100",
+        "relative z-20 flex shrink-0 border-b border-surface-400/80 bg-surface-100",
         className,
       )}
       style={{ height: TIMELINE_AXIS_HEIGHT }}
