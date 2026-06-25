@@ -7,5 +7,6 @@ export const TIMELINE_AXIS_HEIGHT = 56;
 export const TIMELINE_BAR_HEIGHT = 80;
 export const TIMELINE_AXIS_Z_INDEX = 30;
 export const TIMELINE_BAR_Z_INDEX = 10;
+export const TIMELINE_BAR_ELEVATED_Z_INDEX = 20;
 
 export const TIMELINE_PAGE_HEIGHT = "calc(100dvh - 6.5rem)";

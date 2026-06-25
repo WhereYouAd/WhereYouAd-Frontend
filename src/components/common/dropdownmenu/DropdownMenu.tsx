@@ -78,6 +78,7 @@ export function DropdownMenu({
   fullWidth = false,
   placement = "bottom",
   "aria-label": ariaLabel,
+  onOpenChange,
 }: {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   items: TMenuItem[];
@@ -88,6 +89,7 @@ export function DropdownMenu({
   /** bottom: 아래 / top: 위 / auto: 공간에 따라 자동 */
   placement?: TDropdownPlacement;
   "aria-label"?: string;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
@@ -129,6 +131,10 @@ export function DropdownMenu({
 
     setResolvedPlacement(resolveAutoPlacement(el, items.length));
   }, [open, placement, items.length]);
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
 
   const isTopPlacement = resolvedPlacement === "top";
 

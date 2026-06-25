@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { PLATFORM_MAP, PROVIDER_TYPES } from "@/types/dashboard/provider";
 import type { ITimelineCampaignBar } from "@/types/timeline/ui";
 import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 import {
+  TIMELINE_BAR_ELEVATED_Z_INDEX,
   TIMELINE_BAR_HEIGHT,
   TIMELINE_BAR_Z_INDEX,
   TIMELINE_COL_WIDTH,
@@ -39,6 +41,7 @@ export default function TimelineBar({
   onEdit,
   onDelete,
 }: ITimelineBarProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
   const left = (bar.colStart - 1) * colWidth;
   const columnSpan = Math.max(bar.colEnd - bar.colStart, 1);
@@ -51,6 +54,8 @@ export default function TimelineBar({
   const providers = PROVIDER_TYPES.filter((provider) =>
     bar.providers?.includes(provider),
   );
+
+  const isElevated = isMenuOpen || isSelected;
 
   return (
     <div
@@ -76,7 +81,9 @@ export default function TimelineBar({
         top,
         width,
         height: TIMELINE_BAR_HEIGHT,
-        zIndex: TIMELINE_BAR_Z_INDEX,
+        zIndex: isElevated
+          ? TIMELINE_BAR_ELEVATED_Z_INDEX
+          : TIMELINE_BAR_Z_INDEX,
       }}
     >
       <div
@@ -127,6 +134,7 @@ export default function TimelineBar({
         <DropdownMenu
           aria-label="캠페인 메뉴"
           placement="auto"
+          onOpenChange={setIsMenuOpen}
           menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
           trigger={
             <button
