@@ -41,7 +41,8 @@ export default function TimelineBar({
 }: ITimelineBarProps) {
   const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
   const left = (bar.colStart - 1) * colWidth;
-  const width = (bar.colEnd - bar.colStart) * colWidth;
+  const columnSpan = Math.max(bar.colEnd - bar.colStart, 1);
+  const width = columnSpan * colWidth;
   const top =
     rowOffset +
     (bar.row - 1) * rowHeight +
