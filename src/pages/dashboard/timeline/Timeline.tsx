@@ -10,7 +10,10 @@ import type {
   ITimelineCampaignBar,
   TTimelineViewUnit,
 } from "@/types/timeline/ui";
-import { TIMELINE_COL_WIDTH } from "@/constants/timeline/layout";
+import {
+  TIMELINE_COL_WIDTH,
+  TIMELINE_PAGE_HEIGHT,
+} from "@/constants/timeline/layout";
 
 import Button from "@/components/common/button/Button";
 import TimelineAxis from "@/components/timeline/TimelineAxis";
@@ -82,10 +85,13 @@ export default function Timeline() {
   };
 
   return (
-    <section className="w-full flex flex-col gap-8 min-w-0">
-      <div className="flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-surface-400/70 bg-surface-100">
+    <section
+      className="flex w-full min-w-0 flex-col"
+      style={{ height: TIMELINE_PAGE_HEIGHT }}
+    >
+      <div className="flex min-h-0 flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
         {/* 툴바 */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-surface-400/80 px-5 py-3">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-surface-400/80 px-5 py-3">
           <TimelinePeriodSelector
             viewUnit={viewUnit}
             periodLabel={periodLabel}
@@ -132,14 +138,14 @@ export default function Timeline() {
             </button>
           </div>
         </div>
-        {/* 캔버스 */}
+        {/* 캔버스 — 가로·세로 스크롤, 행이 많아지면 세로로 확장 */}
         <div
           ref={scrollRef}
-          className="h-105 w-full overflow-x-auto overflow-y-hidden"
+          className="flex min-h-0 w-full flex-1 flex-col overflow-auto"
         >
           <div
-            style={{ width: totalWidth }}
-            className="flex h-full min-h-0 flex-col"
+            style={{ width: totalWidth, minHeight: "100%" }}
+            className="flex min-h-full flex-1 flex-col"
           >
             <TimelineAxis columns={columns} />
             <TimelineGrid columns={columns} rowCount={maxRow}>

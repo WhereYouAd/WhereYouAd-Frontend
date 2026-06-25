@@ -68,15 +68,19 @@ export default function TimelineBar({
           {status.label}
         </span>
       </div>
-      <div className="ml-auto flex shrink-0 self-center items-center">
+      <div
+        className="ml-auto flex shrink-0 self-center items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
         <DropdownMenu
           aria-label="캠페인 메뉴"
+          placement="auto"
+          menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
           trigger={
             <button
               type="button"
               aria-label="캠페인 메뉴"
-              className="flex h-7 w-7 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
-              onClick={(e) => e.stopPropagation()}
+              className="flex h-10 w-7 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
             >
               <KebabIcon className="h-4 w-4" />
             </button>
