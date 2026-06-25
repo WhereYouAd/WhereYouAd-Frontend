@@ -33,7 +33,7 @@ export const TIMELINE_DETAIL_MOCK: ITimelineDetail = {
   performanceStatus: "ON_TRACK",
   metrics: ["CLICK", "CONVERSION", "ROAS"],
   summary:
-    "Google Ads 전환이 전주 대비 12% 상승했습니다. Meta는 노출은 늘었으나 ROAS가 소폭 하락했습니다.",
+    "해당 기간 동안 클릭수는 전반적으로 증가하며 평균 이상의 성과를 보였습니다. 특히 1월 23일에 가장 높은 클릭수를 기록했으며, 이후에도 높은 수준을 유지했습니다. 다만 전환수는 후반부로 갈수록 소폭 감소하는 흐름을 보였습니다.",
   dailyTrend: [
     {
       date: "2026-06-18",
@@ -118,6 +118,7 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
 export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
   timelineName: TIMELINE_DETAIL_MOCK.name,
   periodLabel: "2026.06.01 ~ 2026.06.30",
+  performanceStatus: "ABOVE_AVERAGE",
   aiSummary: TIMELINE_DETAIL_MOCK.summary,
   metrics: [
     { metric: "CLICK", label: "클릭", value: 3730, changeRate: 0.08 },
@@ -127,7 +128,7 @@ export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
       metric: "ROAS",
       label: "ROAS",
       value: 3.17,
-      unit: "x",
+      unit: "배",
       changeRate: -0.03,
     },
   ],
@@ -136,4 +137,9 @@ export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
     { provider: "META", contributionRate: 0.31 },
     { provider: "NAVER", contributionRate: 0.17 },
   ],
+};
+
+export const TIMELINE_SUMMARY_PANEL_NO_AI_MOCK: ITimelineSummaryPanelData = {
+  ...TIMELINE_SUMMARY_PANEL_MOCK,
+  aiSummary: "",
 };
