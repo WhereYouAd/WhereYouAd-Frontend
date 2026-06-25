@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import type { ITimelineGridColumn } from "@/types/timeline/ui";
 import {
   TIMELINE_AXIS_HEIGHT,
+  TIMELINE_AXIS_Z_INDEX,
   TIMELINE_COL_WIDTH,
 } from "@/constants/timeline/layout";
 
@@ -20,10 +21,10 @@ export default function TimelineAxis({
   return (
     <div
       className={twMerge(
-        "relative z-20 flex shrink-0 border-b border-surface-400/80 bg-surface-100",
+        "relative flex shrink-0 border-b border-surface-400/80 bg-surface-100",
         className,
       )}
-      style={{ height: TIMELINE_AXIS_HEIGHT }}
+      style={{ height: TIMELINE_AXIS_HEIGHT, zIndex: TIMELINE_AXIS_Z_INDEX }}
     >
       {columns.map((column, index) => (
         <div

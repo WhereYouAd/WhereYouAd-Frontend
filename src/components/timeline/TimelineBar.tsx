@@ -5,6 +5,7 @@ import type { ITimelineCampaignBar } from "@/types/timeline/ui";
 import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 import {
   TIMELINE_BAR_HEIGHT,
+  TIMELINE_BAR_Z_INDEX,
   TIMELINE_COL_WIDTH,
   TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_OFFSET,
@@ -52,18 +53,30 @@ export default function TimelineBar({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={twMerge(
-        "group/bar absolute z-20 flex cursor-pointer items-start gap-2 rounded-xl px-3 py-2.5 transition-shadow hover:z-30 hover:shadow-Soft",
+        "group/bar absolute flex cursor-pointer items-start gap-2 rounded-xl px-3 py-2.5 transition-shadow hover:shadow-Soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40",
         status.barBg,
         isSelected &&
-          twMerge(
-            "z-30 ring-2 ring-offset-1 ring-offset-surface-200",
-            status.ring,
-          ),
+          twMerge("ring-2 ring-offset-1 ring-offset-surface-200", status.ring),
         className,
       )}
       onClick={() => onBarClick?.(bar)}
-      style={{ left, top, width, height: TIMELINE_BAR_HEIGHT }}
+      onKeyDown={(event) => {
+        if (event.currentTarget !== event.target) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onBarClick?.(bar);
+        }
+      }}
+      style={{
+        left,
+        top,
+        width,
+        height: TIMELINE_BAR_HEIGHT,
+        zIndex: TIMELINE_BAR_Z_INDEX,
+      }}
     >
       <div
         className={twMerge(

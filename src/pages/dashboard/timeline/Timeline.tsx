@@ -2,9 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
+import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import {
-  TIMELINE_GRID_MOCK,
-  TIMELINE_SUMMARY_PANEL_MOCK,
+  buildTimelineSummaryPanelDataForBar,
+  TIMELINE_GRID_MOCK_BY_VIEW_UNIT,
+  TIMELINE_GRID_MOCK_WEEK,
 } from "@/types/timeline/timeline.mock";
 import type {
   ITimelineCampaignBar,
@@ -34,7 +36,7 @@ import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
 const MOCK_PERIOD_LABELS: Record<TTimelineViewUnit, string[]> = {
   DAY: ["오늘", "6월 23일", "6월 24일"],
-  WEEK: ["오늘", TIMELINE_GRID_MOCK.periodLabel, "6월 28일 - 7월 4일"],
+  WEEK: ["오늘", TIMELINE_GRID_MOCK_WEEK.periodLabel, "6월 28일 - 7월 4일"],
   MONTH: ["오늘", "2026년 6월", "2026년 7월"],
 };
 
@@ -45,14 +47,18 @@ export default function Timeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>(
-    TIMELINE_GRID_MOCK.viewUnit,
+    TIMELINE_GRID_MOCK_WEEK.viewUnit,
   );
   const [periodIndex, setPeriodIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedBarId, setSelectedBarId] = useState<number | null>(null);
+  const [panelData, setPanelData] = useState<ITimelineSummaryPanelData | null>(
+    null,
+  );
 
-  const { columns, bars } = TIMELINE_GRID_MOCK;
+  const gridData = TIMELINE_GRID_MOCK_BY_VIEW_UNIT[viewUnit];
+  const { columns, bars } = gridData;
   const isEmpty = bars.length === 0;
 
   const maxRow = useMemo(
@@ -62,15 +68,39 @@ export default function Timeline() {
 
   const totalWidth = columns.length * TIMELINE_COL_WIDTH;
 
-  const periodLabels = MOCK_PERIOD_LABELS[viewUnit];
+  const periodLabels = useMemo(
+    () =>
+      MOCK_PERIOD_LABELS[viewUnit].map((label, index) =>
+        index === 1 ? gridData.periodLabel : label,
+      ),
+    [gridData.periodLabel, viewUnit],
+  );
   const periodLabel = periodLabels[periodIndex] ?? periodLabels[0];
+
+  const selectedBar = useMemo(
+    () => bars.find((bar) => bar.id === selectedBarId) ?? null,
+    [bars, selectedBarId],
+  );
+
+  useEffect(() => {
+    if (!selectedBar) return;
+    setPanelData(buildTimelineSummaryPanelDataForBar(selectedBar));
+  }, [selectedBar]);
 
   useEffect(() => {
     if (isEmpty) return;
     const el = scrollRef.current;
     if (!el) return;
     el.scrollLeft = el.scrollWidth - el.clientWidth;
-  }, [columns, isEmpty]);
+  }, [columns, isEmpty, viewUnit]);
+
+  useEffect(() => {
+    if (selectedBarId === null) return;
+    if (!bars.some((bar) => bar.id === selectedBarId)) {
+      setIsPanelOpen(false);
+      setSelectedBarId(null);
+    }
+  }, [bars, selectedBarId]);
 
   const handleViewUnitChange = (unit: TTimelineViewUnit) => {
     setViewUnit(unit);
@@ -91,6 +121,7 @@ export default function Timeline() {
 
   const handleBarClick = (bar: ITimelineCampaignBar) => {
     setSelectedBarId(bar.id);
+    setPanelData(buildTimelineSummaryPanelDataForBar(bar));
     setIsPanelOpen(true);
   };
 
@@ -175,11 +206,11 @@ export default function Timeline() {
               style={{ width: totalWidth, minHeight: "100%" }}
               className="flex min-h-full flex-1 flex-col"
             >
-              <TimelineAxis columns={columns} className="sticky top-0 z-20" />
+              <TimelineAxis columns={columns} className="sticky top-0" />
               <TimelineGrid columns={columns} rowCount={maxRow}>
                 {bars.map((bar) => (
                   <TimelineBar
-                    key={bar.id}
+                    key={`${viewUnit}-${bar.id}`}
                     bar={bar}
                     isSelected={selectedBarId === bar.id && isPanelOpen}
                     onBarClick={handleBarClick}
@@ -202,18 +233,15 @@ export default function Timeline() {
         onClose={() => setIsCreateOpen(false)}
       />
 
-      <TimelinePerformancePanel
-        isOpen={isPanelOpen}
-        onClose={handlePanelClose}
-        onEdit={() => toast.info("수정기능은 다음 이슈에서 연동예정")}
-        onDelete={() => toast.info("삭제기능은 다음 이슈에서 연동예정")}
-        data={{
-          ...TIMELINE_SUMMARY_PANEL_MOCK,
-          timelineName:
-            bars.find((bar) => bar.id === selectedBarId)?.title ??
-            TIMELINE_SUMMARY_PANEL_MOCK.timelineName,
-        }}
-      />
+      {panelData ? (
+        <TimelinePerformancePanel
+          isOpen={isPanelOpen}
+          onClose={handlePanelClose}
+          onEdit={() => toast.info("수정기능은 다음 이슈에서 연동예정")}
+          onDelete={() => toast.info("삭제기능은 다음 이슈에서 연동예정")}
+          data={panelData}
+        />
+      ) : null}
     </section>
   );
 }

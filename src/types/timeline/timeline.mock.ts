@@ -1,10 +1,39 @@
+import type { TProviderType } from "@/types/dashboard/provider";
 import type {
   ITimelineDetail,
   ITimelineListItem,
   ITimelineMutationResponse,
 } from "@/types/timeline/api";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
-import type { ITimelineGridData } from "@/types/timeline/ui";
+import type {
+  ITimelineCampaignBar,
+  ITimelineGridColumn,
+  ITimelineGridData,
+  TTimelineViewUnit,
+} from "@/types/timeline/ui";
+
+const WEEKDAY_KO = ["일", "월", "화", "수", "목", "금", "토"] as const;
+
+function buildMonthColumns(
+  year: number,
+  month: number,
+  daysInMonth: number,
+  todayDate: number,
+): ITimelineGridColumn[] {
+  const firstDay = new Date(year, month - 1, 1).getDay();
+
+  return Array.from({ length: daysInMonth }, (_, index) => {
+    const date = index + 1;
+    const dayIndex = (firstDay + index) % 7;
+
+    return {
+      day: WEEKDAY_KO[dayIndex],
+      date,
+      isWeekend: dayIndex === 0 || dayIndex === 6,
+      isToday: date === todayDate,
+    };
+  });
+}
 
 /*GET /timeline 목록 mock*/
 export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
@@ -77,8 +106,8 @@ export const TIMELINE_CREATE_RESPONSE_MOCK: ITimelineMutationResponse = {
   createdAt: "2026-06-20T07:58:24.795Z",
 };
 
-/*UI 그리드 mock*/
-export const TIMELINE_GRID_MOCK: ITimelineGridData = {
+/*UI 그리드 mock — 주간*/
+export const TIMELINE_GRID_MOCK_WEEK: ITimelineGridData = {
   viewUnit: "WEEK",
   periodLabel: "21 June - 27 June",
   columns: [
@@ -114,7 +143,73 @@ export const TIMELINE_GRID_MOCK: ITimelineGridData = {
   ],
 };
 
-/*UI 그리드 빈 상태 확인용 — Timeline에서 TIMELINE_GRID_MOCK 대신 사용*/
+export const TIMELINE_GRID_MOCK = TIMELINE_GRID_MOCK_WEEK;
+
+export const TIMELINE_GRID_MOCK_DAY: ITimelineGridData = {
+  viewUnit: "DAY",
+  periodLabel: "6월 27일",
+  columns: [{ day: "토", date: 27, isWeekend: true, isToday: true }],
+  bars: [
+    {
+      id: 1,
+      title: "평일 성과 요약",
+      subtitle: "06.27",
+      providers: ["GOOGLE"],
+      colStart: 1,
+      colEnd: 2,
+      row: 1,
+      performanceStatus: "ABOVE_AVERAGE",
+    },
+    {
+      id: 2,
+      title: "리타겟팅 캠페인",
+      subtitle: "06.27",
+      providers: ["GOOGLE", "META", "NAVER"],
+      colStart: 1,
+      colEnd: 2,
+      row: 2,
+      performanceStatus: "ON_TRACK",
+    },
+  ],
+};
+
+export const TIMELINE_GRID_MOCK_MONTH: ITimelineGridData = {
+  viewUnit: "MONTH",
+  periodLabel: "2026년 6월",
+  columns: buildMonthColumns(2026, 6, 30, 27),
+  bars: [
+    {
+      id: 1,
+      title: "평일 성과 요약",
+      subtitle: "06.01 - 06.15",
+      providers: ["GOOGLE"],
+      colStart: 1,
+      colEnd: 16,
+      row: 1,
+      performanceStatus: "ABOVE_AVERAGE",
+    },
+    {
+      id: 2,
+      title: "리타겟팅 캠페인",
+      subtitle: "06.16 - 06.30",
+      providers: ["GOOGLE", "META", "NAVER"],
+      colStart: 16,
+      colEnd: 31,
+      row: 2,
+      performanceStatus: "ON_TRACK",
+    },
+  ],
+};
+
+export const TIMELINE_GRID_MOCK_BY_VIEW_UNIT: Record<
+  TTimelineViewUnit,
+  ITimelineGridData
+> = {
+  DAY: TIMELINE_GRID_MOCK_DAY,
+  WEEK: TIMELINE_GRID_MOCK_WEEK,
+  MONTH: TIMELINE_GRID_MOCK_MONTH,
+};
+
 export const TIMELINE_GRID_EMPTY_MOCK: ITimelineGridData = {
   ...TIMELINE_GRID_MOCK,
   bars: [],
@@ -149,3 +244,70 @@ export const TIMELINE_SUMMARY_PANEL_NO_AI_MOCK: ITimelineSummaryPanelData = {
   ...TIMELINE_SUMMARY_PANEL_MOCK,
   aiSummary: "",
 };
+
+const TIMELINE_SUMMARY_PANEL_MOCK_BAR_OVERRIDES: Record<
+  number,
+  Partial<ITimelineSummaryPanelData>
+> = {
+  1: {
+    metrics: [
+      { metric: "CLICK", label: "클릭", value: 2480, changeRate: 0.12 },
+      { metric: "CONVERSION", label: "전환", value: 182, changeRate: 0.09 },
+      { metric: "IMPRESSION", label: "노출", value: 92100, changeRate: 0.04 },
+      {
+        metric: "ROAS",
+        label: "ROAS",
+        value: 3.42,
+        unit: "배",
+        changeRate: 0.06,
+      },
+    ],
+    aiSummary:
+      "평일 구간에서 클릭과 전환이 비교 기간 대비 안정적으로 증가했습니다.",
+  },
+  2: {
+    metrics: [
+      { metric: "CLICK", label: "클릭", value: 1250, changeRate: -0.02 },
+      { metric: "CONVERSION", label: "전환", value: 73, changeRate: -0.05 },
+      { metric: "IMPRESSION", label: "노출", value: 43900, changeRate: 0.01 },
+      {
+        metric: "ROAS",
+        label: "ROAS",
+        value: 2.84,
+        unit: "배",
+        changeRate: -0.04,
+      },
+    ],
+    aiSummary:
+      "리타겟팅 구간은 클릭은 유지됐지만 전환 효율이 비교 기간 대비 다소 낮습니다.",
+  },
+};
+
+function buildPlatformShareFromProviders(
+  providers?: TProviderType[],
+): ITimelineSummaryPanelData["platformShare"] {
+  if (!providers?.length) {
+    return TIMELINE_SUMMARY_PANEL_MOCK.platformShare;
+  }
+
+  const rate = 1 / providers.length;
+  return providers.map((provider) => ({
+    provider,
+    contributionRate: rate,
+  }));
+}
+
+export function buildTimelineSummaryPanelDataForBar(
+  bar: ITimelineCampaignBar,
+): ITimelineSummaryPanelData {
+  const overrides = TIMELINE_SUMMARY_PANEL_MOCK_BAR_OVERRIDES[bar.id] ?? {};
+
+  return {
+    ...TIMELINE_SUMMARY_PANEL_MOCK,
+    ...overrides,
+    timelineName: bar.title,
+    periodLabel: bar.subtitle,
+    performanceStatus: bar.performanceStatus,
+    platformShare: buildPlatformShareFromProviders(bar.providers),
+  };
+}
