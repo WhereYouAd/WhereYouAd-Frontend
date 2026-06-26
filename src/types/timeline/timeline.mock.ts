@@ -33,7 +33,7 @@ export const TIMELINE_DETAIL_MOCK: ITimelineDetail = {
   performanceStatus: "ON_TRACK",
   metrics: ["CLICK", "CONVERSION", "ROAS"],
   summary:
-    "해당 기간 동안 클릭수는 전반적으로 증가하며 평균 이상의 성과를 보였습니다. 특히 1월 23일에 가장 높은 클릭수를 기록했으며, 이후에도 높은 수준을 유지했습니다. 다만 전환수는 후반부로 갈수록 소폭 감소하는 흐름을 보였습니다.",
+    "해당 기간 동안 클릭수는 전반적으로 증가하며 평균 이상의 성과를 보였습니다. 특히 6월 23일에 가장 높은 클릭수를 기록했으며, 이후에도 높은 수준을 유지했습니다. 다만 전환수는 후반부로 갈수록 소폭 감소하는 흐름을 보였습니다.",
   dailyTrend: [
     {
       date: "2026-06-18",
