@@ -9,7 +9,7 @@ const CLICKS = [
 
 const PEAK = Math.max(...CLICKS);
 const TARGET_PEAK = 48500;
-const NORMALIZED_CLICKS = CLICKS.map((value) =>
+export const NORMALIZED_CLICKS = CLICKS.map((value) =>
   Math.round((value / PEAK) * TARGET_PEAK),
 );
 
