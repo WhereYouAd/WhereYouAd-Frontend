@@ -79,7 +79,7 @@ function WorkflowGraphic() {
         className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-Soft relative overflow-hidden select-none"
         style={{
           background:
-            "linear-gradient(135deg, var(--color-primary-400), var(--color-primary-500))",
+            "linear-gradient(135deg, var(--color-primary-300), var(--color-primary-500))",
         }}
       >
         <motion.span
@@ -164,8 +164,7 @@ function WorkspaceGraphic() {
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline gap-2">
-            <span className="font-body2 text-text-title">You</span>
-            <span className="font-caption text-text-muted">Team JSON</span>
+            <span className="font-body2 text-text-title">관리자</span>
           </div>
           <p className="font-body2 text-text-auth-sub">
             새로운 멤버를 초대하세요!
@@ -187,7 +186,11 @@ function WorkspaceGraphic() {
         )}
         <div
           aria-hidden
-          className="w-7 h-7 rounded-full flex items-center justify-center bg-primary-500 shrink-0 shadow-Soft"
+          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-Soft"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--color-primary-300), var(--color-primary-500))",
+          }}
         >
           <ChevronUp className="text-surface-100 w-3.5 h-3.5" />
         </div>
