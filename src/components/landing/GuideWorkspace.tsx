@@ -9,7 +9,7 @@ const MEMBERS = [
 
 export default function GuideWorkspace() {
   return (
-    <div className="h-75 w-full bg-transparent md:h-90">
+    <div className="h-75 w-full bg-transparent md:h-90" aria-hidden="true">
       <div className="h-full rounded-[28px] bg-surface-100 border border-surface-400/60 shadow-Soft overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
           <p className="font-heading4 text-text-title">팀원 초대하기</p>

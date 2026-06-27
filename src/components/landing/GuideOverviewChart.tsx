@@ -25,9 +25,18 @@ const PLATFORM_COLORS: Record<
     primary: "var(--color-primary-400)",
     secondary: "var(--color-primary-500)",
   },
-  NAVER: { primary: "#03c75a", secondary: "#02a04a" },
-  META: { primary: "#1877f2", secondary: "#0d5fcc" },
-  GOOGLE: { primary: "#f9ab00", secondary: "#e09600" },
+  NAVER: {
+    primary: "var(--color-oauth-naver)",
+    secondary: "var(--color-oauth-naver)",
+  },
+  META: {
+    primary: "var(--color-platform-meta)",
+    secondary: "var(--color-platform-meta)",
+  },
+  GOOGLE: {
+    primary: "var(--color-platform-google)",
+    secondary: "var(--color-platform-google)",
+  },
 };
 
 const PLATFORM_OPTIONS: TPlatformFilter[] = ["통합", "NAVER", "META", "GOOGLE"];
@@ -35,12 +44,16 @@ const PLATFORM_OPTIONS: TPlatformFilter[] = ["통합", "NAVER", "META", "GOOGLE"
 const SPLIT_INDEX = 12;
 const SPLIT_Y = 48500;
 
-const PLATFORM_SERIES = [
-  {
-    name: "클릭수",
-    data: NORMALIZED_CLICKS.map((y, i) => ({ x: i, y })),
-  },
-];
+const SINGLE_SERIES_DATA = NORMALIZED_CLICKS.map((y, i) => ({ x: i, y }));
+
+const PLATFORM_SERIES_MAP: Record<
+  Exclude<TPlatformFilter, "통합">,
+  { name: string; data: { x: number; y: number }[] }[]
+> = {
+  NAVER: [{ name: "NAVER 클릭수", data: SINGLE_SERIES_DATA }],
+  META: [{ name: "META 클릭수", data: SINGLE_SERIES_DATA }],
+  GOOGLE: [{ name: "GOOGLE 클릭수", data: SINGLE_SERIES_DATA }],
+};
 
 function getChartOptions(
   primary: string,
@@ -93,7 +106,16 @@ export default function GuideOverviewChart() {
         className="h-full flex flex-col"
         title="실시간 트래픽 변화"
         description={
-          <ChartLegend items={[{ label: "클릭수", color: primary }]} />
+          <ChartLegend
+            items={
+              isUnified
+                ? [
+                    { label: "클릭수", color: primary },
+                    { label: "예측 클릭수", color: secondary },
+                  ]
+                : [{ label: "클릭수", color: primary }]
+            }
+          />
         }
         RightElement={
           <DropdownMenu
@@ -115,8 +137,9 @@ export default function GuideOverviewChart() {
         }
       >
         <p className="sr-only">
-          {"실시간 트래픽 변화 차트(목업). 클릭수와 예측 클릭수를 시간 흐름에 따라 비교합니다. " +
-            "오후 12시 기준 클릭수 48,500, 전시간 대비 +1.9%로 표시됩니다."}
+          {isUnified
+            ? "실시간 트래픽 변화 차트(목업). 클릭수와 예측 클릭수를 시간 흐름에 따라 비교합니다. 오후 12시 기준 클릭수 48,500, 전시간 대비 +1.9%로 표시됩니다."
+            : `실시간 트래픽 변화 차트(목업). ${selected} 플랫폼의 클릭수 변화를 보여줍니다.`}
         </p>
         <Suspense
           fallback={
@@ -140,7 +163,11 @@ export default function GuideOverviewChart() {
               type="line"
               options={chartOptions}
               series={
-                isUnified ? LANDING_OVERVIEW_CHART_SERIES : PLATFORM_SERIES
+                isUnified
+                  ? LANDING_OVERVIEW_CHART_SERIES
+                  : PLATFORM_SERIES_MAP[
+                      selected as Exclude<TPlatformFilter, "통합">
+                    ]
               }
               height="100%"
             />

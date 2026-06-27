@@ -76,11 +76,7 @@ function WorkflowGraphic() {
     <div className="absolute left-0 bg-surface-100 backdrop-blur-sm rounded-r-full rounded-l-none p-3 pl-4 pr-5 flex items-center gap-3 shadow-Soft border border-surface-400/60">
       <div
         aria-hidden
-        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-Soft relative overflow-hidden select-none"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--color-primary-300), var(--color-primary-500))",
-        }}
+        className="h-10 rounded-full flex items-center px-4 gap-2 shrink-0 mx-0.5 shadow-Soft relative overflow-hidden select-none bg-linear-to-br from-primary-300 to-primary-500"
       >
         <motion.span
           aria-hidden
@@ -186,11 +182,7 @@ function WorkspaceGraphic() {
         )}
         <div
           aria-hidden
-          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-Soft"
-          style={{
-            background:
-              "linear-gradient(135deg, var(--color-primary-300), var(--color-primary-500))",
-          }}
+          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-Soft bg-linear-to-br from-primary-300 to-primary-500"
         >
           <ChevronUp className="text-surface-100 w-3.5 h-3.5" />
         </div>

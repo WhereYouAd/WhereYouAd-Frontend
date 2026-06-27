@@ -29,9 +29,9 @@ export default function GuidePlatform() {
           <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-surface-300 font-caption text-text-muted">
             미연동
           </span>
-          <div className="shrink-0 px-3 py-1.5 rounded-xl bg-primary-500 font-body2 text-surface-100">
+          <span className="shrink-0 px-3 py-1.5 rounded-xl border border-surface-400/60 font-body2 text-text-muted">
             연동하기
-          </div>
+          </span>
         </div>
       ))}
     </div>
