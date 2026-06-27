@@ -20,7 +20,7 @@ export default function GuidePlatform() {
       {PLATFORMS.map((platform) => (
         <div
           key={platform.id}
-          className="flex flex-1 items-center gap-4 rounded-2xl bg-surface-100 px-5 shadow-Soft border border-surface-400/40"
+          className="flex flex-1 items-center gap-4 rounded-2xl bg-surface-100 px-5 border border-surface-400/40"
         >
           {platform.logo}
           <span className="flex-1 font-body2 text-text-title">
