@@ -30,13 +30,21 @@ export default function TimelineGrid({
   const bodyHeight = rowOffset + rowCount * rowHeight;
 
   return (
-    <div className={twMerge("relative flex-1 bg-surface-200", className)}>
-      <div className="relative h-full" style={{ minHeight: bodyHeight }}>
+    <div
+      className={twMerge(
+        "relative flex min-h-0 flex-1 flex-col bg-surface-200",
+        className,
+      )}
+    >
+      <div
+        className="relative min-h-0 flex-1"
+        style={{ minHeight: `max(${bodyHeight}px, 100%)` }}
+      >
         {columns.map((column, i) => (
           <div
             key={`col-${column.isoDate ?? i}`}
             className={twMerge(
-              "absolute top-0 bottom-0 border-r border-surface-400/80",
+              "absolute inset-y-0 border-r border-surface-400/40",
               column.isToday && "bg-primary-400/8",
             )}
             style={{ left: i * colWidth, width: colWidth }}

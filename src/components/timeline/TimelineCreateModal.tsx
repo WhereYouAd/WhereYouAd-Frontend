@@ -86,12 +86,13 @@ export default function TimelineCreateModal({
         label: option.label,
         active: option.value === comparisonPeriodType,
         onClick: () => {
+          if (isSubmitting) return;
           setValue("comparisonPeriodType", option.value, {
             shouldValidate: true,
           });
         },
       })),
-    [comparisonPeriodType, setValue],
+    [comparisonPeriodType, isSubmitting, setValue],
   );
 
   useEffect(() => {
