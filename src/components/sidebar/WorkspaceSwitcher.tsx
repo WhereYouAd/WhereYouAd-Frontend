@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 import type { TWorkspace } from "@/types/workspace/workspace";
 
-import { useCoreQuery } from "@/hooks/customQuery";
+import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import { getMyWorkspaces, saveSelectedWorkspace } from "@/api/workspace/org";
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
@@ -24,7 +23,6 @@ export function WorkspaceSwitcher({
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const queryClient = useQueryClient();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
@@ -57,23 +55,15 @@ export function WorkspaceSwitcher({
     setMyRole(fallback.myRole);
   }, [selectedOrgId, workspaceList, setSelectedOrgId, setMyRole]);
 
-  const { mutate: saveWorkspace } = useMutation({
-    mutationFn: (orgId: number) => saveSelectedWorkspace(orgId),
-    onSuccess: async (_data, orgId) => {
+  const { mutate: saveWorkspace } = useCoreMutation(saveSelectedWorkspace, {
+    invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
+    userOnSuccess: (_data, orgId) => {
       const workspace = workspaceList.find((w) => w.orgId === orgId);
       setSelectedOrgId(orgId);
       if (workspace) setMyRole(workspace.myRole);
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.list(),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.saved(),
-        }),
-      ]);
       setIsOpen(false);
     },
-    onError: (error) => {
+    userOnError: (error) => {
       console.error("워크스페이스 저장 실패:", error);
       toast.error("워크스페이스 변경에 실패했습니다. 다시 시도해 주세요.");
     },
