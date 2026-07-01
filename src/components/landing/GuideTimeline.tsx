@@ -32,13 +32,13 @@ export default function GuideTimeline() {
       <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-surface-400/80 bg-surface-100 z-20">
         <div
           aria-label="보기 모드(목업)"
-          className="flex items-center bg-surface-100 p-0.5 rounded-[8px] border border-surface-400/70"
+          className="flex items-center bg-surface-100 p-0.5 rounded-lg border border-surface-400/70"
           role="group"
         >
           <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
             Day
           </span>
-          <span className="rounded-[6px] bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-Soft select-none">
+          <span className="rounded-md bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-Soft select-none">
             Week
           </span>
           <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
@@ -89,11 +89,11 @@ export default function GuideTimeline() {
           style={{ width: totalWidth }}
         >
           {/* Header (Dates) */}
-          <div className="h-[28px] flex items-center border-b border-surface-400/80 relative bg-surface-100 z-10">
+          <div className="h-7 flex items-center border-b border-surface-400/80 relative bg-surface-100 z-10">
             {LANDING_TIMELINE_COLUMNS.map((c, i) => (
               <div
                 key={i}
-                className="flex w-[55px] justify-center font-caption text-text-placeholder"
+                className="flex w-13.75 justify-center font-caption text-text-placeholder"
               >
                 <span className="relative flex items-center gap-1">
                   {c.day} <span className="text-text-title">{c.date}</span>
@@ -124,12 +124,12 @@ export default function GuideTimeline() {
               return (
                 <div
                   key={card.id}
-                  className="absolute flex items-center px-3 gap-2.5 rounded-[12px] h-[52px] z-20 cursor-pointer border border-surface-400/80 bg-surface-100 shadow-Soft transition-transform hover:scale-[1.01] hover:z-30"
+                  className="absolute flex items-center px-3 gap-2.5 rounded-xl h-13 z-20 cursor-pointer border border-surface-400/80 bg-surface-100 shadow-Soft transition-transform hover:scale-[1.01] hover:z-30"
                   style={{ left: `${x}px`, top: `${y}px`, width: `${width}px` }}
                 >
                   {/* Left Indicator */}
                   <div
-                    className={`w-[4px] h-[30px] rounded-full shrink-0 ${card.colorClass}`}
+                    className={`w-1 h-7.5 rounded-full shrink-0 ${card.colorClass}`}
                   />
 
                   {/* Text */}
