@@ -16,7 +16,7 @@ export default function GuideTimeline() {
   const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
 
   return (
-    <div className="landing-guide-timeline flex h-[360px] w-full flex-col overflow-hidden bg-surface-100 md:h-[420px]">
+    <div className="landing-guide-timeline flex h-75 w-full flex-col overflow-hidden bg-surface-100 md:h-90">
       <style>{`
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
           height: 0px;

@@ -5,7 +5,10 @@ import { LANDING_GUIDE_PAGES } from "@/constants/landing/guide";
 import GuideOverviewChart from "@/components/landing/GuideOverviewChart";
 import GuidePlatform from "@/components/landing/GuidePlatform";
 import GuideTimeline from "@/components/landing/GuideTimeline";
+import GuideWorkspace from "@/components/landing/GuideWorkspace";
 import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
+
+import CheckIcon from "@/assets/icon/common/check.svg?react";
 
 export default function LandingGuide() {
   return (
@@ -43,8 +46,11 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-3/5 rounded-3xl overflow-hidden ${
-                  page.useTimeline || page.usePlatform || page.useOverview
+                className={`w-full md:w-1/2 rounded-3xl overflow-hidden ${
+                  page.useTimeline ||
+                  page.usePlatform ||
+                  page.useOverview ||
+                  page.useWorkspace
                     ? "bg-transparent shadow-none"
                     : "bg-surface-100 shadow-Soft border border-surface-400/70"
                 }`}
@@ -65,19 +71,15 @@ export default function LandingGuide() {
                   <div className="p-0 bg-transparent">
                     <GuidePlatform />
                   </div>
-                ) : (
-                  <img
-                    src={page.image}
-                    alt={page.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-auto object-cover object-top"
-                  />
-                )}
+                ) : page.useWorkspace ? (
+                  <div className="p-0 bg-transparent">
+                    <GuideWorkspace />
+                  </div>
+                ) : null}
               </motion.div>
 
               <motion.div
-                className="w-full md:w-2/5 md:max-w-120 flex flex-col gap-5"
+                className="w-full md:w-1/2 md:max-w-120 flex flex-col gap-5"
                 initial={{ opacity: 0, x: page.reverse ? -42 : 42 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
@@ -91,7 +93,7 @@ export default function LandingGuide() {
                   <span className="select-none font-heading1 leading-none text-primary-400">
                     {page.number}
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-primary-300 px-3 py-1 font-caption text-surface-100 shadow-Soft tracking-wide">
+                  <span className="inline-flex items-center rounded-full bg-primary-100 px-3 py-1 font-caption text-primary-500 tracking-wide">
                     {page.label}
                   </span>
                 </div>
@@ -104,23 +106,16 @@ export default function LandingGuide() {
                   {page.description}
                 </p>
 
-                <div className="mt-2 grid gap-3">
+                <ul className="mt-2 flex flex-col gap-2.5">
                   {page.steps.map((item) => (
-                    <div
-                      key={item.step}
-                      className="rounded-2xl border border-surface-400/60 bg-surface-100/70 backdrop-blur-sm px-4 py-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="break-keep text-balance font-label text-text-title">
-                          {item.title}
-                        </span>
-                      </div>
-                      <p className="mt-2 break-keep font-body2 text-text-auth-sub">
-                        {item.text}
-                      </p>
-                    </div>
+                    <li key={item.step} className="flex items-center gap-2.5">
+                      <CheckIcon className="w-4 h-4 shrink-0 text-primary-400" />
+                      <span className="break-keep font-label text-text-title">
+                        {item.title}
+                      </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </motion.div>
             </motion.div>
           ))}
