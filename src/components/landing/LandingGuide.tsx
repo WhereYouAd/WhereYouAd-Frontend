@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import { LANDING_GUIDE_PAGES } from "@/constants/landing/guide";
@@ -11,6 +12,30 @@ import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
 import CheckIcon from "@/assets/icon/common/check.svg?react";
 
 export default function LandingGuide() {
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        setIsInView(visible.length > 0);
+        if (visible.length === 0) return;
+
+        const closest = visible.reduce((best, entry) =>
+          entry.intersectionRatio > best.intersectionRatio ? entry : best,
+        );
+        const idx = stepRefs.current.indexOf(closest.target as HTMLDivElement);
+        if (idx !== -1) setActiveIndex(idx);
+      },
+      { threshold: [0.1, 0.25, 0.5, 0.75, 1], rootMargin: "-45% 0px -45% 0px" },
+    );
+
+    stepRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="guide"
@@ -36,9 +61,12 @@ export default function LandingGuide() {
         </motion.div>
 
         <div className="space-y-20 md:space-y-32 relative">
-          {LANDING_GUIDE_PAGES.map((page) => (
+          {LANDING_GUIDE_PAGES.map((page, idx) => (
             <motion.div
               key={page.number}
+              ref={(el) => {
+                stepRefs.current[idx] = el;
+              }}
               className={`flex flex-col ${page.reverse ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-12`}
               initial={{ opacity: 0, y: 26 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -120,6 +148,45 @@ export default function LandingGuide() {
             </motion.div>
           ))}
         </div>
+      </div>
+
+      {/* 진행 인디케이터: 화면 우측에 고정, 현재 보고 있는 스텝을 표시 */}
+      <div
+        aria-hidden={!isInView}
+        className={`hidden lg:flex fixed right-6 xl:right-10 top-1/2 z-30 -translate-y-1/2 flex-col items-center gap-5 transition-opacity duration-300 ${
+          isInView ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        {LANDING_GUIDE_PAGES.map((page, idx) => (
+          <button
+            key={page.number}
+            type="button"
+            onClick={() =>
+              stepRefs.current[idx]?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              })
+            }
+            aria-label={`${page.number} ${page.label}로 이동`}
+            aria-current={idx === activeIndex ? "step" : undefined}
+            className="group flex flex-col items-center gap-1.5"
+          >
+            <span
+              className={`font-caption tabular-nums transition-colors duration-300 ${
+                idx === activeIndex ? "text-primary-400" : "text-text-muted/60"
+              }`}
+            >
+              {page.number}
+            </span>
+            <span
+              className={`w-1.5 rounded-full transition-all duration-300 ${
+                idx === activeIndex
+                  ? "h-6 bg-primary-400"
+                  : "h-1.5 bg-surface-400/60 group-hover:bg-text-muted/60"
+              }`}
+            />
+          </button>
+        ))}
       </div>
     </section>
   );
