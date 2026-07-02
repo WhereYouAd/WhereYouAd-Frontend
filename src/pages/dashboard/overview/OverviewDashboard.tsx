@@ -4,6 +4,9 @@ import { useBudget } from "@/hooks/dashboard/useBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
+import MetricErrorFallback from "@/components/common/error/MetricErrorFallback";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
@@ -49,33 +52,42 @@ export default function OverviewDashboard() {
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
       <div className="grid w-full min-w-0 grid-cols-4 items-stretch gap-6 tablet:grid-cols-1 tablet:gap-6">
-        <OverviewKpiSection
-          kpis={kpis}
-          isKpisLoading={isKpisLoading}
-          isKpisError={isKpisError}
-          kpisError={kpisError}
-        />
-        <OverviewBudgetSection
-          budget={budget}
-          isBudgetLoading={isBudgetLoading}
-          isBudgetError={isBudgetError}
-          budgetError={budgetError}
-          budgetStatus={budgetStatus}
-        />
+        <ErrorBoundary FallbackComponent={MetricErrorFallback}>
+          <OverviewKpiSection
+            kpis={kpis}
+            isKpisLoading={isKpisLoading}
+            isKpisError={isKpisError}
+            kpisError={kpisError}
+          />
+        </ErrorBoundary>
+
+        <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+          <OverviewBudgetSection
+            budget={budget}
+            isBudgetLoading={isBudgetLoading}
+            isBudgetError={isBudgetError}
+            budgetError={budgetError}
+            budgetStatus={budgetStatus}
+          />
+        </ErrorBoundary>
       </div>
 
-      <OverviewPlatformSection
-        rankings={roasRankingsData}
-        isRankingsLoading={isRankingsLoading}
-        isRankingsError={isRankingsError}
-        rankingsError={rankingsError}
-        onNavigate={() => navigate("/platform")}
-      />
+      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+        <OverviewPlatformSection
+          rankings={roasRankingsData}
+          isRankingsLoading={isRankingsLoading}
+          isRankingsError={isRankingsError}
+          rankingsError={rankingsError}
+          onNavigate={() => navigate("/platform")}
+        />
+      </ErrorBoundary>
 
-      <DashboardAiSummarySection
-        provider="ALL"
-        idPrefix="overview-ai-summary"
-      />
+      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+        <DashboardAiSummarySection
+          provider="ALL"
+          idPrefix="overview-ai-summary"
+        />
+      </ErrorBoundary>
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { useNavigate, useRouteError } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 
 import Button from "@/components/common/button/Button";
@@ -30,16 +30,9 @@ const itemVariants = {
   }),
 };
 
-const ErrorPage = memo(function ErrorPage() {
-  const error = useRouteError() as { status?: number; message?: string } | null;
+const NotFound = memo(function NotFound() {
   const navigate = useNavigate();
   const reduceMotion = useReducedMotion();
-
-  const is404 = error?.status === 404;
-  const title = is404 ? "페이지를 찾을 수 없어요" : "오류가 발생했어요";
-  const description = is404
-    ? "요청하신 페이지가 존재하지 않거나\n주소가 변경되었을 수 있어요."
-    : "일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.";
 
   return (
     <div className="flex h-full min-h-[70vh] w-full flex-1 flex-col items-center justify-center p-4">
@@ -64,7 +57,7 @@ const ErrorPage = memo(function ErrorPage() {
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          {title}
+          페이지를 찾을 수 없어요
         </motion.h1>
 
         <motion.p
@@ -72,7 +65,7 @@ const ErrorPage = memo(function ErrorPage() {
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          {description}
+          {"요청하신 페이지가 존재하지 않거나\n주소가 변경되었을 수 있어요."}
         </motion.p>
 
         <motion.div
@@ -80,19 +73,17 @@ const ErrorPage = memo(function ErrorPage() {
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          {!is404 && (
-            <Button
-              size="big"
-              variant="primary"
-              fullWidth
-              onClick={() => window.location.reload()}
-            >
-              다시 시도
-            </Button>
-          )}
           <Button
             size="big"
             variant="secondary"
+            fullWidth
+            onClick={() => navigate(-1)}
+          >
+            이전 페이지로
+          </Button>
+          <Button
+            size="big"
+            variant="primary"
             fullWidth
             onClick={() => navigate("/", { replace: true })}
           >
@@ -104,4 +95,4 @@ const ErrorPage = memo(function ErrorPage() {
   );
 });
 
-export default ErrorPage;
+export default NotFound;
