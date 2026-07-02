@@ -42,9 +42,9 @@ const ErrorPage = memo(function ErrorPage() {
     : "일시적인 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.";
 
   return (
-    <div className="flex h-full min-h-[70vh] w-full flex-1 flex-col items-center justify-center p-4">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center p-4">
       <motion.div
-        className="flex w-full max-w-[420px] flex-col items-center rounded-[32px] bg-surface-100 px-8 py-12 text-center shadow-Soft transition-ui-smooth tablet:px-6"
+        className="flex w-full max-w-105 flex-col items-center rounded-4xl bg-surface-100 px-8 py-12 text-center shadow-Soft transition-ui-smooth tablet:px-6"
         role="alert"
         initial="hidden"
         animate="visible"
