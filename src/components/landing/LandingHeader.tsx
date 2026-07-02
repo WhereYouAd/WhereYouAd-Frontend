@@ -16,17 +16,26 @@ function scrollToSection(id: string) {
   const prefersReducedMotion =
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 
-  el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-
   if (prefersReducedMotion) {
+    el.scrollIntoView({ behavior: "auto" });
     el.focus({ preventScroll: true });
     return;
   }
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => {
-      el.focus({ preventScroll: true });
-    });
-  });
+
+  el.scrollIntoView({ behavior: "smooth" });
+
+  // smooth scroll 완료 후 focus: scrollend 미지원 브라우저는 fallback timeout 사용
+  if ("onscrollend" in window) {
+    window.addEventListener(
+      "scrollend",
+      () => el.focus({ preventScroll: true }),
+      {
+        once: true,
+      },
+    );
+  } else {
+    setTimeout(() => el.focus({ preventScroll: true }), 600);
+  }
 }
 
 export default function LandingHeader() {
@@ -79,7 +88,7 @@ export default function LandingHeader() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b transition-[box-shadow] duration-300 h-(--landing-header-height,64px) ${
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-shadow duration-300 h-(--landing-header-height,64px) ${
         progress > 0.8 ? "shadow-Soft" : ""
       }`}
       style={headerStyle}
@@ -93,7 +102,7 @@ export default function LandingHeader() {
             className="flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           >
             {/* 컬러 로고와 흰색 로고를 progress에 비례해 교차 페이드 */}
-            <div className="relative h-9">
+            <div className="relative h-9 w-fit">
               <img
                 src={logoSvg}
                 alt=""
@@ -136,36 +145,19 @@ export default function LandingHeader() {
         </div>
 
         {/* 오른쪽: 로그인/회원가입 */}
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
           <Link
             to="/login"
             style={{ color: textColorBase }}
-            className="rounded-xl px-3 py-2 font-body2 opacity-90 hover:opacity-100 transition-opacity duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5 md:font-body1"
+            className="rounded-xl px-3 py-2 font-body1 opacity-90 hover:opacity-100 transition-opacity duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5"
           >
             로그인
           </Link>
           <Link
             to="/signup"
-            className="group relative rounded-full px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            className="rounded-xl bg-primary-400 px-3 py-2 font-body1 text-surface-100 shadow-Soft transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5"
           >
-            {/* 기본 필 배경 */}
-            <span
-              className="absolute inset-0 rounded-full"
-              style={{ backgroundColor: pillBg }}
-              aria-hidden
-            />
-            {/* 호버 시 동일 레이어 한 겹 더 얹어 자연스럽게 진해짐 */}
-            <span
-              className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-              style={{ backgroundColor: pillBg }}
-              aria-hidden
-            />
-            <span
-              className="relative font-label opacity-90 transition-opacity duration-150 group-hover:opacity-100"
-              style={{ color: textColorBase }}
-            >
-              회원가입
-            </span>
+            회원가입
           </Link>
         </div>
       </div>
