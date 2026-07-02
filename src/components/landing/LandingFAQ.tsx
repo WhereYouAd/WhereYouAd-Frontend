@@ -2,9 +2,6 @@ import { LANDING_FAQ_ITEMS } from "@/constants/landing/faq";
 
 import LandingSectionHeader from "@/components/landing/LandingSectionHeader";
 
-import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
-import ChevronUp from "@/assets/icon/chevron/chevron-up.svg?react";
-
 export default function LandingFAQ() {
   return (
     <section
@@ -14,26 +11,17 @@ export default function LandingFAQ() {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="max-w-4xl mx-auto">
-          <LandingSectionHeader
-            title="자주 묻는 질문"
-            subtitle="시작하기 전에 자주 받는 질문을 모았습니다."
-          />
+          <LandingSectionHeader title="자주 묻는 질문" />
         </div>
 
-        <div className="mt-10 divide-y divide-surface-400 rounded-2xl border border-surface-400 overflow-hidden bg-surface-100 shadow-Soft">
+        <div className="mt-14 divide-y divide-surface-400/60">
           {LANDING_FAQ_ITEMS.map(({ q, a }) => (
-            <details key={q} className="group px-5 md:px-6 py-5">
-              <summary className="cursor-pointer list-none flex items-center justify-between gap-4 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100">
-                <span className="font-body1 text-text-title">{q}</span>
-                <span className="text-text-muted shrink-0">
-                  <ChevronDown className="w-5 h-5 group-open:hidden" />
-                  <ChevronUp className="w-5 h-5 hidden group-open:block" />
-                </span>
-              </summary>
-              <div className="mt-3 font-body2 text-text-auth-sub leading-relaxed">
+            <div key={q} className="py-8 first:pt-0 last:pb-0">
+              <h3 className="font-heading4 text-text-title">{q}</h3>
+              <p className="mt-3 break-keep font-body1 text-text-muted leading-relaxed">
                 {a}
-              </div>
-            </details>
+              </p>
+            </div>
           ))}
         </div>
       </div>

@@ -50,7 +50,7 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
   yaxis: {
     min: 0,
     max: 50000,
-    tickAmount: 6,
+    tickAmount: 3,
     labels: {
       formatter: (val: number) =>
         val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,
