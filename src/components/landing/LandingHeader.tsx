@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import logoSvg from "@/assets/logo/service-logo/logo.svg";
@@ -30,15 +30,19 @@ function scrollToSection(id: string) {
 }
 
 export default function LandingHeader() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let rafId: number | null = null;
 
     function update() {
       rafId = null;
-      const next = window.scrollY > 8;
-      setIsScrolled((prev) => (prev === next ? prev : next));
+      const hero = document.getElementById("hero");
+      const threshold = Math.max(
+        (hero?.offsetHeight ?? window.innerHeight) * 0.4,
+        1,
+      );
+      setProgress(Math.min(window.scrollY / threshold, 1));
     }
 
     function onScroll() {
@@ -54,50 +58,85 @@ export default function LandingHeader() {
     };
   }, []);
 
+  // ease-out quadratic: 스크롤 초반 빠르게 시작, 후반 부드럽게 수렴
+  const eased = 1 - Math.pow(1 - progress, 2);
+
+  // 텍스트: rgba(255,255,255,0.9) → rgb(55,65,81) (text-text-body = #374151)
+  const textColor = `rgba(${Math.round(255 - 200 * eased)},${Math.round(255 - 190 * eased)},${Math.round(255 - 174 * eased)},${(0.9 + 0.1 * eased).toFixed(2)})`;
+
+  const headerStyle = {
+    backgroundColor: `rgba(255,255,255,${(eased * 0.82).toFixed(3)})`,
+    backdropFilter: `blur(${(eased * 12).toFixed(1)}px)`,
+    WebkitBackdropFilter: `blur(${(eased * 12).toFixed(1)}px)`,
+    // border-surface-400 = #dde3f0 = rgb(221,227,240)
+    borderBottomColor: `rgba(221,227,240,${eased.toFixed(3)})`,
+  } as CSSProperties;
+
   return (
     <header
-      className={`sticky top-0 w-full z-50 flex items-center justify-between px-6 md:px-12 transition-ui-smooth h-(--landing-header-height,64px) ${
-        isScrolled
-          ? "bg-surface-100 shadow-Soft border-transparent"
-          : "bg-surface-100/80 backdrop-blur-xl border-surface-400"
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-[box-shadow] duration-300 h-(--landing-header-height,64px) ${
+        progress > 0.8 ? "shadow-Soft" : ""
       }`}
+      style={headerStyle}
     >
-      <div className="flex items-center">
-        <Link
-          to="/"
-          aria-label="WhereYouAd 홈"
-          className="flex items-center gap-2 text-text-title rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
-        >
-          <img src={logoSvg} alt="" aria-hidden className="h-6 w-auto" />
-        </Link>
-      </div>
-
-      <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-        {navItems.map(({ label, targetId }) => (
-          <button
-            key={targetId}
-            type="button"
-            onClick={() => scrollToSection(targetId)}
-            className="rounded-lg font-body1 text-text-body transition-colors hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100"
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+        {/* 왼쪽: 로고 + 네비게이션 */}
+        <div className="flex items-center">
+          <Link
+            to="/"
+            aria-label="WhereYouAd 홈"
+            className="flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           >
-            {label}
-          </button>
-        ))}
-      </nav>
+            {/* 컬러 로고와 흰색 로고를 progress에 비례해 교차 페이드 */}
+            <div className="relative h-9">
+              <img
+                src={logoSvg}
+                alt=""
+                aria-hidden
+                className="h-9 w-auto block"
+                style={{ opacity: eased }}
+              />
+              <img
+                src={logoSvg}
+                alt=""
+                aria-hidden
+                className="h-9 w-auto absolute inset-0 brightness-0 invert"
+                style={{ opacity: 1 - eased }}
+              />
+            </div>
+          </Link>
 
-      <div className="ml-auto flex items-center gap-2 md:gap-3 shrink-0">
-        <Link
-          to="/login"
-          className="rounded-xl px-3 py-2 font-body2 text-text-body transition-colors hover:bg-surface-300 hover:text-text-title focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5 md:font-body1"
-        >
-          로그인
-        </Link>
-        <Link
-          to="/signup"
-          className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-Soft transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-100 md:px-3.5"
-        >
-          회원가입
-        </Link>
+          <nav className="hidden md:flex items-center gap-7 ml-10">
+            {navItems.map(({ label, targetId }) => (
+              <button
+                key={targetId}
+                type="button"
+                onClick={() => scrollToSection(targetId)}
+                style={{ color: textColor }}
+                className="rounded-lg font-body1 hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* 오른쪽: 로그인/회원가입 */}
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+          <Link
+            to="/login"
+            style={{ color: textColor }}
+            className="rounded-xl px-3 py-2 font-body2 hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5 md:font-body1"
+          >
+            로그인
+          </Link>
+          <Link
+            to="/signup"
+            className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-Soft transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5"
+          >
+            회원가입
+          </Link>
+        </div>
       </div>
     </header>
   );
