@@ -72,4 +72,10 @@ export const QUERY_KEYS = {
     report: (provider: string, orgId: number | null) =>
       ["ai", "report", provider, orgId] as const,
   },
+
+  timeline: {
+    list: (orgId: number | null) => ["timeline", "list", orgId] as const,
+    detail: (orgId: number | null, timelineId: number | null) =>
+      ["timeline", "detail", orgId, timelineId] as const,
+  },
 } as const;
