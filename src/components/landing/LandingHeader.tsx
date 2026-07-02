@@ -61,8 +61,13 @@ export default function LandingHeader() {
   // ease-out quadratic: 스크롤 초반 빠르게 시작, 후반 부드럽게 수렴
   const eased = 1 - Math.pow(1 - progress, 2);
 
-  // 텍스트: rgba(255,255,255,0.9) → rgb(55,65,81) (text-text-body = #374151)
-  const textColor = `rgba(${Math.round(255 - 200 * eased)},${Math.round(255 - 190 * eased)},${Math.round(255 - 174 * eased)},${(0.9 + 0.1 * eased).toFixed(2)})`;
+  // 텍스트 기본색: rgb(255,255,255) → rgb(55,65,81) (text-text-body = #374151)
+  // alpha는 opacity 클래스로 분리해 hover에서 별도 제어
+  const textColorBase = `rgb(${Math.round(255 - 200 * eased)},${Math.round(255 - 190 * eased)},${Math.round(255 - 174 * eased)})`;
+
+  // 호버 필 배경: 텍스트와 동일한 RGB 기반, 낮은 알파로 반투명 처리
+  // 투명 헤더(dark bg): rgba(255,255,255,0.12) / 불투명 헤더(light bg): rgba(55,65,81,0.07)
+  const pillBg = `rgba(${Math.round(255 - 200 * eased)},${Math.round(255 - 190 * eased)},${Math.round(255 - 174 * eased)},${(0.12 - 0.05 * eased).toFixed(3)})`;
 
   const headerStyle = {
     backgroundColor: `rgba(255,255,255,${(eased * 0.82).toFixed(3)})`,
@@ -106,35 +111,61 @@ export default function LandingHeader() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-7 ml-10">
+          <nav className="hidden md:flex items-center gap-1 ml-10">
             {navItems.map(({ label, targetId }) => (
               <button
                 key={targetId}
                 type="button"
                 onClick={() => scrollToSection(targetId)}
-                style={{ color: textColor }}
-                className="rounded-lg font-body1 hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+                className="group relative rounded-full px-3 py-1.5 font-body1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
               >
-                {label}
+                <span
+                  className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                  style={{ backgroundColor: pillBg }}
+                  aria-hidden
+                />
+                <span
+                  className="relative opacity-90 transition-opacity duration-150 group-hover:opacity-100"
+                  style={{ color: textColorBase }}
+                >
+                  {label}
+                </span>
               </button>
             ))}
           </nav>
         </div>
 
         {/* 오른쪽: 로그인/회원가입 */}
-        <div className="flex items-center gap-2 md:gap-3 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           <Link
             to="/login"
-            style={{ color: textColor }}
-            className="rounded-xl px-3 py-2 font-body2 hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5 md:font-body1"
+            style={{ color: textColorBase }}
+            className="rounded-xl px-3 py-2 font-body2 opacity-90 hover:opacity-100 transition-opacity duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/35 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5 md:font-body1"
           >
             로그인
           </Link>
           <Link
             to="/signup"
-            className="rounded-xl bg-primary-400 px-3 py-2 font-label text-surface-100 shadow-Soft transition-colors hover:bg-primary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:px-3.5"
+            className="group relative rounded-full px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           >
-            회원가입
+            {/* 기본 필 배경 */}
+            <span
+              className="absolute inset-0 rounded-full"
+              style={{ backgroundColor: pillBg }}
+              aria-hidden
+            />
+            {/* 호버 시 동일 레이어 한 겹 더 얹어 자연스럽게 진해짐 */}
+            <span
+              className="absolute inset-0 rounded-full opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+              style={{ backgroundColor: pillBg }}
+              aria-hidden
+            />
+            <span
+              className="relative font-label opacity-90 transition-opacity duration-150 group-hover:opacity-100"
+              style={{ color: textColorBase }}
+            >
+              회원가입
+            </span>
           </Link>
         </div>
       </div>
