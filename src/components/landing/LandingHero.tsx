@@ -64,7 +64,7 @@ export default function LandingHero() {
           광고 성과를 실시간으로{"\n"}한 화면에서 관리하세요
         </h1>
         <p className="max-w-2xl break-keep font-heading3 text-surface-100/85">
-          Google·Meta 파트너 서비스로 광고 데이터를 한 곳에서 관리하세요.
+          매체마다 따로 들어가 확인하던 시간, 이제 아끼세요.
         </p>
       </motion.div>
 
