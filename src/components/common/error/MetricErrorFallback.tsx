@@ -12,7 +12,7 @@ const MetricErrorFallback = memo(function MetricErrorFallback({
   return (
     <div
       role="alert"
-      className="col-span-4 flex flex-col items-center justify-center gap-4 rounded-3xl border border-surface-200 bg-surface-100/80 px-6 py-8 text-center backdrop-blur-sm"
+      className="col-span-4 flex min-h-28 flex-col items-center justify-center gap-4 rounded-3xl border border-surface-200 bg-surface-100/80 px-6 py-8 text-center backdrop-blur-sm"
     >
       <WarnCircleIcon
         className="h-8 w-8 shrink-0 text-info-red"

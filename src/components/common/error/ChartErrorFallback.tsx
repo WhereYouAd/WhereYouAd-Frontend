@@ -12,7 +12,7 @@ const ChartErrorFallback = memo(function ChartErrorFallback({
   return (
     <div
       role="alert"
-      className="flex min-h-40 w-full flex-col items-center justify-center gap-4 rounded-2xl bg-surface-200/50 px-6 py-8 text-center"
+      className="flex min-h-40 w-full flex-1 flex-col items-center justify-center gap-4 rounded-2xl bg-surface-200/40 px-6 py-8 text-center"
     >
       <WarnCircleIcon
         className="h-7 w-7 shrink-0 text-info-red"
