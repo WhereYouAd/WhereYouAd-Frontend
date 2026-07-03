@@ -23,6 +23,7 @@ export function WorkspaceSwitcher({
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const latestSaveOrgIdRef = useRef<number | null>(null);
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
@@ -55,19 +56,39 @@ export function WorkspaceSwitcher({
     setMyRole(fallback.myRole);
   }, [selectedOrgId, workspaceList, setSelectedOrgId, setMyRole]);
 
-  const { mutate: saveWorkspace } = useCoreMutation(saveSelectedWorkspace, {
-    invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
-    userOnSuccess: (_data, orgId) => {
-      const workspace = workspaceList.find((w) => w.orgId === orgId);
-      setSelectedOrgId(orgId);
-      if (workspace) setMyRole(workspace.myRole);
+  const { mutate: saveWorkspace, isPending: isSavingWorkspace } =
+    useCoreMutation(saveSelectedWorkspace, {
+      invalidateKeys: [
+        QUERY_KEYS.workspace.list(),
+        QUERY_KEYS.workspace.saved(),
+      ],
+      userOnSuccess: (_data, orgId) => {
+        if (latestSaveOrgIdRef.current !== orgId) return;
+
+        latestSaveOrgIdRef.current = null;
+        const workspace = workspaceList.find((w) => w.orgId === orgId);
+        setSelectedOrgId(orgId);
+        if (workspace) setMyRole(workspace.myRole);
+      },
+      userOnError: (error, orgId) => {
+        if (latestSaveOrgIdRef.current === orgId) {
+          latestSaveOrgIdRef.current = null;
+        }
+        console.error("워크스페이스 저장 실패:", error);
+        toast.error("워크스페이스 변경에 실패했습니다. 다시 시도해 주세요.");
+      },
+    });
+
+  const handleSelectWorkspace = useCallback(
+    (orgId: number) => {
+      if (isSavingWorkspace) return;
+
+      latestSaveOrgIdRef.current = orgId;
       setIsOpen(false);
+      saveWorkspace(orgId);
     },
-    userOnError: (error) => {
-      console.error("워크스페이스 저장 실패:", error);
-      toast.error("워크스페이스 변경에 실패했습니다. 다시 시도해 주세요.");
-    },
-  });
+    [isSavingWorkspace, saveWorkspace],
+  );
 
   useEffect(() => {
     if (isCollapsed) {
@@ -243,10 +264,9 @@ export function WorkspaceSwitcher({
                   )}
                   <button
                     type="button"
-                    onClick={() => {
-                      saveWorkspace(org.orgId);
-                    }}
-                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-title hover:bg-surface-200 transition-colors"
+                    disabled={isSavingWorkspace}
+                    onClick={() => handleSelectWorkspace(org.orgId)}
+                    className="group flex w-full items-center gap-3 rounded-2xl px-2 py-1.5 font-body2 text-text-title hover:bg-surface-200 transition-colors disabled:pointer-events-none disabled:opacity-50"
                   >
                     {renderImage(org)}
                     <div className="flex flex-col flex-1 min-w-0 items-start">
