@@ -66,7 +66,10 @@ export default function OverviewDashboard() {
         />
       </div>
 
-      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+      <ErrorBoundary
+        FallbackComponent={ChartErrorFallback}
+        resetKeys={[roasRankingsData]}
+      >
         <OverviewPlatformSection
           rankings={roasRankingsData}
           isRankingsLoading={isRankingsLoading}

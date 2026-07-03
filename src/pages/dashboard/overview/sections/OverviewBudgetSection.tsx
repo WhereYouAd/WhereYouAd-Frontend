@@ -60,7 +60,10 @@ export function OverviewBudgetSection({
           }
         >
           <div className="flex min-h-0 flex-1 flex-col">
-            <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+            <ErrorBoundary
+              FallbackComponent={ChartErrorFallback}
+              resetKeys={[budget]}
+            >
               {isBudgetError ? (
                 <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
                   {budgetError?.message ?? (
