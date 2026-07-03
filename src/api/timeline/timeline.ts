@@ -42,3 +42,12 @@ export const createTimeline = async (
   });
   return data.data;
 };
+
+//타임라인 수정 API
+//export const updateTimeline = async
+
+//타임라인 삭제 API
+//export const deleteTimeline = async
+
+//타임라인 AI 요약 요청 API
+//export const requestTimelineSummary = async
