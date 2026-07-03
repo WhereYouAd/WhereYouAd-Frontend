@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IPlatformCampaign } from "@/types/ads/campaign";
-import type { IApiErrorResponse } from "@/types/common/common";
+
+import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import { createCampaignGroup, getPlatformCampaigns } from "@/api/ads/ads";
 import { QUERY_KEYS } from "@/lib/queryKeys";
@@ -18,7 +18,6 @@ const NONE_OPTION: IPlatformCampaign = {
 
 export const useCampaignGroup = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const [name, setName] = useState("");
@@ -33,32 +32,23 @@ export const useCampaignGroup = () => {
     null,
   );
 
-  const { data: googleData = [] } = useQuery<
-    IPlatformCampaign[],
-    IApiErrorResponse
-  >({
-    queryKey: QUERY_KEYS.campaign.platformList(orgId, "GOOGLE"),
-    queryFn: () => getPlatformCampaigns(orgId!, "GOOGLE"),
-    enabled: !!orgId,
-  });
+  const { data: googleData = [] } = useCoreQuery(
+    QUERY_KEYS.campaign.platformList(orgId, "GOOGLE"),
+    () => getPlatformCampaigns(orgId!, "GOOGLE"),
+    { enabled: !!orgId },
+  );
 
-  const { data: naverData = [] } = useQuery<
-    IPlatformCampaign[],
-    IApiErrorResponse
-  >({
-    queryKey: QUERY_KEYS.campaign.platformList(orgId, "NAVER"),
-    queryFn: () => getPlatformCampaigns(orgId!, "NAVER"),
-    enabled: !!orgId,
-  });
+  const { data: naverData = [] } = useCoreQuery(
+    QUERY_KEYS.campaign.platformList(orgId, "NAVER"),
+    () => getPlatformCampaigns(orgId!, "NAVER"),
+    { enabled: !!orgId },
+  );
 
-  const { data: metaData = [] } = useQuery<
-    IPlatformCampaign[],
-    IApiErrorResponse
-  >({
-    queryKey: QUERY_KEYS.campaign.platformList(orgId, "META"),
-    queryFn: () => getPlatformCampaigns(orgId!, "META"),
-    enabled: !!orgId,
-  });
+  const { data: metaData = [] } = useCoreQuery(
+    QUERY_KEYS.campaign.platformList(orgId, "META"),
+    () => getPlatformCampaigns(orgId!, "META"),
+    { enabled: !!orgId },
+  );
 
   const googleCampaigns = [NONE_OPTION, ...googleData];
   const naverCampaigns = [NONE_OPTION, ...naverData];
@@ -72,11 +62,11 @@ export const useCampaignGroup = () => {
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const { mutate: createGroup, isPending: isCreating } = useMutation<
-    unknown,
-    IApiErrorResponse
-  >({
-    mutationFn: () => {
+  const { mutate: createGroup, isPending: isCreating } = useCoreMutation<
+    void,
+    void
+  >(
+    () => {
       const campaignIds: number[] = [
         googleSelected?.adCampaignId,
         naverSelected?.adCampaignId,
@@ -91,16 +81,16 @@ export const useCampaignGroup = () => {
         campaignIds,
       });
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.campaign.list(orgId),
-      });
-      setIsSuccessModalOpen(true);
+    {
+      invalidateKeys: [QUERY_KEYS.campaign.list(orgId)],
+      userOnSuccess: () => {
+        setIsSuccessModalOpen(true);
+      },
+      userOnError: (error) => {
+        toast.error(error.message ?? "그룹 생성에 실패했습니다.");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message ?? "그룹 생성에 실패했습니다.");
-    },
-  });
+  );
 
   const handleComplete = () => {
     if (!isFormValid) return;
