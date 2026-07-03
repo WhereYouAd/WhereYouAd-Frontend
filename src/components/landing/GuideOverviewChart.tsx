@@ -101,7 +101,7 @@ export default function GuideOverviewChart() {
   const chartOptions = getChartOptions(primary, secondary, isUnified);
 
   return (
-    <div className="w-full h-90 md:h-110 bg-transparent">
+    <div className="h-75 w-full md:h-85 bg-transparent">
       <Card
         className="h-full flex flex-col"
         title="실시간 트래픽 변화"
