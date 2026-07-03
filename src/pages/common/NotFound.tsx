@@ -1,10 +1,9 @@
-import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@/components/common/button/Button";
 import ErrorLayout from "@/components/common/error/ErrorLayout";
 
-const NotFound = memo(function NotFound() {
+export default function NotFound() {
   const navigate = useNavigate();
 
   return (
@@ -19,7 +18,11 @@ const NotFound = memo(function NotFound() {
             size="big"
             variant="secondary"
             fullWidth
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              window.history.length > 1
+                ? navigate(-1)
+                : navigate("/", { replace: true })
+            }
           >
             이전 페이지로
           </Button>
@@ -35,6 +38,4 @@ const NotFound = memo(function NotFound() {
       }
     />
   );
-});
-
-export default NotFound;
+}

@@ -69,6 +69,9 @@ export default function OverviewDashboard() {
       <ErrorBoundary
         FallbackComponent={ChartErrorFallback}
         resetKeys={[roasRankingsData]}
+        onError={(error, info) =>
+          console.error("[OverviewPlatformSection]", error, info.componentStack)
+        }
       >
         <OverviewPlatformSection
           rankings={roasRankingsData}
@@ -79,7 +82,16 @@ export default function OverviewDashboard() {
         />
       </ErrorBoundary>
 
-      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+      <ErrorBoundary
+        FallbackComponent={ChartErrorFallback}
+        onError={(error, info) =>
+          console.error(
+            "[DashboardAiSummarySection]",
+            error,
+            info.componentStack,
+          )
+        }
+      >
         <DashboardAiSummarySection
           provider="ALL"
           idPrefix="overview-ai-summary"

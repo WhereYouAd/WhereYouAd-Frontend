@@ -1,14 +1,17 @@
-import { memo } from "react";
-import { useNavigate, useRouteError } from "react-router-dom";
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "react-router-dom";
 
 import Button from "@/components/common/button/Button";
 import ErrorLayout from "@/components/common/error/ErrorLayout";
 
-const ErrorPage = memo(function ErrorPage() {
-  const error = useRouteError() as { status?: number; message?: string } | null;
+export default function ErrorPage() {
+  const error = useRouteError();
   const navigate = useNavigate();
 
-  const is404 = error?.status === 404;
+  const is404 = isRouteErrorResponse(error) && error.status === 404;
   const title = is404 ? "페이지를 찾을 수 없어요" : "오류가 발생했어요";
   const description = is404
     ? "요청하신 페이지가 존재하지 않거나\n주소가 변경되었을 수 있어요."
@@ -42,6 +45,4 @@ const ErrorPage = memo(function ErrorPage() {
       }
     />
   );
-});
-
-export default ErrorPage;
+}

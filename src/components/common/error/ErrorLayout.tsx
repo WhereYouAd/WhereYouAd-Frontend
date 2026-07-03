@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import WarningIcon from "@/assets/icon/ai/warning.svg?react";
@@ -10,18 +10,14 @@ interface IErrorLayoutProps {
   actions: ReactNode;
 }
 
-const ErrorLayout = memo(function ErrorLayout({
-  title,
-  description,
-  actions,
-}: IErrorLayoutProps) {
+function ErrorLayout({ title, description, actions }: IErrorLayoutProps) {
   const reduceMotion = useReducedMotion();
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center p-4">
       <motion.div
         className="flex w-full max-w-105 flex-col items-center rounded-4xl bg-surface-100 px-8 py-12 text-center shadow-Soft transition-ui-smooth tablet:px-6"
-        role="alert"
+        role="status"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
@@ -61,6 +57,6 @@ const ErrorLayout = memo(function ErrorLayout({
       </motion.div>
     </div>
   );
-});
+}
 
 export default ErrorLayout;
