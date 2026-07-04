@@ -2,12 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
+import type { IApiErrorResponse } from "@/types/common/common";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
-import {
-  buildTimelineSummaryPanelDataForBar,
-  TIMELINE_GRID_MOCK_BY_VIEW_UNIT,
-  TIMELINE_GRID_MOCK_WEEK,
-} from "@/types/timeline/timeline.mock";
 import type {
   ITimelineCampaignBar,
   TTimelineViewUnit,
@@ -17,7 +13,14 @@ import {
   TIMELINE_PAGE_HEIGHT,
 } from "@/constants/timeline/layout";
 
+import { buildTimelineGrid } from "@/utils/timeline/buildTimelineGrid";
+import { buildTimelineSummaryPanel } from "@/utils/timeline/buildTimelineSummaryPanel";
+
+import { useTimelineDetail } from "@/hooks/timeline/useTimelineDetail";
+import { useTimelineList } from "@/hooks/timeline/useTimelineList";
+
 import Button from "@/components/common/button/Button";
+import TimelineSkeleton from "@/components/timeline/skeleton/TimelineSkeleton";
 import TimelineAxis from "@/components/timeline/TimelineAxis";
 import TimelineBar from "@/components/timeline/TimelineBar";
 import TimelineCreateModal from "@/components/timeline/TimelineCreateModal";
@@ -34,21 +37,13 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
-const MOCK_PERIOD_LABELS: Record<TTimelineViewUnit, string[]> = {
-  DAY: ["오늘", "6월 23일", "6월 24일"],
-  WEEK: ["오늘", TIMELINE_GRID_MOCK_WEEK.periodLabel, "6월 28일 - 7월 4일"],
-  MONTH: ["오늘", "2026년 6월", "2026년 7월"],
-};
-
 const TOOLBAR_ACTION_CLASS =
   "flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-caption text-text-muted opacity-50 cursor-not-allowed";
 
 export default function Timeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>(
-    TIMELINE_GRID_MOCK_WEEK.viewUnit,
-  );
+  const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>("WEEK");
   const [periodIndex, setPeriodIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -57,9 +52,22 @@ export default function Timeline() {
     null,
   );
 
-  const gridData = TIMELINE_GRID_MOCK_BY_VIEW_UNIT[viewUnit];
+  const {
+    data: timelineList = [],
+    isLoading,
+    isError,
+    error,
+  } = useTimelineList();
+
+  const { data: detail } = useTimelineDetail(selectedBarId);
+
+  const gridData = useMemo(
+    () => buildTimelineGrid({ items: timelineList, viewUnit, periodIndex }),
+    [timelineList, viewUnit, periodIndex],
+  );
   const { columns, bars } = gridData;
-  const isEmpty = bars.length === 0;
+  const isEmpty = !isLoading && bars.length === 0;
+  const periodLabel = gridData.periodLabel;
 
   const maxRow = useMemo(
     () => (bars.length > 0 ? Math.max(...bars.map((bar) => bar.row)) : 0),
@@ -68,24 +76,10 @@ export default function Timeline() {
 
   const totalWidth = columns.length * TIMELINE_COL_WIDTH;
 
-  const periodLabels = useMemo(
-    () =>
-      MOCK_PERIOD_LABELS[viewUnit].map((label, index) =>
-        index === 1 ? gridData.periodLabel : label,
-      ),
-    [gridData.periodLabel, viewUnit],
-  );
-  const periodLabel = periodLabels[periodIndex] ?? periodLabels[0];
-
-  const selectedBar = useMemo(
-    () => bars.find((bar) => bar.id === selectedBarId) ?? null,
-    [bars, selectedBarId],
-  );
-
   useEffect(() => {
-    if (!selectedBar) return;
-    setPanelData(buildTimelineSummaryPanelDataForBar(selectedBar));
-  }, [selectedBar]);
+    if (!detail) return;
+    setPanelData(buildTimelineSummaryPanel(detail));
+  }, [detail]);
 
   useEffect(() => {
     if (isEmpty) return;
@@ -108,11 +102,11 @@ export default function Timeline() {
   };
 
   const handlePrevPeriod = () => {
-    setPeriodIndex((prev) => (prev === 0 ? periodLabels.length - 1 : prev - 1));
+    setPeriodIndex((prev) => prev + 1); //더 과거
   };
 
   const handleNextPeriod = () => {
-    setPeriodIndex((prev) => (prev === periodLabels.length - 1 ? 0 : prev + 1));
+    setPeriodIndex((prev) => Math.max(0, prev - 1));
   };
 
   const handleGoToToday = () => {
@@ -121,7 +115,6 @@ export default function Timeline() {
 
   const handleBarClick = (bar: ITimelineCampaignBar) => {
     setSelectedBarId(bar.id);
-    setPanelData(buildTimelineSummaryPanelDataForBar(bar));
     setIsPanelOpen(true);
   };
 
@@ -129,6 +122,26 @@ export default function Timeline() {
     setIsPanelOpen(false);
     setSelectedBarId(null);
   };
+
+  if (isLoading) {
+    return <TimelineSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <section
+        className="flex w-full min-w-0 flex-col"
+        style={{ height: TIMELINE_PAGE_HEIGHT }}
+      >
+        <div className="flex min-h-40 flex-1 items-center justify-center rounded-2xl border border-surface-400/70 bg-surface-100 p-8">
+          <p className="text-center font-body2 text-text-muted">
+            {(error as IApiErrorResponse)?.message ??
+              "타임라인을 불러오지 못헀습니다. 잠시후에 다시 시도해주세요"}
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -194,7 +207,6 @@ export default function Timeline() {
             </div>
           </div>
         </div>
-
         {isEmpty ? (
           <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
         ) : (
