@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
-import type { IApiErrorResponse } from "@/types/common/common";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import type {
   ITimelineCampaignBar,
@@ -134,10 +133,14 @@ export default function Timeline() {
         className="flex w-full min-w-0 flex-col"
         style={{ height: TIMELINE_PAGE_HEIGHT }}
       >
-        <div className="flex min-h-40 flex-1 items-center justify-center rounded-2xl border border-surface-400/70 bg-surface-100 p-8">
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="flex min-h-40 flex-1 items-center justify-center rounded-2xl border border-surface-400/70 bg-surface-100 p-8"
+        >
           <p className="text-center font-body2 text-text-muted">
-            {(error as IApiErrorResponse)?.message ??
-              "타임라인을 불러오지 못헀습니다. 잠시후에 다시 시도해주세요"}
+            {error?.message ??
+              "타임라인을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요"}
           </p>
         </div>
       </section>
