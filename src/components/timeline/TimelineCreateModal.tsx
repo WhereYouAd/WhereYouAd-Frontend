@@ -1,7 +1,6 @@
-import { type MouseEvent, useEffect, useMemo, useState } from "react";
+import { type MouseEvent, useEffect, useMemo } from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 import type { TTimelineMetric } from "@/types/timeline/api";
@@ -16,6 +15,8 @@ import {
   type TTimelineCreateFormValues,
 } from "@/utils/timeline/timeline";
 
+import { useCreateTimeline } from "@/hooks/timeline/useCreateTimeline";
+
 import Button from "../common/button/Button";
 import {
   DropdownMenu,
@@ -25,8 +26,6 @@ import Input from "../common/input/Input";
 import Modal from "../common/modal/Modal";
 
 import ChevronIcon from "@/assets/icon/chevron/chevron-up.svg?react";
-
-const MOCK_SUBMIT_DELAY_MS = 800;
 
 function openDatePickerFromField(event: MouseEvent<HTMLElement>) {
   const input =
@@ -53,7 +52,8 @@ export default function TimelineCreateModal({
   isOpen,
   onClose,
 }: ITimelineCreateModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate, isPending } = useCreateTimeline();
 
   const {
     register,
@@ -86,24 +86,23 @@ export default function TimelineCreateModal({
         label: option.label,
         active: option.value === comparisonPeriodType,
         onClick: () => {
-          if (isSubmitting) return;
+          if (isPending) return;
           setValue("comparisonPeriodType", option.value, {
             shouldValidate: true,
           });
         },
       })),
-    [comparisonPeriodType, isSubmitting, setValue],
+    [comparisonPeriodType, isPending, setValue],
   );
 
   useEffect(() => {
     if (!isOpen) {
       reset(TIMELINE_FORM_DEFAULT_VALUES);
-      setIsSubmitting(false);
     }
   }, [isOpen, reset]);
 
   const handleClose = () => {
-    if (isSubmitting) return;
+    if (isPending) return;
     onClose();
   };
 
@@ -116,23 +115,13 @@ export default function TimelineCreateModal({
     setValue("metrics", next, { shouldValidate: true });
   };
 
-  const onSubmit: SubmitHandler<TTimelineCreateFormValues> = async (data) => {
-    setIsSubmitting(true);
-
-    try {
-      await new Promise<void>((resolve) => {
-        window.setTimeout(resolve, MOCK_SUBMIT_DELAY_MS);
-      });
-      toast.success("타임라인이 생성되었습니다", {
-        description: `"${data.name}" 타임라인을 추가했습니다`,
-      });
-      reset(TIMELINE_FORM_DEFAULT_VALUES);
-      onClose();
-    } catch {
-      toast.error("타임라인 생성에 실패했습니다. 다시 시도해주세요");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onSubmit: SubmitHandler<TTimelineCreateFormValues> = (data) => {
+    mutate(data, {
+      onSuccess: () => {
+        reset(TIMELINE_FORM_DEFAULT_VALUES);
+        onClose();
+      },
+    });
   };
 
   return (
@@ -142,7 +131,7 @@ export default function TimelineCreateModal({
       size="lg"
       padding="lg"
       title="타임라인 생성"
-      disableOverlayClick={isSubmitting}
+      disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-10">
         <h2 className="mb-2 font-heading3 text-text-title">타임라인 생성</h2>
@@ -159,7 +148,7 @@ export default function TimelineCreateModal({
             <Input
               label="타임라인 이름"
               placeholder="ex. 6월 봄 프로모션"
-              disabled={isSubmitting}
+              disabled={isPending}
               error={!!errors.name}
               helperText={errors.name?.message}
               {...register("name")}
@@ -168,13 +157,13 @@ export default function TimelineCreateModal({
             <div className="grid grid-cols-1 gap-7 tablet:grid-cols-2">
               <div
                 role="presentation"
-                className={!isSubmitting ? "cursor-pointer" : undefined}
+                className={!isPending ? "cursor-pointer" : undefined}
                 onClick={openDatePickerFromField}
               >
                 <Input
                   label="시작일"
                   type="date"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                   error={!!errors.startDate}
                   helperText={errors.startDate?.message}
                   inputClassName="cursor-pointer"
@@ -183,13 +172,13 @@ export default function TimelineCreateModal({
               </div>
               <div
                 role="presentation"
-                className={!isSubmitting ? "cursor-pointer" : undefined}
+                className={!isPending ? "cursor-pointer" : undefined}
                 onClick={openDatePickerFromField}
               >
                 <Input
                   label="종료일"
                   type="date"
-                  disabled={isSubmitting}
+                  disabled={isPending}
                   error={!!errors.endDate}
                   helperText={errors.endDate?.message}
                   inputClassName="cursor-pointer"
@@ -216,7 +205,7 @@ export default function TimelineCreateModal({
                         <button
                           type="button"
                           key={option.value}
-                          disabled={isSubmitting}
+                          disabled={isPending}
                           aria-pressed={isSelected}
                           onClick={() => toggleMetric(option.value)}
                           className={twMerge(
@@ -224,7 +213,7 @@ export default function TimelineCreateModal({
                             isSelected
                               ? "border-info-blue/40 bg-info-blue/15 text-info-blue"
                               : "border-text-placeholder/40 bg-surface-200 text-text-muted hover:bg-surface-300",
-                            isSubmitting && "cursor-not-allowed opacity-60",
+                            isPending && "cursor-not-allowed opacity-60",
                           )}
                         >
                           {option.label}
@@ -260,7 +249,7 @@ export default function TimelineCreateModal({
                           "flex h-14 w-full cursor-pointer items-center justify-between rounded-2xl bg-surface-100 px-5 text-left font-body1 ring-1 ring-surface-400 transition-colors duration-200 ease-out outline-none",
                           "hover:bg-surface-200 hover:ring-surface-400",
                           "focus-visible:ring-2 focus-visible:ring-surface-400",
-                          isSubmitting && "cursor-not-allowed opacity-60",
+                          isPending && "cursor-not-allowed opacity-60",
                           errors.comparisonPeriodType
                             ? "ring-2 ring-info-red bg-info-red/5"
                             : "",
@@ -294,10 +283,10 @@ export default function TimelineCreateModal({
               size="big"
               variant="primary"
               fullWidth
-              isLoading={isSubmitting}
-              disabled={isSubmitting}
+              isLoading={isPending}
+              disabled={isPending}
             >
-              {isSubmitting ? "생성 중..." : "생성하기"}
+              {isPending ? "생성 중..." : "생성하기"}
             </Button>
           </div>
         </form>
