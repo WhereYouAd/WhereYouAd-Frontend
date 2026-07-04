@@ -115,6 +115,7 @@ export default function Timeline() {
 
   const handleBarClick = (bar: ITimelineCampaignBar) => {
     setSelectedBarId(bar.id);
+    setPanelData(null);
     setIsPanelOpen(true);
   };
 
