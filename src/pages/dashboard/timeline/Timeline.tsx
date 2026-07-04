@@ -65,7 +65,8 @@ export default function Timeline() {
     [timelineList, viewUnit, periodIndex],
   );
   const { columns, bars } = gridData;
-  const isEmpty = !isLoading && bars.length === 0;
+  const hasNoTimelines = timelineList.length === 0;
+  const hasNoVisibleBars = !hasNoTimelines && bars.length === 0;
   const periodLabel = gridData.periodLabel;
 
   const maxRow = useMemo(
@@ -81,11 +82,11 @@ export default function Timeline() {
   }, [detail]);
 
   useEffect(() => {
-    if (isEmpty) return;
+    if (hasNoTimelines) return;
     const el = scrollRef.current;
     if (!el) return;
     el.scrollLeft = el.scrollWidth - el.clientWidth;
-  }, [columns, isEmpty, viewUnit]);
+  }, [columns, hasNoTimelines, viewUnit]);
 
   useEffect(() => {
     if (selectedBarId === null) return;
@@ -211,7 +212,7 @@ export default function Timeline() {
             </div>
           </div>
         </div>
-        {isEmpty ? (
+        {hasNoTimelines ? (
           <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
         ) : (
           <div
@@ -223,22 +224,33 @@ export default function Timeline() {
               className="flex min-h-full flex-1 flex-col"
             >
               <TimelineAxis columns={columns} className="sticky top-0" />
-              <TimelineGrid columns={columns} rowCount={maxRow}>
-                {bars.map((bar) => (
-                  <TimelineBar
-                    key={`${viewUnit}-${bar.id}`}
-                    bar={bar}
-                    isSelected={selectedBarId === bar.id && isPanelOpen}
-                    onBarClick={handleBarClick}
-                    onEdit={() =>
-                      toast.info("수정기능은 다음 이슈에서 연동됩니다")
-                    }
-                    onDelete={() =>
-                      toast.info("삭제기능은 다음 이슈에서 연동됩니다")
-                    }
-                  />
-                ))}
-              </TimelineGrid>
+              {hasNoVisibleBars ? (
+                <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
+                  <p className="font-heading4 text-text-title">
+                    이 기간에 표시할 타임라인이 없어요
+                  </p>
+                  <p className="max-w-sm font-body2 text-text-muted">
+                    다른 기간으로 이동하거나 보기 단위를 변경해 보세요
+                  </p>
+                </div>
+              ) : (
+                <TimelineGrid columns={columns} rowCount={maxRow}>
+                  {bars.map((bar) => (
+                    <TimelineBar
+                      key={`${viewUnit}-${bar.id}`}
+                      bar={bar}
+                      isSelected={selectedBarId === bar.id && isPanelOpen}
+                      onBarClick={handleBarClick}
+                      onEdit={() =>
+                        toast.info("수정기능은 다음 이슈에서 연동됩니다")
+                      }
+                      onDelete={() =>
+                        toast.info("삭제기능은 다음 이슈에서 연동됩니다")
+                      }
+                    />
+                  ))}
+                </TimelineGrid>
+              )}
             </div>
           </div>
         )}
