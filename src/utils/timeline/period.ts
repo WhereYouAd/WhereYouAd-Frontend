@@ -48,7 +48,7 @@ export function formatRange(startIso: string, endIso: string): string {
 
 export function formatDot(iso: string): string {
   const [year, month, day] = iso.split("-");
-  return `${year}-${month}-${day}`;
+  return `${year}.${month}.${day}`;
 }
 
 function getWeekStart(date: Date): Date {
