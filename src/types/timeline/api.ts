@@ -26,7 +26,7 @@ export type TTimelinePerformanceStatus =
 export const TIMELINE_COMPARISON_PERIOD_TYPES = [
   "LAST_WEEK",
   "LAST_MONTH",
-  "LASY_YEAR",
+  "LAST_YEAR",
 ] as const;
 export type TTimelineComparisonPeriodType =
   (typeof TIMELINE_COMPARISON_PERIOD_TYPES)[number];
