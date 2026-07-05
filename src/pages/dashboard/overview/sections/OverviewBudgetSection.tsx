@@ -7,6 +7,8 @@ import Card from "@/components/common/card/Card";
 import ChartLegend, {
   type IChartLegendItem,
 } from "@/components/common/chart/ChartLegend";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import type { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 import BudgetGaugeChart, {
   statusBadgeVariant,
@@ -58,21 +60,26 @@ export function OverviewBudgetSection({
           }
         >
           <div className="flex min-h-0 flex-1 flex-col">
-            {isBudgetError ? (
-              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
-                {budgetError?.message ?? (
-                  <>
-                    예산 데이터를 불러오지 못했습니다.
-                    <br />
-                    잠시 후 다시 시도해 주세요.
-                  </>
-                )}
-              </div>
-            ) : isBudgetLoading ? (
-              <OverviewBudgetGaugeSkeleton />
-            ) : budget ? (
-              <BudgetGaugeChart {...budget} />
-            ) : null}
+            <ErrorBoundary
+              FallbackComponent={ChartErrorFallback}
+              resetKeys={[budget]}
+            >
+              {isBudgetError ? (
+                <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
+                  {budgetError?.message ?? (
+                    <>
+                      예산 데이터를 불러오지 못했습니다.
+                      <br />
+                      잠시 후 다시 시도해 주세요.
+                    </>
+                  )}
+                </div>
+              ) : isBudgetLoading ? (
+                <OverviewBudgetGaugeSkeleton />
+              ) : budget ? (
+                <BudgetGaugeChart {...budget} />
+              ) : null}
+            </ErrorBoundary>
           </div>
         </Card>
       </div>

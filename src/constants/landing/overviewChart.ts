@@ -9,7 +9,7 @@ const CLICKS = [
 
 const PEAK = Math.max(...CLICKS);
 const TARGET_PEAK = 48500;
-const NORMALIZED_CLICKS = CLICKS.map((value) =>
+export const NORMALIZED_CLICKS = CLICKS.map((value) =>
   Math.round((value / PEAK) * TARGET_PEAK),
 );
 
@@ -50,7 +50,7 @@ export const LANDING_OVERVIEW_CHART_OPTIONS: ApexOptions = {
   yaxis: {
     min: 0,
     max: 50000,
-    tickAmount: 6,
+    tickAmount: 3,
     labels: {
       formatter: (val: number) =>
         val === 0 ? "" : `${(val / 1000).toFixed(0)}K`,

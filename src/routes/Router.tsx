@@ -7,7 +7,8 @@ import MainRoutes from "./MainRoutes";
 import AuthLayout from "@/layout/auth/AuthLayout";
 import GlobalLayout from "@/layout/GlobalLayout";
 import MainLayout from "@/layout/main/MainLayout";
-import Error from "@/pages/common/Error";
+import ErrorPage from "@/pages/common/Error";
+import NotFound from "@/pages/common/NotFound";
 import useAuthStore from "@/store/useAuthStore";
 
 const LandingPage = React.lazy(() => import("@/pages/landing/LandingPage"));
@@ -35,11 +36,11 @@ export const router = createBrowserRouter([
         <LandingPage />
       </React.Suspense>
     ),
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
   },
   {
     element: <GlobalLayout />,
-    errorElement: <Error />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/landing",
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
           </AuthGuard>
         ),
         children: MainRoutes,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

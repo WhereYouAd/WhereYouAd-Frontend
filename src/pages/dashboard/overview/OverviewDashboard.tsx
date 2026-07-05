@@ -4,6 +4,8 @@ import { useBudget } from "@/hooks/dashboard/useBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
 
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
@@ -64,18 +66,25 @@ export default function OverviewDashboard() {
         />
       </div>
 
-      <OverviewPlatformSection
-        rankings={roasRankingsData}
-        isRankingsLoading={isRankingsLoading}
-        isRankingsError={isRankingsError}
-        rankingsError={rankingsError}
-        onNavigate={() => navigate("/platform")}
-      />
+      <ErrorBoundary
+        FallbackComponent={ChartErrorFallback}
+        resetKeys={[roasRankingsData]}
+      >
+        <OverviewPlatformSection
+          rankings={roasRankingsData}
+          isRankingsLoading={isRankingsLoading}
+          isRankingsError={isRankingsError}
+          rankingsError={rankingsError}
+          onNavigate={() => navigate("/platform")}
+        />
+      </ErrorBoundary>
 
-      <DashboardAiSummarySection
-        provider="ALL"
-        idPrefix="overview-ai-summary"
-      />
+      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+        <DashboardAiSummarySection
+          provider="ALL"
+          idPrefix="overview-ai-summary"
+        />
+      </ErrorBoundary>
     </section>
   );
 }

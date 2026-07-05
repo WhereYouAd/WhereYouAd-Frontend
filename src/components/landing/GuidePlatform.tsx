@@ -1,115 +1,59 @@
 import type { ReactNode } from "react";
-import { useState } from "react";
 
-import ChevronDown from "@/assets/icon/chevron/chevron-down.svg?react";
-import GoogleAdsPlain from "@/assets/logo/social-logo/plain/google_ads.png";
-import MetaPlain from "@/assets/logo/social-logo/plain/meta.svg?react";
-import GoogleWordmark from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
-import NaverWordmarkPng from "@/assets/logo/social-logo/wordmark/naver-wordmark.png";
+import Badge from "@/components/common/badge/Badge";
 
-type TPlatform = {
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+
+const PLATFORMS: {
   id: string;
-  label: string;
-  content: ReactNode;
-  offsetClass?: string;
-};
-
-const PLATFORMS: TPlatform[] = [
+  name: string;
+  logo: ReactNode;
+  connected: boolean;
+}[] = [
   {
     id: "naver",
-    label: "Naver",
-    content: (
-      <img
-        src={NaverWordmarkPng}
-        alt="Naver"
-        className="h-[13px] w-auto object-contain"
-      />
-    ),
-  },
-  {
-    id: "google",
-    label: "Google",
-    content: <GoogleWordmark className="h-[23px] w-auto" />,
+    name: "NAVER",
+    logo: <NaverLogo className="w-10 h-10" />,
+    connected: true,
   },
   {
     id: "meta",
-    label: "Meta",
-    content: <MetaPlain className="h-[35px] w-auto" />,
-    offsetClass: "-ml-2",
+    name: "Meta",
+    logo: <MetaLogo className="w-10 h-10" />,
+    connected: false,
   },
   {
-    id: "googleads",
-    label: "Google Ads",
-    content: (
-      <img
-        src={GoogleAdsPlain}
-        alt="Google Ads"
-        className="h-[40px] w-auto object-contain"
-      />
-    ),
-    offsetClass: "-ml-2",
+    id: "google",
+    name: "Google",
+    logo: <GoogleLogo className="w-10 h-10" />,
+    connected: false,
   },
 ];
 
 export default function GuidePlatform() {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
-  const [selectedIds, setSelectedIds] = useState<string[]>([
-    "googleads",
-    "meta",
-    "naver",
-  ]);
-
-  function togglePlatform(id: string) {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
-    );
-  }
-
   return (
-    <div className="h-[360px] w-full bg-transparent md:h-[420px]">
-      <div className="h-full rounded-[28px] bg-surface-100/65 border border-surface-400/60 backdrop-blur-sm p-5 md:p-6 flex flex-col gap-4">
-        <button
-          type="button"
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          aria-expanded={isMenuOpen}
-          className="flex h-11 w-full items-center justify-between rounded-xl border border-surface-400/70 bg-surface-100 px-4 font-body2 text-text-title transition-ui-smooth hover:bg-primary-100/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/30"
+    <div className="h-75 w-full md:h-85 flex flex-col gap-3 py-1.5">
+      {PLATFORMS.map((platform) => (
+        <div
+          key={platform.id}
+          className="flex flex-1 items-center gap-4 rounded-2xl bg-surface-100 px-5 border border-surface-400/40"
         >
-          <span>플랫폼 선택</span>
-          <span
-            aria-hidden
-            className={`text-text-muted transition-transform duration-200 ${isMenuOpen ? "rotate-180" : "rotate-0"}`}
-          >
-            <ChevronDown className="w-4.5 h-4.5" />
+          {platform.logo}
+          <span className="flex-1 font-body2 text-text-title">
+            {platform.name}
           </span>
-        </button>
-
-        {isMenuOpen && (
-          <div className="bg-surface-100 border border-surface-400/70 rounded-2xl shadow-Soft overflow-hidden">
-            <div>
-              {PLATFORMS.map((platform) => {
-                const isSelected = selectedIds.includes(platform.id);
-                return (
-                  <button
-                    key={platform.id}
-                    type="button"
-                    onClick={() => togglePlatform(platform.id)}
-                    className={`w-full h-14 px-4 flex items-center justify-start border-b last:border-b-0 transition-ui-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/25 focus-visible:ring-inset bg-surface-100 border-surface-400/40 ${
-                      isSelected ? "" : "hover:bg-surface-100"
-                    }`}
-                  >
-                    <div
-                      className={`min-w-0 flex items-center h-6 ${platform.offsetClass ?? ""}`}
-                    >
-                      {platform.content}
-                    </div>
-                    <span className="sr-only">{platform.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
+          <Badge variant={platform.connected ? "infoBlue" : "surface"}>
+            {platform.connected ? "연동됨" : "미연동"}
+          </Badge>
+          {!platform.connected && (
+            <span className="shrink-0 px-3 py-1.5 rounded-xl border border-surface-400/60 font-body2 text-text-muted">
+              연동하기
+            </span>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
