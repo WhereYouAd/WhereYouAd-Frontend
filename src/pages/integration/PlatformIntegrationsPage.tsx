@@ -24,6 +24,10 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 export default function PlatformIntegrationsPage() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
+  const [naverModalMode, setNaverModalMode] = useState<"connect" | "reconnect">(
+    "connect",
+  );
+  const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
 
   const {
     data: platformConnections = [],
@@ -41,9 +45,15 @@ export default function PlatformIntegrationsPage() {
       return;
     }
     if (provider === "NAVER") {
-      if (status !== "disconnected") {
-        toast.message("네이버 재연동 구현 예정");
-        return;
+      if (status === "disconnected") {
+        setNaverModalMode("connect");
+        setNaverCustomerId(undefined);
+      } else {
+        const naverItem = platformConnections.find(
+          (p) => p.provider === "NAVER",
+        );
+        setNaverModalMode("reconnect");
+        setNaverCustomerId(naverItem?.externalAccountId);
       }
       setIsNaverModalOpen(true);
       return;
@@ -111,6 +121,8 @@ export default function PlatformIntegrationsPage() {
           isOpen={isNaverModalOpen}
           onClose={() => setIsNaverModalOpen(false)}
           orgId={orgId}
+          mode={naverModalMode}
+          initialCustomerId={naverCustomerId}
         />
       ) : null}
     </section>
