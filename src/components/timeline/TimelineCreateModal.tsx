@@ -4,7 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { twMerge } from "tailwind-merge";
 
 import type { TTimelineMetric } from "@/types/timeline/api";
-import { TIMELINE_FORM_DEFAULT_VALUES } from "@/types/timeline/form";
+import {
+  type ITimelineFormValues,
+  TIMELINE_FORM_DEFAULT_VALUES,
+} from "@/types/timeline/form";
 import {
   TIMELINE_COMPARISON_PERIOD_OPTIONS,
   TIMELINE_METRIC_OPTIONS,
@@ -16,6 +19,7 @@ import {
 } from "@/utils/timeline/timeline";
 
 import { useCreateTimeline } from "@/hooks/timeline/useCreateTimeline";
+import { useUpdateTimeline } from "@/hooks/timeline/useUpdateTimeline";
 
 import Button from "../common/button/Button";
 import {
@@ -46,14 +50,20 @@ function openDatePickerFromField(event: MouseEvent<HTMLElement>) {
 interface ITimelineCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
+  timelineId?: number | null;
+  initialValues?: ITimelineFormValues;
 }
 
 export default function TimelineCreateModal({
   isOpen,
   onClose,
+  timelineId,
+  initialValues,
 }: ITimelineCreateModalProps) {
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-  const { mutate, isPending } = useCreateTimeline();
+  const isEditMode = timelineId != null;
+  const { mutate: createMutate, isPending: isCreating } = useCreateTimeline();
+  const { mutate: updateMutate, isPending: isUpdating } = useUpdateTimeline();
+  const isPending = isCreating || isUpdating;
 
   const {
     register,
@@ -98,8 +108,10 @@ export default function TimelineCreateModal({
   useEffect(() => {
     if (!isOpen) {
       reset(TIMELINE_FORM_DEFAULT_VALUES);
+      return;
     }
-  }, [isOpen, reset]);
+    reset(initialValues ?? TIMELINE_FORM_DEFAULT_VALUES);
+  }, [isOpen, initialValues, reset]);
 
   const handleClose = () => {
     if (isPending) return;
@@ -116,12 +128,16 @@ export default function TimelineCreateModal({
   };
 
   const onSubmit: SubmitHandler<TTimelineCreateFormValues> = (data) => {
-    mutate(data, {
-      onSuccess: () => {
-        reset(TIMELINE_FORM_DEFAULT_VALUES);
-        onClose();
-      },
-    });
+    const handleSuccess = () => {
+      reset(TIMELINE_FORM_DEFAULT_VALUES);
+      onClose();
+    };
+
+    if (isEditMode && timelineId != null) {
+      updateMutate({ timelineId, body: data }, { onSuccess: handleSuccess });
+      return;
+    }
+    createMutate(data, { onSuccess: handleSuccess });
   };
 
   return (
@@ -130,7 +146,7 @@ export default function TimelineCreateModal({
       onClose={handleClose}
       size="lg"
       padding="lg"
-      title="타임라인 생성"
+      title={isEditMode ? "타임라인 수정" : "타임라인 생성"}
       disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-10">
@@ -286,7 +302,13 @@ export default function TimelineCreateModal({
               isLoading={isPending}
               disabled={isPending}
             >
-              {isPending ? "생성 중..." : "생성하기"}
+              {isPending
+                ? isEditMode
+                  ? "저장 중..."
+                  : "생성 중..."
+                : isEditMode
+                  ? "저장하기"
+                  : "생성하기"}
             </Button>
           </div>
         </form>
