@@ -15,10 +15,14 @@ import {
 import { buildTimelineGrid } from "@/utils/timeline/buildTimelineGrid";
 import { buildTimelineSummaryPanel } from "@/utils/timeline/buildTimelineSummaryPanel";
 
+import { useDeleteTimeline } from "@/hooks/timeline/useDeleteTimeline";
+import { useRequestTimelineSummary } from "@/hooks/timeline/useRequestTimelineSummary";
 import { useTimelineDetail } from "@/hooks/timeline/useTimelineDetail";
 import { useTimelineList } from "@/hooks/timeline/useTimelineList";
 
 import Button from "@/components/common/button/Button";
+import Modal from "@/components/common/modal/Modal";
+import ModalContent from "@/components/common/modal/ModalContent";
 import TimelineSkeleton from "@/components/timeline/skeleton/TimelineSkeleton";
 import TimelineAxis from "@/components/timeline/TimelineAxis";
 import TimelineBar from "@/components/timeline/TimelineBar";
@@ -33,6 +37,7 @@ import {
 import TimelineStatusLegend from "@/components/timeline/TimelineStatusLegend";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
+import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
@@ -50,6 +55,15 @@ export default function Timeline() {
   const [panelData, setPanelData] = useState<ITimelineSummaryPanelData | null>(
     null,
   );
+  const [editTimelineId, setEditTimelineId] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+  const [isAwaitingSummary, setIsAwaitingSummary] = useState(false);
+  const [summaryPollStartedAt, setSummaryPollStartedAt] = useState<
+    number | null
+  >(null);
 
   const {
     data: timelineList = [],
@@ -58,7 +72,45 @@ export default function Timeline() {
     error,
   } = useTimelineList();
 
-  const { data: detail } = useTimelineDetail(selectedBarId);
+  const { mutate: deleteTimeline, isPending: isDeleting } = useDeleteTimeline();
+  const { mutate: requestSummary, isPending: isSummaryPending } =
+    useRequestTimelineSummary();
+  const { data: editDetail } = useTimelineDetail(editTimelineId);
+
+  const { data: detail } = useTimelineDetail(selectedBarId, {
+    refetchInterval: (query) => {
+      if (!isAwaitingSummary) return false;
+
+      const summary = query.state.data?.summary?.trim();
+      if (summary) {
+        setIsAwaitingSummary(false);
+        setSummaryPollStartedAt(null);
+        return false;
+      }
+
+      //90초 타임아웃
+      if (summaryPollStartedAt && Date.now() - summaryPollStartedAt > 90000) {
+        setIsAwaitingSummary(false);
+        setSummaryPollStartedAt(null);
+        toast.error(
+          "더 상세한 요약을 위해 시간이 걸리고 있습니다. 잠시만 기다려주세요",
+        );
+        return false;
+      }
+      return 1500; //1.5초 마다 refetch
+    },
+  });
+
+  const editInitialValues = useMemo(() => {
+    if (!editDetail) return undefined;
+    return {
+      name: editDetail.name,
+      startDate: editDetail.startDate,
+      endDate: editDetail.endDate,
+      metrics: editDetail.metrics,
+      comparisonPeriodType: "LAST_WEEK" as const,
+    };
+  }, [editDetail]);
 
   const gridData = useMemo(
     () => buildTimelineGrid({ items: timelineList, viewUnit, periodIndex }),
@@ -117,11 +169,45 @@ export default function Timeline() {
     setSelectedBarId(bar.id);
     setPanelData(null);
     setIsPanelOpen(true);
+    setIsAwaitingSummary(false);
+    setSummaryPollStartedAt(null);
   };
 
   const handlePanelClose = () => {
     setIsPanelOpen(false);
     setSelectedBarId(null);
+  };
+
+  const openEditModal = (id: number) => setEditTimelineId(id);
+  const closeEditModal = () => setEditTimelineId(null);
+
+  const openDeleteModal = (target: { id: number; name: string }) => {
+    setDeleteTarget(target);
+  };
+  const closedDeleteModal = () => {
+    if (isDeleting) return;
+    setDeleteTarget(null);
+  };
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    deleteTimeline(deleteTarget.id, {
+      onSuccess: () => {
+        if (selectedBarId === deleteTarget.id) handlePanelClose();
+        setDeleteTarget(null);
+      },
+    });
+  };
+
+  const handleRequestSummary = () => {
+    if (selectedBarId == null) return;
+    setIsAwaitingSummary(true);
+    setSummaryPollStartedAt(Date.now());
+    requestSummary(selectedBarId, {
+      onError: () => {
+        setIsAwaitingSummary(false);
+        setSummaryPollStartedAt(null);
+      },
+    });
   };
 
   if (isLoading) {
@@ -241,11 +327,9 @@ export default function Timeline() {
                       bar={bar}
                       isSelected={selectedBarId === bar.id && isPanelOpen}
                       onBarClick={handleBarClick}
-                      onEdit={() =>
-                        toast.info("수정기능은 다음 이슈에서 연동됩니다")
-                      }
+                      onEdit={() => openEditModal(bar.id)}
                       onDelete={() =>
-                        toast.info("삭제기능은 다음 이슈에서 연동됩니다")
+                        openDeleteModal({ id: bar.id, name: bar.title })
                       }
                     />
                   ))}
@@ -255,21 +339,55 @@ export default function Timeline() {
           </div>
         )}
       </div>
-
+      {/* 생성 */}
       <TimelineCreateModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
       />
-
+      {/* 수정 */}
+      <TimelineCreateModal
+        isOpen={editTimelineId != null}
+        onClose={closeEditModal}
+        timelineId={editTimelineId}
+        initialValues={editInitialValues}
+      />
       {panelData ? (
         <TimelinePerformancePanel
           isOpen={isPanelOpen}
           onClose={handlePanelClose}
-          onEdit={() => toast.info("수정기능은 다음 이슈에서 연동예정")}
-          onDelete={() => toast.info("삭제기능은 다음 이슈에서 연동예정")}
+          onEdit={() => selectedBarId != null && openEditModal(selectedBarId)}
+          onDelete={() =>
+            openDeleteModal({
+              id: selectedBarId!,
+              name: panelData.timelineName,
+            })
+          }
           data={panelData}
+          onRequestSummary={handleRequestSummary}
+          isSummaryLoading={isAwaitingSummary}
+          isSummaryPending={isSummaryPending}
         />
       ) : null}
+      <Modal
+        isOpen={deleteTarget != null}
+        onClose={closedDeleteModal}
+        title="타임라인 삭제"
+        disableOverlayClick={isDeleting}
+      >
+        <ModalContent
+          icon={<TrashIcon className="h-7 w-7 text-info-red" />}
+          title="해당 타임라인을 삭제할까요?"
+          description={
+            deleteTarget
+              ? `"${deleteTarget.name}" 타임라인을 삭제하면 복구할 수 없습니다`
+              : ""
+          }
+          buttonText="삭제하기"
+          onConfirm={handleConfirmDelete}
+          isLoading={isDeleting}
+          variant="danger"
+        />
+      </Modal>
     </section>
   );
 }
