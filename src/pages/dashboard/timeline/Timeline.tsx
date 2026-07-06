@@ -184,7 +184,7 @@ export default function Timeline() {
   const openDeleteModal = (target: { id: number; name: string }) => {
     setDeleteTarget(target);
   };
-  const closedDeleteModal = () => {
+  const closeDeleteModal = () => {
     if (isDeleting) return;
     setDeleteTarget(null);
   };
@@ -346,7 +346,7 @@ export default function Timeline() {
       />
       {/* 수정 */}
       <TimelineCreateModal
-        isOpen={editTimelineId != null}
+        isOpen={editTimelineId != null && editInitialValues != null}
         onClose={closeEditModal}
         timelineId={editTimelineId}
         initialValues={editInitialValues}
@@ -370,7 +370,7 @@ export default function Timeline() {
       ) : null}
       <Modal
         isOpen={deleteTarget != null}
-        onClose={closedDeleteModal}
+        onClose={closeDeleteModal}
         title="타임라인 삭제"
         disableOverlayClick={isDeleting}
       >
