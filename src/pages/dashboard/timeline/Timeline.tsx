@@ -41,6 +41,9 @@ import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
+const SUMMARY_POLL_INTERVAL_MS = 1500;
+const SUMMARY_POLL_TIMEOUT_MS = 90000;
+
 const TOOLBAR_ACTION_CLASS =
   "flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-caption text-text-muted opacity-50 cursor-not-allowed";
 
@@ -75,30 +78,15 @@ export default function Timeline() {
   const { mutate: deleteTimeline, isPending: isDeleting } = useDeleteTimeline();
   const { mutate: requestSummary, isPending: isSummaryPending } =
     useRequestTimelineSummary();
-  const { data: editDetail } = useTimelineDetail(editTimelineId);
+  const {
+    data: editDetail,
+    isLoading: isEditDetailLoading,
+    isError: isEditDetailError,
+    error: editDetailError,
+  } = useTimelineDetail(editTimelineId);
 
   const { data: detail } = useTimelineDetail(selectedBarId, {
-    refetchInterval: (query) => {
-      if (!isAwaitingSummary) return false;
-
-      const summary = query.state.data?.summary?.trim();
-      if (summary) {
-        setIsAwaitingSummary(false);
-        setSummaryPollStartedAt(null);
-        return false;
-      }
-
-      //90초 타임아웃
-      if (summaryPollStartedAt && Date.now() - summaryPollStartedAt > 90000) {
-        setIsAwaitingSummary(false);
-        setSummaryPollStartedAt(null);
-        toast.error(
-          "더 상세한 요약을 위해 시간이 걸리고 있습니다. 잠시만 기다려주세요",
-        );
-        return false;
-      }
-      return 1500; //1.5초 마다 refetch
-    },
+    refetchInterval: isAwaitingSummary ? SUMMARY_POLL_INTERVAL_MS : false,
   });
 
   const editInitialValues = useMemo(() => {
@@ -127,6 +115,41 @@ export default function Timeline() {
   );
 
   const totalWidth = columns.length * TIMELINE_COL_WIDTH;
+
+  useEffect(() => {
+    if (!isAwaitingSummary) return;
+    if (!detail?.summary?.trim()) return;
+
+    setIsAwaitingSummary(false);
+    setSummaryPollStartedAt(null);
+  }, [isAwaitingSummary, detail?.summary]);
+
+  useEffect(() => {
+    if (!isAwaitingSummary || summaryPollStartedAt == null) return;
+
+    const timer = window.setTimeout(() => {
+      setIsAwaitingSummary(false);
+      setSummaryPollStartedAt(null);
+      toast.error(
+        "더 상세한 요약을 위해 시간이 걸리고 있습니다. 잠시 후 다시 시도해주세요",
+      );
+    }, SUMMARY_POLL_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+  }, [isAwaitingSummary, summaryPollStartedAt]);
+
+  useEffect(() => {
+    if (editTimelineId == null || !isEditDetailError) return;
+    toast.error(
+      editDetailError?.message ??
+        "타임라인 정보를 불러오지 못했습니다. 다시 시도해주세요",
+    );
+    setEditTimelineId(null);
+  }, [editTimelineId, isEditDetailError, editDetailError]);
+
+  useEffect(() => {
+    if (editTimelineId == null || !isEditDetailLoading) return;
+    toast.info("타임라인 정보를 불러오는 중...");
+  }, [editTimelineId, isEditDetailLoading]);
 
   useEffect(() => {
     if (!detail) return;
@@ -357,6 +380,7 @@ export default function Timeline() {
           onClose={handlePanelClose}
           onEdit={() => selectedBarId != null && openEditModal(selectedBarId)}
           onDelete={() =>
+            selectedBarId != null &&
             openDeleteModal({
               id: selectedBarId!,
               name: panelData.timelineName,
