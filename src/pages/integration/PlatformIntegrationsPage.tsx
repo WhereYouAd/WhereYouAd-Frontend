@@ -9,6 +9,7 @@ import type {
 
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
+import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
@@ -35,6 +36,8 @@ export default function PlatformIntegrationsPage() {
     isError,
     error,
   } = usePlatformConnections();
+
+  useIntegrationOAuthReturn(orgId);
 
   const handleConnect = async (
     provider: TIntegrationProvider,
