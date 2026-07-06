@@ -87,3 +87,8 @@ export interface ITimelineMutationResponse {
 
 /*DELETE / summary 요청 등 빈 data*/
 export type TTimelineEmptyResponse = Record<string, never>;
+
+export interface IUpdateTimelineVariables {
+  timelineId: number;
+  body: ITimelineUpsertRequest;
+}
