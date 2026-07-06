@@ -21,7 +21,7 @@ export const TIMELINE_COMPARISON_PERIOD_OPTIONS: ReadonlyArray<{
 }> = [
   { value: "LAST_WEEK", label: "지난주 대비" },
   { value: "LAST_MONTH", label: "지난달 대비" },
-  { value: "PREVIOUS_PERIOD", label: "이전 동일 기간 대비" },
+  { value: "LAST_YEAR", label: "작년 동기간 대비" },
 ] as const;
 
 /*zod enum 용 - 타입과 동기화*/
