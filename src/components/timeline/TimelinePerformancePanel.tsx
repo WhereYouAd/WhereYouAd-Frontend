@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/provider";
@@ -23,8 +23,6 @@ import MetaWordmark from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?r
 import NaverWordmark from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
 
 type TAiSummaryUiState = "idle" | "loading" | "done";
-
-const AI_SUMMARY_LOADING_MS = 1500;
 
 const CHART_PERIOD_LABELS = ["오늘", "1월 21일 → 25일", "1월 14일 → 20일"];
 
@@ -65,6 +63,9 @@ interface ITimelinePerformancePanelProps {
   onEdit?: () => void;
   onDelete?: () => void;
   className?: string;
+  onRequestSummary?: () => void;
+  isSummaryPending?: boolean;
+  isSummaryLoading?: boolean;
 }
 
 function formatMetricValue(value: number, unit?: string) {
@@ -119,49 +120,23 @@ export default function TimelinePerformancePanel({
   onEdit,
   onDelete,
   className,
+  onRequestSummary,
+  isSummaryPending,
+  isSummaryLoading,
 }: ITimelinePerformancePanelProps) {
-  const [aiState, setAiState] = useState<TAiSummaryUiState>("idle");
-  const [generatedSummary, setGeneratedSummary] = useState("");
-  const summaryTimerRef = useRef<number | null>(null);
   const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>("WEEK");
   const [chartPeriodIndex, setChartPeriodIndex] = useState(0);
+  const hasSummary = data.aiSummary.trim().length > 0;
+  const aiState: TAiSummaryUiState =
+    isSummaryPending || isSummaryLoading
+      ? "loading"
+      : hasSummary
+        ? "done"
+        : "idle";
 
   const statusStyle = TIMELINE_PERFORMANCE_STATUS_STYLE[data.performanceStatus];
   const chartPeriodLabel =
     CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
-
-  useEffect(() => {
-    if (!isOpen) {
-      if (summaryTimerRef.current !== null) {
-        window.clearTimeout(summaryTimerRef.current);
-        summaryTimerRef.current = null;
-      }
-      return;
-    }
-    setAiState(data.aiSummary.trim() ? "done" : "idle");
-    setGeneratedSummary("");
-  }, [isOpen, data.aiSummary]);
-
-  useEffect(() => {
-    return () => {
-      if (summaryTimerRef.current !== null) {
-        window.clearTimeout(summaryTimerRef.current);
-      }
-    };
-  }, []);
-  const handleGenerateSummary = () => {
-    if (summaryTimerRef.current !== null) {
-      window.clearTimeout(summaryTimerRef.current);
-    }
-    setAiState("loading");
-    summaryTimerRef.current = window.setTimeout(() => {
-      setGeneratedSummary(
-        data.aiSummary.trim() || "AI 요약이 생성되었습니다.(API연동전 임시)",
-      );
-      setAiState("done");
-      summaryTimerRef.current = null;
-    }, AI_SUMMARY_LOADING_MS);
-  };
 
   const handlePrevChartPeriod = () => {
     setChartPeriodIndex((prev) =>
@@ -268,7 +243,8 @@ export default function TimelinePerformancePanel({
               variant="gradient"
               size="big"
               fullWidth
-              onClick={handleGenerateSummary}
+              onClick={() => onRequestSummary?.()}
+              disabled={isSummaryPending}
               className="rounded-2xl px-6 py-4 shadow-Soft"
             >
               요약하기 생성
@@ -283,14 +259,14 @@ export default function TimelinePerformancePanel({
             </div>
           )}
 
-          {aiState === "done" && (data.aiSummary || generatedSummary) && (
+          {aiState === "done" && hasSummary && (
             <p
               className={twMerge(
                 SOFT_CARD_CLASS,
                 "px-5 py-4 font-body1 text-text-body break-keep leading-relaxed",
               )}
             >
-              {data.aiSummary || generatedSummary}
+              {data.aiSummary}
             </p>
           )}
         </section>
