@@ -5,7 +5,6 @@ import type { IApiErrorResponse } from "@/types/common/common";
 import type {
   IPlatformConnectionItem,
   TIntegrationProvider,
-  TPlatformConnectionStatus,
 } from "@/types/integration/platformConnection";
 
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
@@ -67,24 +66,20 @@ export default function PlatformIntegrationsPage() {
 
   useIntegrationOAuthReturn(orgId);
 
-  const handleConnect = async (
-    provider: TIntegrationProvider,
-    status: TPlatformConnectionStatus,
-  ) => {
+  const handleConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
       toast.error("워크스페이스를 선택해 주세요.");
       return;
     }
     if (provider === "NAVER") {
-      if (status === "disconnected") {
+      const naverItem = platformConnections.find((p) => p.provider === "NAVER");
+
+      if (naverItem?.platformAccountId != null) {
+        setNaverModalMode("reconnect");
+        setNaverCustomerId(naverItem.externalAccountId);
+      } else {
         setNaverModalMode("connect");
         setNaverCustomerId(undefined);
-      } else {
-        const naverItem = platformConnections.find(
-          (p) => p.provider === "NAVER",
-        );
-        setNaverModalMode("reconnect");
-        setNaverCustomerId(naverItem?.externalAccountId);
       }
       setIsNaverModalOpen(true);
       return;
@@ -140,8 +135,8 @@ export default function PlatformIntegrationsPage() {
               >
                 <PlatformIntegrationCard
                   {...item}
-                  onConnect={() => handleConnect(item.provider, item.status)}
-                  onReconnect={() => handleConnect(item.provider, item.status)}
+                  onConnect={() => handleConnect(item.provider)}
+                  onReconnect={() => handleConnect(item.provider)}
                   onDisconnect={() => handleDisconnect(item)}
                 />
               </li>
