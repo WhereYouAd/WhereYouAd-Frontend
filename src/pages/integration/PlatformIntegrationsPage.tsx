@@ -3,16 +3,19 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 import type {
+  IPlatformConnectionItem,
   TIntegrationProvider,
   TPlatformConnectionStatus,
 } from "@/types/integration/platformConnection";
 
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
+import { useCoreMutation } from "@/hooks/customQuery";
 import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
+import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
 import PlatformIntegrationsPageSkeleton from "@/components/integration/skeleton/PlatformIntegrationsSkeleton";
 import {
@@ -20,6 +23,8 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
+import { disconnectPlatformAccount } from "@/api/integration/platformAccounts";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function PlatformIntegrationsPage() {
@@ -30,12 +35,35 @@ export default function PlatformIntegrationsPage() {
   );
   const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
 
+  const [disconnectTarget, setDisconnectTarget] =
+    useState<IPlatformConnectionItem | null>(null);
+
   const {
     data: platformConnections = [],
     isLoading,
     isError,
     error,
   } = usePlatformConnections();
+
+  const disconnectMutation = useCoreMutation<void, number>(
+    (accountId) => {
+      if (orgId == null) {
+        return Promise.reject(new Error("워크스페이스를 선택해 주세요."));
+      }
+      return disconnectPlatformAccount(orgId, accountId);
+    },
+    {
+      invalidateKeys:
+        orgId != null ? [QUERY_KEYS.platform.connections(orgId)] : [],
+      userOnSuccess: () => {
+        toast.success("광고 계정 연동을 해제했습니다.");
+        setDisconnectTarget(null);
+      },
+      userOnError: (apiError) => {
+        toast.error(apiError.message ?? "연동 해제에 실패했습니다.");
+      },
+    },
+  );
 
   useIntegrationOAuthReturn(orgId);
 
@@ -73,6 +101,24 @@ export default function PlatformIntegrationsPage() {
     }
   };
 
+  const handleDisconnect = (item: IPlatformConnectionItem) => {
+    if (orgId == null) {
+      toast.error("워크스페이스를 선택해 주세요.");
+      return;
+    }
+    if (item.platformAccountId == null) {
+      toast.error("연동 계정 정보를 찾을 수 없습니다.");
+      return;
+    }
+    setDisconnectTarget(item);
+  };
+
+  const handleConfirmDisconnect = () => {
+    const accountId = disconnectTarget?.platformAccountId;
+    if (accountId == null || disconnectMutation.isPending) return;
+    disconnectMutation.mutate(accountId);
+  };
+
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
       {isLoading ? (
@@ -96,7 +142,7 @@ export default function PlatformIntegrationsPage() {
                   {...item}
                   onConnect={() => handleConnect(item.provider, item.status)}
                   onReconnect={() => handleConnect(item.provider, item.status)}
-                  onDisconnect={() => toast.message("연결 해제")}
+                  onDisconnect={() => handleDisconnect(item)}
                 />
               </li>
             ))}
@@ -128,6 +174,14 @@ export default function PlatformIntegrationsPage() {
           initialCustomerId={naverCustomerId}
         />
       ) : null}
+      <PlatformDisconnectModal
+        isOpen={disconnectTarget != null}
+        onClose={() => setDisconnectTarget(null)}
+        provider={disconnectTarget?.provider ?? "META"}
+        externalAccountId={disconnectTarget?.externalAccountId}
+        onConfirm={handleConfirmDisconnect}
+        isLoading={disconnectMutation.isPending}
+      />
     </section>
   );
 }
