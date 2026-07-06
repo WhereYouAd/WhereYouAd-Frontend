@@ -150,9 +150,13 @@ export default function TimelineCreateModal({
       disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-10">
-        <h2 className="mb-2 font-heading3 text-text-title">타임라인 생성</h2>
+        <h2 className="mb-2 font-heading3 text-text-title">
+          {isEditMode ? "타임라인 수정" : "타임라인 생성"}
+        </h2>
         <p className="mb-5 text-start font-body2 text-text-muted">
-          분석할 기간과 성과 지표를 설정해 새 타임라인을 만들어보세요
+          {isEditMode
+            ? "타임라인 정보를 수정하고 저장하세요"
+            : "분석할 기간과 성과 지표를 설정해 새 타임라인을 만들어보세요"}
         </p>
 
         <form
