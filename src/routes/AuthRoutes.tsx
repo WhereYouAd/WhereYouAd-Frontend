@@ -7,6 +7,7 @@ import SignupEmailStepSkeleton from "@/components/auth/skeleton/SignupEmailStepS
 import SignupPageSkeleton from "@/components/auth/skeleton/SignupPageSkeleton";
 
 import { loadable } from "@/lib/loadable";
+import MetaOAuthResultPage from "@/pages/integration/MetaOAuthResultPage";
 
 const FindEmail = loadable(
   lazy(() => import("@/pages/auth/FindEmail")),
@@ -63,6 +64,10 @@ const AuthRoutes: RouteObject[] = [
   {
     path: "oauth2/redirect",
     element: <RedirectPage />,
+  },
+  {
+    path: "oauth2/meta/result",
+    element: <MetaOAuthResultPage />,
   },
 ];
 

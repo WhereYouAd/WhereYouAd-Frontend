@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
-const OAUTH_RETURN_PROVIDERS = ["GOOGLE", "META"] as const;
+const OAUTH_RETURN_PROVIDERS = ["GOOGLE"] as const;
 
 type TOAuthReturnProvider = (typeof OAUTH_RETURN_PROVIDERS)[number];
 
@@ -17,13 +17,9 @@ function isOAuthReturnProvider(
 
 const PROVIDER_LABEL: Record<TOAuthReturnProvider, string> = {
   GOOGLE: "Google",
-  META: "Meta",
 };
 
-/**
- * OAuth 연동 완료 후 `/integrations?status=&provider=` 쿼리 처리
- * Google·Meta 공통
- */
+/** OAuth 연동 완료 후 `/integrations?status=&provider=` 쿼리 처리 (Google 전용) */
 export function useIntegrationOAuthReturn(orgId: number | null) {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
