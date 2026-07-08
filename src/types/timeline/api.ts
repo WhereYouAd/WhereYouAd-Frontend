@@ -59,6 +59,7 @@ export interface ITimelineDetail {
   endDate: string;
   performanceStatus: TTimelinePerformanceStatus;
   metrics: TTimelineMetric[];
+  comparisonPeriodType: TTimelineComparisonPeriodType;
   summary: string;
   dailyTrend: ITimelineDailyTrend[];
   platformContributions: ITimelinePlatformContribution[];

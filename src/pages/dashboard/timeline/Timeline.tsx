@@ -96,7 +96,7 @@ export default function Timeline() {
       startDate: editDetail.startDate,
       endDate: editDetail.endDate,
       metrics: editDetail.metrics,
-      comparisonPeriodType: "LAST_WEEK" as const,
+      comparisonPeriodType: editDetail.comparisonPeriodType,
     };
   }, [editDetail]);
 
