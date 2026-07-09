@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -26,7 +27,15 @@ import { disconnectPlatformAccount } from "@/api/integration/platformAccounts";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
+type TDisconnectTarget = {
+  orgId: number;
+  provider: TIntegrationProvider;
+  platformAccountId: number;
+  externalAccountId?: string;
+};
+
 export default function PlatformIntegrationsPage() {
+  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
   const [naverModalMode, setNaverModalMode] = useState<"connect" | "reconnect">(
@@ -35,7 +44,7 @@ export default function PlatformIntegrationsPage() {
   const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
 
   const [disconnectTarget, setDisconnectTarget] =
-    useState<IPlatformConnectionItem | null>(null);
+    useState<TDisconnectTarget | null>(null);
 
   const {
     data: platformConnections = [],
@@ -44,17 +53,17 @@ export default function PlatformIntegrationsPage() {
     error,
   } = usePlatformConnections();
 
-  const disconnectMutation = useCoreMutation<void, number>(
-    (accountId) => {
-      if (orgId == null) {
-        return Promise.reject(new Error("워크스페이스를 선택해 주세요."));
-      }
-      return disconnectPlatformAccount(orgId, accountId);
-    },
+  const disconnectMutation = useCoreMutation<
+    void,
+    { orgId: number; accountId: number }
+  >(
+    ({ orgId: requestOrgId, accountId }) =>
+      disconnectPlatformAccount(requestOrgId, accountId),
     {
-      invalidateKeys:
-        orgId != null ? [QUERY_KEYS.platform.connections(orgId)] : [],
-      userOnSuccess: () => {
+      userOnSuccess: async (_, { orgId: requestOrgId }) => {
+        await queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.platform.connections(requestOrgId),
+        });
         toast.success("광고 계정 연동을 해제했습니다.");
         setDisconnectTarget(null);
       },
@@ -105,13 +114,21 @@ export default function PlatformIntegrationsPage() {
       toast.error("연동 계정 정보를 찾을 수 없습니다.");
       return;
     }
-    setDisconnectTarget(item);
+    setDisconnectTarget({
+      orgId,
+      provider: item.provider,
+      platformAccountId: item.platformAccountId,
+      externalAccountId: item.externalAccountId,
+    });
   };
 
   const handleConfirmDisconnect = () => {
-    const accountId = disconnectTarget?.platformAccountId;
-    if (accountId == null || disconnectMutation.isPending) return;
-    disconnectMutation.mutate(accountId);
+    if (disconnectTarget == null || disconnectMutation.isPending) return;
+
+    disconnectMutation.mutate({
+      orgId: disconnectTarget.orgId,
+      accountId: disconnectTarget.platformAccountId,
+    });
   };
 
   return (

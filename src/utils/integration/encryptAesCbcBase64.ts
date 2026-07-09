@@ -1,11 +1,28 @@
 import CryptoJS from "crypto-js";
 
-function parseKeyOrIv(value: string, label: string): CryptoJS.lib.WordArray {
+const AES_KEY_BYTE_LENGTHS = [16, 24, 32] as const;
+const AES_IV_BYTE_LENGTH = 16;
+
+function parseKeyOrIv(
+  value: string,
+  label: string,
+  allowedByteLengths: readonly number[],
+): CryptoJS.lib.WordArray {
   const trimmed = value.trim();
   if (!trimmed) {
     throw new Error(`${label} 환경 변수가 설정되지 않았습니다.`);
   }
-  return CryptoJS.enc.Utf8.parse(trimmed);
+
+  const wordArray = CryptoJS.enc.Utf8.parse(trimmed);
+  const byteLength = wordArray.sigBytes;
+
+  if (!allowedByteLengths.includes(byteLength)) {
+    throw new Error(
+      `${label} 길이가 올바르지 않습니다. (${allowedByteLengths.join("/")} bytes 필요, 현재 ${byteLength} bytes)`,
+    );
+  }
+
+  return wordArray;
 }
 
 /**
@@ -20,8 +37,14 @@ export function encryptAesCbcBase64(plainText: string): string {
     throw new Error("네이버 연동 암호화 설정이 없습니다.");
   }
 
-  const keyWordArray = parseKeyOrIv(secret, "VITE_NAVER_AES_SECRET");
-  const ivWordArray = parseKeyOrIv(iv, "VITE_NAVER_AES_IV");
+  const keyWordArray = parseKeyOrIv(
+    secret,
+    "VITE_NAVER_AES_SECRET",
+    AES_KEY_BYTE_LENGTHS,
+  );
+  const ivWordArray = parseKeyOrIv(iv, "VITE_NAVER_AES_IV", [
+    AES_IV_BYTE_LENGTH,
+  ]);
 
   const encrypted = CryptoJS.AES.encrypt(plainText, keyWordArray, {
     iv: ivWordArray,

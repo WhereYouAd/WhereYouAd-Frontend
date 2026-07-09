@@ -127,7 +127,7 @@ export default function NaverConnectModal({
         <Input
           label="고객 ID"
           placeholder="네이버 광고 고객 ID"
-          disabled={isSubmitting || mode === "reconnect"}
+          disabled={isSubmitting}
           readOnly={mode === "reconnect"}
           error={!!errors.customerId}
           helperText={errors.customerId?.message}

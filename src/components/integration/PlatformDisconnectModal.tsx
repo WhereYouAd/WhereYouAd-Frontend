@@ -30,13 +30,20 @@ export default function PlatformDisconnectModal({
     onConfirm();
   };
 
+  const handleClose = () => {
+    if (isLoading) return;
+    onClose();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       size="lg"
       padding="lg"
       title="연동 해제 확인"
+      hideCloseButton={isLoading}
+      disableOverlayClick={isLoading}
     >
       <div className="px-2 py-6 text-center">
         <div className="mb-6 flex justify-center">
@@ -64,7 +71,7 @@ export default function PlatformDisconnectModal({
             variant="outline"
             size="big"
             className="flex-1"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isLoading}
           >
             취소
