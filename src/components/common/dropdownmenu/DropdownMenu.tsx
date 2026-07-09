@@ -1,6 +1,14 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
+
+export type TDropdownPlacement = "bottom" | "top" | "auto";
 
 export type TMenuItem = {
   label: string;
@@ -14,13 +22,63 @@ export type TMenuItem = {
 const easeOut = [0, 0, 0.2, 1] as const;
 const easeIn = [0.4, 0, 1, 1] as const;
 
+const MENU_ITEM_HEIGHT = 52;
+const MENU_VERTICAL_PADDING = 32;
+
+function getClippingBounds(element: HTMLElement) {
+  let bottom = window.innerHeight;
+  let top = 0;
+  let parent = element.parentElement;
+
+  while (parent) {
+    const { overflow, overflowY, overflowX } = getComputedStyle(parent);
+    const clips =
+      overflow === "hidden" ||
+      overflowY === "hidden" ||
+      overflowY === "auto" ||
+      overflowY === "scroll" ||
+      overflowX === "hidden" ||
+      overflowX === "auto" ||
+      overflowX === "scroll";
+
+    if (clips) {
+      const rect = parent.getBoundingClientRect();
+      bottom = Math.min(bottom, rect.bottom);
+      top = Math.max(top, rect.top);
+    }
+
+    parent = parent.parentElement;
+  }
+
+  return { top, bottom };
+}
+
+function resolveAutoPlacement(
+  element: HTMLElement,
+  itemCount: number,
+): "bottom" | "top" {
+  const triggerRect = element.getBoundingClientRect();
+  const { top: containerTop, bottom: containerBottom } =
+    getClippingBounds(element);
+  const estimatedMenuHeight =
+    itemCount * MENU_ITEM_HEIGHT + MENU_VERTICAL_PADDING;
+  const spaceBelow = containerBottom - triggerRect.bottom;
+  const spaceAbove = triggerRect.top - containerTop;
+
+  return spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow
+    ? "top"
+    : "bottom";
+}
+
 export function DropdownMenu({
   trigger,
   items,
   className,
   menuClassName,
   fullWidth = false,
+  placement = "bottom",
   "aria-label": ariaLabel,
+  onOpenChange,
 }: {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   items: TMenuItem[];
@@ -28,10 +86,16 @@ export function DropdownMenu({
   menuClassName?: string;
   /** 트리거와 동일 너비로 패널을 펼침 (폼 필드용) */
   fullWidth?: boolean;
+  /** bottom: 아래 / top: 위 / auto: 공간에 따라 자동 */
+  placement?: TDropdownPlacement;
   "aria-label"?: string;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [resolvedPlacement, setResolvedPlacement] = useState<"bottom" | "top">(
+    "bottom",
+  );
   const ref = useRef<HTMLDivElement | null>(null);
   const menuId = useId();
 
@@ -48,6 +112,31 @@ export function DropdownMenu({
       document.removeEventListener("mousedown", onDocClick);
     };
   }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+
+    if (placement === "bottom") {
+      setResolvedPlacement("bottom");
+      return;
+    }
+
+    if (placement === "top") {
+      setResolvedPlacement("top");
+      return;
+    }
+
+    const el = ref.current;
+    if (!el) return;
+
+    setResolvedPlacement(resolveAutoPlacement(el, items.length));
+  }, [open, placement, items.length]);
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
+
+  const isTopPlacement = resolvedPlacement === "top";
 
   return (
     <div
@@ -81,13 +170,20 @@ export function DropdownMenu({
             id={menuId}
             role="menu"
             style={{
-              transformOrigin: fullWidth ? "top center" : "top right",
+              transformOrigin: fullWidth
+                ? isTopPlacement
+                  ? "bottom center"
+                  : "top center"
+                : isTopPlacement
+                  ? "bottom right"
+                  : "top right",
             }}
             className={twMerge(
-              "absolute z-50 mt-2 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Soft",
+              "absolute z-50 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Soft",
               fullWidth
-                ? "left-0 right-0 top-full w-full"
-                : "right-0 top-full w-56 max-w-[calc(100vw-40px)]",
+                ? "left-0 right-0 w-full"
+                : "right-0 w-56 max-w-[calc(100vw-40px)]",
+              isTopPlacement ? "bottom-full mb-2" : "top-full mt-2",
               menuClassName,
             )}
             initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}

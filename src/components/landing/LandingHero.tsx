@@ -28,7 +28,10 @@ function scrollToSection(id: string) {
 
 export default function LandingHero() {
   return (
-    <section className="relative w-full overflow-hidden bg-primary-100">
+    <section
+      id="hero"
+      className="relative w-full overflow-hidden bg-primary-100"
+    >
       <picture>
         <source type="image/avif" srcSet={HeroBg1280Avif} />
         <source type="image/webp" srcSet={HeroBg1280Webp} />
@@ -47,7 +50,7 @@ export default function LandingHero() {
         aria-hidden
       />
       <motion.div
-        className="relative z-10 min-h-[calc(100dvh-var(--landing-header-height,64px))] flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-4 pt-36 md:pt-24 pb-24"
+        className="relative z-10 min-h-dvh flex flex-col items-center justify-start text-center max-w-3xl mx-auto px-6 space-y-4 pt-40 md:pt-36 pb-24"
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -64,7 +67,7 @@ export default function LandingHero() {
           광고 성과를 실시간으로{"\n"}한 화면에서 관리하세요
         </h1>
         <p className="max-w-2xl break-keep font-heading3 text-surface-100/85">
-          Google·Meta 파트너 서비스로 광고 데이터를 한 곳에서 관리하세요.
+          매체마다 따로 들어가 확인하던 시간, 이제 아끼세요.
         </p>
       </motion.div>
 

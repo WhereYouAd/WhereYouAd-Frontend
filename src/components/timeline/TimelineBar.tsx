@@ -1,13 +1,20 @@
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import { PLATFORM_MAP, PROVIDER_TYPES } from "@/types/dashboard/provider";
 import type { ITimelineCampaignBar } from "@/types/timeline/ui";
+import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 import {
+  TIMELINE_BAR_ELEVATED_Z_INDEX,
   TIMELINE_BAR_HEIGHT,
+  TIMELINE_BAR_Z_INDEX,
   TIMELINE_COL_WIDTH,
   TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_OFFSET,
 } from "@/constants/timeline/layout";
 import { TIMELINE_PERFORMANCE_STATUS_STYLE } from "@/constants/timeline/statusStyle";
+
+import { DropdownMenu } from "../common/dropdownmenu/DropdownMenu";
 
 import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 
@@ -16,9 +23,11 @@ interface ITimelineBarProps {
   colWidth?: number;
   rowHeight?: number;
   rowOffset?: number;
+  isSelected?: boolean;
   className?: string;
   onBarClick?: (bar: ITimelineCampaignBar) => void;
-  onMenuClick?: (bar: ITimelineCampaignBar) => void; //선택, 추후 이슈로 다룰 예정
+  onEdit?: (bar: ITimelineCampaignBar) => void;
+  onDelete?: (bar: ITimelineCampaignBar) => void;
 }
 
 export default function TimelineBar({
@@ -26,10 +35,13 @@ export default function TimelineBar({
   colWidth = TIMELINE_COL_WIDTH,
   rowHeight = TIMELINE_ROW_HEIGHT,
   rowOffset = TIMELINE_ROW_OFFSET,
+  isSelected = false,
   className,
   onBarClick,
-  onMenuClick,
+  onEdit,
+  onDelete,
 }: ITimelineBarProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
   const left = (bar.colStart - 1) * colWidth;
   const columnSpan = Math.max(bar.colEnd - bar.colStart, 1);
@@ -38,16 +50,41 @@ export default function TimelineBar({
     rowOffset +
     (bar.row - 1) * rowHeight +
     (rowHeight - TIMELINE_BAR_HEIGHT) / 2;
+
+  const providers = PROVIDER_TYPES.filter((provider) =>
+    bar.providers?.includes(provider),
+  );
+
+  const isElevated = isMenuOpen || isSelected;
+
   return (
-    /*카드 클릭하면 성과요약 패널 나오도록 핸들러 구현 예정 */
     <div
+      role="button"
+      tabIndex={0}
       className={twMerge(
-        "absolute z-20 flex cursor-pointer items-start gap-2.5 rounded-xl px-3 py-2.5 transition-shadow hover:z-30 hover:shadow-Soft",
+        "group/bar absolute flex cursor-pointer items-start gap-2 rounded-xl px-3 py-2.5 transition-shadow hover:shadow-Soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-400/40",
         status.barBg,
+        isSelected &&
+          twMerge("ring-2 ring-offset-1 ring-offset-surface-200", status.ring),
         className,
       )}
       onClick={() => onBarClick?.(bar)}
-      style={{ left, top, width, height: TIMELINE_BAR_HEIGHT }}
+      onKeyDown={(event) => {
+        if (event.currentTarget !== event.target) return;
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onBarClick?.(bar);
+        }
+      }}
+      style={{
+        left,
+        top,
+        width,
+        height: TIMELINE_BAR_HEIGHT,
+        zIndex: isElevated
+          ? TIMELINE_BAR_ELEVATED_Z_INDEX
+          : TIMELINE_BAR_Z_INDEX,
+      }}
     >
       <div
         className={twMerge(
@@ -56,7 +93,28 @@ export default function TimelineBar({
         )}
       />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-body2 text-text-title">{bar.title}</span>
+        <div className="flex min-w-0 items-center gap-1.5">
+          {providers.length > 0 ? (
+            <div
+              className="flex shrink-0 items-center -space-x-1"
+              aria-label={providers.map((p) => PLATFORM_MAP[p]).join(", ")}
+            >
+              {providers.map((provider) => {
+                const Logo = PLATFORM_CIRCLE_LOGO_MAP[provider];
+                return (
+                  <Logo
+                    key={provider}
+                    className="h-4 w-4 rounded-full ring-2 ring-surface-100"
+                    aria-hidden
+                  />
+                );
+              })}
+            </div>
+          ) : null}
+          <span className="truncate font-body2 text-text-title">
+            {bar.title}
+          </span>
+        </div>
         <span className="truncate font-caption text-text-muted">
           {bar.subtitle}
         </span>
@@ -65,18 +123,38 @@ export default function TimelineBar({
           {status.label}
         </span>
       </div>
-      <div className="ml-auto flex shrink-0 self-center items-center">
-        <button
-          type="button"
+      <div
+        className={twMerge(
+          "ml-auto flex shrink-0 self-center items-center opacity-0 transition-opacity",
+          "group-hover/bar:opacity-100 group-focus-within/bar:opacity-100",
+          isSelected && "opacity-100",
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <DropdownMenu
           aria-label="캠페인 메뉴"
-          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-text-placeholder transition-colors hover:bg-surface-500/5"
-          onClick={(event) => {
-            event.stopPropagation();
-            onMenuClick?.(bar);
-          }}
-        >
-          <KebabIcon className="h-3.5 w-3.5" />
-        </button>
+          placement="auto"
+          onOpenChange={setIsMenuOpen}
+          menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
+          trigger={
+            <button
+              type="button"
+              aria-label="캠페인 메뉴"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-placeholder transition-colors hover:bg-surface-500/10"
+            >
+              <KebabIcon className="h-4 w-4" />
+            </button>
+          }
+          items={[
+            { label: "수정하기", onClick: () => onEdit?.(bar) },
+            {
+              label: "삭제하기",
+              danger: true,
+              labelClassName: "text-info-red",
+              onClick: () => onDelete?.(bar),
+            },
+          ]}
+        />
       </div>
     </div>
   );

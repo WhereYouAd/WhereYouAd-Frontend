@@ -26,7 +26,7 @@ export type TTimelinePerformanceStatus =
 export const TIMELINE_COMPARISON_PERIOD_TYPES = [
   "LAST_WEEK",
   "LAST_MONTH",
-  "PREVIOUS_PERIOD",
+  "LAST_YEAR",
 ] as const;
 export type TTimelineComparisonPeriodType =
   (typeof TIMELINE_COMPARISON_PERIOD_TYPES)[number];
@@ -59,6 +59,7 @@ export interface ITimelineDetail {
   endDate: string;
   performanceStatus: TTimelinePerformanceStatus;
   metrics: TTimelineMetric[];
+  comparisonPeriodType: TTimelineComparisonPeriodType;
   summary: string;
   dailyTrend: ITimelineDailyTrend[];
   platformContributions: ITimelinePlatformContribution[];
@@ -87,3 +88,8 @@ export interface ITimelineMutationResponse {
 
 /*DELETE / summary 요청 등 빈 data*/
 export type TTimelineEmptyResponse = Record<string, never>;
+
+export interface IUpdateTimelineVariables {
+  timelineId: number;
+  body: ITimelineUpsertRequest;
+}

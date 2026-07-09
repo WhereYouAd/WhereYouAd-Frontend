@@ -1,35 +1,42 @@
 import { useEffect } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import type { IApiErrorResponse } from "@/types/common/common";
-
 import { naverConnectSchema } from "@/utils/auth/validation";
+
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 
-import { connectNaverAccount } from "@/api/integration/naver";
+import {
+  connectNaverAccount,
+  updateNaverAccount,
+} from "@/api/integration/naver";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
-type TNaverConnectFormValues = z.infer<typeof naverConnectSchema>;
+type TNaverConnectMode = "connect" | "reconnect";
 
 interface INaverConnectModalProps {
   isOpen: boolean;
   onClose: () => void;
   orgId: number;
+  mode?: TNaverConnectMode;
+  initialCustomerId?: string;
 }
+
+type TNaverConnectFormValues = z.infer<typeof naverConnectSchema>;
 
 export default function NaverConnectModal({
   isOpen,
   onClose,
   orgId,
+  mode = "connect",
+  initialCustomerId,
 }: INaverConnectModalProps) {
-  const queryClient = useQueryClient();
-
   const {
     register,
     handleSubmit,
@@ -48,27 +55,44 @@ export default function NaverConnectModal({
   useEffect(() => {
     if (!isOpen) {
       reset();
+      return;
     }
-  }, [isOpen, reset]);
 
-  const connectMutation = useMutation<
-    void,
-    IApiErrorResponse,
-    TNaverConnectFormValues
-  >({
-    mutationFn: (body) => connectNaverAccount(orgId, body),
-    onSuccess: () => {
-      toast.success("네이버 광고 계정을 연동했습니다.");
-      reset();
-      onClose();
-      void queryClient.invalidateQueries({
-        queryKey: ["platform-connections", orgId],
+    if (mode === "reconnect" && initialCustomerId) {
+      reset({
+        customerId: initialCustomerId,
+        apiKey: "",
+        secretKey: "",
       });
+    }
+  }, [isOpen, mode, initialCustomerId, reset]);
+
+  const connectMutation = useCoreMutation<void, TNaverConnectFormValues>(
+    (body) =>
+      mode === "reconnect"
+        ? updateNaverAccount(orgId, body)
+        : connectNaverAccount(orgId, body),
+    {
+      invalidateKeys: [QUERY_KEYS.platform.connections(orgId)],
+      userOnSuccess: () => {
+        toast.success(
+          mode === "reconnect"
+            ? "네이버 광고 계정을 재연동했습니다."
+            : "네이버 광고 계정을 연동했습니다.",
+        );
+        reset();
+        onClose();
+      },
+      userOnError: (error) => {
+        toast.error(
+          error.message ??
+            (mode === "reconnect"
+              ? "네이버 재연동에 실패했습니다."
+              : "네이버 연동에 실패했습니다."),
+        );
+      },
     },
-    onError: (error) => {
-      toast.error(error.message ?? "네이버 연동에 실패했습니다.");
-    },
-  });
+  );
 
   const isSubmitting = connectMutation.isPending;
 
@@ -85,7 +109,7 @@ export default function NaverConnectModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="네이버 광고 연동"
+      title={mode === "reconnect" ? "네이버 광고 재연동" : "네이버 광고 연동"}
       size="md"
       disableOverlayClick={isSubmitting}
     >
@@ -95,13 +119,16 @@ export default function NaverConnectModal({
         autoComplete="off"
       >
         <p className="font-body2 text-text-muted">
-          네이버 검색 광고 계정의 고객 ID, API Key, Secret Key를 입력해 주세요.
+          {mode === "reconnect"
+            ? "API Key와 Secret Key를 새로 입력해 주세요."
+            : "네이버 검색 광고 계정의 고객 ID, API Key, Secret Key를 입력해 주세요."}
         </p>
 
         <Input
           label="고객 ID"
           placeholder="네이버 광고 고객 ID"
           disabled={isSubmitting}
+          readOnly={mode === "reconnect"}
           error={!!errors.customerId}
           helperText={errors.customerId?.message}
           {...register("customerId")}
@@ -146,7 +173,13 @@ export default function NaverConnectModal({
             className="flex-1"
             disabled={!isValid || isSubmitting}
           >
-            {isSubmitting ? "연동 중..." : "연동하기"}
+            {isSubmitting
+              ? mode === "reconnect"
+                ? "재연동 중..."
+                : "연동 중..."
+              : mode === "reconnect"
+                ? "재연동하기"
+                : "연동하기"}
           </Button>
         </div>
       </form>
