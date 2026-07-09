@@ -11,3 +11,10 @@ export const getPlatformAccounts = async (
   >(`/api/platform/${orgId}/accounts`);
   return data.data;
 };
+
+export async function disconnectPlatformAccount(
+  orgId: number,
+  accountId: number,
+): Promise<void> {
+  await axiosInstance.delete(`/api/platform/${orgId}/accounts/${accountId}`);
+}
