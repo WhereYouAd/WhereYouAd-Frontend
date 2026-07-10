@@ -3,7 +3,11 @@ import type { TProvider } from "@/types/ads/campaign";
 export type TIntegrationProvider = TProvider;
 
 /** 목록 API `platformAccounts[].status` */
-export type TPlatformAccountApiStatus = "ACTIVE" | "EXPIRED" | "INACTIVE";
+export type TPlatformAccountApiStatus =
+  | "ACTIVE"
+  | "EXPIRED"
+  | "INACTIVE"
+  | "DISCONNECTED";
 
 export type TPlatformAuthType = "OAUTH";
 

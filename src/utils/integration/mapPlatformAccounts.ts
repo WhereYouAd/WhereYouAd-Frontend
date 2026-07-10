@@ -106,7 +106,7 @@ function mapApiStatusToUi(
   if (account.status === "ACTIVE") {
     return "connected";
   }
-  return "disconnected";
+  return "disconnected"; // DISCONNECTED, INACTIVE 포함
 }
 
 function mapAccountToConnection(
