@@ -1,5 +1,6 @@
 import type { TProviderType } from "@/types/dashboard/provider";
 import type {
+  ITimelineDailyTrend,
   TTimelineMetric,
   TTimelinePerformanceStatus,
 } from "@/types/timeline/api";
@@ -27,4 +28,8 @@ export interface ITimelineSummaryPanelData {
   aiSummary: string;
   metrics: ITimelineSummaryMetric[];
   platformShare: ITimelineSummaryPlatformShare[];
+  /*일별 추이 차트용*/
+  dailyTrend: ITimelineDailyTrend[];
+  startDate: string;
+  endDate: string;
 }

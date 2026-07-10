@@ -64,5 +64,8 @@ export function buildTimelineSummaryPanel(
       provider: item.platform,
       contributionRate: item.contributionRate,
     })),
+    dailyTrend: detail.dailyTrend,
+    startDate: detail.startDate,
+    endDate: detail.endDate,
   };
 }
