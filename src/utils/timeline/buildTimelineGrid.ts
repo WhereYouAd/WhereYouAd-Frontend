@@ -5,6 +5,7 @@ import type {
   ITimelineGridData,
   TTimelineViewUnit,
 } from "@/types/timeline/ui";
+import { resolveTimelinePerformanceStatus } from "@/constants/timeline/statusStyle";
 
 import {
   formatRange,
@@ -99,7 +100,9 @@ function layoutBars(
       id: item.timelineId,
       title: item.name,
       subtitle: formatRange(item.startDate, item.endDate),
-      performanceStatus: item.performanceStatus,
+      performanceStatus: resolveTimelinePerformanceStatus(
+        item.performanceStatus,
+      ),
       colStart,
       colEnd,
       row,

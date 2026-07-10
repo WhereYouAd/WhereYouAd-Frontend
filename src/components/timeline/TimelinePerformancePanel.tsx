@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/provider";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import type { TTimelineViewUnit } from "@/types/timeline/ui";
-import { TIMELINE_PERFORMANCE_STATUS_STYLE } from "@/constants/timeline/statusStyle";
+import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
@@ -134,7 +134,9 @@ export default function TimelinePerformancePanel({
         ? "done"
         : "idle";
 
-  const statusStyle = TIMELINE_PERFORMANCE_STATUS_STYLE[data.performanceStatus];
+  const statusStyle = resolveTimelinePerformanceStatusStyle(
+    data.performanceStatus,
+  );
   const chartPeriodLabel =
     CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
 
