@@ -49,7 +49,7 @@ export function calcChartYMax(values: number[], isRoas: boolean): number {
 
   if (max <= 0) return 1000;
   const magnitude = Math.pow(10, Math.floor(Math.log10(max)));
-  const unit = magnitude >= 1000 ? magnitude : 1000;
+  const unit = magnitude >= 1 ? magnitude : 1;
   return Math.ceil((max * 1.2) / unit) * unit;
 }
 
