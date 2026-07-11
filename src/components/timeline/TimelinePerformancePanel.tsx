@@ -144,8 +144,8 @@ export default function TimelinePerformancePanel({
   const chartPeriodLabel =
     CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
 
-  const chartMeric = data.metrics[0]?.metric ?? "CLICK";
-  const chartMetricLabel = getTimelineMetricLabel(chartMeric);
+  const chartMetric = data.metrics[0]?.metric ?? "CLICK";
+  const chartMetricLabel = getTimelineMetricLabel(chartMetric);
 
   const handlePrevChartPeriod = () => {
     setChartPeriodIndex((prev) =>
@@ -340,7 +340,7 @@ export default function TimelinePerformancePanel({
             </div>
             <TimelineDailyTrendChart
               dailyTrend={data.dailyTrend}
-              metric={chartMeric}
+              metric={chartMetric}
             />
           </div>
         </section>
