@@ -23,7 +23,10 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
-import { disconnectPlatformAccount } from "@/api/integration/platformAccounts";
+import {
+  disconnectPlatformAccount,
+  reconnectPlatformAccount,
+} from "@/api/integration/platformAccounts";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -73,6 +76,25 @@ export default function PlatformIntegrationsPage() {
     },
   );
 
+  const reconnectMutation = useCoreMutation<
+    void,
+    { orgId: number; accountId: number }
+  >(
+    ({ orgId: requestOrgId, accountId }) =>
+      reconnectPlatformAccount(requestOrgId, accountId),
+    {
+      userOnSuccess: async (_, { orgId: requestOrgId }) => {
+        await queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.platform.connections(requestOrgId),
+        });
+        toast.success("광고 계정을 다시 연동했습니다.");
+      },
+      userOnError: (apiError) => {
+        toast.error(apiError.message ?? "재연동에 실패했습니다.");
+      },
+    },
+  );
+
   useIntegrationOAuthReturn(orgId);
 
   const handleConnect = async (provider: TIntegrationProvider) => {
@@ -80,6 +102,18 @@ export default function PlatformIntegrationsPage() {
       toast.error("워크스페이스를 선택해 주세요.");
       return;
     }
+
+    const item = platformConnections.find((p) => p.provider === provider);
+    // DISCONNECTED
+    if (item?.status === "disconnected" && item.platformAccountId != null) {
+      if (reconnectMutation.isPending) return;
+      reconnectMutation.mutate({
+        orgId,
+        accountId: item.platformAccountId,
+      });
+      return;
+    }
+
     if (provider === "NAVER") {
       const naverItem = platformConnections.find((p) => p.provider === "NAVER");
 
