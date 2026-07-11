@@ -211,6 +211,16 @@ export default function Timeline() {
     if (isDeleting) return;
     setDeleteTarget(null);
   };
+
+  const handleEditTimeline = (id: number) => {
+    handlePanelClose();
+    openEditModal(id);
+  };
+  const handleDeleteTimeline = (target: { id: number; name: string }) => {
+    handlePanelClose();
+    openDeleteModal(target);
+  };
+
   const handleConfirmDelete = () => {
     if (!deleteTarget) return;
     deleteTimeline(deleteTarget.id, {
@@ -350,9 +360,9 @@ export default function Timeline() {
                       bar={bar}
                       isSelected={selectedBarId === bar.id && isPanelOpen}
                       onBarClick={handleBarClick}
-                      onEdit={() => openEditModal(bar.id)}
+                      onEdit={() => handleEditTimeline(bar.id)}
                       onDelete={() =>
-                        openDeleteModal({ id: bar.id, name: bar.title })
+                        handleDeleteTimeline({ id: bar.id, name: bar.title })
                       }
                     />
                   ))}
@@ -378,14 +388,17 @@ export default function Timeline() {
         <TimelinePerformancePanel
           isOpen={isPanelOpen}
           onClose={handlePanelClose}
-          onEdit={() => selectedBarId != null && openEditModal(selectedBarId)}
-          onDelete={() =>
-            selectedBarId != null &&
-            openDeleteModal({
-              id: selectedBarId!,
+          onEdit={() => {
+            if (selectedBarId == null) return;
+            handleEditTimeline(selectedBarId);
+          }}
+          onDelete={() => {
+            if (selectedBarId == null) return;
+            handleDeleteTimeline({
+              id: selectedBarId,
               name: panelData.timelineName,
-            })
-          }
+            });
+          }}
           data={panelData}
           onRequestSummary={handleRequestSummary}
           isSummaryLoading={isAwaitingSummary}
