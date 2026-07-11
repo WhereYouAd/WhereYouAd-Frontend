@@ -7,6 +7,8 @@ import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
+import { getTimelineMetricLabel } from "@/utils/timeline/buildTimelineChartSeries";
+
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import ChartLegend from "@/components/common/chart/ChartLegend";
@@ -14,6 +16,8 @@ import Drawer from "@/components/common/drawer/Drawer";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import TimelinePeriodSelector from "@/components/timeline/TimelinePeriodSelector";
+
+import TimelineDailyTrendChart from "./charts/TimelineDailyTrendChart";
 
 import ChevronRightIcon from "@/assets/icon/chevron/chevron-right.svg?react";
 import MoreIcon from "@/assets/icon/common/more.svg?react";
@@ -139,6 +143,9 @@ export default function TimelinePerformancePanel({
   );
   const chartPeriodLabel =
     CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
+
+  const chartMeric = data.metrics[0]?.metric ?? "CLICK";
+  const chartMetricLabel = getTimelineMetricLabel(chartMeric);
 
   const handlePrevChartPeriod = () => {
     setChartPeriodIndex((prev) =>
@@ -317,8 +324,9 @@ export default function TimelinePerformancePanel({
                 <ChartLegend
                   className="[&_span]:text-text-body"
                   items={[
-                    { label: "클릭수", colorClass: "bg-primary-400" },
-                    { label: "예산 수정 시점", colorClass: "bg-info-red" },
+                    { label: chartMetricLabel, colorClass: "bg-primary-400" },
+                    // 예산 수정 시점은 일시 제외
+                    // { label: "예산 수정 시점", colorClass: "bg-info-red" },
                   ]}
                 />
               </div>
@@ -330,11 +338,10 @@ export default function TimelinePerformancePanel({
                 onNextPeriod={handleNextChartPeriod}
               />
             </div>
-            <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-surface-300/70 bg-surface-200/30 px-4 py-6">
-              <span className="font-caption text-text-muted">
-                차트 영역 (ApexChart 연동예정)
-              </span>
-            </div>
+            <TimelineDailyTrendChart
+              dailyTrend={data.dailyTrend}
+              metric={chartMeric}
+            />
           </div>
         </section>
 
