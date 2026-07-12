@@ -60,18 +60,37 @@ function PlatformConnectionMeta({
   status,
   syncedAt,
   externalAccountId,
+  platformAccountId,
   tokenExpireAt,
 }: Pick<
   IPlatformConnectionItem,
-  "status" | "syncedAt" | "externalAccountId" | "tokenExpireAt"
+  | "status"
+  | "syncedAt"
+  | "externalAccountId"
+  | "platformAccountId"
+  | "tokenExpireAt"
 >) {
   const syncedLabel = formatConnectionDateTime(syncedAt);
   const expireLabel = formatConnectionDate(tokenExpireAt);
   const expireTone = getTokenExpireTone(tokenExpireAt);
+  const isSoftDisconnected =
+    status === "disconnected" && platformAccountId != null;
 
   return (
     <div className="flex w-full flex-col gap-2">
-      {status === "disconnected" ? (
+      {isSoftDisconnected ? (
+        externalAccountId ? (
+          <p className="min-w-0 font-body2 text-text-muted">
+            <span>연동 계정 · </span>
+            <span
+              className="truncate text-text-title"
+              title={externalAccountId}
+            >
+              {externalAccountId}
+            </span>
+          </p>
+        ) : null
+      ) : status === "disconnected" ? (
         <>
           <p className="font-body2 text-text-muted/60">
             <span>마지막 동기화 · </span>
@@ -156,6 +175,7 @@ function PlatformIntegrationCard({
         status={status}
         syncedAt={syncedAt}
         externalAccountId={externalAccountId}
+        platformAccountId={platformAccountId}
         tokenExpireAt={tokenExpireAt}
       />
 
