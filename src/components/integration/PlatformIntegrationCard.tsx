@@ -79,17 +79,29 @@ function PlatformConnectionMeta({
   return (
     <div className="flex w-full flex-col gap-2">
       {isSoftDisconnected ? (
-        externalAccountId ? (
-          <p className="min-w-0 font-body2 text-text-muted">
-            <span>연동 계정 · </span>
-            <span
-              className="truncate text-text-title"
-              title={externalAccountId}
-            >
-              {externalAccountId}
-            </span>
+        <>
+          {externalAccountId ? (
+            <p className="min-w-0 font-body2 text-text-muted">
+              <span>연동 계정 · </span>
+              <span
+                className="truncate text-text-title"
+                title={externalAccountId}
+              >
+                {externalAccountId}
+              </span>
+            </p>
+          ) : null}
+          <p className="font-body2 text-text-muted">
+            <span>토큰 만료 예정 · </span>
+            {expireLabel ? (
+              <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
+                {expireLabel}
+              </span>
+            ) : (
+              <span className="text-text-muted/60">—</span>
+            )}
           </p>
-        ) : null
+        </>
       ) : status === "disconnected" ? (
         <>
           <p className="font-body2 text-text-muted/60">
@@ -133,7 +145,12 @@ function PlatformConnectionMeta({
                 {expireLabel}
               </span>
             </p>
-          ) : null}
+          ) : (
+            <p className="font-body2 text-text-muted">
+              <span>토큰 만료 예정 · </span>
+              <span className="text-text-muted/60">—</span>
+            </p>
+          )}
         </>
       )}
     </div>
