@@ -153,6 +153,10 @@ function PlatformIntegrationCard({
   onDisconnect,
 }: TProps) {
   const label = PLATFORM_MAP[provider] ?? provider;
+  const statusLabel =
+    status === "disconnected" && platformAccountId != null
+      ? "연동 해제"
+      : STATUS_LABEL[status];
 
   return (
     <div className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft">
@@ -167,7 +171,7 @@ function PlatformIntegrationCard({
           variant={CONNECTION_STATUS_BADGE[status]}
           className="h-8 shrink-0 font-body2"
         >
-          {STATUS_LABEL[status]}
+          {statusLabel}
         </Badge>
       </div>
 
