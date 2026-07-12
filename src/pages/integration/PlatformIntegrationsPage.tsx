@@ -97,6 +97,31 @@ export default function PlatformIntegrationsPage() {
 
   useIntegrationOAuthReturn(orgId);
 
+  const startNewConnect = async (provider: TIntegrationProvider) => {
+    if (orgId == null) {
+      toast.error("워크스페이스를 선택해 주세요.");
+      return;
+    }
+
+    if (provider === "NAVER") {
+      setNaverModalMode("connect");
+      setNaverCustomerId(undefined);
+      setIsNaverModalOpen(true);
+      return;
+    }
+
+    try {
+      await startPlatformConnect(provider, orgId);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : ((err as IApiErrorResponse)?.message ??
+            "플랫폼 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
+      toast.error(message);
+    }
+  };
+
   const handleConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
       toast.error("워크스페이스를 선택해 주세요.");
@@ -104,7 +129,6 @@ export default function PlatformIntegrationsPage() {
     }
 
     const item = platformConnections.find((p) => p.provider === provider);
-    // DISCONNECTED
     if (item?.status === "disconnected" && item.platformAccountId != null) {
       if (reconnectMutation.isPending) return;
       reconnectMutation.mutate({
@@ -120,23 +144,12 @@ export default function PlatformIntegrationsPage() {
       if (naverItem?.platformAccountId != null) {
         setNaverModalMode("reconnect");
         setNaverCustomerId(naverItem.externalAccountId);
-      } else {
-        setNaverModalMode("connect");
-        setNaverCustomerId(undefined);
+        setIsNaverModalOpen(true);
+        return;
       }
-      setIsNaverModalOpen(true);
-      return;
     }
-    try {
-      await startPlatformConnect(provider, orgId);
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : ((err as IApiErrorResponse)?.message ??
-            "플랫폼 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
-      toast.error(message);
-    }
+
+    await startNewConnect(provider);
   };
 
   const handleDisconnect = (item: IPlatformConnectionItem) => {

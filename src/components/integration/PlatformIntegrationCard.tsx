@@ -126,6 +126,7 @@ function PlatformIntegrationCard({
   status,
   syncedAt,
   externalAccountId,
+  platformAccountId,
   tokenExpireAt,
   errorMessage,
   onConnect,
@@ -169,8 +170,20 @@ function PlatformIntegrationCard({
       <div className="mt-auto flex w-full flex-col gap-4">
         {status === "disconnected" ? (
           <p className="font-body2 text-text-muted/80">
-            광고 계정을 연동하면 대시보드와 캠페인에서 데이터를 확인할 수
-            있습니다.
+            {platformAccountId != null ? (
+              <>
+                기존 계정을 다시 연동하면 대시보드와 캠페인에서 데이터를 확인할
+                수 있습니다.
+                <br />
+                계정이 완전히 삭제되기 전까지는 기존 계정 복구가 가능하며,
+                현재는 다른 계정 연동이 불가능합니다.
+              </>
+            ) : (
+              <>
+                광고 계정을 연동하면 대시보드와 캠페인에서 데이터를 확인할 수
+                있습니다.
+              </>
+            )}
           </p>
         ) : null}
 
@@ -199,7 +212,7 @@ function PlatformIntegrationCard({
                 className="min-w-0 flex-1"
                 onClick={onDisconnect}
               >
-                연결 해제
+                연동 해제
               </Button>
             </>
           ) : null}
