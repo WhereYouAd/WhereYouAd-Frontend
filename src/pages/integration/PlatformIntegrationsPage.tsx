@@ -202,6 +202,11 @@ export default function PlatformIntegrationsPage() {
                   onConnect={() => handleConnect(item.provider)}
                   onReconnect={() => handleConnect(item.provider)}
                   onDisconnect={() => handleDisconnect(item)}
+                  isConnectLoading={
+                    reconnectMutation.isPending &&
+                    reconnectMutation.variables?.accountId ===
+                      item.platformAccountId
+                  }
                 />
               </li>
             ))}

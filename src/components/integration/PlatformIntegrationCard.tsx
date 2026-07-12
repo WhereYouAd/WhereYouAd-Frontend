@@ -54,6 +54,7 @@ type TProps = IPlatformConnectionItem & {
   onConnect?: () => void;
   onReconnect?: () => void;
   onDisconnect?: () => void;
+  isConnectLoading?: boolean;
 };
 
 function PlatformConnectionMeta({
@@ -168,6 +169,7 @@ function PlatformIntegrationCard({
   onConnect,
   onReconnect,
   onDisconnect,
+  isConnectLoading = false,
 }: TProps) {
   const label = PLATFORM_MAP[provider] ?? provider;
   const statusLabel =
@@ -230,8 +232,15 @@ function PlatformIntegrationCard({
 
         <div className="flex w-full flex-wrap gap-4">
           {status === "disconnected" ? (
-            <Button type="button" size="big" fullWidth onClick={onConnect}>
-              연동하기
+            <Button
+              type="button"
+              size="big"
+              fullWidth
+              onClick={onConnect}
+              isLoading={isConnectLoading}
+              disabled={isConnectLoading}
+            >
+              {isConnectLoading ? "연동 중..." : "연동하기"}
             </Button>
           ) : null}
 
