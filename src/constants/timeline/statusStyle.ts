@@ -1,4 +1,7 @@
-import type { TTimelinePerformanceStatus } from "@/types/timeline/api";
+import {
+  TIMELINE_PERFORMANCE_STATUS,
+  type TTimelinePerformanceStatus,
+} from "@/types/timeline/api";
 
 export interface ITimelinePerformanceStatusStyle {
   label: string;
@@ -51,3 +54,25 @@ export const TIMELINE_PERFORMANCE_STATUS_STYLE: Record<
     ring: "ring-info-red",
   },
 };
+
+/** API가 null/미정의/알 수 없는 값을 줄 때 ON_TRACK으로 정규화 */
+export function resolveTimelinePerformanceStatus(
+  status: string | null | undefined,
+): TTimelinePerformanceStatus {
+  if (
+    status != null &&
+    (TIMELINE_PERFORMANCE_STATUS as readonly string[]).includes(status)
+  ) {
+    return status as TTimelinePerformanceStatus;
+  }
+  return "ON_TRACK";
+}
+
+/** 성과 상태 → 바/패널 스타일 (미정의 시 기본 스타일) */
+export function resolveTimelinePerformanceStatusStyle(
+  status: string | null | undefined,
+): ITimelinePerformanceStatusStyle {
+  return TIMELINE_PERFORMANCE_STATUS_STYLE[
+    resolveTimelinePerformanceStatus(status)
+  ];
+}

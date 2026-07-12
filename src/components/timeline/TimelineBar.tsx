@@ -12,7 +12,7 @@ import {
   TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_OFFSET,
 } from "@/constants/timeline/layout";
-import { TIMELINE_PERFORMANCE_STATUS_STYLE } from "@/constants/timeline/statusStyle";
+import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import { DropdownMenu } from "../common/dropdownmenu/DropdownMenu";
 
@@ -42,7 +42,7 @@ export default function TimelineBar({
   onDelete,
 }: ITimelineBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const status = TIMELINE_PERFORMANCE_STATUS_STYLE[bar.performanceStatus];
+  const status = resolveTimelinePerformanceStatusStyle(bar.performanceStatus);
   const left = (bar.colStart - 1) * colWidth;
   const columnSpan = Math.max(bar.colEnd - bar.colStart, 1);
   const width = columnSpan * colWidth;

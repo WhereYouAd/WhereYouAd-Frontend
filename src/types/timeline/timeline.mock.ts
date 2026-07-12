@@ -239,6 +239,9 @@ export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
     { provider: "META", contributionRate: 0.31 },
     { provider: "NAVER", contributionRate: 0.17 },
   ],
+  dailyTrend: TIMELINE_DETAIL_MOCK.dailyTrend,
+  startDate: TIMELINE_DETAIL_MOCK.startDate,
+  endDate: TIMELINE_DETAIL_MOCK.endDate,
 };
 
 export const TIMELINE_SUMMARY_PANEL_NO_AI_MOCK: ITimelineSummaryPanelData = {

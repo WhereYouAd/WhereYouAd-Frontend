@@ -5,6 +5,7 @@ import type {
 } from "@/types/timeline/api";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import { TIMELINE_METRIC_OPTIONS } from "@/constants/timeline/formOptions";
+import { resolveTimelinePerformanceStatus } from "@/constants/timeline/statusStyle";
 
 import { formatDot } from "./period";
 
@@ -54,12 +55,17 @@ export function buildTimelineSummaryPanel(
   return {
     timelineName: detail.name,
     periodLabel: `${formatDot(detail.startDate)} ~ ${formatDot(detail.endDate)}`,
-    performanceStatus: detail.performanceStatus,
+    performanceStatus: resolveTimelinePerformanceStatus(
+      detail.performanceStatus,
+    ),
     aiSummary: detail.summary ?? "",
     metrics,
     platformShare: detail.platformContributions.map((item) => ({
       provider: item.platform,
       contributionRate: item.contributionRate,
     })),
+    dailyTrend: detail.dailyTrend,
+    startDate: detail.startDate,
+    endDate: detail.endDate,
   };
 }

@@ -36,7 +36,8 @@ export interface ITimelineListItem {
   name: string;
   startDate: string;
   endDate: string;
-  performanceStatus: TTimelinePerformanceStatus;
+  /** 성과 미산출 시 null일 수 있음 */
+  performanceStatus: TTimelinePerformanceStatus | null;
 }
 
 export interface ITimelineDailyTrend {
@@ -57,7 +58,8 @@ export interface ITimelineDetail {
   name: string;
   startDate: string;
   endDate: string;
-  performanceStatus: TTimelinePerformanceStatus;
+  /** 성과 미산출 시 null일 수 있음 */
+  performanceStatus: TTimelinePerformanceStatus | null;
   metrics: TTimelineMetric[];
   comparisonPeriodType: TTimelineComparisonPeriodType;
   summary: string;
@@ -82,7 +84,8 @@ export interface ITimelineMutationResponse {
   metrics: TTimelineMetric[];
   comparisonStartDate: string;
   comparisonEndDate: string;
-  performanceStatus: TTimelinePerformanceStatus;
+  /** 성과 미산출 시 null일 수 있음 */
+  performanceStatus: TTimelinePerformanceStatus | null;
   createdAt: string;
 }
 
