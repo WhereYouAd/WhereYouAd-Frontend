@@ -31,9 +31,12 @@ export function buildTimelineDailyTrendChartOptions(params: {
   yMax: number;
   xMin?: number;
   xMax?: number;
+  /** 1점이면 선이 없으므로 마커를 항상 표시 */
+  pointCount?: number;
 }): ApexOptions {
-  const { metric, yMax, xMin, xMax } = params;
+  const { metric, yMax, xMin, xMax, pointCount = 0 } = params;
   const isRoas = metric === "ROAS";
+  const isSinglePoint = pointCount === 1;
 
   return {
     chart: {
@@ -62,8 +65,9 @@ export function buildTimelineDailyTrendChartOptions(params: {
     colors: ["var(--color-primary-400)"],
 
     markers: {
-      size: 0,
-      hover: { size: 5 },
+      // 기본은 선만, 단일 점은 선이 없어 마커를 항상 보이게
+      size: isSinglePoint ? 5 : 0,
+      hover: { size: isSinglePoint ? 7 : 5 },
     },
 
     xaxis: {

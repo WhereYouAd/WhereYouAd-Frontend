@@ -24,14 +24,21 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
   metric,
   isLoading = false,
 }: ITimelineDailyTrendChartProps) {
-  const { series, yMax, xMin, xMax } = useMemo(
+  const { series, yMax, xMin, xMax, pointCount } = useMemo(
     () => buildTimelineChartSeries(dailyTrend, metric),
     [dailyTrend, metric],
   );
 
   const chartOptions = useMemo(
-    () => buildTimelineDailyTrendChartOptions({ metric, yMax, xMin, xMax }),
-    [metric, yMax, xMin, xMax],
+    () =>
+      buildTimelineDailyTrendChartOptions({
+        metric,
+        yMax,
+        xMin,
+        xMax,
+        pointCount,
+      }),
+    [metric, yMax, xMin, xMax, pointCount],
   );
 
   if (isLoading) {

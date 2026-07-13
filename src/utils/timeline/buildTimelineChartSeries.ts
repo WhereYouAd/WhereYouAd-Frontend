@@ -63,12 +63,15 @@ export interface ITimelineChartSeriesItem {
   data: ITimelineChartPoint[];
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 export interface ITimelineChartSeriesResult {
   series: ITimelineChartSeriesItem[];
   yMax: number;
   xMin: number | undefined;
   xMax: number | undefined;
   metricLabel: string;
+  pointCount: number;
 }
 
 export function buildTimelineChartSeries(
@@ -83,6 +86,14 @@ export function buildTimelineChartSeries(
   const ys = points.map((p) => p.y);
   const xs = points.map((p) => p.x);
 
+  let xMin = xs.length > 0 ? Math.min(...xs) : undefined;
+  let xMax = xs.length > 0 ? Math.max(...xs) : undefined;
+
+  if (xs.length === 1 && xMin != null && xMax != null) {
+    xMin -= DAY_MS / 2;
+    xMax += DAY_MS / 2;
+  }
+
   return {
     series: [
       {
@@ -91,8 +102,9 @@ export function buildTimelineChartSeries(
       },
     ],
     yMax: calcChartYMax(ys, metric === "ROAS"),
-    xMin: xs.length > 0 ? Math.min(...xs) : undefined,
-    xMax: xs.length > 0 ? Math.max(...xs) : undefined,
+    xMin,
+    xMax,
     metricLabel,
+    pointCount: points.length,
   };
 }
