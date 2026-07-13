@@ -2,6 +2,7 @@ import type {
   ITimelineDailyTrend,
   TTimelineMetric,
 } from "@/types/timeline/api";
+import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { TIMELINE_METRIC_OPTIONS } from "@/constants/timeline/formOptions";
 
 import {
@@ -52,7 +53,22 @@ export function calcChartYMax(values: number[], isRoas: boolean): number {
   return Math.ceil((max * 1.2) / unit) * unit;
 }
 
-function formatCategoryLabel(isoDate: string): string {
+/** X축: MONTH는 홀수 일자만(1,3,5…), DAY/WEEK는 M/D */
+function formatAxisCategoryLabel(
+  isoDate: string,
+  viewUnit: TTimelineViewUnit,
+): string {
+  const [, month, day] = isoDate.split("-");
+  const dayNum = Number(day);
+
+  if (viewUnit === "MONTH") {
+    return dayNum % 2 === 1 ? `${dayNum}` : "";
+  }
+
+  return `${Number(month)}/${dayNum}`;
+}
+
+function formatTooltipCategoryLabel(isoDate: string): string {
   const [, month, day] = isoDate.split("-");
   return `${Number(month)}/${Number(day)}`;
 }
@@ -65,6 +81,8 @@ export interface ITimelineChartSeriesItem {
 export interface ITimelineChartSeriesResult {
   series: ITimelineChartSeriesItem[];
   categories: string[];
+  /** 툴팁용 — 항상 M/D (월 보기에서도 날짜 혼동 방지) */
+  tooltipCategories: string[];
   yMax: number;
   metricLabel: string;
   /** null이 아닌 실제 값 개수 (단일 점 마커 표시용) */
@@ -75,10 +93,16 @@ export interface ITimelineChartSeriesResult {
 export function buildTimelineChartSeries(
   filledRows: readonly TFilledDailyTrendRow[],
   metric: TTimelineMetric,
+  viewUnit: TTimelineViewUnit = "WEEK",
 ): ITimelineChartSeriesResult {
   const metricLabel = getTimelineMetricLabel(metric);
 
-  const categories = filledRows.map((row) => formatCategoryLabel(row.date));
+  const categories = filledRows.map((row) =>
+    formatAxisCategoryLabel(row.date, viewUnit),
+  );
+  const tooltipCategories = filledRows.map((row) =>
+    formatTooltipCategoryLabel(row.date),
+  );
   const data = filledRows.map((row) => {
     if (isMissingDailyTrendRow(row)) return null;
     return getMetricValueFromTrend(row, metric);
@@ -94,6 +118,7 @@ export function buildTimelineChartSeries(
       },
     ],
     categories,
+    tooltipCategories,
     yMax: calcChartYMax(numericValues, metric === "ROAS"),
     metricLabel,
     pointCount: numericValues.length,

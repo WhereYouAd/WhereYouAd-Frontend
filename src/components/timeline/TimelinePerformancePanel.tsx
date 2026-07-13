@@ -356,6 +356,7 @@ export default function TimelinePerformancePanel({
             <TimelineDailyTrendChart
               dailyTrend={slicedTrend}
               metric={chartMetric}
+              viewUnit={viewUnit}
               rangeStart={chartRangeStart}
               rangeEnd={chartRangeEnd}
             />

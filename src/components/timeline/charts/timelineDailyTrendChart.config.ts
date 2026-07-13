@@ -23,10 +23,18 @@ export function buildTimelineDailyTrendChartOptions(params: {
   metric: TTimelineMetric;
   yMax: number;
   categories: string[];
+  /** 미전달 시 categories와 동일 */
+  tooltipCategories?: string[];
   /** 1점이면 선이 없으므로 마커를 항상 표시 */
   pointCount?: number;
 }): ApexOptions {
-  const { metric, yMax, categories, pointCount = 0 } = params;
+  const {
+    metric,
+    yMax,
+    categories,
+    tooltipCategories = categories,
+    pointCount = 0,
+  } = params;
   const isRoas = metric === "ROAS";
   const isSinglePoint = pointCount === 1;
 
@@ -92,7 +100,8 @@ export function buildTimelineDailyTrendChartOptions(params: {
 
     tooltip: {
       x: {
-        formatter: (_val, opts) => categories[opts?.dataPointIndex ?? 0] ?? "",
+        formatter: (_val, opts) =>
+          tooltipCategories[opts?.dataPointIndex ?? 0] ?? "",
       },
       y: {
         formatter: (val: number) => {

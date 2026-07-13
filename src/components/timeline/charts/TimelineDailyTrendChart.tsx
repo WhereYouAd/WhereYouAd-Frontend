@@ -4,6 +4,7 @@ import type {
   ITimelineDailyTrend,
   TTimelineMetric,
 } from "@/types/timeline/api";
+import type { TTimelineViewUnit } from "@/types/timeline/ui";
 
 import { buildTimelineChartSeries } from "@/utils/timeline/buildTimelineChartSeries";
 import { fillDailyTrendRange } from "@/utils/timeline/fillDailyTrendRange";
@@ -17,6 +18,7 @@ const ReactApexChart = lazy(() => import("react-apexcharts"));
 interface ITimelineDailyTrendChartProps {
   dailyTrend: ITimelineDailyTrend[];
   metric: TTimelineMetric;
+  viewUnit?: TTimelineViewUnit;
   /** 선택 구간 시작 — 있으면 구간 전체 날짜를 채움 */
   rangeStart?: Date | null;
   /** 선택 구간 끝 */
@@ -27,6 +29,7 @@ interface ITimelineDailyTrendChartProps {
 const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
   dailyTrend,
   metric,
+  viewUnit = "WEEK",
   rangeStart = null,
   rangeEnd = null,
   isLoading = false,
@@ -38,9 +41,9 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
     return dailyTrend;
   }, [dailyTrend, rangeStart, rangeEnd]);
 
-  const { series, categories, yMax, pointCount } = useMemo(
-    () => buildTimelineChartSeries(filledRows, metric),
-    [filledRows, metric],
+  const { series, categories, tooltipCategories, yMax, pointCount } = useMemo(
+    () => buildTimelineChartSeries(filledRows, metric, viewUnit),
+    [filledRows, metric, viewUnit],
   );
 
   const chartOptions = useMemo(
@@ -49,9 +52,10 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
         metric,
         yMax,
         categories,
+        tooltipCategories,
         pointCount,
       }),
-    [metric, yMax, categories, pointCount],
+    [metric, yMax, categories, tooltipCategories, pointCount],
   );
 
   if (isLoading) {
