@@ -60,9 +60,13 @@ export default function PlatformDisconnectModal({
               연동 계정 ·{" "}
               <span className="text-text-title">{externalAccountId}</span>
               <br />
+              <br />
             </>
           ) : null}
-          연동 해제 시 관련 데이터가 삭제되며 복구할 수 없습니다.
+          해제 후에도 기존 계정을 다시 연동할 수 있으며, 계정은 매일 새벽 4시에
+          삭제됩니다.
+          <br />
+          다른 계정으로 바꾸려면 계정 삭제가 완료된 후 새로 연동해 주세요.
         </p>
 
         <div className="flex gap-4">
