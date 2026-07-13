@@ -1,36 +1,10 @@
-import type {
-  ITimelineDailyTrend,
-  ITimelineDetail,
-  TTimelineMetric,
-} from "@/types/timeline/api";
+import type { ITimelineDetail } from "@/types/timeline/api";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import { TIMELINE_METRIC_OPTIONS } from "@/constants/timeline/formOptions";
 import { resolveTimelinePerformanceStatus } from "@/constants/timeline/statusStyle";
 
+import { aggregateTimelineMetric } from "./aggregateTimelineMetric";
 import { formatDot } from "./period";
-
-/** dailyTrend 배열에서 metric별 집계값 계산 */
-function aggregateMetric(
-  dailyTrend: ITimelineDailyTrend[],
-  metric: TTimelineMetric,
-): number {
-  if (dailyTrend.length === 0) return 0;
-
-  switch (metric) {
-    case "CLICK":
-      return dailyTrend.reduce((sum, row) => sum + row.clicks, 0);
-    case "CONVERSION":
-      return dailyTrend.reduce((sum, row) => sum + row.conversions, 0);
-    case "IMPRESSION":
-      return dailyTrend.reduce((sum, row) => sum + row.impressions, 0);
-    case "ROAS": {
-      const total = dailyTrend.reduce((sum, row) => sum + row.roas, 0);
-      return total / dailyTrend.length;
-    }
-    default:
-      return 0;
-  }
-}
 
 /** 상세 API → 성과 패널 props */
 export function buildTimelineSummaryPanel(
@@ -41,7 +15,7 @@ export function buildTimelineSummaryPanel(
       TIMELINE_METRIC_OPTIONS.find((option) => option.value === metricKey)
         ?.label ?? metricKey;
 
-    const value = aggregateMetric(detail.dailyTrend, metricKey);
+    const value = aggregateTimelineMetric(detail.dailyTrend, metricKey);
 
     return {
       metric: metricKey,
