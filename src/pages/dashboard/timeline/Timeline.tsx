@@ -15,6 +15,7 @@ import {
 import { buildTimelineGrid } from "@/utils/timeline/buildTimelineGrid";
 import { buildTimelineSummaryPanel } from "@/utils/timeline/buildTimelineSummaryPanel";
 
+import { useContainerWidth } from "@/hooks/timeline/useContainerWidth";
 import { useDeleteTimeline } from "@/hooks/timeline/useDeleteTimeline";
 import { useRequestTimelineSummary } from "@/hooks/timeline/useRequestTimelineSummary";
 import { useTimelineDetail } from "@/hooks/timeline/useTimelineDetail";
@@ -114,7 +115,13 @@ export default function Timeline() {
     [bars],
   );
 
-  const totalWidth = columns.length * TIMELINE_COL_WIDTH;
+  const containerWidth = useContainerWidth(scrollRef, !hasNoTimelines);
+  const columnCount = columns.length;
+  const colWidth =
+    columnCount > 0 && containerWidth > 0
+      ? Math.max(TIMELINE_COL_WIDTH, containerWidth / columnCount)
+      : TIMELINE_COL_WIDTH;
+  const totalWidth = columnCount * colWidth;
 
   useEffect(() => {
     if (!isAwaitingSummary) return;
@@ -342,7 +349,11 @@ export default function Timeline() {
               style={{ width: totalWidth, minHeight: "100%" }}
               className="flex min-h-full flex-1 flex-col"
             >
-              <TimelineAxis columns={columns} className="sticky top-0" />
+              <TimelineAxis
+                columns={columns}
+                colWidth={colWidth}
+                className="sticky top-0"
+              />
               {hasNoVisibleBars ? (
                 <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
                   <p className="font-heading4 text-text-title">
@@ -353,11 +364,16 @@ export default function Timeline() {
                   </p>
                 </div>
               ) : (
-                <TimelineGrid columns={columns} rowCount={maxRow}>
+                <TimelineGrid
+                  columns={columns}
+                  rowCount={maxRow}
+                  colWidth={colWidth}
+                >
                   {bars.map((bar) => (
                     <TimelineBar
                       key={`${viewUnit}-${bar.id}`}
                       bar={bar}
+                      colWidth={colWidth}
                       isSelected={selectedBarId === bar.id && isPanelOpen}
                       onBarClick={handleBarClick}
                       onEdit={() => handleEditTimeline(bar.id)}

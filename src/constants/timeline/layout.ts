@@ -1,5 +1,6 @@
 /*하드코딩 숫자 모아두기*/
 
+// 열 최소 너비. 컨테이너가 더 넓으면 균등 분배로 커짐
 export const TIMELINE_COL_WIDTH = 92;
 export const TIMELINE_ROW_HEIGHT = 104;
 export const TIMELINE_ROW_OFFSET = 24;
