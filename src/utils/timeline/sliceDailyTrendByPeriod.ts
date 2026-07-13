@@ -22,6 +22,9 @@ export interface ISliceDailyTrendByPeriodResult {
   periodLabel: string;
   visiblePeriod: ITimelineVisiblePeriod;
   slicedTrend: ITimelineDailyTrend[];
+  /** 차트 X축 채우기용 — 선택 구간 전체. 타임라인과 안 겹치면 null */
+  rangeStart: Date | null;
+  rangeEnd: Date | null;
 }
 
 function clampRangeToTimeline(
@@ -72,6 +75,8 @@ export function sliceDailyTrendByPeriod({
       periodLabel: visiblePeriod.periodLabel,
       visiblePeriod,
       slicedTrend: [],
+      rangeStart: null,
+      rangeEnd: null,
     };
   }
 
@@ -84,6 +89,9 @@ export function sliceDailyTrendByPeriod({
     periodLabel: visiblePeriod.periodLabel,
     visiblePeriod,
     slicedTrend,
+    // X축은 선택 구간 전체. 데이터 없는 날은 fill 시 missing 처리
+    rangeStart: visiblePeriod.start,
+    rangeEnd: visiblePeriod.end,
   };
 }
 

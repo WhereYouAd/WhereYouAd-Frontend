@@ -4,7 +4,10 @@ import type {
 } from "@/types/timeline/api";
 import { TIMELINE_METRIC_OPTIONS } from "@/constants/timeline/formOptions";
 
-import { parseIsoDate } from "./period";
+import {
+  isMissingDailyTrendRow,
+  type TFilledDailyTrendRow,
+} from "./fillDailyTrendRange";
 
 const METRIC_FIELD_MAP: Record<
   TTimelineMetric,
@@ -24,10 +27,6 @@ export function getTimelineMetricLabel(metric: TTimelineMetric): string {
     TIMELINE_METRIC_OPTIONS.find((option) => option.value === metric)?.label ??
     metric
   );
-}
-
-function toChartTimestamp(isoDate: string): number {
-  return parseIsoDate(isoDate).getTime();
 }
 
 export function getMetricValueFromTrend(
@@ -53,58 +52,50 @@ export function calcChartYMax(values: number[], isRoas: boolean): number {
   return Math.ceil((max * 1.2) / unit) * unit;
 }
 
-export interface ITimelineChartPoint {
-  x: number;
-  y: number;
+function formatCategoryLabel(isoDate: string): string {
+  const [, month, day] = isoDate.split("-");
+  return `${Number(month)}/${Number(day)}`;
 }
 
 export interface ITimelineChartSeriesItem {
   name: string;
-  data: ITimelineChartPoint[];
+  data: (number | null)[];
 }
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface ITimelineChartSeriesResult {
   series: ITimelineChartSeriesItem[];
+  categories: string[];
   yMax: number;
-  xMin: number | undefined;
-  xMax: number | undefined;
   metricLabel: string;
+  /** null이 아닌 실제 값 개수 (단일 점 마커 표시용) */
   pointCount: number;
 }
 
+/*missing 날짜는 null로 해서 선이 끊기고 ROAS에 가짜 0을 넣지 않음 */
 export function buildTimelineChartSeries(
-  dailyTrend: ITimelineDailyTrend[],
+  filledRows: readonly TFilledDailyTrendRow[],
   metric: TTimelineMetric,
 ): ITimelineChartSeriesResult {
   const metricLabel = getTimelineMetricLabel(metric);
-  const points = dailyTrend.map((row) => ({
-    x: toChartTimestamp(row.date),
-    y: getMetricValueFromTrend(row, metric),
-  }));
-  const ys = points.map((p) => p.y);
-  const xs = points.map((p) => p.x);
 
-  let xMin = xs.length > 0 ? Math.min(...xs) : undefined;
-  let xMax = xs.length > 0 ? Math.max(...xs) : undefined;
+  const categories = filledRows.map((row) => formatCategoryLabel(row.date));
+  const data = filledRows.map((row) => {
+    if (isMissingDailyTrendRow(row)) return null;
+    return getMetricValueFromTrend(row, metric);
+  });
 
-  if (xs.length === 1 && xMin != null && xMax != null) {
-    xMin -= DAY_MS / 2;
-    xMax += DAY_MS / 2;
-  }
+  const numericValues = data.filter((value): value is number => value != null);
 
   return {
     series: [
       {
         name: metricLabel,
-        data: points,
+        data,
       },
     ],
-    yMax: calcChartYMax(ys, metric === "ROAS"),
-    xMin,
-    xMax,
+    categories,
+    yMax: calcChartYMax(numericValues, metric === "ROAS"),
     metricLabel,
-    pointCount: points.length,
+    pointCount: numericValues.length,
   };
 }

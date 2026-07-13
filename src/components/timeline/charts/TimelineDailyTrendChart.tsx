@@ -6,6 +6,7 @@ import type {
 } from "@/types/timeline/api";
 
 import { buildTimelineChartSeries } from "@/utils/timeline/buildTimelineChartSeries";
+import { fillDailyTrendRange } from "@/utils/timeline/fillDailyTrendRange";
 
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
@@ -16,17 +17,30 @@ const ReactApexChart = lazy(() => import("react-apexcharts"));
 interface ITimelineDailyTrendChartProps {
   dailyTrend: ITimelineDailyTrend[];
   metric: TTimelineMetric;
+  /** 선택 구간 시작 — 있으면 구간 전체 날짜를 채움 */
+  rangeStart?: Date | null;
+  /** 선택 구간 끝 */
+  rangeEnd?: Date | null;
   isLoading?: boolean;
 }
 
 const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
   dailyTrend,
   metric,
+  rangeStart = null,
+  rangeEnd = null,
   isLoading = false,
 }: ITimelineDailyTrendChartProps) {
-  const { series, yMax, xMin, xMax, pointCount } = useMemo(
-    () => buildTimelineChartSeries(dailyTrend, metric),
-    [dailyTrend, metric],
+  const filledRows = useMemo(() => {
+    if (rangeStart && rangeEnd) {
+      return fillDailyTrendRange(dailyTrend, rangeStart, rangeEnd);
+    }
+    return dailyTrend;
+  }, [dailyTrend, rangeStart, rangeEnd]);
+
+  const { series, categories, yMax, pointCount } = useMemo(
+    () => buildTimelineChartSeries(filledRows, metric),
+    [filledRows, metric],
   );
 
   const chartOptions = useMemo(
@@ -34,18 +48,17 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
       buildTimelineDailyTrendChartOptions({
         metric,
         yMax,
-        xMin,
-        xMax,
+        categories,
         pointCount,
       }),
-    [metric, yMax, xMin, xMax, pointCount],
+    [metric, yMax, categories, pointCount],
   );
 
   if (isLoading) {
     return <Skeleton className="h-48 w-full rounded-2xl" />;
   }
 
-  if (dailyTrend.length === 0) {
+  if (dailyTrend.length === 0 || pointCount === 0) {
     return (
       <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-surface-300/70 bg-surface-200/30 px-4 py-6">
         <span className="font-caption text-text-muted">

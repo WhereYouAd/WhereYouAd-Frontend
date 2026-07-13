@@ -144,7 +144,12 @@ export default function TimelinePerformancePanel({
   const chartMetric = data.metrics[0]?.metric ?? "CLICK";
   const chartMetricLabel = getTimelineMetricLabel(chartMetric);
 
-  const { periodLabel: chartPeriodLabel, slicedTrend } = useMemo(
+  const {
+    periodLabel: chartPeriodLabel,
+    slicedTrend,
+    rangeStart: chartRangeStart,
+    rangeEnd: chartRangeEnd,
+  } = useMemo(
     () =>
       sliceDailyTrendByPeriod({
         dailyTrend: data.dailyTrend,
@@ -351,6 +356,8 @@ export default function TimelinePerformancePanel({
             <TimelineDailyTrendChart
               dailyTrend={slicedTrend}
               metric={chartMetric}
+              rangeStart={chartRangeStart}
+              rangeEnd={chartRangeEnd}
             />
           </div>
         </section>
