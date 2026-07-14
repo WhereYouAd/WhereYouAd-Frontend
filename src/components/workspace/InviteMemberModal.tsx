@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import type { IApiErrorResponse } from "@/types/common/common";
 import type {
   TInviteMemberItem,
   TInviteMemberRequest,
 } from "@/types/workspace/workspace";
 
 import { emailSchema } from "@/utils/auth/validation";
+
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
@@ -33,36 +33,28 @@ export default function InviteMemberModal({
   orgId,
   inviteItems,
 }: TInviteMemberModalProps) {
-  const queryClient = useQueryClient();
   const [form, setForm] = useState<TInviteMemberRequest>({ email: "" });
   const trimmedEmail = form.email.trim();
   const emailValidation = emailSchema.safeParse(trimmedEmail);
   const isValidEmail = emailValidation.success;
 
-  const inviteMutation = useMutation<
-    unknown,
-    IApiErrorResponse,
-    TInviteMemberRequest
-  >({
-    mutationFn: (body) => postInviteEmail(orgId, body),
-    onSuccess: () => {
-      toast.success("초대 이메일을 발송했습니다");
-      setForm({ email: "" });
-
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.pendingMembers(orgId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.members(orgId),
-      });
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.memberCount(orgId),
-      });
+  const inviteMutation = useCoreMutation(
+    (body: TInviteMemberRequest) => postInviteEmail(orgId, body),
+    {
+      invalidateKeys: [
+        QUERY_KEYS.workspace.pendingMembers(orgId),
+        QUERY_KEYS.workspace.members(orgId),
+        QUERY_KEYS.workspace.memberCount(orgId),
+      ],
+      userOnSuccess: () => {
+        toast.success("초대 이메일을 발송했습니다");
+        setForm({ email: "" });
+      },
+      userOnError: (error) => {
+        toast.error(error.message ?? "초대 이메일 발송에 실패했습니다");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message ?? "초대 이메일 발송에 실패했습니다.");
-    },
-  });
+  );
 
   const isInviteDisabled = !isValidEmail || inviteMutation.isPending;
 

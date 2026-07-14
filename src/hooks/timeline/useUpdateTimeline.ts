@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -12,7 +11,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function useUpdateTimeline() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
-  const queryClient = useQueryClient();
+
   return useCoreMutation(
     ({ timelineId, body }: IUpdateTimelineVariables) => {
       if (orgId == null) {
@@ -21,13 +20,14 @@ export function useUpdateTimeline() {
       return updateTimeline(orgId, timelineId, body);
     },
     {
-      invalidateKeys: orgId != null ? [QUERY_KEYS.timeline.list(orgId)] : [],
-      userOnSuccess: (data, { timelineId }) => {
-        if (orgId != null) {
-          void queryClient.invalidateQueries({
-            queryKey: QUERY_KEYS.timeline.detail(orgId, timelineId),
-          });
-        }
+      invalidateKeys:
+        orgId != null
+          ? [
+              QUERY_KEYS.timeline.list(orgId),
+              ["timeline", "detail", orgId] as const,
+            ]
+          : [],
+      userOnSuccess: (data) => {
         toast.success("타임라인이 수정되었습니다", {
           description: `"${data.name}" 타임라인의 변경내용을 저장했습니다`,
         });

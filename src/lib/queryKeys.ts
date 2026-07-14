@@ -11,6 +11,8 @@ export const QUERY_KEYS = {
     list: () => ["my-workspaces"] as const,
     /** 마지막으로 선택한 워크스페이스 */
     saved: () => ["savedWorkspace"] as const,
+    /** 워크스페이스 상세(기본정보) */
+    detail: (orgId: number) => ["workspaceDetail", orgId] as const,
     /** 워크스페이스 멤버 목록 (invalidate 전용) */
     members: (orgId: number) => ["workspaceMembers", orgId] as const,
     /** 워크스페이스 멤버 목록 (페이지 사이즈 포함) */
