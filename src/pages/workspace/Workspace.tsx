@@ -8,6 +8,8 @@ import React, {
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import type { TCreateOrgRequest } from "@/types/workspace/workspace";
+
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
@@ -45,11 +47,7 @@ export default function WorkspacePage() {
   );
 
   const createWorkspaceMutation = useCoreMutation(
-    async () => {
-      const name = newName.trim();
-      const description = newDesc.trim();
-      return createWorkspace({ name, description, imageFile: logoFile });
-    },
+    (body: TCreateOrgRequest) => createWorkspace(body),
     {
       invalidateKeys: [QUERY_KEYS.workspace.list()],
       userOnSuccess: () => {
@@ -145,9 +143,13 @@ export default function WorkspacePage() {
     };
   }, [logoPreview]);
 
-  const onSubmitCreate = async () => {
+  const onSubmitCreate = () => {
     if (!newName.trim()) return;
-    createWorkspaceMutation.mutate();
+    createWorkspaceMutation.mutate({
+      name: newName.trim(),
+      description: newDesc.trim(),
+      imageFile: logoFile,
+    });
   };
 
   const renderWorkspaceContent = () => {
