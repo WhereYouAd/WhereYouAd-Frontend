@@ -8,7 +8,10 @@ import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import { getTimelineMetricLabel } from "@/utils/timeline/buildTimelineChartSeries";
-import { sliceDailyTrendByPeriod } from "@/utils/timeline/sliceDailyTrendByPeriod";
+import {
+  canGoToPrevChartPeriod,
+  sliceDailyTrendByPeriod,
+} from "@/utils/timeline/sliceDailyTrendByPeriod";
 
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
@@ -161,12 +164,21 @@ export default function TimelinePerformancePanel({
     [data.dailyTrend, data.startDate, data.endDate, viewUnit, chartPeriodIndex],
   );
 
+  const canGoPrev = canGoToPrevChartPeriod({
+    viewUnit,
+    periodIndex: chartPeriodIndex,
+    timelineStartDate: data.startDate,
+  });
+
+  const canGoNext = chartPeriodIndex > 0;
+
   const handleViewUnitChange = (unit: TTimelineViewUnit) => {
     setViewUnit(unit);
     setChartPeriodIndex(0); //단위 바꾸면 현재로 리셋되도록
   };
 
   const handlePrevChartPeriod = () => {
+    if (!canGoPrev) return;
     setChartPeriodIndex((prev) => prev + 1);
   };
 
@@ -351,6 +363,8 @@ export default function TimelinePerformancePanel({
                 onViewUnitChange={handleViewUnitChange}
                 onPrevPeriod={handlePrevChartPeriod}
                 onNextPeriod={handleNextChartPeriod}
+                disablePrev={!canGoPrev}
+                disableNext={!canGoNext}
               />
             </div>
             <TimelineDailyTrendChart

@@ -114,3 +114,17 @@ export function getClampedPeriodIsoRange(
     endIso: toIsoDate(clamped.end),
   };
 }
+
+export function canGoToPrevChartPeriod(params: {
+  viewUnit: TTimelineViewUnit;
+  periodIndex: number;
+  timelineStartDate: string;
+  today?: Date;
+}): boolean {
+  const { viewUnit, periodIndex, timelineStartDate, today } = params;
+
+  const nextOlder = resolveVisiblePeriod(viewUnit, periodIndex + 1, today);
+  const timelineStart = startOfDay(parseIsoDate(timelineStartDate));
+
+  return startOfDay(nextOlder.end).getTime() >= timelineStart.getTime();
+}
