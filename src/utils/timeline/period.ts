@@ -1,20 +1,5 @@
 import type { TTimelineViewUnit } from "@/types/timeline/ui";
 
-const MONTH = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-] as const;
-
 export interface ITimelineVisiblePeriod {
   start: Date;
   end: Date;
