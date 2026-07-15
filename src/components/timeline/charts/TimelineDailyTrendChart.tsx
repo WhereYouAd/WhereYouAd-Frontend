@@ -34,12 +34,14 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
   rangeEnd = null,
   isLoading = false,
 }: ITimelineDailyTrendChartProps) {
+  const hasRange = rangeStart != null && rangeEnd != null;
+
   const filledRows = useMemo(() => {
-    if (rangeStart && rangeEnd) {
+    if (hasRange) {
       return fillDailyTrendRange(dailyTrend, rangeStart, rangeEnd);
     }
     return dailyTrend;
-  }, [dailyTrend, rangeStart, rangeEnd]);
+  }, [dailyTrend, rangeStart, rangeEnd, hasRange]);
 
   const { series, categories, tooltipCategories, yMax, pointCount } = useMemo(
     () => buildTimelineChartSeries(filledRows, metric, viewUnit),
@@ -62,7 +64,7 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
     return <Skeleton className="h-48 w-full rounded-2xl" />;
   }
 
-  if (dailyTrend.length === 0 || pointCount === 0) {
+  if (!hasRange && (dailyTrend.length === 0 || pointCount === 0)) {
     return (
       <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-surface-300/70 bg-surface-200/30 px-4 py-6">
         <span className="font-caption text-text-muted">
@@ -84,6 +86,7 @@ const TimelineDailyTrendChart = memo(function TimelineDailyTrendChart({
           options={chartOptions}
           series={series}
           height={192}
+          key={`${viewUnit}-${rangeStart?.getTime()} - ${rangeEnd?.getTime()}`}
         />
       </Suspense>
     </div>
