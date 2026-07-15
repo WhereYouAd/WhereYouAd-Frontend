@@ -107,7 +107,7 @@ export function resolveVisiblePeriod(
         periodIndex === 0 &&
         weekStart <= normalizedToday &&
         normalizedToday <= weekEnd
-          ? "오늘"
+          ? "이번 주"
           : formatWeekLabel(weekStart, weekEnd),
     };
   }
