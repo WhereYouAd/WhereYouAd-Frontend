@@ -10,30 +10,33 @@ import {
 // 차트 고유 ID
 export const TIMELINE_DAILY_TREND_CHART_ID = "timeline-daily-trend-chart";
 
-function formatDateAxisLabel(ts: number): string {
-  const d = new Date(ts);
-  const month = d.getMonth() + 1;
-  const day = d.getDate();
-  return `${month}/${day}`;
-}
-
 function formatRoasAxis(val: number): string {
   if (val <= 0) return "";
   return `${val.toFixed(1)}`;
 }
 
-function formatRoasTooltop(val: number): string {
+function formatRoasTooltip(val: number): string {
   return `${val.toFixed(2)}배`;
 }
 
 export function buildTimelineDailyTrendChartOptions(params: {
   metric: TTimelineMetric;
   yMax: number;
-  xMin?: number;
-  xMax?: number;
+  categories: string[];
+  /** 미전달 시 categories와 동일 */
+  tooltipCategories?: string[];
+  /** 1점이면 선이 없으므로 마커를 항상 표시 */
+  pointCount?: number;
 }): ApexOptions {
-  const { metric, yMax, xMin, xMax } = params;
+  const {
+    metric,
+    yMax,
+    categories,
+    tooltipCategories = categories,
+    pointCount = 0,
+  } = params;
   const isRoas = metric === "ROAS";
+  const isSinglePoint = pointCount === 1;
 
   return {
     chart: {
@@ -62,19 +65,17 @@ export function buildTimelineDailyTrendChartOptions(params: {
     colors: ["var(--color-primary-400)"],
 
     markers: {
-      size: 0,
-      hover: { size: 5 },
+      size: isSinglePoint ? 5 : 0,
+      hover: { size: isSinglePoint ? 7 : 5 },
     },
 
     xaxis: {
-      type: "numeric",
-      min: xMin,
-      max: xMax,
-      tickAmount: Math.min(6, 4),
+      type: "category",
+      categories,
       labels: {
-        formatter: (val: string | number) => formatDateAxisLabel(Number(val)),
         style: { colors: "var(--color-text-muted)", fontSize: "12px" },
         rotate: 0,
+        hideOverlappingLabels: true,
       },
       axisBorder: { show: false },
       axisTicks: { show: false },
@@ -94,16 +95,19 @@ export function buildTimelineDailyTrendChartOptions(params: {
       borderColor: "var(--color-surface-200)",
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
-      padding: { left: 8, right: 16 },
+      padding: { left: 20, right: 16 },
     },
 
     tooltip: {
       x: {
-        formatter: (val: number) => formatDateAxisLabel(val),
+        formatter: (_val, opts) =>
+          tooltipCategories[opts?.dataPointIndex ?? 0] ?? "",
       },
       y: {
-        formatter: (val: number) =>
-          isRoas ? formatRoasTooltop(val) : formatCountChartTooltip(val),
+        formatter: (val: number) => {
+          if (val == null || Number.isNaN(val)) return "데이터 없음";
+          return isRoas ? formatRoasTooltip(val) : formatCountChartTooltip(val);
+        },
       },
       style: { fontFamily: "Pretendard" },
     },

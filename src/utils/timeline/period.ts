@@ -1,20 +1,5 @@
 import type { TTimelineViewUnit } from "@/types/timeline/ui";
 
-const MONTH = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-] as const;
-
 export interface ITimelineVisiblePeriod {
   start: Date;
   end: Date;
@@ -65,15 +50,10 @@ function formatDayLabel(date: Date, today: Date): string {
 }
 
 function formatWeekLabel(start: Date, end: Date): string {
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const startMonth = MONTH[start.getMonth()];
-  const endMonth = MONTH[end.getMonth()];
+  const startLabel = `${start.getMonth() + 1}월 ${start.getDate()}일`;
+  const endLabel = `${end.getMonth() + 1}월 ${end.getDate()}일`;
 
-  if (start.getMonth() === end.getMonth()) {
-    return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
-  }
-  return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+  return `${startLabel} - ${endLabel}`;
 }
 
 function formatMonthLabel(date: Date): string {
@@ -112,7 +92,7 @@ export function resolveVisiblePeriod(
         periodIndex === 0 &&
         weekStart <= normalizedToday &&
         normalizedToday <= weekEnd
-          ? "오늘"
+          ? "이번 주"
           : formatWeekLabel(weekStart, weekEnd),
     };
   }
