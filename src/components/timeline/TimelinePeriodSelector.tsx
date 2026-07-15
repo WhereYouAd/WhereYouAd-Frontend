@@ -55,6 +55,8 @@ interface ITimelinePeriodNavProps {
   onPrevPeriod: () => void;
   onNextPeriod: () => void;
   onGoToToday?: () => void;
+  disablePrev?: boolean;
+  disableNext?: boolean;
   className?: string;
 }
 
@@ -63,6 +65,8 @@ export function TimelinePeriodNav({
   onPrevPeriod,
   onNextPeriod,
   onGoToToday,
+  disablePrev = false,
+  disableNext = false,
   className,
 }: ITimelinePeriodNavProps) {
   return (
@@ -75,6 +79,7 @@ export function TimelinePeriodNav({
       <button
         type="button"
         aria-label="이전 기간"
+        disabled={disablePrev}
         onClick={onPrevPeriod}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-muted transition-ui-smooth hover:bg-surface-200 hover:text-text-title"
       >
@@ -88,6 +93,7 @@ export function TimelinePeriodNav({
       <button
         type="button"
         aria-label="다음 기간"
+        disabled={disableNext}
         onClick={onNextPeriod}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-muted transition-ui-smooth hover:bg-surface-200 hover:text-text-title"
       >
@@ -117,6 +123,8 @@ interface ITimelinePeriodSelectorProps {
   onPrevPeriod: () => void;
   onNextPeriod: () => void;
   onGoToToday?: () => void;
+  disablePrev?: boolean;
+  disableNext?: boolean;
   className?: string;
 }
 
@@ -127,6 +135,8 @@ export default function TimelinePeriodSelector({
   onPrevPeriod,
   onNextPeriod,
   onGoToToday,
+  disablePrev,
+  disableNext,
   className,
 }: ITimelinePeriodSelectorProps) {
   return (
@@ -140,6 +150,8 @@ export default function TimelinePeriodSelector({
         onPrevPeriod={onPrevPeriod}
         onNextPeriod={onNextPeriod}
         onGoToToday={onGoToToday}
+        disablePrev={disablePrev}
+        disableNext={disableNext}
       />
     </div>
   );

@@ -1,11 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -14,6 +9,8 @@ import {
   type TUpdateMemberRoleRequest,
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
+
+import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
@@ -34,7 +31,6 @@ const PAGE_SIZE = 20;
 export default function MemberManagement() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const orgId = Number(workspaceId);
-  const queryClient = useQueryClient();
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedDeleteMember, setSelectedDeleteMember] =
@@ -42,14 +38,12 @@ export default function MemberManagement() {
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const memberCountQuery = useQuery<
-    Awaited<ReturnType<typeof getWorkspaceMemberCount>>,
-    IApiErrorResponse
-  >({
-    queryKey: QUERY_KEYS.workspace.memberCount(orgId),
-    queryFn: () => getWorkspaceMemberCount(orgId),
-    enabled: Number.isFinite(orgId) && orgId > 0,
-  });
+  const memberCountQuery = useCoreQuery(
+    QUERY_KEYS.workspace.memberCount(orgId),
+    () => getWorkspaceMemberCount(orgId),
+    { enabled: Number.isFinite(orgId) && orgId > 0 },
+  );
+
   const membersQuery = useInfiniteQuery({
     queryKey: QUERY_KEYS.workspace.membersWithPageSize(orgId, PAGE_SIZE),
     queryFn: ({ pageParam }: { pageParam: string | null }) =>
@@ -72,14 +66,11 @@ export default function MemberManagement() {
     return members.filter((member) => member.role === "ADMIN").length;
   }, [members]);
 
-  const pendingMembersQuery = useQuery<
-    Awaited<ReturnType<typeof getPendingMember>>,
-    IApiErrorResponse
-  >({
-    queryKey: QUERY_KEYS.workspace.pendingMembers(orgId),
-    queryFn: () => getPendingMember(orgId),
-    enabled: Number.isFinite(orgId) && orgId > 0,
-  });
+  const pendingMembersQuery = useCoreQuery(
+    QUERY_KEYS.workspace.pendingMembers(orgId),
+    () => getPendingMember(orgId),
+    { enabled: Number.isFinite(orgId) && orgId > 0 },
+  );
 
   const pendingMembers = useMemo(() => {
     const items = pendingMembersQuery.data?.pendingMembers ?? [];
@@ -90,39 +81,34 @@ export default function MemberManagement() {
     );
   }, [pendingMembersQuery.data]);
 
-  const updateMemberRoleMutation = useMutation<
-    unknown,
-    IApiErrorResponse,
-    { memberId: number; body: TUpdateMemberRoleRequest }
-  >({
-    mutationFn: ({ memberId, body }) =>
-      updateWorkspaceMemberPermission(orgId, memberId, body),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.members(orgId),
-      });
+  const updateMemberRoleMutation = useCoreMutation(
+    ({
+      memberId,
+      body,
+    }: {
+      memberId: number;
+      body: TUpdateMemberRoleRequest;
+    }) => updateWorkspaceMemberPermission(orgId, memberId, body),
+    {
+      invalidateKeys: [QUERY_KEYS.workspace.members(orgId)],
+      userOnError: (error) => {
+        toast.error(error.message ?? "권한 변경에 실패했습니다");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message ?? "권한 변경에 실패했습니다.");
-    },
-  });
+  );
 
-  const deleteMemberMutation = useMutation<unknown, IApiErrorResponse, number>({
-    mutationFn: (memberId) => deleteWorkspaceMember(orgId, memberId),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.members(orgId),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.memberCount(orgId),
-        }),
-      ]);
+  const deleteMemberMutation = useCoreMutation(
+    (memberId: number) => deleteWorkspaceMember(orgId, memberId),
+    {
+      invalidateKeys: [
+        QUERY_KEYS.workspace.members(orgId),
+        QUERY_KEYS.workspace.memberCount(orgId),
+      ],
+      userOnError: (error) => {
+        toast.error(error.message ?? "멤버 삭제에 실패했습니다");
+      },
     },
-    onError: (error) => {
-      toast.error(error.message ?? "멤버 삭제에 실패했습니다.");
-    },
-  });
+  );
 
   useEffect(() => {
     const target = observerRef.current;

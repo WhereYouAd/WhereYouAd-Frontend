@@ -7,10 +7,10 @@ import React, {
   useState,
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import type { IApiErrorResponse } from "@/types/common/common";
-import type { TWorkspace } from "@/types/workspace/workspace";
+import type { TCreateOrgRequest } from "@/types/workspace/workspace";
+
+import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import Input from "@/components/common/input/Input";
@@ -41,26 +41,21 @@ export default function WorkspacePage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
-  const queryClient = useQueryClient();
-  const workspacesQuery = useQuery<TWorkspace[], IApiErrorResponse>({
-    queryKey: QUERY_KEYS.workspace.list(),
-    queryFn: getMyWorkspaces,
-  });
+  const workspacesQuery = useCoreQuery(
+    QUERY_KEYS.workspace.list(),
+    getMyWorkspaces,
+  );
 
-  const createWorkspaceMutation = useMutation<unknown, IApiErrorResponse>({
-    mutationFn: async () => {
-      const name = newName.trim();
-      const description = newDesc.trim();
-      return createWorkspace({ name, description, imageFile: logoFile });
+  const createWorkspaceMutation = useCoreMutation(
+    (body: TCreateOrgRequest) => createWorkspace(body),
+    {
+      invalidateKeys: [QUERY_KEYS.workspace.list()],
+      userOnSuccess: () => {
+        setCreateOpen(false);
+      },
     },
+  );
 
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.list(),
-      });
-      setCreateOpen(false);
-    },
-  });
   const isListLoading = workspacesQuery.isLoading;
   const listErrorMsg = workspacesQuery.isError
     ? workspacesQuery.error.message
@@ -148,9 +143,13 @@ export default function WorkspacePage() {
     };
   }, [logoPreview]);
 
-  const onSubmitCreate = async () => {
+  const onSubmitCreate = () => {
     if (!newName.trim()) return;
-    createWorkspaceMutation.mutate();
+    createWorkspaceMutation.mutate({
+      name: newName.trim(),
+      description: newDesc.trim(),
+      imageFile: logoFile,
+    });
   };
 
   const renderWorkspaceContent = () => {

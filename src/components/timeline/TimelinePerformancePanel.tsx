@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/provider";
@@ -8,6 +8,10 @@ import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import { getTimelineMetricLabel } from "@/utils/timeline/buildTimelineChartSeries";
+import {
+  canGoToPrevChartPeriod,
+  sliceDailyTrendByPeriod,
+} from "@/utils/timeline/sliceDailyTrendByPeriod";
 
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
@@ -27,8 +31,6 @@ import MetaWordmark from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?r
 import NaverWordmark from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
 
 type TAiSummaryUiState = "idle" | "loading" | "done";
-
-const CHART_PERIOD_LABELS = ["오늘", "1월 21일 → 25일", "1월 14일 → 20일"];
 
 const SECTION_SHELL_CLASS =
   "rounded-3xl border border-surface-300/70 bg-surface-100";
@@ -141,22 +143,47 @@ export default function TimelinePerformancePanel({
   const statusStyle = resolveTimelinePerformanceStatusStyle(
     data.performanceStatus,
   );
-  const chartPeriodLabel =
-    CHART_PERIOD_LABELS[chartPeriodIndex] ?? CHART_PERIOD_LABELS[0];
 
   const chartMetric = data.metrics[0]?.metric ?? "CLICK";
   const chartMetricLabel = getTimelineMetricLabel(chartMetric);
 
+  const {
+    periodLabel: chartPeriodLabel,
+    slicedTrend,
+    rangeStart: chartRangeStart,
+    rangeEnd: chartRangeEnd,
+  } = useMemo(
+    () =>
+      sliceDailyTrendByPeriod({
+        dailyTrend: data.dailyTrend,
+        viewUnit,
+        periodIndex: chartPeriodIndex,
+        timelineStartDate: data.startDate,
+        timelineEndDate: data.endDate,
+      }),
+    [data.dailyTrend, data.startDate, data.endDate, viewUnit, chartPeriodIndex],
+  );
+
+  const canGoPrev = canGoToPrevChartPeriod({
+    viewUnit,
+    periodIndex: chartPeriodIndex,
+    timelineStartDate: data.startDate,
+  });
+
+  const canGoNext = chartPeriodIndex > 0;
+
+  const handleViewUnitChange = (unit: TTimelineViewUnit) => {
+    setViewUnit(unit);
+    setChartPeriodIndex(0); //단위 바꾸면 현재로 리셋되도록
+  };
+
   const handlePrevChartPeriod = () => {
-    setChartPeriodIndex((prev) =>
-      prev === 0 ? CHART_PERIOD_LABELS.length - 1 : prev - 1,
-    );
+    if (!canGoPrev) return;
+    setChartPeriodIndex((prev) => prev + 1);
   };
 
   const handleNextChartPeriod = () => {
-    setChartPeriodIndex((prev) =>
-      prev === CHART_PERIOD_LABELS.length - 1 ? 0 : prev + 1,
-    );
+    setChartPeriodIndex((prev) => Math.max(0, prev - 1));
   };
 
   const menuItems = [
@@ -333,14 +360,19 @@ export default function TimelinePerformancePanel({
               <TimelinePeriodSelector
                 viewUnit={viewUnit}
                 periodLabel={chartPeriodLabel}
-                onViewUnitChange={setViewUnit}
+                onViewUnitChange={handleViewUnitChange}
                 onPrevPeriod={handlePrevChartPeriod}
                 onNextPeriod={handleNextChartPeriod}
+                disablePrev={!canGoPrev}
+                disableNext={!canGoNext}
               />
             </div>
             <TimelineDailyTrendChart
-              dailyTrend={data.dailyTrend}
+              dailyTrend={slicedTrend}
               metric={chartMetric}
+              viewUnit={viewUnit}
+              rangeStart={chartRangeStart}
+              rangeEnd={chartRangeEnd}
             />
           </div>
         </section>

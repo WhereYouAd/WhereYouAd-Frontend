@@ -1,11 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import type { IApiErrorResponse } from "@/types/common/common";
-
-import { useCoreQuery } from "@/hooks/customQuery";
+import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -30,13 +27,15 @@ export default function WorkspaceSetting() {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
 
-  const { data: workspaces } = useCoreQuery(["my-workspaces"], getMyWorkspaces);
+  const { data: workspaces } = useCoreQuery(
+    QUERY_KEYS.workspace.list(),
+    getMyWorkspaces,
+  );
   const isAdmin = useMemo(() => {
     if (!workspaceId || !workspaces) return false;
     const workspace = workspaces.find((w) => w.orgId === Number(workspaceId));
     return workspace?.myRole === "ADMIN";
   }, [workspaceId, workspaces]);
-  const queryClient = useQueryClient();
 
   const orgId = useMemo(() => {
     if (!workspaceId) return null;
@@ -45,12 +44,8 @@ export default function WorkspaceSetting() {
   }, [workspaceId]);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const [saving, setSaving] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
   const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
 
@@ -61,92 +56,79 @@ export default function WorkspaceSetting() {
   const [isImageDeleted, setIsImageDeleted] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const fetchWorkspaceDetail = async () => {
-    if (orgId === null) {
-      setErrorMsg("잘못된 워크스페이스ID 입니다");
-      return;
-    }
-    setLoading(true);
-    setErrorMsg(null);
-    setImageError(false);
-    try {
-      const detail = await getWorkspace(orgId);
-      setName(detail.name);
-      setDesc(detail.description ?? "");
-      setServerLogoUrl(detail.logoUrl ?? null);
-      setLogoFile(null);
-      setIsImageDeleted(false);
-      setLogoPreview((prev) => {
-        if (prev) URL.revokeObjectURL(prev);
-        return null;
-      });
-    } catch (e) {
-      const message = (e as IApiErrorResponse).message;
-      setErrorMsg(message);
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: detail,
+    isLoading: loading,
+    isError,
+    error,
+    refetch: refetchDetail,
+  } = useCoreQuery(
+    QUERY_KEYS.workspace.detail(orgId ?? 0),
+    () => getWorkspace(orgId!),
+    { enabled: orgId !== null },
+  );
+  const errorMsg = isError ? (error.message ?? "불러오기 실패") : null;
+
   useEffect(() => {
-    void fetchWorkspaceDetail();
-  }, [orgId]);
+    if (!detail) return;
+    setName(detail.name);
+    setDesc(detail.description ?? "");
+    setServerLogoUrl(detail.logoUrl ?? null);
+    setLogoFile(null);
+    setIsImageDeleted(false);
+    setImageError(false);
+    setLogoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+  }, [detail]);
 
-  const onSave = async () => {
-    if (orgId === null) {
-      setErrorMsg("잘못된 워크스페이스ID 입니다");
-      return;
-    }
-    const nextName = name.trim();
-    const nextDesc = desc.trim();
-    if (!nextName) return;
-    setSaving(true);
-
-    try {
-      await updateWorkspace(orgId, {
-        name: nextName,
-        description: nextDesc,
+  const updateMutation = useCoreMutation(
+    (id: number) =>
+      updateWorkspace(id, {
+        name: name.trim(),
+        description: desc.trim(),
         imageFile: logoFile,
         isImageDeleted,
-      });
-      await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.list(),
-      });
-      toast.success("변경사항이 저장되었습니다");
-      await fetchWorkspaceDetail();
-    } catch (e) {
-      toast.error(
-        (e as IApiErrorResponse).message ?? "변경사항 저장에 실패했습니다.",
-      );
-    } finally {
-      setSaving(false);
-    }
+      }),
+    {
+      invalidateKeys: [
+        QUERY_KEYS.workspace.list(),
+        ...(orgId !== null ? [QUERY_KEYS.workspace.detail(orgId)] : []),
+      ],
+      userOnSuccess: () => toast.success("변경사항이 저장되었습니다"),
+      userOnError: (err) =>
+        toast.error(err.message ?? "변경사항 저장에 실패했습니다"),
+    },
+  );
+
+  const saving = updateMutation.isPending;
+
+  const onSave = () => {
+    if (orgId === null || !name.trim()) return;
+    updateMutation.mutate(orgId);
   };
-  const onDelete = async () => {
-    if (orgId === null) {
-      setErrorMsg("잘못된 워크스페이스ID 입니다");
-      return;
-    }
-    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
-      toast.error("워크스페이스 이름이 일치하지 않습니다.");
-      return;
-    }
-    setDeleting(true);
-    try {
-      await deleteWorkspace(orgId);
-      await queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.workspace.list(),
-      });
+
+  const deleteMutation = useCoreMutation((id: number) => deleteWorkspace(id), {
+    invalidateKeys: [QUERY_KEYS.workspace.list()],
+    userOnSuccess: () => {
       toast.success("워크스페이스가 삭제되었습니다");
       setDeleteOpen(false);
       navigate("/workspace", { replace: true });
-    } catch (e) {
-      toast.error(
-        (e as IApiErrorResponse).message ?? "워크스페이스 삭제에 실패했습니다.",
-      );
-    } finally {
-      setDeleting(false);
+    },
+    userOnError: (err) =>
+      toast.error(err.message ?? "워크스페이스 삭제에 실패했습니다"),
+  });
+
+  const deleting = deleteMutation.isPending;
+
+  const onDelete = () => {
+    if (orgId === null) return;
+    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
+      toast.error("워크스페이스 이름이 일치하지 않습니다");
+      return;
     }
+    deleteMutation.mutate(orgId);
   };
 
   const openDeleteModal = () => {
@@ -212,7 +194,9 @@ export default function WorkspaceSetting() {
           <Button
             type="button"
             variant="primary"
-            onClick={fetchWorkspaceDetail}
+            onClick={() => {
+              refetchDetail();
+            }}
           >
             다시 시도
           </Button>
