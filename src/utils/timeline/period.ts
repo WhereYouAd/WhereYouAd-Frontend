@@ -65,15 +65,10 @@ function formatDayLabel(date: Date, today: Date): string {
 }
 
 function formatWeekLabel(start: Date, end: Date): string {
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const startMonth = MONTH[start.getMonth()];
-  const endMonth = MONTH[end.getMonth()];
+  const startLabel = `${start.getMonth() + 1}월 ${start.getDate()}일`;
+  const endLabel = `${end.getMonth() + 1}월 ${end.getDate()}일`;
 
-  if (start.getMonth() === end.getMonth()) {
-    return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
-  }
-  return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+  return `${startLabel} - ${endLabel}`;
 }
 
 function formatMonthLabel(date: Date): string {
