@@ -1,4 +1,5 @@
 import type { IBudgetResponse, IMetricsResponse, IRoasRanking } from "./common";
+import type { TProviderType } from "./provider";
 
 export type { IBudgetResponse, IMetricsResponse, IRoasRanking };
 export type { TProviderType } from "./provider";
@@ -26,6 +27,7 @@ export interface IPlatformRankingItem extends IRoasRanking {
 
 // 클릭 스트림 데이터 항목
 export interface IClickStreamItem {
+  provider: TProviderType | null;
   timeSeriesData: {
     minute: string; // 'YYYYMMDDHHmm' 형태
     count: number;
@@ -33,6 +35,9 @@ export interface IClickStreamItem {
   mode: "real" | "dummy";
   hasSuspect: boolean;
   suspectDetail: {
+    provider: TProviderType;
+    campaignName?: string;
+    adName?: string;
     message: string;
     timestamp: string;
   } | null;

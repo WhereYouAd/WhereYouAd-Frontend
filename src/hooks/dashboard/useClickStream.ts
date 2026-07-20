@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
-import type { IClickStreamItem } from "@/types/dashboard/overview";
+import type {
+  IClickStreamItem,
+  TProviderType,
+} from "@/types/dashboard/overview";
 
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -9,7 +12,15 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 const MAX_RETRIES = 3;
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 
-export function useClickStream(mode: "real" | "dummy" = "dummy") {
+export interface IUseClickStreamOptions {
+  mode?: "real" | "dummy";
+  /** 생략 시 조직 전체 합산 */
+  providerType?: TProviderType;
+}
+
+export function useClickStream(options: IUseClickStreamOptions = {}) {
+  const { mode = "dummy", providerType } = options;
+
   // TODO: 테스트용 - 더미 데이터가 orgId 1에만 있어서 임시 고정, 테스트 후 원래대로 복구할 예정
   // const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   useWorkspaceStore((s) => s.selectedOrgId);
@@ -27,8 +38,13 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
     const controller = new AbortController();
     retryCountRef.current = 0;
 
+    const params = new URLSearchParams({ mode });
+    if (providerType) {
+      params.set("providerType", providerType);
+    }
+
     fetchEventSource(
-      `${BASE_URL}/api/dashboard/${orgId}/clicks/stream?mode=${mode}`,
+      `${BASE_URL}/api/dashboard/${orgId}/clicks/stream?${params.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -71,7 +87,7 @@ export function useClickStream(mode: "real" | "dummy" = "dummy") {
     );
 
     return () => controller.abort();
-  }, [orgId, accessToken, mode]);
+  }, [orgId, accessToken, mode, providerType]);
 
   return { data, suspectDetail, isError };
 }
