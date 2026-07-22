@@ -2,7 +2,10 @@ import { memo, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
-import type { TProviderType } from "@/types/dashboard/overview";
+import type {
+  IClickStreamItem,
+  TProviderType,
+} from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
 import {
@@ -14,16 +17,16 @@ import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp
 
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
-import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDashboard.mock";
-
 interface IPlatformTrafficChartProps {
-  data: IClickStreamResponse | null;
-  platform: string;
+  data: IClickStreamItem | null;
+  platform: TProviderType;
+  isError?: boolean;
 }
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
   platform,
+  isError = false,
 }: IPlatformTrafficChartProps) {
   const seriesData = useMemo(() => {
     if (!data) return [];
@@ -42,9 +45,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     };
   }, [seriesData]);
 
-  const platformColor =
-    PLATFORM_CHART_COLORS[platform as TProviderType] ??
-    PLATFORM_CHART_COLORS.META;
+  const platformColor = PLATFORM_CHART_COLORS[platform];
 
   // Y축 최대값 계산
   const yMax = useMemo(() => {
@@ -136,6 +137,14 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       data: seriesData,
     },
   ];
+
+  if (isError) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        실시간 데이터를 불러오지 못했습니다.
+      </div>
+    );
+  }
 
   if (!data) {
     return <Skeleton className="w-full h-75 rounded-xl" />;
