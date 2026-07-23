@@ -38,6 +38,10 @@ export function useClickStream(options: TUseClickStreamOptions = {}) {
     const controller = new AbortController();
     retryCountRef.current = 0;
 
+    setData(null);
+    setSuspectDetail(null);
+    setIsError(false);
+
     const params = new URLSearchParams({ mode });
     if (providerType) {
       params.set("providerType", providerType);
