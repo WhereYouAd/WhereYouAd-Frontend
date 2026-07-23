@@ -72,13 +72,13 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     return Math.ceil((maxCount * 1.2) / unit) * unit;
   }, [seriesData]);
 
-  // X축 범위 (첫 번째 데이터 기준)
+  // X축 범위 (모든 플랫폼 데이터 기준)
   const { xMin, xMax } = useMemo(() => {
-    const firstSeries = seriesData[0]?.data ?? [];
-    if (firstSeries.length === 0) return { xMin: undefined, xMax: undefined };
+    const allX = seriesData.flatMap((s) => s.data.map((d) => d.x));
+    if (allX.length === 0) return { xMin: undefined, xMax: undefined };
     return {
-      xMin: firstSeries[0].x,
-      xMax: firstSeries[firstSeries.length - 1].x,
+      xMin: Math.min(...allX),
+      xMax: Math.max(...allX),
     };
   }, [seriesData]);
 
