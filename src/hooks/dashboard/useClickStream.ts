@@ -12,13 +12,13 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 const MAX_RETRIES = 3;
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 
-export interface IUseClickStreamOptions {
+export type TUseClickStreamOptions = {
   mode?: "real" | "dummy";
   /** 생략 시 조직 전체 합산 */
   providerType?: TProviderType;
-}
+};
 
-export function useClickStream(options: IUseClickStreamOptions = {}) {
+export function useClickStream(options: TUseClickStreamOptions = {}) {
   const { mode = "dummy", providerType } = options;
 
   // TODO: 테스트용 - 더미 데이터가 orgId 1에만 있어서 임시 고정, 테스트 후 원래대로 복구할 예정
