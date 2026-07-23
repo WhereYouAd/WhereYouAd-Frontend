@@ -150,6 +150,14 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     return <Skeleton className="w-full h-75 rounded-xl" />;
   }
 
+  if (data.timeSeriesData.length === 0) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        표시할 실시간 트래픽 데이터가 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full min-h-75">
       <ReactApexChart

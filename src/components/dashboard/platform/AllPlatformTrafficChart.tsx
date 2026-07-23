@@ -61,6 +61,8 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     }));
   }, [googleStream.data, naverStream.data, metaStream.data]);
 
+  const isEmpty = !isLoading && seriesData.every((s) => s.data.length === 0);
+
   // 모든 플랫폼 데이터 중 최대값을 찾아 Y축 범위 계산
   const yMax = useMemo(() => {
     const allCounts = seriesData.flatMap((s) => s.data.map((d) => d.y));
@@ -165,6 +167,14 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
 
   if (isLoading) {
     return <Skeleton className="h-75 w-full rounded-xl" />;
+  }
+
+  if (isEmpty) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        표시할 실시간 트래픽 데이터가 없습니다.
+      </div>
+    );
   }
 
   return (
