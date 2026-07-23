@@ -35,13 +35,10 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     providerType: "META",
   });
 
-  const isLoading =
-    googleStream.data == null ||
-    naverStream.data == null ||
-    metaStream.data == null;
+  const streams = [googleStream, naverStream, metaStream];
 
-  const isError =
-    googleStream.isError || naverStream.isError || metaStream.isError;
+  // 첫 응답도 에러도 없는 스트림이 있으면 로딩
+  const isLoading = streams.some((s) => s.data == null && !s.isError);
 
   const seriesData = useMemo(() => {
     const streamByPlatform = {
@@ -61,7 +58,10 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     }));
   }, [googleStream.data, naverStream.data, metaStream.data]);
 
-  const isEmpty = !isLoading && seriesData.every((s) => s.data.length === 0);
+  const hasAnySeries = seriesData.some((s) => s.data.length > 0);
+  const isAllFailed = streams.every((s) => s.isError) && !hasAnySeries;
+  const hasPartialError = !isAllFailed && streams.some((s) => s.isError);
+  const isEmpty = !isLoading && !isAllFailed && !hasAnySeries;
 
   // 모든 플랫폼 데이터 중 최대값을 찾아 Y축 범위 계산
   const yMax = useMemo(() => {
@@ -157,7 +157,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     legend: { show: false },
   };
 
-  if (isError) {
+  if (isAllFailed) {
     return (
       <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
         실시간 데이터를 불러오지 못했습니다.
@@ -165,7 +165,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !hasAnySeries) {
     return <Skeleton className="h-75 w-full rounded-xl" />;
   }
 
@@ -178,13 +178,20 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
   }
 
   return (
-    <div className="h-full min-h-75 w-full">
-      <ReactApexChart
-        options={chartOptions}
-        series={seriesData}
-        type="area"
-        height="100%"
-      />
+    <div className="flex h-full min-h-75 w-full flex-col">
+      {hasPartialError && (
+        <p className="mb-2 font-caption text-text-muted">
+          일부 플랫폼 실시간 데이터를 불러오지 못했습니다.
+        </p>
+      )}
+      <div className="min-h-0 flex-1">
+        <ReactApexChart
+          options={chartOptions}
+          series={seriesData}
+          type="area"
+          height="100%"
+        />
+      </div>
     </div>
   );
 });

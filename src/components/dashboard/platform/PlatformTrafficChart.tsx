@@ -138,7 +138,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
   ];
 
-  if (isError) {
+  if (isError && !data) {
     return (
       <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
         실시간 데이터를 불러오지 못했습니다.
@@ -159,13 +159,20 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   }
 
   return (
-    <div className="w-full h-full min-h-75">
-      <ReactApexChart
-        options={chartOptions}
-        series={series}
-        type="area"
-        height={360}
-      />
+    <div className="flex h-full min-h-75 w-full flex-col">
+      {isError && (
+        <p className="mb-2 font-caption text-text-muted">
+          연결이 원활하지 않아 마지막 데이터를 표시합니다.
+        </p>
+      )}
+      <div className="min-h-0 flex-1">
+        <ReactApexChart
+          options={chartOptions}
+          series={series}
+          type="area"
+          height={360}
+        />
+      </div>
     </div>
   );
 });
