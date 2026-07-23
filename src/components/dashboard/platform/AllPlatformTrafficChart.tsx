@@ -15,23 +15,51 @@ import {
 } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
-import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
+import { useClickStream } from "@/hooks/dashboard/useClickStream";
+
+import { Skeleton } from "@/components/common/skeleton/Skeleton";
+
+const STREAM_MODE = "dummy" as const;
 
 const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
-  // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
+  const googleStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "GOOGLE",
+  });
+  const naverStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "NAVER",
+  });
+  const metaStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "META",
+  });
+
+  const isLoading =
+    googleStream.data == null ||
+    naverStream.data == null ||
+    metaStream.data == null;
+
+  const isError =
+    googleStream.isError || naverStream.isError || metaStream.isError;
+
   const seriesData = useMemo(() => {
-    return PROVIDER_TYPES.map((platform) => {
-      const data = platformTrafficMock[platform];
-      return {
-        name: PLATFORM_MAP[platform],
-        color: PLATFORM_CHART_COLORS[platform],
-        data: data.timeSeriesData.map((d) => ({
+    const streamByPlatform = {
+      GOOGLE: googleStream.data,
+      NAVER: naverStream.data,
+      META: metaStream.data,
+    } as const;
+
+    return PROVIDER_TYPES.map((platform) => ({
+      name: PLATFORM_MAP[platform],
+      color: PLATFORM_CHART_COLORS[platform],
+      data:
+        streamByPlatform[platform]?.timeSeriesData.map((d) => ({
           x: parseMinuteToTimestamp(d.minute),
           y: d.count,
-        })),
-      };
-    });
-  }, []);
+        })) ?? [],
+    }));
+  }, [googleStream.data, naverStream.data, metaStream.data]);
 
   // 모든 플랫폼 데이터 중 최대값을 찾아 Y축 범위 계산
   const yMax = useMemo(() => {
@@ -46,7 +74,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
 
   // X축 범위 (첫 번째 데이터 기준)
   const { xMin, xMax } = useMemo(() => {
-    const firstSeries = seriesData[0].data;
+    const firstSeries = seriesData[0]?.data ?? [];
     if (firstSeries.length === 0) return { xMin: undefined, xMax: undefined };
     return {
       xMin: firstSeries[0].x,
@@ -127,8 +155,20 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     legend: { show: false },
   };
 
+  if (isError) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        실시간 데이터를 불러오지 못했습니다.
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <Skeleton className="h-75 w-full rounded-xl" />;
+  }
+
   return (
-    <div className="w-full h-full min-h-75">
+    <div className="h-full min-h-75 w-full">
       <ReactApexChart
         options={chartOptions}
         series={seriesData}
