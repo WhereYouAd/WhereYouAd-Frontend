@@ -2,7 +2,10 @@ import { memo, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
-import type { TProviderType } from "@/types/dashboard/overview";
+import type {
+  IClickStreamItem,
+  TProviderType,
+} from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
 import {
@@ -14,16 +17,16 @@ import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp
 
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
-import type { IClickStreamResponse } from "@/pages/dashboard/platform/platformDashboard.mock";
-
 interface IPlatformTrafficChartProps {
-  data: IClickStreamResponse | null;
-  platform: string;
+  data: IClickStreamItem | null;
+  platform: TProviderType;
+  isError?: boolean;
 }
 
 const PlatformTrafficChart = memo(function PlatformTrafficChart({
   data,
   platform,
+  isError = false,
 }: IPlatformTrafficChartProps) {
   const seriesData = useMemo(() => {
     if (!data) return [];
@@ -42,9 +45,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     };
   }, [seriesData]);
 
-  const platformColor =
-    PLATFORM_CHART_COLORS[platform as TProviderType] ??
-    PLATFORM_CHART_COLORS.META;
+  const platformColor = PLATFORM_CHART_COLORS[platform];
 
   // Y축 최대값 계산
   const yMax = useMemo(() => {
@@ -137,18 +138,41 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
   ];
 
+  if (isError && !data) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        실시간 데이터를 불러오지 못했습니다.
+      </div>
+    );
+  }
+
   if (!data) {
     return <Skeleton className="w-full h-75 rounded-xl" />;
   }
 
+  if (data.timeSeriesData.length === 0) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        표시할 실시간 트래픽 데이터가 없습니다.
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-full min-h-75">
-      <ReactApexChart
-        options={chartOptions}
-        series={series}
-        type="area"
-        height={360}
-      />
+    <div className="flex h-full min-h-75 w-full flex-col">
+      {isError && (
+        <p className="mb-2 font-caption text-text-muted">
+          연결이 원활하지 않아 마지막 데이터를 표시합니다.
+        </p>
+      )}
+      <div className="min-h-0 flex-1">
+        <ReactApexChart
+          options={chartOptions}
+          series={series}
+          type="area"
+          height={360}
+        />
+      </div>
     </div>
   );
 });
