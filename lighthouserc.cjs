@@ -1,5 +1,5 @@
 /** @type {import('@lhci/cli').LighthousercConfig} */
-export default {
+module.exports = {
   ci: {
     collect: {
       // CI 환경에서 인증이 필요한 /dashboard는 /login으로 리다이렉트됨.
