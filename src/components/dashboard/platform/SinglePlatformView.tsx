@@ -72,12 +72,14 @@ export default function SinglePlatformView({
     isError: isMetricFactsError,
   } = usePlatformMetricFacts(platform, viewRange);
 
-  const { data: clickStreamData, isError: isClickStreamError } = useClickStream(
-    {
-      mode: "dummy",
-      providerType: platform,
-    },
-  );
+  const {
+    data: clickStreamData,
+    suspectDetail,
+    isError: isClickStreamError,
+  } = useClickStream({
+    mode: "dummy",
+    providerType: platform,
+  });
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -159,6 +161,7 @@ export default function SinglePlatformView({
             data={clickStreamData}
             platform={platform}
             isError={isClickStreamError}
+            suspectDetail={suspectDetail}
           />
         </Card>
 
