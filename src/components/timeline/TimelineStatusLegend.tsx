@@ -19,31 +19,38 @@ export default function TimelineStatusLegend({
   return (
     <div
       className={twMerge(
-        "flex min-w-0 w-full flex-wrap items-center justify-between gap-4 rounded-2xl bg-surface-200 px-5 py-3",
+        "flex min-w-0 w-full items-center gap-4 rounded-2xl bg-surface-200 px-5 py-3",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-8 gap-y-2">
-        {TIMELINE_STATUS_LEGEND_ORDER.map((status) => {
-          const style = TIMELINE_PERFORMANCE_STATUS_STYLE[status];
+      <div className="min-w-0 flex-1 overflow-x-auto">
+        <div className="flex w-max items-center gap-x-8">
+          {TIMELINE_STATUS_LEGEND_ORDER.map((status) => {
+            const style = TIMELINE_PERFORMANCE_STATUS_STYLE[status];
 
-          return (
-            <div
-              key={status}
-              className="flex min-w-0 items-center gap-2 font-body2"
-            >
-              <span
-                className={twMerge("h-2 w-2 shrink-0 rounded-full", style.dot)}
-                aria-hidden
-              />
-              <span className="shrink-0 text-text-title">{style.label}</span>
-              <span className="text-text-placeholder" aria-hidden>
-                :
-              </span>
-              <span className="text-text-muted">{style.legendDescription}</span>
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={status}
+                className="flex shrink-0 items-center gap-2 whitespace-nowrap font-body2"
+              >
+                <span
+                  className={twMerge(
+                    "h-2 w-2 shrink-0 rounded-full",
+                    style.dot,
+                  )}
+                  aria-hidden
+                />
+                <span className="shrink-0 text-text-title">{style.label}</span>
+                <span className="text-text-placeholder" aria-hidden>
+                  :
+                </span>
+                <span className="text-text-muted">
+                  {style.legendDescription}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="group/help relative shrink-0">
