@@ -29,6 +29,7 @@
   },
   "include": [
     "vite.config.ts",
+    "vitest.config.ts",
     "svg.d.ts",
     "playwright.config.ts",
     "tests/**/*.ts"
