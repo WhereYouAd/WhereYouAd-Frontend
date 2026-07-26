@@ -19,11 +19,11 @@ export default function TimelineStatusLegend({
   return (
     <div
       className={twMerge(
-        "flex w-fit max-w-full flex-wrap items-center justify-between gap-4 rounded-2xl bg-surface-200 px-5 py-3",
+        "flex min-w-0 w-full flex-wrap items-center justify-between gap-4 rounded-2xl bg-surface-200 px-5 py-3",
         className,
       )}
     >
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-12 gap-y-2">
+      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-8 gap-y-2">
         {TIMELINE_STATUS_LEGEND_ORDER.map((status) => {
           const style = TIMELINE_PERFORMANCE_STATUS_STYLE[status];
 
