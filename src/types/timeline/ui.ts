@@ -1,5 +1,5 @@
 import type { TProviderType } from "@/types/dashboard/provider";
-import type { TTimelinePerformanceStatus } from "@/types/timeline/api";
+import type { TTimelinePerformanceStatusUi } from "@/types/timeline/api";
 
 export type TTimelineViewUnit = "DAY" | "WEEK" | "MONTH";
 
@@ -22,7 +22,7 @@ export interface ITimelineCampaignBar {
   colStart: number; //그리드 시작 위치
   colEnd: number;
   row: number;
-  performanceStatus: TTimelinePerformanceStatus;
+  performanceStatus: TTimelinePerformanceStatusUi;
 }
 
 /*그리드 + 바 묶음*/
