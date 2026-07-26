@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useId, useMemo, useRef, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
@@ -27,12 +27,14 @@ interface IPlatformTrafficChartProps {
 
 // 이상 징후 상세 버블
 const AnomalyBubble = memo(function AnomalyBubble({
+  id,
   x,
   y,
   message,
   campaignName,
   adName,
 }: {
+  id: string;
   x: number;
   y: number;
   message?: string;
@@ -42,6 +44,8 @@ const AnomalyBubble = memo(function AnomalyBubble({
   const GAP = 12;
   return (
     <div
+      id={id}
+      role="tooltip"
       className="pointer-events-none absolute transition-transform duration-200 ease-out"
       style={{
         left: x,
@@ -73,6 +77,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   suspectDetail = null,
 }: IPlatformTrafficChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const anomalyBubbleId = useId();
   const seriesData = useMemo(() => {
     if (!data) return [];
     return data.timeSeriesData.map((d) => ({
@@ -302,6 +307,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
                 className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
                 style={{ left: markerPos.x, top: markerPos.y }}
                 aria-label="클릭 이상 징후 상세 보기"
+                aria-describedby={showBubble ? anomalyBubbleId : undefined}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onPointerEnter={handlePointerEnter}
@@ -309,6 +315,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
               />
               {showBubble && (
                 <AnomalyBubble
+                  id={anomalyBubbleId}
                   x={markerPos.x}
                   y={markerPos.y}
                   message={suspectDetail?.message}
