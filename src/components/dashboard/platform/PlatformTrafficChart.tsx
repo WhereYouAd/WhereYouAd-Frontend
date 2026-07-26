@@ -285,37 +285,39 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
           type="area"
           height={360}
         />
-        {markerPos && (
-          <>
-            <span
-              className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-60 [animation-duration:2s]"
-              style={{ left: markerPos.x, top: markerPos.y }}
-            />
-            <span
-              className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-40 [animation-delay:1s] [animation-duration:2s]"
-              style={{ left: markerPos.x, top: markerPos.y }}
-            />
-            <button
-              type="button"
-              className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
-              style={{ left: markerPos.x, top: markerPos.y }}
-              aria-label="클릭 이상 징후 상세 보기"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onPointerEnter={handlePointerEnter}
-              onPointerLeave={handlePointerLeave}
-            />
-            {showBubble && (
-              <AnomalyBubble
-                x={markerPos.x}
-                y={markerPos.y}
-                message={suspectDetail?.message}
-                campaignName={suspectDetail?.campaignName}
-                adName={suspectDetail?.adName}
+        {anomalyTimestamp !== undefined &&
+          anomalyY !== undefined &&
+          markerPos && (
+            <>
+              <span
+                className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-60 [animation-duration:2s]"
+                style={{ left: markerPos.x, top: markerPos.y }}
               />
-            )}
-          </>
-        )}
+              <span
+                className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-40 [animation-delay:1s] [animation-duration:2s]"
+                style={{ left: markerPos.x, top: markerPos.y }}
+              />
+              <button
+                type="button"
+                className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
+                style={{ left: markerPos.x, top: markerPos.y }}
+                aria-label="클릭 이상 징후 상세 보기"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onPointerEnter={handlePointerEnter}
+                onPointerLeave={handlePointerLeave}
+              />
+              {showBubble && (
+                <AnomalyBubble
+                  x={markerPos.x}
+                  y={markerPos.y}
+                  message={suspectDetail?.message}
+                  campaignName={suspectDetail?.campaignName}
+                  adName={suspectDetail?.adName}
+                />
+              )}
+            </>
+          )}
       </div>
     </div>
   );
