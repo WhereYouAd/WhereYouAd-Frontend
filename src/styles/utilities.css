@@ -61,6 +61,34 @@
     line-height: var(--type-label-leading);
   }
 
+  /* 반응형 히어로 폰트 — Tailwind 반응형 변형이 @layer utilities 커스텀 클래스를 덮어쓰지 못하는
+     캐스케이드 문제 우회: 동일 블록 내 @media로 처리 */
+  .font-hero-rsp {
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+  }
+  @media (max-width: 639px) {
+    .font-hero-rsp {
+      font-size: var(--type-heading2-size);
+      font-weight: var(--type-heading2-weight);
+      line-height: var(--type-heading2-leading);
+    }
+  }
+
+  .font-heading3-rsp {
+    font-size: var(--type-heading3-size);
+    font-weight: var(--type-heading3-weight);
+    line-height: var(--type-heading3-leading);
+  }
+  @media (max-width: 639px) {
+    .font-heading3-rsp {
+      font-size: var(--type-body1-size);
+      font-weight: var(--type-body1-weight);
+      line-height: var(--type-body1-leading);
+    }
+  }
+
   /* 그림자 */
   .shadow-Soft {
     box-shadow:
