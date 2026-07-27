@@ -43,6 +43,7 @@
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@eslint/js": "^9.39.2",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.60.0",
     "@storybook/addon-essentials": "8.6.17",
     "@storybook/react": "8.6.17",
