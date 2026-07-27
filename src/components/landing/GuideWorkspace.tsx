@@ -23,7 +23,7 @@ export default function GuideWorkspace() {
           <div className="flex items-center gap-3">
             <div className="flex-1 h-10 rounded-xl border border-surface-400/70 px-4 flex items-center">
               <span className="font-body2 text-text-muted">
-                이메일을 입력해서 팀원을 초대하세요
+                whereyouad@email.com
               </span>
             </div>
             <div className="shrink-0 px-4 py-2 rounded-xl bg-primary-500 font-body2 text-surface-100">

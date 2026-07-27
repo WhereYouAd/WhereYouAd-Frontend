@@ -13,7 +13,7 @@ export default function ShowEmailResultStep() {
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-title mb-10">
+      <h1 className="text-start font-heading2-rsp text-text-title mb-10">
         <span className="block">입력하신 정보로</span>
         <span className="block">WYA에 가입된 계정을 찾았어요</span>
       </h1>

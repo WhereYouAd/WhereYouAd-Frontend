@@ -63,10 +63,10 @@ export default function LandingHero() {
             광고 통합 대시보드
           </span>
         </div>
-        <h1 className="break-keep whitespace-pre-line font-hero text-surface-100 sm:font-heading1 md:font-hero">
+        <h1 className="break-keep whitespace-pre-line font-hero-rsp text-surface-100">
           광고 성과를 실시간으로{"\n"}한 화면에서 관리하세요
         </h1>
-        <p className="max-w-2xl break-keep font-heading3 text-surface-100/85">
+        <p className="max-w-2xl break-keep font-heading3-rsp text-surface-100/85">
           매체마다 따로 들어가 확인하던 시간, 이제 아끼세요.
         </p>
       </motion.div>
@@ -85,7 +85,7 @@ export default function LandingHero() {
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ChevronDown className="w-15 h-auto" focusable="false" />
+          <ChevronDown className="w-10 h-auto sm:w-15" focusable="false" />
         </motion.button>
       </motion.div>
     </section>

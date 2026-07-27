@@ -3,8 +3,6 @@ import {
   LANDING_TIMELINE_COLUMNS,
 } from "@/constants/landing/timeline";
 
-import ChevronLeftIcon from "@/assets/icon/timeline/chevron-left.svg?react";
-import ChevronRightIcon from "@/assets/icon/timeline/chevron-right.svg?react";
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
@@ -46,24 +44,6 @@ export default function GuideTimeline() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4 font-body2 text-text-title">
-          <button
-            type="button"
-            aria-label="이전 기간"
-            className="text-text-placeholder hover:text-text-muted transition-colors"
-          >
-            <ChevronLeftIcon className="h-3.5 w-3.5" />
-          </button>
-          <span>27 Dec - 4 Jan</span>
-          <button
-            type="button"
-            aria-label="다음 기간"
-            className="text-text-placeholder hover:text-text-muted transition-colors"
-          >
-            <ChevronRightIcon className="h-3.5 w-3.5" />
-          </button>
-        </div>
-
         <div className="flex items-center gap-5 font-caption text-text-auth-sub">
           <div
             aria-label="정렬/필터(목업)"
@@ -72,11 +52,11 @@ export default function GuideTimeline() {
           >
             <span className="flex items-center gap-1.5 opacity-70">
               <SortIcon className="h-3.5 w-3.5" />
-              <span>Sort</span>
+              <span className="hidden md:inline">Sort</span>
             </span>
             <span className="flex items-center gap-1.5 opacity-70">
               <FilterIcon className="h-3.5 w-3.5" />
-              <span>Filter</span>
+              <span className="hidden md:inline">Filter</span>
             </span>
           </div>
         </div>
@@ -109,7 +89,7 @@ export default function GuideTimeline() {
               <div
                 key={i}
                 className="absolute top-0 bottom-0 border-r border-surface-400/80"
-                style={{ left: `${i * 55}px`, width: "55px" }}
+                style={{ left: `${i * colWidth}px`, width: `${colWidth}px` }}
               />
             ))}
 

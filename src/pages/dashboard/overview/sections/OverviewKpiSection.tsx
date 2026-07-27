@@ -42,7 +42,7 @@ export function OverviewKpiSection({
               "지표 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요."}
           </div>
         ) : (
-          <div className="grid min-w-0 grid-cols-4 gap-4 tablet:grid-cols-2 tablet:gap-4">
+          <div className="grid min-w-0 grid-cols-4 gap-4 tablet:grid-cols-2 tablet:gap-4 grid-mobile-1">
             {isKpisLoading
               ? [0, 1, 2, 3].map((i) => <OverviewKpiCardSkeleton key={i} />)
               : kpiList.map((kpi) => (
