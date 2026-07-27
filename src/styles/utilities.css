@@ -115,6 +115,14 @@
     }
   }
 
+  /* 모바일(< 640px)에서 그리드를 1열로 강제 — tablet: 커스텀 변형 우선순위 우회 */
+  .grid-mobile-1 {}
+  @media (max-width: 639px) {
+    .grid-mobile-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+
   /* 그림자 */
   .shadow-Soft {
     box-shadow:
