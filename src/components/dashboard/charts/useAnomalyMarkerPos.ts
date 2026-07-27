@@ -19,7 +19,10 @@ export function useAnomalyMarkerPos(
       const marker = container.querySelector<SVGCircleElement>(
         ".apexcharts-point-annotation-marker",
       );
-      if (!marker) return;
+      if (!marker) {
+        setMarkerPos(null);
+        return;
+      }
 
       // getBoundingClientRect으로 뷰포트 기준 위치 계산 후 컨테이너 기준으로 변환
       const markerRect = marker.getBoundingClientRect();
