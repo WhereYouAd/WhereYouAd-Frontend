@@ -14,6 +14,15 @@ import { twMerge } from "tailwind-merge";
 
 import CloseIcon from "@/assets/icon/common/close.svg?react";
 
+const FOCUSABLE_SELECTORS = [
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "a[href]",
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ");
+
 export interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -53,7 +62,13 @@ function Modal({
   useLayoutEffect(() => {
     if (!isOpen) return;
     previousActiveElement.current = document.activeElement as HTMLElement;
-    const id = requestAnimationFrame(() => modalRef.current?.focus());
+    const id = requestAnimationFrame(() => {
+      const first =
+        modalRef.current?.querySelectorAll<HTMLElement>(
+          FOCUSABLE_SELECTORS,
+        )?.[0];
+      (first ?? modalRef.current)?.focus();
+    });
     return () => cancelAnimationFrame(id);
   }, [isOpen]);
 
@@ -61,6 +76,31 @@ function Modal({
     setScrollLocked(false);
     previousActiveElement.current?.focus();
   }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "Tab") return;
+      const focusable = Array.from(
+        modalRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS) ??
+          [],
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -149,6 +189,7 @@ function Modal({
               }}
               transition={{ duration: openMs, ease: easeOut }}
               onClick={handleContentClick}
+              onKeyDown={handleKeyDown}
               tabIndex={-1}
             >
               {title ? (
