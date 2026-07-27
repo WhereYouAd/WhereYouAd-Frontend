@@ -40,7 +40,7 @@ export default function LandingPricing() {
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-35 bg-landing-guide-wash"
       />
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 24 }}
@@ -66,7 +66,7 @@ export default function LandingPricing() {
                 delay: i * 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              className={`bg-surface-100 rounded-[28px] p-5 md:p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
+              className={`bg-surface-100 rounded-[28px] p-7 lg:p-8 relative transition-[box-shadow,transform,border-color] duration-300 flex flex-col ${
                 plan.featured
                   ? "order-first md:order-0 border border-primary-400/55 shadow-Soft -translate-y-1"
                   : "border border-surface-400/70 shadow-Soft"
