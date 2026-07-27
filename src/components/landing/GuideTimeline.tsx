@@ -54,7 +54,7 @@ export default function GuideTimeline() {
           >
             <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
-          <span>27 Dec - 4 Jan</span>
+          <span className="hidden md:inline">27 Dec - 4 Jan</span>
           <button
             type="button"
             aria-label="다음 기간"
