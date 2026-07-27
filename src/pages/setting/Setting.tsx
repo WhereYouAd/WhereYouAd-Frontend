@@ -199,10 +199,15 @@ export default function Setting() {
         setSavedWorkspaceNotif(draftWorkspaceNotif);
       }
 
+      const savedWorkspaceNotifiThisTime =
+        hasWorkspaceNotifChanges && selectedOrgId != null;
+      const savedAnyNotification =
+        hasChannelChanges || savedWorkspaceNotifiThisTime;
+
       toast.success(
-        hasAccountChanges && hasChannelChanges
+        hasAccountChanges && savedAnyNotification
           ? "설정이 저장되었습니다"
-          : hasChannelChanges
+          : savedAnyNotification
             ? "알림 설정이 저장되었습니다"
             : "회원정보가 수정되었습니다",
       );
