@@ -2,23 +2,34 @@ import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
+import type {
+  IChannelNotificationSettings,
+  IWorkspaceNotificationSettings,
+} from "@/types/setting/notification";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
+import { useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
-import NotificationSection, {
-  type INotificationSettings,
-} from "@/components/setting/NotificationSection";
+import NotificationSection from "@/components/setting/NotificationSection";
 import PasswordSection from "@/components/setting/PasswordSection";
 import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
 import ProfileSection from "@/components/setting/ProfileSection";
 import ProfileSectionSkeleton from "@/components/setting/ProfileSectionSkeleton";
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
+import { getMyWorkspaces } from "@/api/workspace/org";
+import { QUERY_KEYS } from "@/lib/queryKeys";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const DEFAULT_NOTIFICATION_SETTINGS: INotificationSettings = {
+const DEFAULT_CHANNEL: IChannelNotificationSettings = {
   browserPush: false,
   emailNotif: false,
+};
+
+const DEFAULT_WORKSPACE_NOTIF: IWorkspaceNotificationSettings = {
+  clickAlarm: false,
+  weeklyReport: false,
 };
 
 interface IDraftProfile {
@@ -45,10 +56,14 @@ export default function Setting() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [savedNotification, setSavedNotification] =
-    useState<INotificationSettings>(DEFAULT_NOTIFICATION_SETTINGS);
-  const [draftNotification, setDraftNotification] =
-    useState<INotificationSettings>(DEFAULT_NOTIFICATION_SETTINGS);
+  const [savedChannel, setSavedChannel] =
+    useState<IChannelNotificationSettings>(DEFAULT_CHANNEL);
+  const [draftChannel, setDraftChannel] =
+    useState<IChannelNotificationSettings>(DEFAULT_CHANNEL);
+  const [savedWorkspaceNotif, setSavedWorkspaceNotif] =
+    useState<IWorkspaceNotificationSettings>(DEFAULT_WORKSPACE_NOTIF);
+  const [draftWorkspaceNotif, setDraftWorkspaceNotif] =
+    useState<IWorkspaceNotificationSettings>(DEFAULT_WORKSPACE_NOTIF);
   const [isImageDeleted, setIsImageDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -60,6 +75,19 @@ export default function Setting() {
     onPickFile,
     resetImage,
   } = useImageUploader();
+
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const { data: workspaces } = useCoreQuery(
+    QUERY_KEYS.workspace.list(),
+    getMyWorkspaces,
+  );
+  const currentWorkspaceName = useMemo(() => {
+    if (selectedOrgId === null) return null;
+    return workspaces?.find((w) => w.orgId === selectedOrgId)?.name ?? null;
+  }, [selectedOrgId, workspaces]);
+
+  const workspaceNotifiDisabled =
+    selectedOrgId == null || !currentWorkspaceName;
 
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
@@ -77,14 +105,23 @@ export default function Setting() {
     );
   }, [savedProfile, draftProfile, preview, file]);
 
-  const hasNotificationChanges = useMemo(() => {
+  const hasChannelChanges = useMemo(() => {
     return (
-      savedNotification.browserPush !== draftNotification.browserPush ||
-      savedNotification.emailNotif !== draftNotification.emailNotif
+      savedChannel.browserPush !== draftChannel.browserPush ||
+      savedChannel.emailNotif !== draftChannel.emailNotif
     );
-  }, [savedNotification, draftNotification]);
+  }, [savedChannel, draftChannel]);
+
+  const hasWorkspaceNotifChanges = useMemo(() => {
+    return (
+      savedWorkspaceNotif.clickAlarm !== draftWorkspaceNotif.clickAlarm ||
+      savedWorkspaceNotif.weeklyReport !== draftWorkspaceNotif.weeklyReport
+    );
+  }, [savedWorkspaceNotif, draftWorkspaceNotif]);
 
   const hasAccountChanges = hasProfileChanges || hasPasswordChanges;
+
+  const hasNotificationChanges = hasChannelChanges || hasWorkspaceNotifChanges;
 
   const hasChanges = hasAccountChanges || hasNotificationChanges;
 
@@ -154,15 +191,18 @@ export default function Setting() {
         setIsImageDeleted(false);
       }
 
-      if (hasNotificationChanges) {
-        setSavedNotification(draftNotification);
+      if (hasChannelChanges) {
+        setSavedChannel(draftChannel);
         // TODO: 알림 설정 API 연동
+      }
+      if (hasWorkspaceNotifChanges && selectedOrgId != null) {
+        setSavedWorkspaceNotif(draftWorkspaceNotif);
       }
 
       toast.success(
-        hasAccountChanges && hasNotificationChanges
+        hasAccountChanges && hasChannelChanges
           ? "설정이 저장되었습니다"
-          : hasNotificationChanges
+          : hasChannelChanges
             ? "알림 설정이 저장되었습니다"
             : "회원정보가 수정되었습니다",
       );
@@ -198,6 +238,11 @@ export default function Setting() {
     };
     fetchMyInfo();
   }, [setPreview]);
+
+  useEffect(() => {
+    setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+    setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+  }, [selectedOrgId]);
 
   return (
     <section className="w-full flex flex-col gap-8">
@@ -240,14 +285,27 @@ export default function Setting() {
         ) : (
           <NotificationSection
             email={draftProfile.email}
-            browserPush={draftNotification.browserPush}
-            emailNotif={draftNotification.emailNotif}
+            browserPush={draftChannel.browserPush}
+            emailNotif={draftChannel.emailNotif}
             onBrowserPushChange={(value) =>
-              setDraftNotification((prev) => ({ ...prev, browserPush: value }))
+              setDraftChannel((prev) => ({ ...prev, browserPush: value }))
             }
             onEmailNotifChange={(value) =>
-              setDraftNotification((prev) => ({ ...prev, emailNotif: value }))
+              setDraftChannel((prev) => ({ ...prev, emailNotif: value }))
             }
+            workspaceName={currentWorkspaceName}
+            clickAlarm={draftWorkspaceNotif.clickAlarm}
+            weeklyReport={draftWorkspaceNotif.weeklyReport}
+            onClickAlarmChange={(value) =>
+              setDraftWorkspaceNotif((prev) => ({ ...prev, clickAlarm: value }))
+            }
+            onWeeklyReportChange={(value) =>
+              setDraftWorkspaceNotif((prev) => ({
+                ...prev,
+                weeklyReport: value,
+              }))
+            }
+            workspaceNotifiDisabled={workspaceNotifiDisabled}
           />
         )}
       </div>
