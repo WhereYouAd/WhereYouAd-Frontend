@@ -74,7 +74,7 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-1/2 rounded-3xl overflow-hidden ${
+                className={`order-last md:order-none w-full md:w-1/2 rounded-3xl overflow-hidden ${
                   page.useTimeline ||
                   page.usePlatform ||
                   page.useOverview ||
@@ -107,7 +107,7 @@ export default function LandingGuide() {
               </motion.div>
 
               <motion.div
-                className="w-full md:w-1/2 md:max-w-120 flex flex-col gap-5"
+                className="order-first md:order-none w-full md:w-1/2 md:max-w-120 flex flex-col gap-5"
                 initial={{ opacity: 0, x: page.reverse ? -42 : 42 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
