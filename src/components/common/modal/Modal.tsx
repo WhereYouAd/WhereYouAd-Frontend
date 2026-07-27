@@ -23,6 +23,19 @@ const FOCUSABLE_SELECTORS = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(", ");
 
+function getFocusable(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
+  ).filter(
+    (el) =>
+      el.tabIndex >= 0 &&
+      el.getClientRects().length > 0 &&
+      getComputedStyle(el).visibility !== "hidden" &&
+      !el.closest('[aria-hidden="true"]') &&
+      !el.closest("[inert]"),
+  );
+}
+
 export interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -63,10 +76,9 @@ function Modal({
     if (!isOpen) return;
     previousActiveElement.current = document.activeElement as HTMLElement;
     const id = requestAnimationFrame(() => {
-      const first =
-        modalRef.current?.querySelectorAll<HTMLElement>(
-          FOCUSABLE_SELECTORS,
-        )?.[0];
+      const first = modalRef.current
+        ? getFocusable(modalRef.current)[0]
+        : undefined;
       (first ?? modalRef.current)?.focus();
     });
     return () => cancelAnimationFrame(id);
@@ -80,11 +92,11 @@ function Modal({
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key !== "Tab") return;
-      const focusable = Array.from(
-        modalRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS) ??
-          [],
-      );
-      if (focusable.length === 0) return;
+      const focusable = modalRef.current ? getFocusable(modalRef.current) : [];
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
       if (e.shiftKey) {
