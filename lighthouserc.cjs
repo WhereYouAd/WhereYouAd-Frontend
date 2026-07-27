@@ -14,11 +14,11 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // warn 수준 임계값 — #277에서 before/after 실측 후 error 수준으로 확정
-        // preset 없이 3개만 지정: preset이 error 레벨 assertion을 추가해 CI를 막았음
-        "largest-contentful-paint": ["warn", { maxNumericValue: 4000 }],
-        "cumulative-layout-shift": ["warn", { maxNumericValue: 0.1 }],
-        "total-blocking-time": ["warn", { maxNumericValue: 600 }],
+        // #277 실측 기반 확정값 (dashboard AFTER 평균: LCP 1048ms / CLS 0.000304 / TBT 54ms)
+        // CI 환경 변동성을 고려해 2배 마진 적용 후 error 수준으로 상향
+        "largest-contentful-paint": ["error", { maxNumericValue: 2000 }],
+        "cumulative-layout-shift": ["error", { maxNumericValue: 0.1 }],
+        "total-blocking-time": ["error", { maxNumericValue: 200 }],
       },
     },
     upload: {
