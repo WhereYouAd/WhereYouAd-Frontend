@@ -77,7 +77,7 @@ export default function Setting() {
   } = useImageUploader();
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
-  const { data: workspaces } = useCoreQuery(
+  const { data: workspaces, isLoading: isWorkspacesLoading } = useCoreQuery(
     QUERY_KEYS.workspace.list(),
     getMyWorkspaces,
   );
@@ -87,7 +87,7 @@ export default function Setting() {
   }, [selectedOrgId, workspaces]);
 
   const workspaceNotifiDisabled =
-    selectedOrgId == null || !currentWorkspaceName;
+    selectedOrgId == null || (!isWorkspacesLoading && !currentWorkspaceName);
 
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
