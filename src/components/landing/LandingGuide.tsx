@@ -74,7 +74,7 @@ export default function LandingGuide() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`order-last md:order-none w-full md:w-1/2 rounded-3xl overflow-hidden ${
+                className={`order-last md:order-none w-full max-w-80 mx-auto md:max-w-none md:w-1/2 rounded-3xl overflow-hidden ${
                   page.useTimeline ||
                   page.usePlatform ||
                   page.useOverview ||
