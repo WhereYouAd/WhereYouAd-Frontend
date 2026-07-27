@@ -54,13 +54,4 @@ export const LANDING_TIMELINE_CARDS: TLandingTimelineCard[] = [
     row: 2,
     colorClass: "bg-primary-400",
   },
-  {
-    id: 3,
-    title: "브랜드 검색 캠페인",
-    subtitle: "Naver · 검색",
-    colStart: 2.4,
-    colEnd: 8,
-    row: 3,
-    colorClass: "bg-primary-500",
-  },
 ];
