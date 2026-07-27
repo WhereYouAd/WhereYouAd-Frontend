@@ -8,7 +8,7 @@ import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
 export default function GuideTimeline() {
-  const colWidth = 44;
+  const colWidth = 55;
   const rowHeight = 92;
   const rowOffset = 24;
   const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
@@ -73,7 +73,7 @@ export default function GuideTimeline() {
             {LANDING_TIMELINE_COLUMNS.map((c, i) => (
               <div
                 key={i}
-                className="flex w-11 justify-center font-caption text-text-placeholder"
+                className="flex w-13.75 justify-center font-caption text-text-placeholder"
               >
                 <span className="relative flex items-center gap-1">
                   {c.day} <span className="text-text-title">{c.date}</span>
