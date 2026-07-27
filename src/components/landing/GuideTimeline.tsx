@@ -46,7 +46,7 @@ export default function GuideTimeline() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4 font-body2 text-text-title">
+        <div className="hidden md:flex items-center gap-4 font-body2 text-text-title">
           <button
             type="button"
             aria-label="이전 기간"
@@ -54,7 +54,7 @@ export default function GuideTimeline() {
           >
             <ChevronLeftIcon className="h-3.5 w-3.5" />
           </button>
-          <span className="hidden md:inline">27 Dec - 4 Jan</span>
+          <span>27 Dec - 4 Jan</span>
           <button
             type="button"
             aria-label="다음 기간"
@@ -72,11 +72,11 @@ export default function GuideTimeline() {
           >
             <span className="flex items-center gap-1.5 opacity-70">
               <SortIcon className="h-3.5 w-3.5" />
-              <span>Sort</span>
+              <span className="hidden md:inline">Sort</span>
             </span>
             <span className="flex items-center gap-1.5 opacity-70">
               <FilterIcon className="h-3.5 w-3.5" />
-              <span>Filter</span>
+              <span className="hidden md:inline">Filter</span>
             </span>
           </div>
         </div>
