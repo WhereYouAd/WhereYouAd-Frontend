@@ -45,7 +45,7 @@ export default function Login() {
 
   return (
     <AuthFormShell variant="page">
-      <h1 className="text-center font-heading2 text-text-title mb-10">
+      <h1 className="text-center font-heading2-rsp text-text-title mb-10">
         로그인
       </h1>
 
