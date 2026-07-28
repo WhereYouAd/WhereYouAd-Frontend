@@ -71,7 +71,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-title mb-10">
+      <h1 className="text-start font-heading2-rsp text-text-title mb-10">
         <span className="block">사용자의</span>
         <span className="block">기본 정보를 입력해 주세요</span>
       </h1>

@@ -115,7 +115,7 @@ export default function EnterPhoneStep({ onNext }: IEnterPhoneStepProps) {
 
   return (
     <AuthFormShell variant="step">
-      <h1 className="text-start font-heading2 text-text-title mb-10">
+      <h1 className="text-start font-heading2-rsp text-text-title mb-10">
         <span className="block">이메일 찾기를 위해</span>
         <span className="block">휴대폰 인증을 진행할게요</span>
       </h1>

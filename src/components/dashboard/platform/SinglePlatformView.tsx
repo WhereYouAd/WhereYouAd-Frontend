@@ -8,6 +8,7 @@ import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
 
 import { useBudget } from "@/hooks/dashboard/useBudget";
+import { useClickStream } from "@/hooks/dashboard/useClickStream";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
@@ -27,7 +28,6 @@ import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTraffi
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/wordmark/naver-wordmark.svg?react";
-import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
 
 const PLATFORM_LOGOS: Record<
   string,
@@ -71,6 +71,15 @@ export default function SinglePlatformView({
     isLoading: isMetricFactsLoading,
     isError: isMetricFactsError,
   } = usePlatformMetricFacts(platform, viewRange);
+
+  const {
+    data: clickStreamData,
+    suspectDetail,
+    isError: isClickStreamError,
+  } = useClickStream({
+    mode: "dummy",
+    providerType: platform,
+  });
 
   const budgetPct = budget
     ? Math.round((budget.spent / budget.totalBudget) * 100)
@@ -149,8 +158,10 @@ export default function SinglePlatformView({
           }
         >
           <PlatformTrafficChart
-            data={platformTrafficMock[platform] || null}
+            data={clickStreamData}
             platform={platform}
+            isError={isClickStreamError}
+            suspectDetail={suspectDetail}
           />
         </Card>
 

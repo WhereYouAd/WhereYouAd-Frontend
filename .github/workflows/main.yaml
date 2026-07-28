@@ -50,6 +50,24 @@ jobs:
         run: |
           aws s3 cp --recursive dist s3://${{ secrets.AWS_BUCKET_NAME }}
 
+      # CloudFront Function 업데이트 (CSP 보안 헤더)
+      - name: Update CloudFront CSP Function
+        run: |
+          ETAG=$(aws cloudfront describe-function \
+            --name add-csp-report-only \
+            --query 'ETag' --output text)
+          aws cloudfront update-function \
+            --name add-csp-report-only \
+            --if-match "$ETAG" \
+            --function-config Comment="CSP security headers",Runtime="cloudfront-js-2.0" \
+            --function-code fileb://scripts/cloudfront-functions/csp-headers.js
+          NEW_ETAG=$(aws cloudfront describe-function \
+            --name add-csp-report-only \
+            --query 'ETag' --output text)
+          aws cloudfront publish-function \
+            --name add-csp-report-only \
+            --if-match "$NEW_ETAG"
+
       # CloudFront 캐시 무효화
       - name: Invalidate CloudFront Cache
         run: |

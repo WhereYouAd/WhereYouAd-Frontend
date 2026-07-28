@@ -2,7 +2,7 @@ import type { TProviderType } from "@/types/dashboard/provider";
 import type {
   ITimelineDailyTrend,
   TTimelineMetric,
-  TTimelinePerformanceStatus,
+  TTimelinePerformanceStatusUi,
 } from "@/types/timeline/api";
 
 /*패널 상단 KPI 카드 한개*/
@@ -24,7 +24,7 @@ export interface ITimelineSummaryPlatformShare {
 export interface ITimelineSummaryPanelData {
   timelineName: string;
   periodLabel: string;
-  performanceStatus: TTimelinePerformanceStatus;
+  performanceStatus: TTimelinePerformanceStatusUi;
   aiSummary: string;
   metrics: ITimelineSummaryMetric[];
   platformShare: ITimelineSummaryPlatformShare[];

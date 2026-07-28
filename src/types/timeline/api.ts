@@ -12,15 +12,21 @@ export type TTimelineMetric = (typeof TIMELINE_METRICS)[number];
 /*성과 상태
  * ON_TRACK: 최근 추세와 유사한 수준 유지
  * ABOVE_AVERAGE: 최근 평균 대비 눈에 띄게 좋음
- * AT_RISK: 최근 평균 대비 눈에 띄게 낮음
+ * UNDERPERFORM: 최근 평균 대비 눈에 띄게 낮음
+ * (미산출 시 null — UI에서는 PENDING으로 표시)
  */
 export const TIMELINE_PERFORMANCE_STATUS = [
   "ON_TRACK",
   "ABOVE_AVERAGE",
-  "AT_RISK",
+  "UNDERPERFORM",
 ] as const;
 export type TTimelinePerformanceStatus =
   (typeof TIMELINE_PERFORMANCE_STATUS)[number];
+
+/** API 3종 + UI 전용 미정(PENDING). null/미지 값은 UI에서 PENDING으로 정규화 */
+export type TTimelinePerformanceStatusUi =
+  | TTimelinePerformanceStatus
+  | "PENDING";
 
 /*비교 기간 타입*/
 export const TIMELINE_COMPARISON_PERIOD_TYPES = [

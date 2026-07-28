@@ -102,7 +102,7 @@ const AnomalyBubble = memo(function AnomalyBubble({
 
 const TrafficChart = memo(function TrafficChart() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data, suspectDetail, isError } = useClickStream("dummy");
+  const { data, suspectDetail, isError } = useClickStream({ mode: "dummy" });
 
   // timeSeriesData → datetime 기반 차트 series 변환
   const DAY_MS = 24 * 60 * 60 * 1000;

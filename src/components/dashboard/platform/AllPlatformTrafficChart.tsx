@@ -15,23 +15,53 @@ import {
 } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
-import { platformTrafficMock } from "@/pages/dashboard/platform/platformDashboard.mock";
+import { useClickStream } from "@/hooks/dashboard/useClickStream";
+
+import { Skeleton } from "@/components/common/skeleton/Skeleton";
+
+const STREAM_MODE = "dummy" as const;
 
 const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
-  // 3개 플랫폼의 데이터를 모두 변환하여 series 구성
+  const googleStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "GOOGLE",
+  });
+  const naverStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "NAVER",
+  });
+  const metaStream = useClickStream({
+    mode: STREAM_MODE,
+    providerType: "META",
+  });
+
+  const streams = [googleStream, naverStream, metaStream];
+
+  // 첫 응답도 에러도 없는 스트림이 있으면 로딩
+  const isLoading = streams.some((s) => s.data == null && !s.isError);
+
   const seriesData = useMemo(() => {
-    return PROVIDER_TYPES.map((platform) => {
-      const data = platformTrafficMock[platform];
-      return {
-        name: PLATFORM_MAP[platform],
-        color: PLATFORM_CHART_COLORS[platform],
-        data: data.timeSeriesData.map((d) => ({
+    const streamByPlatform = {
+      GOOGLE: googleStream.data,
+      NAVER: naverStream.data,
+      META: metaStream.data,
+    } as const;
+
+    return PROVIDER_TYPES.map((platform) => ({
+      name: PLATFORM_MAP[platform],
+      color: PLATFORM_CHART_COLORS[platform],
+      data:
+        streamByPlatform[platform]?.timeSeriesData.map((d) => ({
           x: parseMinuteToTimestamp(d.minute),
           y: d.count,
-        })),
-      };
-    });
-  }, []);
+        })) ?? [],
+    }));
+  }, [googleStream.data, naverStream.data, metaStream.data]);
+
+  const hasAnySeries = seriesData.some((s) => s.data.length > 0);
+  const isAllFailed = streams.every((s) => s.isError) && !hasAnySeries;
+  const hasPartialError = !isAllFailed && streams.some((s) => s.isError);
+  const isEmpty = !isLoading && !isAllFailed && !hasAnySeries;
 
   // 모든 플랫폼 데이터 중 최대값을 찾아 Y축 범위 계산
   const yMax = useMemo(() => {
@@ -44,13 +74,13 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     return Math.ceil((maxCount * 1.2) / unit) * unit;
   }, [seriesData]);
 
-  // X축 범위 (첫 번째 데이터 기준)
+  // X축 범위 (모든 플랫폼 데이터 기준)
   const { xMin, xMax } = useMemo(() => {
-    const firstSeries = seriesData[0].data;
-    if (firstSeries.length === 0) return { xMin: undefined, xMax: undefined };
+    const allX = seriesData.flatMap((s) => s.data.map((d) => d.x));
+    if (allX.length === 0) return { xMin: undefined, xMax: undefined };
     return {
-      xMin: firstSeries[0].x,
-      xMax: firstSeries[firstSeries.length - 1].x,
+      xMin: Math.min(...allX),
+      xMax: Math.max(...allX),
     };
   }, [seriesData]);
 
@@ -127,14 +157,41 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
     legend: { show: false },
   };
 
+  if (isAllFailed) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        실시간 데이터를 불러오지 못했습니다.
+      </div>
+    );
+  }
+
+  if (isLoading && !hasAnySeries) {
+    return <Skeleton className="h-75 w-full rounded-xl" />;
+  }
+
+  if (isEmpty) {
+    return (
+      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+        표시할 실시간 트래픽 데이터가 없습니다.
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full h-full min-h-75">
-      <ReactApexChart
-        options={chartOptions}
-        series={seriesData}
-        type="area"
-        height="100%"
-      />
+    <div className="flex h-full min-h-75 w-full flex-col">
+      {hasPartialError && (
+        <p className="mb-2 font-caption text-text-muted">
+          일부 플랫폼 실시간 데이터를 불러오지 못했습니다.
+        </p>
+      )}
+      <div className="min-h-0 flex-1">
+        <ReactApexChart
+          options={chartOptions}
+          series={seriesData}
+          type="area"
+          height="100%"
+        />
+      </div>
     </div>
   );
 });

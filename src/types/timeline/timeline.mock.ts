@@ -49,7 +49,7 @@ export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
     name: "리타겟팅 집중 기간",
     startDate: "2026-06-10",
     endDate: "2026-06-30",
-    performanceStatus: "AT_RISK",
+    performanceStatus: "UNDERPERFORM",
   },
 ];
 
@@ -197,7 +197,7 @@ export const TIMELINE_GRID_MOCK_MONTH: ITimelineGridData = {
       colStart: 16,
       colEnd: 31,
       row: 2,
-      performanceStatus: "ON_TRACK",
+      performanceStatus: "UNDERPERFORM",
     },
   ],
 };
