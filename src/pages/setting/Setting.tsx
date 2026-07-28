@@ -2,10 +2,6 @@ import { type ChangeEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
-import type {
-  IChannelNotificationSettings,
-  IWorkspaceNotificationSettings,
-} from "@/types/setting/notification";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
@@ -21,6 +17,16 @@ import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+interface IChannelNotificationSettings {
+  browserPush: boolean;
+  emailNotif: boolean;
+}
+
+interface IWorkspaceNotificationSettings {
+  clickAlarm: boolean;
+  weeklyReport: boolean;
+}
 
 const DEFAULT_CHANNEL: IChannelNotificationSettings = {
   browserPush: false,
