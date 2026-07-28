@@ -110,7 +110,11 @@ const MainRoutes: RouteObject[] = [
   },
   {
     path: "integrations",
-    element: <PlatformIntegrationsPage />,
+    element: (
+      <RoleGuard allowedRoles={["ADMIN"]}>
+        <PlatformIntegrationsPage />
+      </RoleGuard>
+    ),
   },
   {
     path: "setting",
