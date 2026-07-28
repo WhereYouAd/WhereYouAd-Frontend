@@ -1,11 +1,11 @@
 import type { ReactElement, ReactNode } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
-import type { TMemberRole, TWorkspace } from "@/types/workspace/workspace";
+import type { TMemberRole } from "@/types/workspace/workspace";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
-import { getMyWorkspaces } from "@/api/workspace/org";
+import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -14,41 +14,27 @@ interface IRoleGuardProps {
   allowedRoles: TMemberRole[];
 }
 
-function resolveRoleFromWorkspaces(
-  workspaces: TWorkspace[],
-  selectedOrgId: number | null,
-  myRoleFromStore: TMemberRole | null,
-): TMemberRole | null {
-  if (selectedOrgId != null) {
-    const selected = workspaces.find((w) => w.orgId === selectedOrgId);
-    if (selected) return selected.myRole;
-  }
-
-  const current =
-    workspaces.find((w) => w.isCurrentWorkspace) ?? workspaces[0] ?? null;
-  if (current) return current.myRole;
-
-  return myRoleFromStore;
-}
-
 function RoleGuard({
   children,
   allowedRoles,
 }: IRoleGuardProps): ReactElement | null {
   const { workspaceId } = useParams<{ workspaceId?: string }>();
-  const myRole = useWorkspaceStore((s) => s.myRole);
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const {
     data: workspaces,
-    isPending,
-    isError,
+    isPending: isWorkspacesPending,
+    isError: isWorkspacesError,
   } = useCoreQuery(QUERY_KEYS.workspace.list(), getMyWorkspaces);
+  const { isFetched: isSavedWorkspaceFetched } = useCoreQuery(
+    QUERY_KEYS.workspace.saved(),
+    getSavedWorkspace,
+  );
 
-  // 워크스페이스 목록 로드 전 -> 렌더 보류
-  if (isPending) {
+  // 워크스페이스 목록·저장 워크스페이스 조회 완료 전 -> 렌더 보류
+  if (isWorkspacesPending || !isSavedWorkspaceFetched) {
     return null;
   }
-  if (isError || !workspaces?.length) {
+  if (isWorkspacesError || !workspaces?.length) {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -70,14 +56,13 @@ function RoleGuard({
   }
 
   // /integrations 등 workspaceId 없는 라우트
-  // selectedOrgId 초기화를 기다리지 않고 목록에서 역할 판정
-  const resolvedRole = resolveRoleFromWorkspaces(
-    workspaces,
-    selectedOrgId,
-    myRole,
-  );
+  // MainLayout에서 selectedOrgId 초기화 완료 전까지 보류
+  if (selectedOrgId === null) {
+    return null;
+  }
 
-  if (resolvedRole === null || !allowedRoles.includes(resolvedRole)) {
+  const selectedWorkspace = workspaces.find((w) => w.orgId === selectedOrgId);
+  if (!selectedWorkspace || !allowedRoles.includes(selectedWorkspace.myRole)) {
     return <Navigate to="/dashboard" replace />;
   }
 
