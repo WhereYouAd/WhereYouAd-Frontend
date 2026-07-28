@@ -5,6 +5,7 @@ import type { IApiErrorResponse } from "@/types/common/common";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
+import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
 
 import Button from "@/components/common/button/Button";
 import NotificationSection from "@/components/setting/NotificationSection";
@@ -87,6 +88,14 @@ export default function Setting() {
     QUERY_KEYS.workspace.list(),
     getMyWorkspaces,
   );
+
+  const {
+    data: notificationSettings,
+    isLoading: isNotificationLoading,
+    isError: isNotificationError,
+    error: notificationError,
+  } = useMyNotificationSettings();
+
   const currentWorkspaceName = useMemo(() => {
     if (selectedOrgId === null) return null;
     return workspaces?.find((w) => w.orgId === selectedOrgId)?.name ?? null;
@@ -94,6 +103,9 @@ export default function Setting() {
 
   const workspaceNotifiDisabled =
     selectedOrgId == null || (!isWorkspacesLoading && !currentWorkspaceName);
+
+  const isNotificationSectionLoading =
+    selectedOrgId !== null && isNotificationLoading;
 
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
@@ -251,9 +263,36 @@ export default function Setting() {
   }, [setPreview]);
 
   useEffect(() => {
-    setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
-    setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
-  }, [selectedOrgId]);
+    if (!notificationSettings) {
+      setSavedChannel(DEFAULT_CHANNEL);
+      setDraftChannel(DEFAULT_CHANNEL);
+      setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+      setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+      return;
+    }
+
+    const nextChannel = {
+      browserPush: notificationSettings.isBrowserPushEnabled,
+      emailNotif: notificationSettings.isEmailEnabled,
+    };
+    const nextWorkspace = {
+      clickAlarm: notificationSettings.alertClicks,
+      weeklyReport: notificationSettings.alertReport,
+    };
+
+    setSavedChannel(nextChannel);
+    setDraftChannel(nextChannel);
+    setSavedWorkspaceNotif(nextWorkspace);
+    setDraftWorkspaceNotif(nextWorkspace);
+  }, [notificationSettings]);
+
+  useEffect(() => {
+    if (isNotificationError) {
+      toast.error(
+        notificationError?.message ?? "알림 설정을 불러오는데 실패했습니다",
+      );
+    }
+  }, [isNotificationError, notificationError]);
 
   return (
     <section className="w-full flex flex-col gap-8">
@@ -291,7 +330,7 @@ export default function Setting() {
           />
         )}
 
-        {isLoading ? (
+        {isLoading || isNotificationSectionLoading ? (
           <div className="animate-pulse h-64 rounded-lg bg-surface-200" />
         ) : (
           <NotificationSection
@@ -328,7 +367,7 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={!hasChanges || isLoading}
+          disabled={!hasChanges || isLoading || isNotificationLoading}
         >
           변경사항 저장하기
         </Button>
