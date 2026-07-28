@@ -88,6 +88,7 @@ export const footerNav: INavItem[] = [
     label: "플랫폼 연동",
     icon: ConnectIcon,
     path: "/integrations",
+    requiredRole: "ADMIN",
   },
   {
     id: "settings",
