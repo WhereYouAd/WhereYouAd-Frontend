@@ -84,5 +84,6 @@ export const QUERY_KEYS = {
   notification: {
     settings: (orgId: number | null) =>
       ["notification", "settings", orgId] as const,
+    members: (orgId: number) => ["notification", "members", orgId] as const,
   },
 } as const;
