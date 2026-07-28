@@ -1,8 +1,9 @@
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 function handler(event) {
   var response = event.response;
   var headers = response.headers;
 
-  headers['content-security-policy'] = {
+  headers["content-security-policy"] = {
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-eval'",
@@ -13,7 +14,7 @@ function handler(event) {
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "object-src 'none'",
-    ].join('; '),
+    ].join("; "),
   };
 
   return response;
