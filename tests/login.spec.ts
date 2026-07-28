@@ -1,26 +1,9 @@
-import { expect, test } from "@playwright/test";
-
-const email = process.env.E2E_USER_EMAIL;
-const password = process.env.E2E_USER_PASSWORD;
+import { expect, test } from "./fixtures/auth";
 
 test.describe("로그인 E2E", () => {
-  test.beforeEach(() => {
-    test.skip(
-      !email || !password,
-      "E2E_USER_EMAIL / E2E_USER_PASSWORD 가 .env 에 필요합니다.",
-    );
-  });
-
-  test("이메일 로그인 후 대시보드에 머문다", async ({ page }) => {
-    await page.goto("/login");
-    await expect(page.getByRole("heading", { name: "로그인" })).toBeVisible();
-
-    await page.getByPlaceholder("이메일을 입력하세요").fill(email!);
-    await page.getByPlaceholder("비밀번호를 입력하세요").fill(password!);
-    await page.getByRole("button", { name: "로그인하기" }).click();
-
-    await expect(page).toHaveURL(/\/dashboard/);
-
+  test("이메일 로그인 후 대시보드에 머문다", async ({
+    dashboardPage: page,
+  }) => {
     const sidebar = page.getByRole("navigation", {
       name: "사이드바 내비게이션",
     });
