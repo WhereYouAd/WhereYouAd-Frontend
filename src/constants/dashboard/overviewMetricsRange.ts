@@ -1,7 +1,7 @@
 /** 통합 대시보드 — 일별 지표 ROAS 순위 등 */
 export const OVERVIEW_DAILY_METRICS_RANGE = {
-  startDate: "2026-03-23",
-  endDate: "2026-07-07",
+  startDate: "2026-06-15",
+  endDate: "2026-07-15",
 } as const;
 
 /** AI 분석 — ROAS 동일 구간 말일 기준 최근 30일(한 달), 구간 시작일 이전으로는 확장하지 않음 */
