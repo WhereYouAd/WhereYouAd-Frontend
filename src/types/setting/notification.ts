@@ -1,4 +1,4 @@
-import type { TMemberRole } from "../workspace/workspace";
+import type { TMemberRole } from "@/types/workspace/workspace";
 
 //공통 empty data
 export type TNotificationEmptyData = Record<string, never>;
