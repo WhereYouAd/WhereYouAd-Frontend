@@ -80,4 +80,9 @@ export const QUERY_KEYS = {
     detail: (orgId: number | null, timelineId: number | null) =>
       ["timeline", "detail", orgId, timelineId] as const,
   },
+
+  notification: {
+    settings: (orgId: number | null) =>
+      ["notification", "settings", orgId] as const,
+  },
 } as const;

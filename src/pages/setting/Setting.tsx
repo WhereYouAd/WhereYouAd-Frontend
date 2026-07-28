@@ -1,10 +1,11 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
+import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
 
 import Button from "@/components/common/button/Button";
 import NotificationSection from "@/components/setting/NotificationSection";
@@ -87,6 +88,19 @@ export default function Setting() {
     QUERY_KEYS.workspace.list(),
     getMyWorkspaces,
   );
+
+  const {
+    data: notificationSettings,
+    isLoading: isNotificationLoading,
+    isRefetching: isNotificationRefetching,
+    isError: isNotificationError,
+    error: notificationError,
+    errorUpdatedAt: notificationErrorUpdatedAt,
+    refetch: refetchNotificationSettings,
+  } = useMyNotificationSettings();
+
+  const lastNotifiedNotificationErrorAtRef = useRef(0);
+
   const currentWorkspaceName = useMemo(() => {
     if (selectedOrgId === null) return null;
     return workspaces?.find((w) => w.orgId === selectedOrgId)?.name ?? null;
@@ -94,6 +108,10 @@ export default function Setting() {
 
   const workspaceNotifiDisabled =
     selectedOrgId == null || (!isWorkspacesLoading && !currentWorkspaceName);
+
+  const isNotificationSectionLoading =
+    selectedOrgId !== null &&
+    (isNotificationLoading || isNotificationRefetching);
 
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
@@ -129,7 +147,8 @@ export default function Setting() {
 
   const hasNotificationChanges = hasChannelChanges || hasWorkspaceNotifChanges;
 
-  const hasChanges = hasAccountChanges || hasNotificationChanges;
+  const hasChanges =
+    hasAccountChanges || (!isNotificationError && hasNotificationChanges);
 
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
@@ -197,18 +216,27 @@ export default function Setting() {
         setIsImageDeleted(false);
       }
 
-      if (hasChannelChanges) {
+      const canSaveNotification = !isNotificationError;
+
+      if (canSaveNotification && hasChannelChanges) {
         setSavedChannel(draftChannel);
         // TODO: 알림 설정 API 연동
       }
-      if (hasWorkspaceNotifChanges && selectedOrgId != null) {
+      if (
+        canSaveNotification &&
+        hasWorkspaceNotifChanges &&
+        selectedOrgId != null
+      ) {
         setSavedWorkspaceNotif(draftWorkspaceNotif);
       }
 
       const savedWorkspaceNotifiThisTime =
-        hasWorkspaceNotifChanges && selectedOrgId != null;
+        canSaveNotification &&
+        hasWorkspaceNotifChanges &&
+        selectedOrgId != null;
       const savedAnyNotification =
-        hasChannelChanges || savedWorkspaceNotifiThisTime;
+        (canSaveNotification && hasChannelChanges) ||
+        savedWorkspaceNotifiThisTime;
 
       toast.success(
         hasAccountChanges && savedAnyNotification
@@ -251,9 +279,44 @@ export default function Setting() {
   }, [setPreview]);
 
   useEffect(() => {
-    setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
-    setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
-  }, [selectedOrgId]);
+    //워크스페이스 미선택시에만 기본값
+    if (selectedOrgId === null) {
+      setSavedChannel(DEFAULT_CHANNEL);
+      setDraftChannel(DEFAULT_CHANNEL);
+      setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+      setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+      return;
+    }
+
+    if (!notificationSettings) return; //로딩,에러면 손대지 않음
+
+    const nextChannel = {
+      browserPush: notificationSettings.isBrowserPushEnabled,
+      emailNotif: notificationSettings.isEmailEnabled,
+    };
+    const nextWorkspace = {
+      clickAlarm: notificationSettings.orgAlertClicks,
+      weeklyReport: notificationSettings.orgAlertReport,
+    };
+
+    setSavedChannel(nextChannel);
+    setDraftChannel(nextChannel);
+    setSavedWorkspaceNotif(nextWorkspace);
+    setDraftWorkspaceNotif(nextWorkspace);
+  }, [selectedOrgId, notificationSettings]);
+
+  useEffect(() => {
+    if (!isNotificationError || notificationErrorUpdatedAt === 0) return;
+    if (
+      lastNotifiedNotificationErrorAtRef.current === notificationErrorUpdatedAt
+    )
+      return;
+
+    lastNotifiedNotificationErrorAtRef.current = notificationErrorUpdatedAt;
+    toast.error(
+      notificationError?.message ?? "알림 설정을 불러오는데 실패했습니다",
+    );
+  }, [isNotificationError, notificationError, notificationErrorUpdatedAt]);
 
   return (
     <section className="w-full flex flex-col gap-8">
@@ -291,8 +354,25 @@ export default function Setting() {
           />
         )}
 
-        {isLoading ? (
+        {isLoading || isNotificationSectionLoading ? (
           <div className="animate-pulse h-64 rounded-lg bg-surface-200" />
+        ) : isNotificationError ? (
+          <div className="flex min-h-40 flex-col items-center justify-center gap-4 rounded-lg bg-surface-100 p-8">
+            <p className="text-center font-body2 text-text-muted">
+              {notificationError?.message ??
+                "알림 설정을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요"}
+            </p>
+            <Button
+              variant="outline"
+              size="small"
+              type="button"
+              onClick={() => {
+                refetchNotificationSettings();
+              }}
+            >
+              다시 시도
+            </Button>
+          </div>
         ) : (
           <NotificationSection
             email={draftProfile.email}
@@ -328,7 +408,7 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={!hasChanges || isLoading}
+          disabled={!hasChanges || isLoading || isNotificationSectionLoading}
         >
           변경사항 저장하기
         </Button>
