@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -92,10 +92,14 @@ export default function Setting() {
   const {
     data: notificationSettings,
     isLoading: isNotificationLoading,
+    isRefetching: isNotificationRefetching,
     isError: isNotificationError,
     error: notificationError,
+    errorUpdatedAt: notificationErrorUpdatedAt,
     refetch: refetchNotificationSettings,
   } = useMyNotificationSettings();
+
+  const lastNotifiedNotificationErrorAtRef = useRef(0);
 
   const currentWorkspaceName = useMemo(() => {
     if (selectedOrgId === null) return null;
@@ -106,7 +110,8 @@ export default function Setting() {
     selectedOrgId == null || (!isWorkspacesLoading && !currentWorkspaceName);
 
   const isNotificationSectionLoading =
-    selectedOrgId !== null && isNotificationLoading;
+    selectedOrgId !== null &&
+    (isNotificationLoading || isNotificationRefetching);
 
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
@@ -299,6 +304,19 @@ export default function Setting() {
     setSavedWorkspaceNotif(nextWorkspace);
     setDraftWorkspaceNotif(nextWorkspace);
   }, [selectedOrgId, notificationSettings]);
+
+  useEffect(() => {
+    if (!isNotificationError || notificationErrorUpdatedAt === 0) return;
+    if (
+      lastNotifiedNotificationErrorAtRef.current === notificationErrorUpdatedAt
+    )
+      return;
+
+    lastNotifiedNotificationErrorAtRef.current = notificationErrorUpdatedAt;
+    toast.error(
+      notificationError?.message ?? "알림 설정을 불러오는데 실패했습니다",
+    );
+  }, [isNotificationError, notificationError, notificationErrorUpdatedAt]);
 
   return (
     <section className="w-full flex flex-col gap-8">
