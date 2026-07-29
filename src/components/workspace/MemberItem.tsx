@@ -34,7 +34,7 @@ export default function MemberItem({
 }: TProps) {
   const canToggleReceive =
     isReceive !== undefined &&
-    isNotificationLoading &&
+    !isNotificationLoading &&
     !isReceiveUpdating &&
     !!onReceiveToggle;
   return (
