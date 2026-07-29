@@ -124,19 +124,52 @@ export default function MemberManagement() {
     return map;
   }, [notificationMembersQuery.data]);
 
+  // 로드된 멤버 중 알림 매칭이 비어 있으면 알림 목록 다음 페이지를 계속 가져옴
+  useEffect(() => {
+    if (members.length === 0) return;
+    if (!notificationMembersQuery.hasNextPage) return;
+    if (
+      notificationMembersQuery.isLoading ||
+      notificationMembersQuery.isFetchingNextPage
+    ) {
+      return;
+    }
+
+    const hasMissingReceive = members.some(
+      (member) => !notificationReceiveByEmail.has(member.email),
+    );
+    if (!hasMissingReceive) return;
+
+    void notificationMembersQuery.fetchNextPage();
+  }, [
+    members,
+    notificationReceiveByEmail,
+    notificationMembersQuery.hasNextPage,
+    notificationMembersQuery.isLoading,
+    notificationMembersQuery.isFetchingNextPage,
+    notificationMembersQuery.fetchNextPage,
+  ]);
+
   useEffect(() => {
     const target = observerRef.current;
     if (!target) return;
-    if (!membersQuery.hasNextPage) return;
+    if (!membersQuery.hasNextPage && !notificationMembersQuery.hasNextPage) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
-        if (
-          firstEntry?.isIntersecting &&
-          membersQuery.hasNextPage &&
-          !membersQuery.isFetchingNextPage
-        ) {
+        if (!firstEntry?.isIntersecting) return;
+
+        if (membersQuery.hasNextPage && !membersQuery.isFetchingNextPage) {
           void membersQuery.fetchNextPage();
+        }
+        if (
+          notificationMembersQuery.hasNextPage &&
+          !notificationMembersQuery.isFetchingNextPage
+        ) {
+          void notificationMembersQuery.fetchNextPage();
         }
       },
       {
@@ -152,6 +185,9 @@ export default function MemberManagement() {
     membersQuery.hasNextPage,
     membersQuery.isFetchingNextPage,
     membersQuery.fetchNextPage,
+    notificationMembersQuery.hasNextPage,
+    notificationMembersQuery.isFetchingNextPage,
+    notificationMembersQuery.fetchNextPage,
   ]);
 
   const handleRoleChange = async (
