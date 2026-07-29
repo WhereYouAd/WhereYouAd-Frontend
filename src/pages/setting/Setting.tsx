@@ -6,6 +6,8 @@ import type { IApiErrorResponse } from "@/types/common/common";
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
 import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
+import { useUpdateAlertsNotificationSettings } from "@/hooks/setting/useUpdateAlertsNotificationSettings";
+import { useUpdateChannelNotificationSettings } from "@/hooks/setting/useUpdateChannelNotifiacationSettings";
 
 import Button from "@/components/common/button/Button";
 import NotificationSection from "@/components/setting/NotificationSection";
@@ -113,6 +115,9 @@ export default function Setting() {
     selectedOrgId !== null &&
     (isNotificationLoading || isNotificationRefetching);
 
+  const updateChannels = useUpdateChannelNotificationSettings();
+  const updateAlerts = useUpdateAlertsNotificationSettings();
+
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
     onPickFile(e);
@@ -218,15 +223,22 @@ export default function Setting() {
 
       const canSaveNotification = !isNotificationError;
 
-      if (canSaveNotification && hasChannelChanges) {
+      if (canSaveNotification && hasChannelChanges && selectedOrgId != null) {
+        await updateChannels.mutateAsync({
+          isBrowserPushEnabled: draftChannel.browserPush,
+          isEmailEnabled: draftChannel.emailNotif,
+        });
         setSavedChannel(draftChannel);
-        // TODO: 알림 설정 API 연동
       }
       if (
         canSaveNotification &&
         hasWorkspaceNotifChanges &&
         selectedOrgId != null
       ) {
+        await updateAlerts.mutateAsync({
+          alertClicks: draftWorkspaceNotif.clickAlarm,
+          alertReport: draftWorkspaceNotif.weeklyReport,
+        });
         setSavedWorkspaceNotif(draftWorkspaceNotif);
       }
 

@@ -12,6 +12,7 @@ import {
 
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 import { useNotificationMembers } from "@/hooks/setting/useNotificationMembers";
+import { useUpdateNotificationMembers } from "@/hooks/setting/useUpdateNotificationMembers";
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
@@ -263,6 +264,31 @@ export default function MemberManagement() {
       console.error("팀원 삭제 실패", error);
     }
   };
+  const updateNotificationMembersMutation = useUpdateNotificationMembers(orgId);
+
+  const handleReceiveToggle = async (email: string) => {
+    const current = notificationReceiveByEmail.get(email);
+    if (!current) return;
+
+    try {
+      await updateNotificationMembersMutation.mutateAsync({
+        members: [
+          {
+            membershipId: current.membershipId,
+            isReceive: !current.isReceive,
+          },
+        ],
+      });
+      toast.success(
+        !current.isReceive
+          ? "알림 수신이 켜졌습니다"
+          : "알림 수신이 꺼졌습니다",
+      );
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "알림 수신 변경에 실패했습니다");
+    }
+  };
 
   if (!Number.isFinite(orgId) || orgId <= 0) {
     return (
@@ -324,6 +350,8 @@ export default function MemberManagement() {
             notificationMembersQuery.isFetchingNextPage
           }
           isNotificationError={notificationMembersQuery.isError}
+          onReceiveToggle={handleReceiveToggle}
+          isReceiveUpdating={updateNotificationMembersMutation.isPending}
         />
 
         <PermissionTable />

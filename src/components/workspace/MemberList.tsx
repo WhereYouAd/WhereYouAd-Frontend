@@ -29,6 +29,8 @@ type TMemberListProps = {
   >;
   isNotificationLoading: boolean;
   isNotificationError: boolean;
+  onReceiveToggle: (email: string) => void;
+  isReceiveUpdating?: boolean;
 };
 
 export default function MemberList({
@@ -43,6 +45,8 @@ export default function MemberList({
   notificationReceiveByEmail,
   isNotificationLoading,
   isNotificationError,
+  onReceiveToggle,
+  isReceiveUpdating = false,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
@@ -116,10 +120,12 @@ export default function MemberList({
                   notificationReceiveByEmail.get(member.email)?.isReceive
                 }
                 isNotificationLoading={isNotificationLoading}
+                isReceiveUpdating={isReceiveUpdating}
                 onRoleChange={(newRole) =>
                   onRoleChange(member.memberId, newRole)
                 }
                 onDeleteClick={() => onDeleteClick(member)}
+                onReceiveToggle={() => onReceiveToggle(member.email)}
               />
             ))}
           </ul>

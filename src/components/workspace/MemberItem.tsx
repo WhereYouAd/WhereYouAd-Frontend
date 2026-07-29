@@ -17,17 +17,26 @@ type TProps = {
   member: TWorkspaceMember;
   isReceive?: boolean;
   isNotificationLoading: boolean;
+  isReceiveUpdating?: boolean;
   onRoleChange: (newRole: TMemberRole) => void;
   onDeleteClick: () => void;
+  onReceiveToggle?: () => void;
 };
 
 export default function MemberItem({
   member,
   isReceive,
   isNotificationLoading,
+  isReceiveUpdating = false,
   onRoleChange,
   onDeleteClick,
+  onReceiveToggle,
 }: TProps) {
+  const canToggleReceive =
+    isReceive !== undefined &&
+    isNotificationLoading &&
+    !isReceiveUpdating &&
+    !!onReceiveToggle;
   return (
     <li className="flex items-center justify-between py-5 gap-4 tablet:items-start">
       <div className="flex items-center gap-4 w-full min-w-0">
@@ -51,13 +60,18 @@ export default function MemberItem({
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <span
+        <button
+          type="button"
+          disabled={!canToggleReceive}
+          onClick={onReceiveToggle}
           className={twMerge(
             "inline-flex h-5 w-5 items-center justify-center",
-            isNotificationLoading && "animate-pulse",
+            (isNotificationLoading || isReceiveUpdating) && "animate-pulse",
             isReceive === false && "text-text-muted opacity-70",
             isReceive === true && "text-primary-400/90",
             isReceive === undefined && "text-text-muted",
+            canToggleReceive && "cursor-pointer hover:opacity-80",
+            !canToggleReceive && "cursor-not-allowed",
           )}
           aria-label={
             isReceive === true
@@ -79,7 +93,7 @@ export default function MemberItem({
           ) : (
             <BellOffIcon className="h-5 w-5" />
           )}
-        </span>
+        </button>
         {member.isMe ? (
           <span
             className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${
