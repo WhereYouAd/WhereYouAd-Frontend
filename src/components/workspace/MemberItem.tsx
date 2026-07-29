@@ -64,6 +64,7 @@ export default function MemberItem({
           type="button"
           disabled={!canToggleReceive}
           onClick={onReceiveToggle}
+          aria-pressed={isReceive}
           className={twMerge(
             "inline-flex h-5 w-5 items-center justify-center",
             (isNotificationLoading || isReceiveUpdating) && "animate-pulse",
@@ -78,7 +79,9 @@ export default function MemberItem({
               ? "알림 수신 중"
               : isReceive === false
                 ? "알림 수신 안 함"
-                : "알림 설정 확인 중"
+                : isNotificationLoading
+                  ? "알림 설정 확인 중"
+                  : "알림 설정 정보 없음"
           }
           title={
             isReceive === true
