@@ -75,6 +75,7 @@ export default function Setting() {
     useState<IWorkspaceNotificationSettings>(DEFAULT_WORKSPACE_NOTIF);
   const [isImageDeleted, setIsImageDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const {
     fileRef,
     file,
@@ -102,6 +103,7 @@ export default function Setting() {
   } = useMyNotificationSettings();
 
   const lastNotifiedNotificationErrorAtRef = useRef(0);
+  const isSavingRef = useRef(false);
 
   const currentWorkspaceName = useMemo(() => {
     if (selectedOrgId === null) return null;
@@ -186,6 +188,8 @@ export default function Setting() {
   };
 
   const handleSave = async () => {
+    if (isSavingRef.current) return;
+
     if (hasPasswordChanges) {
       const errors = validatePassword();
       setPasswordErrors(errors);
@@ -197,71 +201,91 @@ export default function Setting() {
         confirmNewPassword: "",
       });
     }
+
+    isSavingRef.current = true;
+    setIsSaving(true);
+
+    let savedAccount = false;
+    let savedAnyNotification = false;
+
     try {
       if (hasAccountChanges) {
-        const res = await updateMyInfo({
-          name: draftProfile.name,
-          oldPassword: currentPassword || undefined,
-          newPassword: newPassword || undefined,
-          isImageDeleted,
-          imageFile: file,
-        });
-        setSavedProfile({
-          name: res.data.name,
-          profileImageUrl: res.data.profileImageUrl,
-        });
-        setDraftProfile((prev) => ({
-          ...prev,
-          name: res.data.name,
-        }));
-        setPreview(res.data.profileImageUrl);
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmNewPassword("");
-        setIsImageDeleted(false);
+        try {
+          const res = await updateMyInfo({
+            name: draftProfile.name,
+            oldPassword: currentPassword || undefined,
+            newPassword: newPassword || undefined,
+            isImageDeleted,
+            imageFile: file,
+          });
+          setSavedProfile({
+            name: res.data.name,
+            profileImageUrl: res.data.profileImageUrl,
+          });
+          setDraftProfile((prev) => ({
+            ...prev,
+            name: res.data.name,
+          }));
+          setPreview(res.data.profileImageUrl);
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmNewPassword("");
+          setIsImageDeleted(false);
+          savedAccount = true;
+        } catch (e) {
+          const error = e as IApiErrorResponse;
+          toast.error(error.message ?? "회원정보수정에 실패했습니다");
+          return;
+        }
       }
 
       const canSaveNotification = !isNotificationError;
-
-      if (canSaveNotification && hasChannelChanges && selectedOrgId != null) {
-        await updateChannels.mutateAsync({
-          isBrowserPushEnabled: draftChannel.browserPush,
-          isEmailEnabled: draftChannel.emailNotif,
-        });
-        setSavedChannel(draftChannel);
-      }
-      if (
-        canSaveNotification &&
-        hasWorkspaceNotifChanges &&
-        selectedOrgId != null
-      ) {
-        await updateAlerts.mutateAsync({
-          alertClicks: draftWorkspaceNotif.clickAlarm,
-          alertReport: draftWorkspaceNotif.weeklyReport,
-        });
-        setSavedWorkspaceNotif(draftWorkspaceNotif);
-      }
-
-      const savedChannelThisTime =
+      const shouldSaveChannel =
         canSaveNotification && hasChannelChanges && selectedOrgId != null;
-
-      const savedWorkspaceNotifiThisTime =
+      const shouldSaveAlerts =
         canSaveNotification &&
         hasWorkspaceNotifChanges &&
         selectedOrgId != null;
-      const savedAnyNotification =
-        savedChannelThisTime || savedWorkspaceNotifiThisTime;
 
-      toast.success(
-        hasAccountChanges && savedAnyNotification
-          ? "설정이 저장되었습니다"
-          : savedAnyNotification
-            ? "알림 설정이 저장되었습니다"
-            : "회원정보가 수정되었습니다",
-      );
-    } catch (e) {
-      const error = e as IApiErrorResponse;
-      toast.error(error.message ?? "회원정보수정에 실패했습니다");
+      if (shouldSaveChannel || shouldSaveAlerts) {
+        try {
+          if (shouldSaveChannel) {
+            await updateChannels.mutateAsync({
+              isBrowserPushEnabled: draftChannel.browserPush,
+              isEmailEnabled: draftChannel.emailNotif,
+            });
+            setSavedChannel(draftChannel);
+          }
+          if (shouldSaveAlerts) {
+            await updateAlerts.mutateAsync({
+              alertClicks: draftWorkspaceNotif.clickAlarm,
+              alertReport: draftWorkspaceNotif.weeklyReport,
+            });
+            setSavedWorkspaceNotif(draftWorkspaceNotif);
+          }
+          savedAnyNotification = true;
+        } catch (e) {
+          const error = e as IApiErrorResponse;
+          if (savedAccount) {
+            toast.success("회원정보가 수정되었습니다");
+          }
+          toast.error(error.message ?? "알림 설정 저장에 실패했습니다");
+          return;
+        }
+      }
+
+      if (savedAccount || savedAnyNotification) {
+        toast.success(
+          savedAccount && savedAnyNotification
+            ? "설정이 저장되었습니다"
+            : savedAnyNotification
+              ? "알림 설정이 저장되었습니다"
+              : "회원정보가 수정되었습니다",
+        );
+      }
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
   };
 
@@ -422,7 +446,9 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={!hasChanges || isLoading || isNotificationSectionLoading}
+          disabled={
+            !hasChanges || isLoading || isNotificationSectionLoading || isSaving
+          }
         >
           변경사항 저장하기
         </Button>
