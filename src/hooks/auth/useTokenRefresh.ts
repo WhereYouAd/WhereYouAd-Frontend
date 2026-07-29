@@ -19,7 +19,7 @@ export const useTokenRefresh = () => {
     const initAuth = async () => {
       try {
         const { data } = await reissueToken();
-        if (data.accessToken) {
+        if (data?.accessToken) {
           setAccessToken(data.accessToken);
         }
       } catch {

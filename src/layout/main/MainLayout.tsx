@@ -40,6 +40,7 @@ export default function MainLayout() {
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
   const setMyRole = useWorkspaceStore((s) => s.setMyRole);
+  const myRole = useWorkspaceStore((s) => s.myRole);
 
   const savedWorkspaceQuery = useCoreQuery(
     QUERY_KEYS.workspace.saved(),
@@ -59,7 +60,15 @@ export default function MainLayout() {
 
   useEffect(() => {
     if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
-    if (selectedOrgId !== null) return;
+
+    // orgId는 있는데 myRole만 null/불일치인 경우(새로고침 등) 역할 동기화
+    if (selectedOrgId !== null) {
+      const workspace = workspaces.find((w) => w.orgId === selectedOrgId);
+      if (workspace && myRole !== workspace.myRole) {
+        setMyRole(workspace.myRole);
+      }
+      return;
+    }
 
     const savedId = savedData?.orgId;
     const isExist = workspaces.some((w) => w.orgId === savedId);
@@ -84,6 +93,7 @@ export default function MainLayout() {
     setSelectedOrgId,
     setMyRole,
     selectedOrgId,
+    myRole,
   ]);
 
   const pathname = normalizePathname(location.pathname);

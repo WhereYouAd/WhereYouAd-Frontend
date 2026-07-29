@@ -126,6 +126,10 @@ export default function Sidebar() {
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
     [selectedOrgId, myRole],
   );
+  const footerNavByRole = useMemo(
+    () => filterNavByRole(footerNav, myRole),
+    [myRole],
+  );
 
   const handleFooterItemClick = useCallback(
     (id: string, hasChildren: boolean) => {
@@ -235,7 +239,7 @@ export default function Sidebar() {
         <div
           className={twMerge("mt-2 pb-3 shrink-0", isCollapsed ? "" : "px-2")}
         >
-          {footerNav.map((item) => {
+          {footerNavByRole.map((item) => {
             const isActive =
               item.path != null ? isPathMatch(pathname, item.path) : false;
 
