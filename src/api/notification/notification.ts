@@ -39,9 +39,9 @@ export const updateChannelNotificationSettings = async (
   orgId: number,
   body: IUpdateChannelNotificationSettingsRequest,
 ): Promise<TNotificationEmptyData> => {
-  const { data } = await axiosInstance.put<
+  const { data } = await axiosInstance.patch<
     ICommonResponse<TNotificationEmptyData>
-  >(`/api/org/notification/settings/${orgId}/channels`, body);
+  >(`/api/notification/settings/${orgId}/channels`, body);
   return data.data;
 };
 
@@ -50,7 +50,7 @@ export const updateAlertsNotificationSettings = async (
   orgId: number,
   body: IUpdateAlertsNotificationSettingsRequest,
 ): Promise<TNotificationEmptyData> => {
-  const { data } = await axiosInstance.put<
+  const { data } = await axiosInstance.patch<
     ICommonResponse<TNotificationEmptyData>
   >(`/api/notification/settings/${orgId}/alerts`, body);
   return data.data;
@@ -61,7 +61,7 @@ export const updateNotificationMembers = async (
   orgId: number,
   body: IUpdateNotificationMembersRequest,
 ): Promise<TNotificationEmptyData> => {
-  const { data } = await axiosInstance.put<
+  const { data } = await axiosInstance.patch<
     ICommonResponse<TNotificationEmptyData>
   >(`/api/notification/settings/${orgId}/members`, body);
   return data.data;
