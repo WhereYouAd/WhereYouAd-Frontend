@@ -242,13 +242,15 @@ export default function Setting() {
         setSavedWorkspaceNotif(draftWorkspaceNotif);
       }
 
+      const savedChannelThisTime =
+        canSaveNotification && hasChannelChanges && selectedOrgId != null;
+
       const savedWorkspaceNotifiThisTime =
         canSaveNotification &&
         hasWorkspaceNotifChanges &&
         selectedOrgId != null;
       const savedAnyNotification =
-        (canSaveNotification && hasChannelChanges) ||
-        savedWorkspaceNotifiThisTime;
+        savedChannelThisTime || savedWorkspaceNotifiThisTime;
 
       toast.success(
         hasAccountChanges && savedAnyNotification
