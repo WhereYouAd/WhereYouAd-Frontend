@@ -106,7 +106,8 @@ axiosInstance.interceptors.response.use(
       try {
         const { data } = await authInstance.post("/api/auth/reissue");
 
-        const newAccessToken = data.data.accessToken;
+        const newAccessToken = data.data?.accessToken;
+        if (!newAccessToken) throw new Error("토큰 재발급 실패");
 
         useAuthStore.getState().setAccessToken(newAccessToken);
         onRefreshed(newAccessToken);

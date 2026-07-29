@@ -31,6 +31,7 @@ const useAuthStore = create<IAuthState>((set) => ({
     localStorage.removeItem("hasSession");
     set({
       isLoggedIn: false,
+      isTokenInitialized: false,
       accessToken: null,
       email: "",
       socialId: null,
