@@ -1,6 +1,6 @@
 import type { IUpdateAlertsNotificationSettingsRequest } from "@/types/setting/notification";
 
-import { useCoreMutation } from "../customQuery";
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import { updateAlertsNotificationSettings } from "@/api/notification/notification";
 import { QUERY_KEYS } from "@/lib/queryKeys";

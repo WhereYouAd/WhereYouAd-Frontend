@@ -1,6 +1,6 @@
 import type { IUpdateChannelNotificationSettingsRequest } from "@/types/setting/notification";
 
-import { useCoreMutation } from "../customQuery";
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import { updateChannelNotificationSettings } from "@/api/notification/notification";
 import { QUERY_KEYS } from "@/lib/queryKeys";
