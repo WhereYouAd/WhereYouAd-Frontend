@@ -3,6 +3,10 @@ import type {
   IMyNotificationSettings,
   INotificationMembersData,
   INotificationMembersParams,
+  IUpdateAlertsNotificationSettingsRequest,
+  IUpdateChannelNotificationSettingsRequest,
+  IUpdateNotificationMembersRequest,
+  TNotificationEmptyData,
 } from "@/types/setting/notification";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -27,5 +31,38 @@ export const getNotificationMembers = async (
   >(`/api/notification/settings/${orgId}/members`, {
     params: params?.cursor ? { cursor: params.cursor } : undefined,
   });
+  return data.data;
+};
+
+//알림 채널 설정 변경
+export const updateChannelNotificationSettings = async (
+  orgId: number,
+  body: IUpdateChannelNotificationSettingsRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.put<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/org/notification/settings/${orgId}/channels`, body);
+  return data.data;
+};
+
+//알림 목표 설정 변경
+export const updateAlertsNotificationSettings = async (
+  orgId: number,
+  body: IUpdateAlertsNotificationSettingsRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.put<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/settings/${orgId}/alerts`, body);
+  return data.data;
+};
+
+//멤버 알림 수신 여부 변경
+export const updateNotificationMembers = async (
+  orgId: number,
+  body: IUpdateNotificationMembersRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.put<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/settings/${orgId}/members`, body);
   return data.data;
 };

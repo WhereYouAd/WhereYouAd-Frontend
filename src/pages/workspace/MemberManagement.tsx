@@ -114,11 +114,14 @@ export default function MemberManagement() {
   );
 
   const notificationReceiveByEmail = useMemo(() => {
-    const map = new Map<string, boolean>();
+    const map = new Map<string, { membershipId: number; isReceive: boolean }>();
     const pages = notificationMembersQuery.data?.pages ?? [];
     for (const page of pages) {
       for (const m of page.members) {
-        map.set(m.email, m.isReceive);
+        map.set(m.email, {
+          membershipId: m.membershipId,
+          isReceive: m.isReceive,
+        });
       }
     }
     return map;

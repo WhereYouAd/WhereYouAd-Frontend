@@ -295,8 +295,8 @@ export default function Setting() {
       emailNotif: notificationSettings.isEmailEnabled,
     };
     const nextWorkspace = {
-      clickAlarm: notificationSettings.orgAlertClicks,
-      weeklyReport: notificationSettings.orgAlertReport,
+      clickAlarm: notificationSettings.alertClicks,
+      weeklyReport: notificationSettings.alertReport,
     };
 
     setSavedChannel(nextChannel);

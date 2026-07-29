@@ -23,7 +23,10 @@ type TMemberListProps = {
   onDeleteClick: (member: TWorkspaceMember) => void;
   isFetchingNextPage: boolean;
   observerRef: RefObject<HTMLDivElement | null>;
-  notificationReceiveByEmail: Map<string, boolean>;
+  notificationReceiveByEmail: Map<
+    string,
+    { membershipId: number; isReceive: boolean }
+  >;
   isNotificationLoading: boolean;
   isNotificationError: boolean;
 };
@@ -109,7 +112,9 @@ export default function MemberList({
               <MemberItem
                 key={member.memberId}
                 member={member}
-                isReceive={notificationReceiveByEmail.get(member.email)}
+                isReceive={
+                  notificationReceiveByEmail.get(member.email)?.isReceive
+                }
                 isNotificationLoading={isNotificationLoading}
                 onRoleChange={(newRole) =>
                   onRoleChange(member.memberId, newRole)
