@@ -316,7 +316,10 @@ export default function MemberManagement() {
           isFetchingNextPage={membersQuery.isFetchingNextPage}
           observerRef={observerRef}
           notificationReceiveByEmail={notificationReceiveByEmail}
-          isNotificationLoading={notificationMembersQuery.isLoading}
+          isNotificationLoading={
+            notificationMembersQuery.isLoading ||
+            notificationMembersQuery.isFetchingNextPage
+          }
           isNotificationError={notificationMembersQuery.isError}
         />
 
