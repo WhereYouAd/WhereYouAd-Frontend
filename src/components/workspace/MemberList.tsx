@@ -74,16 +74,16 @@ export default function MemberList({
   return (
     <Card className="p-8">
       <header className="mb-7 flex items-start justify-between gap-4">
-        {isNotificationError && (
-          <p className="mb-4 font-body2 text-info-red">
-            알림 설정을 불러오지 못했습니다
-          </p>
-        )}
         <div>
           <h2 className="font-heading4 text-text-title">팀 구성원</h2>
           <p className="mt-2 font-body2 text-text-muted">
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
+          {isNotificationError && (
+            <p className="mt-2 font-body2 text-info-red">
+              알림 설정을 불러오지 못했습니다
+            </p>
+          )}
         </div>
         <Button
           type="button"
