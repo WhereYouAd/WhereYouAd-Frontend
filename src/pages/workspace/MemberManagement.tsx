@@ -11,6 +11,7 @@ import {
 } from "@/types/workspace/workspace";
 
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
+import { useNotificationMembers } from "@/hooks/setting/useNotificationMembers";
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
@@ -37,6 +38,8 @@ export default function MemberManagement() {
     useState<TWorkspaceMember | null>(null);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const notificationMembersQuery = useNotificationMembers(orgId);
 
   const memberCountQuery = useCoreQuery(
     QUERY_KEYS.workspace.memberCount(orgId),
@@ -109,6 +112,17 @@ export default function MemberManagement() {
       },
     },
   );
+
+  const notificationReceiveByEmail = useMemo(() => {
+    const map = new Map<string, boolean>();
+    const pages = notificationMembersQuery.data?.pages ?? [];
+    for (const page of pages) {
+      for (const m of page.members) {
+        map.set(m.email, m.isReceive);
+      }
+    }
+    return map;
+  }, [notificationMembersQuery.data]);
 
   useEffect(() => {
     const target = observerRef.current;
@@ -265,6 +279,9 @@ export default function MemberManagement() {
           onDeleteClick={openDeleteMember}
           isFetchingNextPage={membersQuery.isFetchingNextPage}
           observerRef={observerRef}
+          notificationReceiveByEmail={notificationReceiveByEmail}
+          isNotificationLoading={notificationMembersQuery.isLoading}
+          isNotificationError={notificationMembersQuery.isError}
         />
 
         <PermissionTable />

@@ -23,6 +23,9 @@ type TMemberListProps = {
   onDeleteClick: (member: TWorkspaceMember) => void;
   isFetchingNextPage: boolean;
   observerRef: RefObject<HTMLDivElement | null>;
+  notificationReceiveByEmail: Map<string, boolean>;
+  isNotificationLoading: boolean;
+  isNotificationError: boolean;
 };
 
 export default function MemberList({
@@ -34,6 +37,9 @@ export default function MemberList({
   onDeleteClick,
   isFetchingNextPage,
   observerRef,
+  notificationReceiveByEmail,
+  isNotificationLoading,
+  isNotificationError,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
@@ -68,6 +74,11 @@ export default function MemberList({
   return (
     <Card className="p-8">
       <header className="mb-7 flex items-start justify-between gap-4">
+        {isNotificationError && (
+          <p className="mb-4 font-body2 text-info-red">
+            알림 설정을 불러오지 못했습니다
+          </p>
+        )}
         <div>
           <h2 className="font-heading4 text-text-title">팀 구성원</h2>
           <p className="mt-2 font-body2 text-text-muted">
@@ -98,6 +109,8 @@ export default function MemberList({
               <MemberItem
                 key={member.memberId}
                 member={member}
+                isReceive={notificationReceiveByEmail.get(member.email)}
+                isNotificationLoading={isNotificationLoading}
                 onRoleChange={(newRole) =>
                   onRoleChange(member.memberId, newRole)
                 }
