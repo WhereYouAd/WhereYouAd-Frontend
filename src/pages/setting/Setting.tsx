@@ -7,7 +7,7 @@ import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
 import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
 import { useUpdateAlertsNotificationSettings } from "@/hooks/setting/useUpdateAlertsNotificationSettings";
-import { useUpdateChannelNotificationSettings } from "@/hooks/setting/useUpdateChannelNotifiacationSettings";
+import { useUpdateChannelNotificationSettings } from "@/hooks/setting/useUpdateChannelNotificationSettings";
 
 import Button from "@/components/common/button/Button";
 import NotificationSection from "@/components/setting/NotificationSection";
