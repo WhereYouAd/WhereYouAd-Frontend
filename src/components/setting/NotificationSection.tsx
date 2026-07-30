@@ -165,7 +165,9 @@ export default function NotificationSection({
               <div className="min-w-0">
                 <p className="font-body1 text-text-title">슬랙 연동하기</p>
                 <p className="font-body2 text-text-muted">
-                  {slackConnected ? "연동됨" : "Webhook URL로 연동"}
+                  {slackConnected
+                    ? "연동됨 • 알림 on/off는 저장 시 반영"
+                    : "Webhook URL로 연동"}
                 </p>
               </div>
             </div>
@@ -230,7 +232,9 @@ export default function NotificationSection({
               <div className="min-w-0">
                 <p className="font-body1 text-text-title">디스코드 연동하기</p>
                 <p className="font-body2 text-text-muted">
-                  {discordConnected ? "연동됨" : "Webhook URL로 연동"}
+                  {discordConnected
+                    ? "연동됨 • 알림 on/off는 저장 시 반영"
+                    : "Webhook URL로 연동"}
                 </p>
               </div>
             </div>

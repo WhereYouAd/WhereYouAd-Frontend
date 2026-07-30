@@ -38,6 +38,8 @@ export default function MemberManagement() {
   const [selectedDeleteMember, setSelectedDeleteMember] =
     useState<TWorkspaceMember | null>(null);
 
+  const [updatingMemberId, setUpdatingMemberId] = useState<number | null>(null);
+
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   const notificationMembersQuery = useNotificationMembers(orgId);
@@ -266,10 +268,11 @@ export default function MemberManagement() {
   };
   const updateNotificationMembersMutation = useUpdateNotificationMembers(orgId);
 
-  const handleReceiveToggle = async (email: string) => {
+  const handleReceiveToggle = async (email: string, memberId: number) => {
     const current = notificationReceiveByEmail.get(email);
     if (!current) return;
 
+    setUpdatingMemberId(memberId);
     try {
       await updateNotificationMembersMutation.mutateAsync({
         members: [
@@ -287,6 +290,8 @@ export default function MemberManagement() {
     } catch (e) {
       const error = e as IApiErrorResponse;
       toast.error(error.message ?? "알림 수신 변경에 실패했습니다");
+    } finally {
+      setUpdatingMemberId(null);
     }
   };
 
@@ -351,7 +356,7 @@ export default function MemberManagement() {
           }
           isNotificationError={notificationMembersQuery.isError}
           onReceiveToggle={handleReceiveToggle}
-          isReceiveUpdating={updateNotificationMembersMutation.isPending}
+          updatingMemberId={updatingMemberId}
         />
 
         <PermissionTable />
