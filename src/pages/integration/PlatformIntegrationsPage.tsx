@@ -14,6 +14,8 @@ import { useCoreMutation } from "@/hooks/customQuery";
 import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
 import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
@@ -191,26 +193,31 @@ export default function PlatformIntegrationsPage() {
         </div>
       ) : (
         <>
-          <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
-            {platformConnections.map((item) => (
-              <li
-                key={item.provider}
-                className="flex h-full min-h-0 w-full min-w-0"
-              >
-                <PlatformIntegrationCard
-                  {...item}
-                  onConnect={() => handleConnect(item.provider)}
-                  onReconnect={() => handleConnect(item.provider)}
-                  onDisconnect={() => handleDisconnect(item)}
-                  isConnectLoading={
-                    reconnectMutation.isPending &&
-                    reconnectMutation.variables?.accountId ===
-                      item.platformAccountId
-                  }
-                />
-              </li>
-            ))}
-          </ul>
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[platformConnections]}
+          >
+            <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
+              {platformConnections.map((item) => (
+                <li
+                  key={item.provider}
+                  className="flex h-full min-h-0 w-full min-w-0"
+                >
+                  <PlatformIntegrationCard
+                    {...item}
+                    onConnect={() => handleConnect(item.provider)}
+                    onReconnect={() => handleConnect(item.provider)}
+                    onDisconnect={() => handleDisconnect(item)}
+                    isConnectLoading={
+                      reconnectMutation.isPending &&
+                      reconnectMutation.variables?.accountId ===
+                        item.platformAccountId
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+          </ErrorBoundary>
 
           <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15">
             <p className="w-full text-center font-body1 text-text-muted/70">

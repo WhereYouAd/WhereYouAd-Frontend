@@ -8,6 +8,8 @@ import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignLi
 import CampaignTable from "@/components/ads/CampaignTable";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
@@ -217,14 +219,19 @@ export default function AdsListPage() {
         </div>
 
         <div className="min-w-0 flex-1">
-          <CampaignTable
-            embedded
-            campaigns={campaigns}
-            onRowClick={(id) => handleCampaignClick(id)}
-            selectedProjectIds={selectedIds}
-            onToggleProject={toggleProject}
-            onToggleSelectAllVisible={toggleSelectAllVisible}
-          />
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[campaigns]}
+          >
+            <CampaignTable
+              embedded
+              campaigns={campaigns}
+              onRowClick={(id) => handleCampaignClick(id)}
+              selectedProjectIds={selectedIds}
+              onToggleProject={toggleProject}
+              onToggleSelectAllVisible={toggleSelectAllVisible}
+            />
+          </ErrorBoundary>
         </div>
       </Card>
 

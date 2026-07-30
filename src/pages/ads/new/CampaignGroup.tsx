@@ -3,6 +3,8 @@ import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 import CampaignPlatformDropdown from "@/components/ads/CampaignPlatformDropdown";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
@@ -93,49 +95,54 @@ export default function CampaignGroup() {
             매체에서 캠페인을 선택해야 합니다.
           </p>
         </div>
-        <div className="flex flex-col gap-10">
-          {/* Google */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <GoogleIcon className="w-6 h-6" />
-              <span className="font-body1 text-text-title">Google</span>
+        <ErrorBoundary
+          FallbackComponent={ChartErrorFallback}
+          resetKeys={[googleCampaigns, naverCampaigns, metaCampaigns]}
+        >
+          <div className="flex flex-col gap-10">
+            {/* Google */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-1">
+                <GoogleIcon className="w-6 h-6" />
+                <span className="font-body1 text-text-title">Google</span>
+              </div>
+              <CampaignPlatformDropdown
+                placeholder="캠페인 선택"
+                options={googleCampaigns}
+                selected={googleSelected}
+                onSelect={setGoogleSelected}
+              />
             </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={googleCampaigns}
-              selected={googleSelected}
-              onSelect={setGoogleSelected}
-            />
-          </div>
 
-          {/* NAVER */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <NaverIcon className="w-6 h-6" />
-              <span className="font-body1 text-text-title">NAVER</span>
+            {/* NAVER */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-1">
+                <NaverIcon className="w-6 h-6" />
+                <span className="font-body1 text-text-title">NAVER</span>
+              </div>
+              <CampaignPlatformDropdown
+                placeholder="캠페인 선택"
+                options={naverCampaigns}
+                selected={naverSelected}
+                onSelect={setNaverSelected}
+              />
             </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={naverCampaigns}
-              selected={naverSelected}
-              onSelect={setNaverSelected}
-            />
-          </div>
 
-          {/* Meta */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
-              <span className="font-body1 text-text-title">Meta</span>
+            {/* Meta */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 px-1">
+                <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
+                <span className="font-body1 text-text-title">Meta</span>
+              </div>
+              <CampaignPlatformDropdown
+                placeholder="캠페인 선택"
+                options={metaCampaigns}
+                selected={metaSelected}
+                onSelect={setMetaSelected}
+              />
             </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={metaCampaigns}
-              selected={metaSelected}
-              onSelect={setMetaSelected}
-            />
           </div>
-        </div>
+        </ErrorBoundary>
       </Card>
 
       <div className="flex justify-end mb-5">
