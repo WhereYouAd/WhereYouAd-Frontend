@@ -79,6 +79,7 @@ export default function SinglePlatformView({
     data: clickStreamData,
     suspectDetail,
     isError: isClickStreamError,
+    reconnect: reconnectClickStream,
   } = useClickStream({
     mode: "dummy",
     providerType: platform,
@@ -174,6 +175,7 @@ export default function SinglePlatformView({
               platform={platform}
               isError={isClickStreamError}
               suspectDetail={suspectDetail}
+              onRetry={reconnectClickStream}
             />
           </ErrorBoundary>
         </Card>
