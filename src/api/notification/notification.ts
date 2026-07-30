@@ -70,7 +70,7 @@ export const updateNotificationMembers = async (
 };
 
 //조직 알림 설정 변경
-export const updateNotificationOrg = async (
+export const updateOrgNotificationSettings = async (
   orgId: number,
   body: IUpdateOrgNotificationSettingsRequest,
 ): Promise<TNotificationEmptyData> => {
@@ -81,7 +81,7 @@ export const updateNotificationOrg = async (
 };
 
 //마스터 컨트롤 변경
-export const updateNotificationMaster = async (
+export const updateMasterNotificationSetting = async (
   orgId: number,
   body: IUpdateMasterNotificationSettingRequest,
 ): Promise<TNotificationEmptyData> => {
