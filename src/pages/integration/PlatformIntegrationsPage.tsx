@@ -14,7 +14,7 @@ import { useCoreMutation } from "@/hooks/customQuery";
 import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
-import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
 import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
@@ -194,7 +194,7 @@ export default function PlatformIntegrationsPage() {
       ) : (
         <>
           <ErrorBoundary
-            FallbackComponent={ChartErrorFallback}
+            FallbackComponent={AreaErrorFallback}
             resetKeys={[platformConnections]}
           >
             <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">

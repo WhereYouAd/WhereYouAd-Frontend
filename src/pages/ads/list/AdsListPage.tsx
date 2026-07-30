@@ -8,7 +8,7 @@ import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignLi
 import CampaignTable from "@/components/ads/CampaignTable";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
-import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
@@ -220,7 +220,7 @@ export default function AdsListPage() {
 
         <div className="min-w-0 flex-1">
           <ErrorBoundary
-            FallbackComponent={ChartErrorFallback}
+            FallbackComponent={AreaErrorFallback}
             resetKeys={[campaigns]}
           >
             <CampaignTable

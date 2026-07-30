@@ -3,7 +3,7 @@ import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 import CampaignPlatformDropdown from "@/components/ads/CampaignPlatformDropdown";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
-import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
@@ -96,7 +96,7 @@ export default function CampaignGroup() {
           </p>
         </div>
         <ErrorBoundary
-          FallbackComponent={ChartErrorFallback}
+          FallbackComponent={AreaErrorFallback}
           resetKeys={[googleCampaigns, naverCampaigns, metaCampaigns]}
         >
           <div className="flex flex-col gap-10">
