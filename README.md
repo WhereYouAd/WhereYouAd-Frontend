@@ -15,7 +15,7 @@
 
 🏆 상명대학교 교내 창업아이디어 경진대회 **대상**
 
-🏆 모두의 창업 공모전 **1차 합격 · 본선 진출**
+🏆 모두의 창업 공모전 **1기 선정 · 본선 진출**
 
 </div>
 
@@ -37,6 +37,7 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 - 트래킹 링크 생성 (shortURL + UTM)
 - 가상 광고 + 트래픽 시뮬레이터
 - 팀 워크스페이스 + RBAC
+- 기간별 상세 분석 타임라인
 
 <br>
 
@@ -55,24 +56,24 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 
 ## 🛠 Tech Stack
 
-| Category | Stack |
-|---|---|
-| Core | React 19, TypeScript 5.9, Vite 6.4 + @vitejs/plugin-react-swc |
-| Routing | React Router DOM v7 |
-| Server State | TanStack React Query v5 |
-| Client State | Zustand v5 |
-| HTTP | Axios |
-| Form / Validation | React Hook Form, Zod v4 |
-| Styling | Tailwind CSS v4 + @tailwindcss/vite |
-| Animation | Framer Motion |
-| Chart | ApexCharts |
-| Toast | Sonner |
-| AI Streaming | @microsoft/fetch-event-source (SSE + JWT 헤더 지원) |
-| Markdown | react-markdown (AI 리포트 렌더링) |
-| Test | Vitest (단위), Playwright (E2E) |
-| Docs | Storybook 8 + Chromatic (시각 회귀) |
-| Deploy | AWS S3 + CloudFront |
-| Quality | ESLint v9 (flat config 4파일 분리), Prettier, Husky, lint-staged, Commitlint |
+| Category          | Stack                                                                        |
+| ----------------- | ---------------------------------------------------------------------------- |
+| Core              | React 19, TypeScript 5.9, Vite 6.4 + @vitejs/plugin-react-swc                |
+| Routing           | React Router DOM v7                                                          |
+| Server State      | TanStack React Query v5                                                      |
+| Client State      | Zustand v5                                                                   |
+| HTTP              | Axios                                                                        |
+| Form / Validation | React Hook Form, Zod v4                                                      |
+| Styling           | Tailwind CSS v4 + @tailwindcss/vite                                          |
+| Animation         | Framer Motion                                                                |
+| Chart             | ApexCharts                                                                   |
+| Toast             | Sonner                                                                       |
+| AI Streaming      | @microsoft/fetch-event-source (SSE + JWT 헤더 지원)                          |
+| Markdown          | react-markdown (AI 리포트 렌더링)                                            |
+| Test              | Vitest (단위), Playwright (E2E)                                              |
+| Docs              | Storybook 8 + Chromatic (시각 회귀)                                          |
+| Deploy            | AWS S3 + CloudFront                                                          |
+| Quality           | ESLint v9 (flat config 4파일 분리), Prettier, Husky, lint-staged, Commitlint |
 
 <br>
 
@@ -107,15 +108,15 @@ npm run build
 
 ## 📜 Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Vite 개발 서버를 실행합니다. |
-| `npm run build` | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
-| `npm run lint` | ESLint로 전체 코드를 검사합니다. |
-| `npm run preview` | 빌드 결과를 로컬에서 미리 확인합니다. |
-| `npm run prepare` | Husky Git hook을 설치합니다. |
-| `npm run test` | Vitest로 단위 테스트를 실행합니다. |
-| `npm run test:watch` | Vitest watch 모드로 실행합니다. |
+| Command              | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `npm run dev`        | Vite 개발 서버를 실행합니다.                        |
+| `npm run build`      | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
+| `npm run lint`       | ESLint로 전체 코드를 검사합니다.                    |
+| `npm run preview`    | 빌드 결과를 로컬에서 미리 확인합니다.               |
+| `npm run prepare`    | Husky Git hook을 설치합니다.                        |
+| `npm run test`       | Vitest로 단위 테스트를 실행합니다.                  |
+| `npm run test:watch` | Vitest watch 모드로 실행합니다.                     |
 
 <br>
 
@@ -183,19 +184,19 @@ src
 `@/`는 `src/`를 가리킵니다.
 
 ```ts
-import { QUERY_KEYS } from '@/lib/queryKeys'
-import { useCoreQuery } from '@/hooks/customQuery'
+import { QUERY_KEYS } from "@/lib/queryKeys";
+import { useCoreQuery } from "@/hooks/customQuery";
 ```
 
 <br>
 
 ## ⚙️ CI/CD
 
-| 워크플로 | 트리거 | 내용 |
-|---|---|---|
-| `ci.yaml` | PR → develop / main | ESLint lint → Vitest test → TypeScript build 검증 |
-| `main.yaml` | push → main | S3 업로드 → CloudFront 캐시 무효화 → Discord 알림 |
-| `chromatic.yml` | push → develop | Storybook 시각 회귀 테스트 (Chromatic) |
+| 워크플로        | 트리거              | 내용                                              |
+| --------------- | ------------------- | ------------------------------------------------- |
+| `ci.yaml`       | PR → develop / main | ESLint lint → Vitest test → TypeScript build 검증 |
+| `main.yaml`     | push → main         | S3 업로드 → CloudFront 캐시 무효화 → Discord 알림 |
+| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)            |
 
 <br>
 
@@ -237,7 +238,7 @@ Conventional Commits 규칙을 따릅니다. commitlint로 자동 검증됩니�
 
 ## 👥 Contributors
 
-| <div align="center">[서제경](https://github.com/Seojegyeong)</div> | <div align="center">[박재선](https://github.com/jjjsun)</div> | <div align="center">[임예림](https://github.com/YermIm)</div> |
-| --- | --- | --- |
+| <div align="center">[서제경](https://github.com/Seojegyeong)</div>                                    | <div align="center">[박재선](https://github.com/jjjsun)</div>                                    | <div align="center">[임예림](https://github.com/YermIm)</div>                                    |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
 | <div align="center"><img src="https://avatars.githubusercontent.com/Seojegyeong" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/jjjsun" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/YermIm" width="160" /></div> |
-| <div align="center">프론트엔드<br/><strong>TEAM LEADER</strong></div> | <div align="center">프론트엔드</div> | <div align="center">프론트엔드</div> |
+| <div align="center">프론트엔드<br/><strong>TEAM LEADER</strong></div>                                 | <div align="center">프론트엔드</div>                                                             | <div align="center">프론트엔드</div>                                                             |
