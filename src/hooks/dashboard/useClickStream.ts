@@ -75,6 +75,12 @@ export function useClickStream(options: TUseClickStreamOptions = {}) {
           // refreshTokenOnce()로 동시 다발 401(플랫폼별 3개 SSE)에도 reissue는 1회만 실행
           if (response.status === 401) {
             const newToken = await refreshTokenOnce();
+            if (
+              controller.signal.aborted ||
+              useAuthStore.getState().accessToken !== accessToken
+            ) {
+              return;
+            }
             if (newToken) {
               useAuthStore.getState().setAccessToken(newToken);
             } else {

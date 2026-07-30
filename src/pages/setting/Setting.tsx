@@ -164,8 +164,8 @@ export default function Setting() {
     isDiscordEnabled: draftOrgNotif.discordEnabled,
     discordWebhookUrl: "",
     disconnectDiscord: false,
-    alertClicks: notificationSettings?.orgAlertClicks ?? false,
-    alertReport: notificationSettings?.orgAlertReport ?? false,
+    alertClicks: draftWorkspaceNotif.clickAlarm ?? false,
+    alertReport: draftWorkspaceNotif.weeklyReport ?? false,
     ...overrides,
   });
 
@@ -418,6 +418,7 @@ export default function Setting() {
         shouldSaveMaster ||
         shouldSaveOrg
       ) {
+        const savedSteps: string[] = [];
         try {
           if (shouldSaveChannel) {
             await updateChannels.mutateAsync({
@@ -425,6 +426,7 @@ export default function Setting() {
               isEmailEnabled: draftChannel.emailNotif,
             });
             setSavedChannel(draftChannel);
+            savedSteps.push("알림 채널");
           }
           if (shouldSaveAlerts) {
             await updateAlerts.mutateAsync({
@@ -432,6 +434,7 @@ export default function Setting() {
               alertReport: draftWorkspaceNotif.weeklyReport,
             });
             setSavedWorkspaceNotif(draftWorkspaceNotif);
+            savedSteps.push("워크스페이스 알림");
           }
           if (shouldSaveMaster) {
             await updateMaster.mutateAsync({
@@ -441,6 +444,7 @@ export default function Setting() {
               ...prev,
               masterEnabled: draftOrgNotif.masterEnabled,
             }));
+            savedSteps.push("마스터 알림");
           }
           if (shouldSaveOrg) {
             await updateOrg.mutateAsync(
@@ -458,6 +462,7 @@ export default function Setting() {
               slackEnabled: draftOrgNotif.slackEnabled,
               discordEnabled: draftOrgNotif.discordEnabled,
             }));
+            savedSteps.push("슬랙/디스코드 설정");
           }
           savedAnyNotification = true;
         } catch (e) {
@@ -465,7 +470,11 @@ export default function Setting() {
           if (savedAccount) {
             toast.success("회원정보가 수정되었습니다");
           }
-          toast.error(error.message ?? "알림 설정 저장에 실패했습니다");
+          toast.error(
+            savedSteps.length > 0
+              ? `${savedSteps.join(", ")}은(는) 저장됐지만, 이후 단계에서 실패했습니다`
+              : (error.message ?? "알림 설정 저장에 실패했습니다"),
+          );
           return;
         }
       }
@@ -628,20 +637,29 @@ export default function Setting() {
             email={draftProfile.email}
             masterEnabled={draftOrgNotif.masterEnabled}
             onMasterEnabledChange={(value) => {
+              if (!value) {
+                setDraftOrgNotif((prev) => ({
+                  ...prev,
+                  masterEnabled: false,
+                  slackEnabled: false,
+                  discordEnabled: false,
+                }));
+                setDraftChannel({ browserPush: false, emailNotif: false });
+                setDraftWorkspaceNotif({
+                  clickAlarm: false,
+                  weeklyReport: false,
+                });
+                return;
+              }
               setDraftOrgNotif((prev) => ({
                 ...prev,
-                masterEnabled: value,
-                slackEnabled: value,
-                discordEnabled: value,
+                masterEnabled: true,
+                slackEnabled: prev.slackConnected && savedOrgNotif.slackEnabled,
+                discordEnabled:
+                  prev.discordConnected && savedOrgNotif.discordEnabled,
               }));
-              setDraftChannel({
-                browserPush: value,
-                emailNotif: value,
-              });
-              setDraftWorkspaceNotif({
-                clickAlarm: value,
-                weeklyReport: value,
-              });
+              setDraftChannel(savedChannel);
+              setDraftWorkspaceNotif(savedWorkspaceNotif);
             }}
             browserPush={draftChannel.browserPush}
             emailNotif={draftChannel.emailNotif}
