@@ -5,7 +5,9 @@ import type {
   INotificationMembersParams,
   IUpdateAlertsNotificationSettingsRequest,
   IUpdateChannelNotificationSettingsRequest,
+  IUpdateMasterNotificationSettingRequest,
   IUpdateNotificationMembersRequest,
+  IUpdateOrgNotificationSettingsRequest,
   TNotificationEmptyData,
 } from "@/types/setting/notification";
 
@@ -64,5 +66,27 @@ export const updateNotificationMembers = async (
   const { data } = await axiosInstance.patch<
     ICommonResponse<TNotificationEmptyData>
   >(`/api/notification/settings/${orgId}/members`, body);
+  return data.data;
+};
+
+//조직 알림 설정 변경
+export const updateOrgNotificationSettings = async (
+  orgId: number,
+  body: IUpdateOrgNotificationSettingsRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/settings/${orgId}/org`, body);
+  return data.data;
+};
+
+//마스터 컨트롤 변경
+export const updateMasterNotificationSetting = async (
+  orgId: number,
+  body: IUpdateMasterNotificationSettingRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/settings/${orgId}/master`, body);
   return data.data;
 };
