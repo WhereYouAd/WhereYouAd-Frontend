@@ -32,23 +32,26 @@ export const useCampaignGroup = () => {
     null,
   );
 
-  const { data: googleData = [] } = useCoreQuery(
+  const { data: googleData = [], isPending: isGoogleLoading } = useCoreQuery(
     QUERY_KEYS.campaign.platformList(orgId, "GOOGLE"),
     () => getPlatformCampaigns(orgId!, "GOOGLE"),
     { enabled: !!orgId },
   );
 
-  const { data: naverData = [] } = useCoreQuery(
+  const { data: naverData = [], isPending: isNaverLoading } = useCoreQuery(
     QUERY_KEYS.campaign.platformList(orgId, "NAVER"),
     () => getPlatformCampaigns(orgId!, "NAVER"),
     { enabled: !!orgId },
   );
 
-  const { data: metaData = [] } = useCoreQuery(
+  const { data: metaData = [], isPending: isMetaLoading } = useCoreQuery(
     QUERY_KEYS.campaign.platformList(orgId, "META"),
     () => getPlatformCampaigns(orgId!, "META"),
     { enabled: !!orgId },
   );
+
+  const isPlatformCampaignsLoading =
+    isGoogleLoading || isNaverLoading || isMetaLoading;
 
   const googleCampaigns = [NONE_OPTION, ...googleData];
   const naverCampaigns = [NONE_OPTION, ...naverData];
@@ -116,6 +119,7 @@ export const useCampaignGroup = () => {
     googleCampaigns,
     naverCampaigns,
     metaCampaigns,
+    isPlatformCampaignsLoading,
     isFormValid,
     isCreating,
     handleComplete,

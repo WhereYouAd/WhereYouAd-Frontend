@@ -8,6 +8,10 @@ import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
+import {
+  CampaignDetailAdsSectionSkeleton,
+  CampaignDetailPageSkeleton,
+} from "@/components/ads/skeleton/AdsSkeleton";
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
@@ -183,13 +187,7 @@ export default function CampaignDetail() {
   }, [data?.name, setCampaignDetailHeaderTitle]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-[90vh] items-center justify-center">
-        <p className="font-body1 text-text-placeholder">
-          데이터를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <CampaignDetailPageSkeleton />;
   }
 
   if (!data) {
@@ -267,19 +265,7 @@ export default function CampaignDetail() {
       </Card>
 
       {isAdLoading ? (
-        <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <p className="font-caption text-text-placeholder">광고</p>
-              <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
-              </div>
-            </div>
-          </div>
-          <div className="py-20 text-center font-body2 text-text-placeholder">
-            연결된 광고를 불러오는 중입니다...
-          </div>
-        </Card>
+        <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
           <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">

@@ -6,6 +6,7 @@ import { useControlModal } from "@/hooks/ads/useControlModal";
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
+import AdsListPageSkeleton from "@/components/ads/skeleton/AdsSkeleton";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
@@ -154,13 +155,7 @@ export default function AdsListPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex h-[90vh] items-center justify-center">
-        <p className="font-body1 text-text-placeholder">
-          데이터를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <AdsListPageSkeleton />;
   }
 
   return (
