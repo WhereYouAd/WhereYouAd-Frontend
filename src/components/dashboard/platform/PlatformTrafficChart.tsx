@@ -15,6 +15,7 @@ import {
 } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
+import Button from "@/components/common/button/Button";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import { useAnomalyMarkerPos } from "@/components/dashboard/charts/useAnomalyMarkerPos";
 
@@ -23,6 +24,7 @@ interface IPlatformTrafficChartProps {
   platform: TProviderType;
   isError?: boolean;
   suspectDetail: IClickStreamItem["suspectDetail"] | null;
+  onRetry?: () => void;
 }
 
 // 이상 징후 상세 버블
@@ -75,6 +77,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   platform,
   isError = false,
   suspectDetail = null,
+  onRetry,
 }: IPlatformTrafficChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const anomalyBubbleId = useId();
@@ -254,8 +257,20 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
 
   if (isError && !data) {
     return (
-      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
-        실시간 데이터를 불러오지 못했습니다.
+      <div className="flex h-75 flex-col items-center justify-center gap-4 text-center">
+        <p className="font-body2 text-text-muted">
+          실시간 데이터를 불러오지 못했습니다.
+        </p>
+        {onRetry ? (
+          <Button
+            variant="outline"
+            size="small"
+            type="button"
+            onClick={onRetry}
+          >
+            다시 시도
+          </Button>
+        ) : null}
       </div>
     );
   }
@@ -275,9 +290,21 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   return (
     <div className="flex h-full min-h-75 w-full flex-col">
       {isError && (
-        <p className="mb-2 font-caption text-text-muted">
-          연결이 원활하지 않아 마지막 데이터를 표시합니다.
-        </p>
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <p className="font-caption text-text-muted">
+            연결이 원활하지 않아 마지막 데이터를 표시합니다.
+          </p>
+          {onRetry ? (
+            <Button
+              variant="outline"
+              size="small"
+              type="button"
+              onClick={onRetry}
+            >
+              다시 시도
+            </Button>
+          ) : null}
+        </div>
       )}
       <div
         ref={containerRef}

@@ -11,6 +11,8 @@ import AdListTable from "@/components/ads/AdListTable";
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
@@ -325,14 +327,19 @@ export default function CampaignDetail() {
           </div>
 
           <div className="min-h-0 min-w-0 flex-1">
-            <AdListTable
-              embedded
-              ads={adsList}
-              refetchAds={refetchAds}
-              selectedAdIds={selectedAdIds}
-              onToggleAd={toggleAd}
-              onToggleSelectAllVisible={toggleSelectAllVisible}
-            />
+            <ErrorBoundary
+              FallbackComponent={AreaErrorFallback}
+              resetKeys={[adsList]}
+            >
+              <AdListTable
+                embedded
+                ads={adsList}
+                refetchAds={refetchAds}
+                selectedAdIds={selectedAdIds}
+                onToggleAd={toggleAd}
+                onToggleSelectAllVisible={toggleSelectAllVisible}
+              />
+            </ErrorBoundary>
           </div>
         </Card>
       )}

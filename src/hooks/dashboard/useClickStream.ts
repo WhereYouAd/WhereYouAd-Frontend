@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 import type {
@@ -46,7 +46,12 @@ export function useClickStream(options: TUseClickStreamOptions = {}) {
   const [suspectDetail, setSuspectDetail] =
     useState<IClickStreamItem["suspectDetail"]>(null);
   const [isError, setIsError] = useState(false);
+  const [connectAttempt, setConnectAttempt] = useState(0);
   const retryCountRef = useRef(0);
+
+  const reconnect = useCallback(() => {
+    setConnectAttempt((attempt) => attempt + 1);
+  }, []);
 
   useEffect(() => {
     if (!orgId || !accessToken) return;
@@ -130,7 +135,7 @@ export function useClickStream(options: TUseClickStreamOptions = {}) {
     );
 
     return () => controller.abort();
-  }, [orgId, accessToken, mode, providerType]);
+  }, [orgId, accessToken, mode, providerType, connectAttempt]);
 
-  return { data, suspectDetail, isError };
+  return { data, suspectDetail, isError, reconnect };
 }
