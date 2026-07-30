@@ -349,7 +349,7 @@ export default function AiSummaryCard({
                 className="h-5 w-5 shrink-0 fill-primary-400 text-primary-400"
                 aria-hidden
               />
-              <span className="bg-gradient-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-primary-400 to-primary-500 bg-clip-text text-transparent">
                 {title}
               </span>
               <span className="shrink-0 rounded-full bg-primary-500/12 px-2 py-0.5 font-caption text-primary-500">

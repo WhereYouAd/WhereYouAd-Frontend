@@ -1,163 +1,244 @@
-# WhereYouAd Frontend
-**2026 Capstone · Graduation Project**
+<div align="center">
 
-WhereYouAd는 **광고 성과 및 워크스페이스 관리를 효율적으로 지원하는 웹 서비스**입니다.
-</br>본 레포지토리는 2026 캡스톤(졸업 프로젝트)을 위해 개발 중인 프론트엔드 애플리케이션으로,
-</br>사용자 친화적인 대시보드 UI와 안정적인 상태 관리, 확장 가능한 아키텍처를 목표로 합니다.
+2026 상명대학교 졸업 프로젝트
 
-&nbsp;
+**분산된 광고 데이터를 하나의 대시보드로 광고 성과를 통합하고 AI가 분석해 드립니다**
 
-## 프로젝트 개요
+<img width="3145" height="1769" alt="wyad" src="https://github.com/user-attachments/assets/9c284495-258e-4fd1-97f7-027a5034774f" />
 
-- **프로젝트명**: WhereYouAd
-- **목적**: 광고 및 워크스페이스 관리 서비스의 프론트엔드 구현
-- **성격**: 2026 캡스톤 디자인 · 졸업 프로젝트
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack_Query-v5-FF4154?logo=reactquery&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS_S3_+_CloudFront-232F3E?logo=amazonaws&logoColor=white)
 
-### 주요 기능
+🏆 상명대학교 교내 창업아이디어 경진대회 **대상**
 
-- **광고 성과 지표 대시보드** 제공
-- 워크스페이스 **단위 광고 및 캠페인 관리**
-- **성과 데이터 시각화** 및 요약 리포트 제공
-- 사용자 인증 및 **권한 기반 접근 제어**
+🏆 모두의 창업 공모전 **1기 선정 · 본선 진출**
 
+</div>
 
-### 기술 방향성
-- 빠른 화면 렌더링과 효율적인 데이터 패칭
-- 명확한 상태 관리 분리 (UI State / Server State)
-- 팀 협업을 고려한 컨벤션 및 코드 품질 관리
+<br>
 
-&nbsp;
+## 📌 Overview
 
-## 팀 구성 (Frontend)
+WhereYouAd는 Google, Naver, Meta 3개 광고 플랫폼의 성과 데이터를 단일 대시보드에 통합하는 B2B SaaS입니다. 팀 단위 워크스페이스로 멤버가 협업하며, AI 분석 리포트를 생성하고 PDF로 저장할 수 있습니다.
 
-| <div align="center">[서제경](https://github.com/Seojegyeong)</div> | <div align="center">[박재선](https://github.com/jjjsun)</div> | <div align="center">[임예림](https://github.com/YermIm)</div> |
-| --- | --- | --- |
-| <div align="center"><img src="https://avatars.githubusercontent.com/Seojegyeong" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/jjjsun" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/YermIm" width="160" /></div> |
-| <div align="center">프론트엔드<br/><strong>TEAM LEADER</strong></div> | <div align="center">프론트엔드</div> | <div align="center">프론트엔드</div> |
+WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트입니다. 실시간 차트, 워크스페이스 권한 관리, AI 스트리밍, SSE 기반 클릭 스트림 등 복잡한 상태와 비동기 흐름을 중심으로 인프라 레이어를 직접 설계·구현합니다.
 
+<br>
 
-&nbsp;
+### 핵심 기능 영역
 
-## 기술 스택
+- Google·Naver·Meta 통합 KPI 대시보드
+- SSE 실시간 클릭 스트림 및 이상 트래픽 감지
+- AI 분석 리포트 (요약·예산 추천·이메일 전송)
+- 트래킹 링크 생성 (shortURL + UTM)
+- 가상 광고 + 트래픽 시뮬레이터
+- 팀 워크스페이스 + RBAC
+- 기간별 상세 분석 타임라인
 
-### Core
-- **Framework**: React 19, TypeScript, Vite
-- **Routing**: react-router-dom (v7)
+<br>
 
-### State Management
-- **Client State**: zustand
-- **Server State**: @tanstack/react-query
+## 📑 Table of Contents
 
-### Styling
-- **CSS Framework**: Tailwind CSS v4
-- **Utilities**: clsx
-- **SVG Handling**: vite-plugin-svgr
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Scripts](#-scripts)
+- [Environment Variables](#-environment-variables)
+- [Project Structure](#-project-structure)
+- [CI/CD](#-cicd)
+- [Conventions](#-conventions)
+- [Contributors](#-contributors)
 
-### Form & Validation
-- **Form**: react-hook-form
-- **Schema Validation**: zod, @hookform/resolvers
-- **UI Feedback**: sonner (Toast)
+<br>
 
-### Code Quality & Collaboration
-- **Linting / Formatting**: ESLint (v9), Prettier
-- **Git Hooks**: husky, lint-staged
-- **Commit Convention**: commitlint (Conventional Commits)
+## 🛠 Tech Stack
 
-&nbsp;
+| Category          | Stack                                                                        |
+| ----------------- | ---------------------------------------------------------------------------- |
+| Core              | React 19, TypeScript 5.9, Vite 6.4 + @vitejs/plugin-react-swc                |
+| Routing           | React Router DOM v7                                                          |
+| Server State      | TanStack React Query v5                                                      |
+| Client State      | Zustand v5                                                                   |
+| HTTP              | Axios                                                                        |
+| Form / Validation | React Hook Form, Zod v4                                                      |
+| Styling           | Tailwind CSS v4 + @tailwindcss/vite                                          |
+| Animation         | Framer Motion                                                                |
+| Chart             | ApexCharts                                                                   |
+| Toast             | Sonner                                                                       |
+| AI Streaming      | @microsoft/fetch-event-source (SSE + JWT 헤더 지원)                          |
+| Markdown          | react-markdown (AI 리포트 렌더링)                                            |
+| Test              | Vitest (단위), Playwright (E2E)                                              |
+| Docs              | Storybook 8 + Chromatic (시각 회귀)                                          |
+| Deploy            | AWS S3 + CloudFront                                                          |
+| Quality           | ESLint v9 (flat config 4파일 분리), Prettier, Husky, lint-staged, Commitlint |
 
-## 개발 환경
+<br>
 
-- **Node.js**: v20.x.x (LTS 권장)
-- **패키지 매니저**: pnpm
+## 🚀 Getting Started
 
-팀 내 개발 환경 차이를 최소화하기 위해 **Node 20 LTS 기준**으로 개발합니다.
-
-&nbsp;
-
-## 주요 스크립트
-
-| Script | 설명 |
-| --- | --- |
-| `pnpm run dev` | Vite 개발 서버 실행 |
-| `pnpm run build` | TypeScript + Vite 프로덕션 빌드 |
-| `pnpm run preview` | 빌드 결과 미리보기 |
-| `pnpm run lint` | ESLint 전체 검사 |
-| `pnpm run prepare` | Husky Git Hook 설정 |
-
-&nbsp;
-
-
-## 프로젝트 구조
-
-현재 프로젝트는 **기능별(Pages)** 및 **재사용성(Components/Layout)** 을 중심으로 구성되어 있습니다.
+### Prerequisites
 
 ```bash
-src
-├── api/          # API 통신 및 요청 로직
-├── assets/       # 이미지, 아이콘, 폰트 등 정적 리소스
-├── components/   # UI 컴포넌트 모음
-├── constants/    # 상수 데이터 관리
-├── layout/       # 페이지 레이아웃 구조
-├── pages/        # 라우트 단위 페이지
-├── routes/       # 라우터 설정
-├── store/        # Zustand 전역 상태 관리
-├── types/        # 공통 타입 정의
-└── utils/        # 유틸리티 함수 및 헬퍼
+node -v
+# v20.x.x
 ```
 
-&nbsp;
+### Installation
 
-## 협업 컨벤션
+```bash
+npm install
+```
 
-### 1. Branch Strategy
-- **main**: 배포 가능한 상태의 브랜치 (Production)
-- **develop**: 다음 버전을 위한 개발 브랜치
-- **feature/#[이슈번호]**: 새로운 기능 개발 브랜치 (예: `feature/#1`)
+### Run Dev Server
 
-&nbsp;
+```bash
+npm run dev
+```
 
-### 2. Commit Convention
-Angular Commit Convention을 따르며, `commitlint`로 관리됩니다.
+### Build
 
-`type: subject`
+```bash
+npm run build
+```
 
-| Type | 설명 |
-| --- | --- |
-| `feat` | 새로운 기능 추가 |
-| `fix` | 버그 수정 |
-| `docs` | 문서 수정 (README 등) |
-| `style` | 코드 포맷팅, 세미콜론 누락, 공백 등 (코드 변경 없음) |
-| `refactor` | 코드 리팩토링 (기능 변화 없음) |
-| `test` | 테스트 코드 추가/수정 |
-| `chore` | 빌드, 설정, 패키지 매니저 등 기타 변경사항 |
-| `ci` | CI 관련 설정 변경 |
-| `setting` | 프로젝트 환경 설정 변경 |
+<br>
 
-&nbsp;
+## 📜 Scripts
 
-### 3. Code Style & Import Rule
+| Command              | Description                                         |
+| -------------------- | --------------------------------------------------- |
+| `npm run dev`        | Vite 개발 서버를 실행합니다.                        |
+| `npm run build`      | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
+| `npm run lint`       | ESLint로 전체 코드를 검사합니다.                    |
+| `npm run preview`    | 빌드 결과를 로컬에서 미리 확인합니다.               |
+| `npm run prepare`    | Husky Git hook을 설치합니다.                        |
+| `npm run test`       | Vitest로 단위 테스트를 실행합니다.                  |
+| `npm run test:watch` | Vitest watch 모드로 실행합니다.                     |
 
-팀 전체의 코드 스타일 일관성을 위해 **ESLint 기반 자동화 규칙**을 적용합니다.
+<br>
 
-- **Import 정렬 플러그인**: eslint-plugin-simple-import-sort
-- **설정 파일**: eslint/import.mjs
-- `.vscode/settings.json`에 `codeActionsOnSave`가 설정되어 있으며
-- 파일 저장 시 `source.fixAll.eslint`가 자동 실행됩니다.
-- 별도의 명령 없이도 저장 시 Import 정렬 및 ESLint 수정 사항이 자동 반영됩니다.
+## 📁 Project Structure
 
-이를 통해 팀 전체가 동일한 코드 스타일을 유지하며,
-코드 리뷰 시 스타일 관련 피드백을 최소화합니다.
+```
+src
+├── api                  # 도메인별 axios 호출 함수 (순수 fetch 레이어)
+│   ├── auth/            # 로그인·회원가입·토큰 재발급
+│   ├── dashboard/       # overview, platform, aiAnalysis
+│   ├── ads/             # 캠페인 목록·상세
+│   ├── integration/     # Google/Naver/Meta OAuth 연동
+│   └── workspace/       # 워크스페이스·멤버 관리
+│
+├── hooks                # 도메인별 커스텀 훅
+│   ├── customQuery.ts   # useCoreQuery / useCoreMutation 추상화
+│   ├── auth/
+│   ├── dashboard/
+│   ├── ads/
+│   ├── common/
+│   ├── integration/
+│   └── sidebar/
+│
+├── lib                  # 앱 수준 인프라
+│   ├── axiosInstance.ts # axios 인스턴스 + 401 refreshSubscribers 큐 패턴
+│   ├── queryClient.ts   # QueryClient (4xx 즉시 실패 / 5xx 1회 재시도)
+│   ├── queryKeys.ts     # QUERY_KEYS 중앙 상수 팩토리
+│   └── loadable.tsx     # React.lazy + Suspense 헬퍼 (code splitting)
+│
+├── store                # Zustand 전역 상태
+│   ├── useAuthStore.ts        # accessToken 메모리 저장, isTokenInitialized
+│   ├── useWorkspaceStore.ts   # selectedOrgId, myRole
+│   ├── useSidebarStore.ts     # isCollapsed
+│   └── useModalStore.ts       # type-safe 전역 모달 레지스트리
+│
+├── utils
+│   ├── dashboard/
+│   │   ├── metricRegistry.ts  # 지표 포맷·레이블 SSOT (16파일 → 1곳)
+│   │   ├── metricsToKpis.ts   # API 응답 → KPI 카드 Props 변환
+│   │   └── downloadChart.ts
+│   └── auth/
+│
+├── components
+│   ├── common/          # Button, Card, Modal, Input 등 (+ .stories)
+│   ├── dashboard/       # ai-report, charts, overview, platform
+│   ├── sidebar/         # Sidebar, WorkspaceSwitcher
+│   └── modal/           # ModalProvider, 전역 모달 컴포넌트
+│
+├── layout
+│   ├── GlobalLayout.tsx      # Toaster + ModalProvider + useTokenRefresh
+│   ├── auth/AuthLayout.tsx
+│   ├── main/MainLayout.tsx   # Sidebar + 헤더 + Outlet
+│   └── workspace/
+│
+├── pages                # 라우트 단위 페이지
+├── routes               # createBrowserRouter + AuthGuard + RoleGuard
+├── styles
+│   ├── tokens.css       # @theme {} 블록 디자인 토큰 (별도 config 파일 없음)
+│   └── print.css
+└── types                # 도메인별 TypeScript 인터페이스
+```
 
-&nbsp;
+### Import Alias
 
-### 4. PR Process
-PR 템플릿에 따라 작성하며, **리뷰어 가이드**를 준수합니다.
+`@/`는 `src/`를 가리킵니다.
 
-- **Title**: `[Type/#이슈번호] 작업 요약` (예: `[Feature/#1] 로그인 페이지 UI 구현`)
-- **Review Labels**:
-  - `P1`: **필수 반영 (Critical)** - 버그/컨벤션 위반 (머지 불가)
-  - `P2`: **적극 권장 (Recommended)** - 더 나은 대안 (반영 권장)
-  - `P3`: **제안 (Suggestion)** - 아이디어 공유 (자율)
-  - `P4`: **단순 확인 (Nit)** - 오타/칭찬 등
+```ts
+import { QUERY_KEYS } from "@/lib/queryKeys";
+import { useCoreQuery } from "@/hooks/customQuery";
+```
 
-&nbsp;
+<br>
+
+## ⚙️ CI/CD
+
+| 워크플로        | 트리거              | 내용                                              |
+| --------------- | ------------------- | ------------------------------------------------- |
+| `ci.yaml`       | PR → develop / main | ESLint lint → Vitest test → TypeScript build 검증 |
+| `main.yaml`     | push → main         | S3 업로드 → CloudFront 캐시 무효화 → Discord 알림 |
+| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)            |
+
+<br>
+
+## 🤝 Conventions
+
+### Branch
+
+- `feature/#1-description`
+- `fix/#1-description`
+- `style/#1-description`
+- `docs/#1-description`
+- `setting/#1-description`
+- `refactor/#1-description`
+
+### Commit
+
+Conventional Commits 규칙을 따릅니다. commitlint로 자동 검증됩니다.
+
+- `feat: add AI analysis report streaming`
+- `fix: prevent duplicate token reissue on parallel 401`
+- `refactor: consolidate metric format logic into METRIC_REGISTRY`
+- `docs: update README`
+
+### Pull Request
+
+- PR 제목은 `[Feature/#1] 작업 내용` 형식을 권장합니다.
+- GitHub Issue를 먼저 등록하고 PR 본문에 `closes #이슈번호`를 포함합니다.
+- 리뷰 기준은 `.cursor/rules/always.mdc`를 따릅니다.
+
+### Code Quality
+
+- 저장 전 ESLint와 Prettier 규칙을 맞춥니다.
+- `simple-import-sort` 규칙에 따라 import 순서를 유지합니다.
+- `api/`, `lib/`는 `components/`, `pages/`에 의존하지 않도록 import 방향을 지킵니다.
+- 서버 상태는 TanStack Query, UI 상태는 Zustand, 폼 상태는 React Hook Form으로 분리합니다.
+- SVG는 `vite-plugin-svgr`를 통해 React 컴포넌트로 사용합니다.
+
+<br>
+
+## 👥 Contributors
+
+| <div align="center">[서제경](https://github.com/Seojegyeong)</div>                                    | <div align="center">[박재선](https://github.com/jjjsun)</div>                                    | <div align="center">[임예림](https://github.com/YermIm)</div>                                    |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| <div align="center"><img src="https://avatars.githubusercontent.com/Seojegyeong" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/jjjsun" width="160" /></div> | <div align="center"><img src="https://avatars.githubusercontent.com/YermIm" width="160" /></div> |
+| <div align="center">프론트엔드<br/><strong>TEAM LEADER</strong></div>                                 | <div align="center">프론트엔드</div>                                                             | <div align="center">프론트엔드</div>                                                             |
