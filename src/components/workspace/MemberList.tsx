@@ -87,7 +87,7 @@ export default function MemberList({
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
           {isNotificationError && (
-            <p className="mt-2 font-body2 text-info-red">
+            <p role="alert" className="mt-2 font-body2 text-info-red">
               알림 설정을 불러오지 못했습니다
             </p>
           )}
