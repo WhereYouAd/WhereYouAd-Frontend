@@ -164,8 +164,8 @@ export default function Setting() {
     isDiscordEnabled: draftOrgNotif.discordEnabled,
     discordWebhookUrl: "",
     disconnectDiscord: false,
-    alertClicks: notificationSettings?.orgAlertClicks ?? false,
-    alertReport: notificationSettings?.orgAlertReport ?? false,
+    alertClicks: draftWorkspaceNotif.clickAlarm ?? false,
+    alertReport: draftWorkspaceNotif.weeklyReport ?? false,
     ...overrides,
   });
 
