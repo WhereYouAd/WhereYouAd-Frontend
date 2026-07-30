@@ -7,7 +7,7 @@ function handler(event) {
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-eval'",
-      "connect-src 'self' https://api.whereyouad.com",
+      "connect-src 'self' https://api.whereyouad.com https://*.ingest.sentry.io",
       "img-src 'self' data: blob: https://*.amazonaws.com",
       "style-src 'self' 'unsafe-inline'",
       "font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com",

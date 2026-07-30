@@ -31,6 +31,7 @@ jobs:
           echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> .env
           echo "VITE_NAVER_AES_SECRET=${{ secrets.VITE_NAVER_AES_SECRET }}" >> .env
           echo "VITE_NAVER_AES_IV=${{ secrets.VITE_NAVER_AES_IV }}" >> .env
+          echo "VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}" >> .env
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
