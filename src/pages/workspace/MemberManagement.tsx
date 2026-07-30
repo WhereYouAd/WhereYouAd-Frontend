@@ -11,6 +11,8 @@ import {
 } from "@/types/workspace/workspace";
 
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
+import { useNotificationMembers } from "@/hooks/setting/useNotificationMembers";
+import { useUpdateNotificationMembers } from "@/hooks/setting/useUpdateNotificationMembers";
 
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
@@ -37,6 +39,8 @@ export default function MemberManagement() {
     useState<TWorkspaceMember | null>(null);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const notificationMembersQuery = useNotificationMembers(orgId);
 
   const memberCountQuery = useCoreQuery(
     QUERY_KEYS.workspace.memberCount(orgId),
@@ -110,19 +114,66 @@ export default function MemberManagement() {
     },
   );
 
+  const notificationReceiveByEmail = useMemo(() => {
+    const map = new Map<string, { membershipId: number; isReceive: boolean }>();
+    const pages = notificationMembersQuery.data?.pages ?? [];
+    for (const page of pages) {
+      for (const m of page.members) {
+        map.set(m.email, {
+          membershipId: m.membershipId,
+          isReceive: m.isReceive,
+        });
+      }
+    }
+    return map;
+  }, [notificationMembersQuery.data]);
+
+  // 로드된 멤버 중 알림 매칭이 비어 있으면 알림 목록 다음 페이지를 계속 가져옴
+  useEffect(() => {
+    if (members.length === 0) return;
+    if (!notificationMembersQuery.hasNextPage) return;
+    if (
+      notificationMembersQuery.isLoading ||
+      notificationMembersQuery.isFetchingNextPage
+    ) {
+      return;
+    }
+
+    const hasMissingReceive = members.some(
+      (member) => !notificationReceiveByEmail.has(member.email),
+    );
+    if (!hasMissingReceive) return;
+
+    void notificationMembersQuery.fetchNextPage();
+  }, [
+    members,
+    notificationReceiveByEmail,
+    notificationMembersQuery.hasNextPage,
+    notificationMembersQuery.isLoading,
+    notificationMembersQuery.isFetchingNextPage,
+    notificationMembersQuery.fetchNextPage,
+  ]);
+
   useEffect(() => {
     const target = observerRef.current;
     if (!target) return;
-    if (!membersQuery.hasNextPage) return;
+    if (!membersQuery.hasNextPage && !notificationMembersQuery.hasNextPage) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
-        if (
-          firstEntry?.isIntersecting &&
-          membersQuery.hasNextPage &&
-          !membersQuery.isFetchingNextPage
-        ) {
+        if (!firstEntry?.isIntersecting) return;
+
+        if (membersQuery.hasNextPage && !membersQuery.isFetchingNextPage) {
           void membersQuery.fetchNextPage();
+        }
+        if (
+          notificationMembersQuery.hasNextPage &&
+          !notificationMembersQuery.isFetchingNextPage
+        ) {
+          void notificationMembersQuery.fetchNextPage();
         }
       },
       {
@@ -138,6 +189,9 @@ export default function MemberManagement() {
     membersQuery.hasNextPage,
     membersQuery.isFetchingNextPage,
     membersQuery.fetchNextPage,
+    notificationMembersQuery.hasNextPage,
+    notificationMembersQuery.isFetchingNextPage,
+    notificationMembersQuery.fetchNextPage,
   ]);
 
   const handleRoleChange = async (
@@ -210,6 +264,31 @@ export default function MemberManagement() {
       console.error("팀원 삭제 실패", error);
     }
   };
+  const updateNotificationMembersMutation = useUpdateNotificationMembers(orgId);
+
+  const handleReceiveToggle = async (email: string) => {
+    const current = notificationReceiveByEmail.get(email);
+    if (!current) return;
+
+    try {
+      await updateNotificationMembersMutation.mutateAsync({
+        members: [
+          {
+            membershipId: current.membershipId,
+            isReceive: !current.isReceive,
+          },
+        ],
+      });
+      toast.success(
+        !current.isReceive
+          ? "알림 수신이 켜졌습니다"
+          : "알림 수신이 꺼졌습니다",
+      );
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "알림 수신 변경에 실패했습니다");
+    }
+  };
 
   if (!Number.isFinite(orgId) || orgId <= 0) {
     return (
@@ -265,6 +344,14 @@ export default function MemberManagement() {
           onDeleteClick={openDeleteMember}
           isFetchingNextPage={membersQuery.isFetchingNextPage}
           observerRef={observerRef}
+          notificationReceiveByEmail={notificationReceiveByEmail}
+          isNotificationLoading={
+            notificationMembersQuery.isLoading ||
+            notificationMembersQuery.isFetchingNextPage
+          }
+          isNotificationError={notificationMembersQuery.isError}
+          onReceiveToggle={handleReceiveToggle}
+          isReceiveUpdating={updateNotificationMembersMutation.isPending}
         />
 
         <PermissionTable />

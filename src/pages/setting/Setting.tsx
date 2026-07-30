@@ -2,10 +2,15 @@ import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
+import type { IUpdateOrgNotificationSettingsRequest } from "@/types/setting/notification";
 
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
 import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
+import { useUpdateAlertsNotificationSettings } from "@/hooks/setting/useUpdateAlertsNotificationSettings";
+import { useUpdateChannelNotificationSettings } from "@/hooks/setting/useUpdateChannelNotificationSettings";
+import { useUpdateMasterNotificationSettings } from "@/hooks/setting/useUpdateMasterNotificationSetting";
+import { useUpdateOrgNotificationSettings } from "@/hooks/setting/useUpdateOrgNotificationSettings";
 
 import Button from "@/components/common/button/Button";
 import NotificationSection from "@/components/setting/NotificationSection";
@@ -29,6 +34,14 @@ interface IWorkspaceNotificationSettings {
   weeklyReport: boolean;
 }
 
+interface IOrgNotificationSettings {
+  masterEnabled: boolean;
+  slackEnabled: boolean;
+  slackConnected: boolean;
+  discordEnabled: boolean;
+  discordConnected: boolean;
+}
+
 const DEFAULT_CHANNEL: IChannelNotificationSettings = {
   browserPush: false,
   emailNotif: false,
@@ -37,6 +50,14 @@ const DEFAULT_CHANNEL: IChannelNotificationSettings = {
 const DEFAULT_WORKSPACE_NOTIF: IWorkspaceNotificationSettings = {
   clickAlarm: false,
   weeklyReport: false,
+};
+
+const DEFAULT_ORG_NOTIF: IOrgNotificationSettings = {
+  masterEnabled: true,
+  slackEnabled: false,
+  slackConnected: false,
+  discordEnabled: false,
+  discordConnected: false,
 };
 
 interface IDraftProfile {
@@ -71,8 +92,23 @@ export default function Setting() {
     useState<IWorkspaceNotificationSettings>(DEFAULT_WORKSPACE_NOTIF);
   const [draftWorkspaceNotif, setDraftWorkspaceNotif] =
     useState<IWorkspaceNotificationSettings>(DEFAULT_WORKSPACE_NOTIF);
+  const [savedOrgNotif, setSavedOrgNotif] =
+    useState<IOrgNotificationSettings>(DEFAULT_ORG_NOTIF);
+  const [draftOrgNotif, setDraftOrgNotif] =
+    useState<IOrgNotificationSettings>(DEFAULT_ORG_NOTIF);
+
+  const [slackWebhookUrl, setSlackWebhookUrl] = useState("");
+  const [slackWebhookError, setSlackWebhookError] = useState("");
+  const [discordWebhookUrl, setDiscordWebhookUrl] = useState("");
+  const [discordWebhookError, setDiscordWebhookError] = useState("");
+  const [pendingOrgAction, setPendingOrgAction] = useState<
+    "slack" | "discord" | null
+  >(null);
+
   const [isImageDeleted, setIsImageDeleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const {
     fileRef,
     file,
@@ -100,6 +136,7 @@ export default function Setting() {
   } = useMyNotificationSettings();
 
   const lastNotifiedNotificationErrorAtRef = useRef(0);
+  const isSavingRef = useRef(false);
 
   const currentWorkspaceName = useMemo(() => {
     if (selectedOrgId === null) return null;
@@ -113,9 +150,128 @@ export default function Setting() {
     selectedOrgId !== null &&
     (isNotificationLoading || isNotificationRefetching);
 
+  const updateChannels = useUpdateChannelNotificationSettings();
+  const updateAlerts = useUpdateAlertsNotificationSettings();
+  const updateOrg = useUpdateOrgNotificationSettings();
+  const updateMaster = useUpdateMasterNotificationSettings();
+
+  const buildOrgBody = (
+    overrides: Partial<IUpdateOrgNotificationSettingsRequest> = {},
+  ): IUpdateOrgNotificationSettingsRequest => ({
+    isSlackEnabled: draftOrgNotif.slackEnabled,
+    slackWebhookUrl: "",
+    disconnectSlack: false,
+    isDiscordEnabled: draftOrgNotif.discordEnabled,
+    discordWebhookUrl: "",
+    disconnectDiscord: false,
+    alertClicks: notificationSettings?.orgAlertClicks ?? false,
+    alertReport: notificationSettings?.orgAlertReport ?? false,
+    ...overrides,
+  });
+
   const handlePickFile = (e: ChangeEvent<HTMLInputElement>) => {
     setIsImageDeleted(false);
     onPickFile(e);
+  };
+
+  const handleConnectSlack = async () => {
+    const url = slackWebhookUrl.trim();
+    if (!url) {
+      setSlackWebhookError("Webhook URL을 입력해주세요");
+      return;
+    }
+    if (!url.startsWith("https://")) {
+      setSlackWebhookError("올바른 URL 형식으로 입력해주세요");
+      return;
+    }
+
+    setPendingOrgAction("slack");
+    try {
+      await updateOrg.mutateAsync(
+        buildOrgBody({
+          isSlackEnabled: true,
+          slackWebhookUrl: url,
+          disconnectSlack: false,
+        }),
+      );
+      toast.success("슬랙이 연동되었습니다");
+      setSlackWebhookUrl("");
+      setSlackWebhookError("");
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "슬랙 연동에 실패했습니다");
+    } finally {
+      setPendingOrgAction(null);
+    }
+  };
+
+  const handleDisconnectSlack = async () => {
+    setPendingOrgAction("slack");
+    try {
+      await updateOrg.mutateAsync(
+        buildOrgBody({
+          isSlackEnabled: false,
+          slackWebhookUrl: "",
+          disconnectSlack: true,
+        }),
+      );
+      toast.success("슬랙 연동이 해제되었습니다");
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "슬랙 연동 해제에 실패했습니다");
+    } finally {
+      setPendingOrgAction(null);
+    }
+  };
+
+  const handleConnectDiscord = async () => {
+    const url = discordWebhookUrl.trim();
+    if (!url) {
+      setDiscordWebhookError("Webhook URL을 입력해주세요");
+      return;
+    }
+    if (!url.startsWith("https://")) {
+      setDiscordWebhookError("올바른 URL 형식으로 입력해주세요");
+      return;
+    }
+
+    setPendingOrgAction("discord");
+    try {
+      await updateOrg.mutateAsync(
+        buildOrgBody({
+          isDiscordEnabled: true,
+          discordWebhookUrl: url,
+          disconnectDiscord: false,
+        }),
+      );
+      toast.success("디스코드가 연동되었습니다");
+      setDiscordWebhookUrl("");
+      setDiscordWebhookError("");
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "디스코드 연동에 실패했습니다");
+    } finally {
+      setPendingOrgAction(null);
+    }
+  };
+
+  const handleDisconnectDiscord = async () => {
+    setPendingOrgAction("discord");
+    try {
+      await updateOrg.mutateAsync(
+        buildOrgBody({
+          isDiscordEnabled: false,
+          discordWebhookUrl: "",
+          disconnectDiscord: true,
+        }),
+      );
+      toast.success("디스코드 연동이 해제되었습니다");
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "디스코드 연동 해제에 실패했습니다");
+    } finally {
+      setPendingOrgAction(null);
+    }
   };
 
   const hasPasswordChanges =
@@ -143,9 +299,20 @@ export default function Setting() {
     );
   }, [savedWorkspaceNotif, draftWorkspaceNotif]);
 
+  const hasMasterChanges =
+    savedOrgNotif.masterEnabled !== draftOrgNotif.masterEnabled;
+
+  const hasOrgToggleChanges =
+    savedOrgNotif.slackEnabled !== draftOrgNotif.slackEnabled ||
+    savedOrgNotif.discordEnabled !== draftOrgNotif.discordEnabled;
+
   const hasAccountChanges = hasProfileChanges || hasPasswordChanges;
 
-  const hasNotificationChanges = hasChannelChanges || hasWorkspaceNotifChanges;
+  const hasNotificationChanges =
+    hasChannelChanges ||
+    hasWorkspaceNotifChanges ||
+    hasMasterChanges ||
+    hasOrgToggleChanges;
 
   const hasChanges =
     hasAccountChanges || (!isNotificationError && hasNotificationChanges);
@@ -181,6 +348,8 @@ export default function Setting() {
   };
 
   const handleSave = async () => {
+    if (isSavingRef.current) return;
+
     if (hasPasswordChanges) {
       const errors = validatePassword();
       setPasswordErrors(errors);
@@ -192,62 +361,127 @@ export default function Setting() {
         confirmNewPassword: "",
       });
     }
+
+    isSavingRef.current = true;
+    setIsSaving(true);
+
+    let savedAccount = false;
+    let savedAnyNotification = false;
+
     try {
       if (hasAccountChanges) {
-        const res = await updateMyInfo({
-          name: draftProfile.name,
-          oldPassword: currentPassword || undefined,
-          newPassword: newPassword || undefined,
-          isImageDeleted,
-          imageFile: file,
-        });
-        setSavedProfile({
-          name: res.data.name,
-          profileImageUrl: res.data.profileImageUrl,
-        });
-        setDraftProfile((prev) => ({
-          ...prev,
-          name: res.data.name,
-        }));
-        setPreview(res.data.profileImageUrl);
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmNewPassword("");
-        setIsImageDeleted(false);
+        try {
+          const res = await updateMyInfo({
+            name: draftProfile.name,
+            oldPassword: currentPassword || undefined,
+            newPassword: newPassword || undefined,
+            isImageDeleted,
+            imageFile: file,
+          });
+          setSavedProfile({
+            name: res.data.name,
+            profileImageUrl: res.data.profileImageUrl,
+          });
+          setDraftProfile((prev) => ({
+            ...prev,
+            name: res.data.name,
+          }));
+          setPreview(res.data.profileImageUrl);
+          setCurrentPassword("");
+          setNewPassword("");
+          setConfirmNewPassword("");
+          setIsImageDeleted(false);
+          savedAccount = true;
+        } catch (e) {
+          const error = e as IApiErrorResponse;
+          toast.error(error.message ?? "회원정보수정에 실패했습니다");
+          return;
+        }
       }
 
       const canSaveNotification = !isNotificationError;
-
-      if (canSaveNotification && hasChannelChanges) {
-        setSavedChannel(draftChannel);
-        // TODO: 알림 설정 API 연동
-      }
-      if (
-        canSaveNotification &&
-        hasWorkspaceNotifChanges &&
-        selectedOrgId != null
-      ) {
-        setSavedWorkspaceNotif(draftWorkspaceNotif);
-      }
-
-      const savedWorkspaceNotifiThisTime =
+      const shouldSaveChannel =
+        canSaveNotification && hasChannelChanges && selectedOrgId != null;
+      const shouldSaveAlerts =
         canSaveNotification &&
         hasWorkspaceNotifChanges &&
         selectedOrgId != null;
-      const savedAnyNotification =
-        (canSaveNotification && hasChannelChanges) ||
-        savedWorkspaceNotifiThisTime;
 
-      toast.success(
-        hasAccountChanges && savedAnyNotification
-          ? "설정이 저장되었습니다"
-          : savedAnyNotification
-            ? "알림 설정이 저장되었습니다"
-            : "회원정보가 수정되었습니다",
-      );
-    } catch (e) {
-      const error = e as IApiErrorResponse;
-      toast.error(error.message ?? "회원정보수정에 실패했습니다");
+      const shouldSaveMaster =
+        canSaveNotification && hasMasterChanges && selectedOrgId != null;
+      const shouldSaveOrg =
+        canSaveNotification && hasOrgToggleChanges && selectedOrgId != null;
+
+      if (
+        shouldSaveChannel ||
+        shouldSaveAlerts ||
+        shouldSaveMaster ||
+        shouldSaveOrg
+      ) {
+        try {
+          if (shouldSaveChannel) {
+            await updateChannels.mutateAsync({
+              isBrowserPushEnabled: draftChannel.browserPush,
+              isEmailEnabled: draftChannel.emailNotif,
+            });
+            setSavedChannel(draftChannel);
+          }
+          if (shouldSaveAlerts) {
+            await updateAlerts.mutateAsync({
+              alertClicks: draftWorkspaceNotif.clickAlarm,
+              alertReport: draftWorkspaceNotif.weeklyReport,
+            });
+            setSavedWorkspaceNotif(draftWorkspaceNotif);
+          }
+          if (shouldSaveMaster) {
+            await updateMaster.mutateAsync({
+              isMasterEnabled: draftOrgNotif.masterEnabled,
+            });
+            setSavedOrgNotif((prev) => ({
+              ...prev,
+              masterEnabled: draftOrgNotif.masterEnabled,
+            }));
+          }
+          if (shouldSaveOrg) {
+            await updateOrg.mutateAsync(
+              buildOrgBody({
+                isSlackEnabled: draftOrgNotif.slackEnabled,
+                slackWebhookUrl: "",
+                disconnectSlack: false,
+                isDiscordEnabled: draftOrgNotif.discordEnabled,
+                discordWebhookUrl: "",
+                disconnectDiscord: false,
+              }),
+            );
+            setSavedOrgNotif((prev) => ({
+              ...prev,
+              slackEnabled: draftOrgNotif.slackEnabled,
+              discordEnabled: draftOrgNotif.discordEnabled,
+            }));
+          }
+          savedAnyNotification = true;
+        } catch (e) {
+          const error = e as IApiErrorResponse;
+          if (savedAccount) {
+            toast.success("회원정보가 수정되었습니다");
+          }
+          toast.error(error.message ?? "알림 설정 저장에 실패했습니다");
+          return;
+        }
+      }
+
+      if (savedAccount || savedAnyNotification) {
+        toast.success(
+          savedAccount && savedAnyNotification
+            ? "설정이 저장되었습니다"
+            : savedAnyNotification
+              ? "알림 설정이 저장되었습니다"
+              : "회원정보가 수정되었습니다",
+        );
+      }
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
   };
 
@@ -285,24 +519,40 @@ export default function Setting() {
       setDraftChannel(DEFAULT_CHANNEL);
       setSavedWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
       setDraftWorkspaceNotif(DEFAULT_WORKSPACE_NOTIF);
+      setSavedOrgNotif(DEFAULT_ORG_NOTIF);
+      setDraftOrgNotif(DEFAULT_ORG_NOTIF);
+      setSlackWebhookUrl("");
+      setSlackWebhookError("");
+      setDiscordWebhookUrl("");
+      setDiscordWebhookError("");
       return;
     }
 
     if (!notificationSettings) return; //로딩,에러면 손대지 않음
 
+    const masterOn = notificationSettings.isMasterEnabled;
     const nextChannel = {
-      browserPush: notificationSettings.isBrowserPushEnabled,
-      emailNotif: notificationSettings.isEmailEnabled,
+      browserPush: masterOn && notificationSettings.isBrowserPushEnabled,
+      emailNotif: masterOn && notificationSettings.isEmailEnabled,
     };
     const nextWorkspace = {
-      clickAlarm: notificationSettings.orgAlertClicks,
-      weeklyReport: notificationSettings.orgAlertReport,
+      clickAlarm: masterOn && notificationSettings.alertClicks,
+      weeklyReport: masterOn && notificationSettings.alertReport,
+    };
+    const nextOrg = {
+      masterEnabled: masterOn,
+      slackEnabled: masterOn && notificationSettings.isSlackEnabled,
+      slackConnected: notificationSettings.isSlackConnected,
+      discordEnabled: masterOn && notificationSettings.isDiscordEnabled,
+      discordConnected: notificationSettings.isDiscordConnected,
     };
 
     setSavedChannel(nextChannel);
     setDraftChannel(nextChannel);
     setSavedWorkspaceNotif(nextWorkspace);
     setDraftWorkspaceNotif(nextWorkspace);
+    setSavedOrgNotif(nextOrg);
+    setDraftOrgNotif(nextOrg);
   }, [selectedOrgId, notificationSettings]);
 
   useEffect(() => {
@@ -376,6 +626,23 @@ export default function Setting() {
         ) : (
           <NotificationSection
             email={draftProfile.email}
+            masterEnabled={draftOrgNotif.masterEnabled}
+            onMasterEnabledChange={(value) => {
+              setDraftOrgNotif((prev) => ({
+                ...prev,
+                masterEnabled: value,
+                slackEnabled: value,
+                discordEnabled: value,
+              }));
+              setDraftChannel({
+                browserPush: value,
+                emailNotif: value,
+              });
+              setDraftWorkspaceNotif({
+                clickAlarm: value,
+                weeklyReport: value,
+              });
+            }}
             browserPush={draftChannel.browserPush}
             emailNotif={draftChannel.emailNotif}
             onBrowserPushChange={(value) =>
@@ -384,6 +651,32 @@ export default function Setting() {
             onEmailNotifChange={(value) =>
               setDraftChannel((prev) => ({ ...prev, emailNotif: value }))
             }
+            slackEnabled={draftOrgNotif.slackEnabled}
+            slackConnected={draftOrgNotif.slackConnected}
+            slackWebhookUrl={slackWebhookUrl}
+            slackWebhookError={slackWebhookError}
+            onSlackWebhookUrlChange={(value) => {
+              setSlackWebhookUrl(value);
+              if (slackWebhookError) setSlackWebhookError("");
+            }}
+            onSlackEnabledChange={(value) =>
+              setDraftOrgNotif((prev) => ({ ...prev, slackEnabled: value }))
+            }
+            onConnectSlack={handleConnectSlack}
+            onDisconnectSlack={handleDisconnectSlack}
+            discordEnabled={draftOrgNotif.discordEnabled}
+            discordConnected={draftOrgNotif.discordConnected}
+            discordWebhookUrl={discordWebhookUrl}
+            discordWebhookError={discordWebhookError}
+            onDiscordWebhookUrlChange={(value) => {
+              setDiscordWebhookUrl(value);
+              if (discordWebhookError) setDiscordWebhookError("");
+            }}
+            onDiscordEnabledChange={(value) =>
+              setDraftOrgNotif((prev) => ({ ...prev, discordEnabled: value }))
+            }
+            onConnectDiscord={handleConnectDiscord}
+            onDisconnectDiscord={handleDisconnectDiscord}
             workspaceName={currentWorkspaceName}
             clickAlarm={draftWorkspaceNotif.clickAlarm}
             weeklyReport={draftWorkspaceNotif.weeklyReport}
@@ -397,6 +690,7 @@ export default function Setting() {
               }))
             }
             workspaceNotifiDisabled={workspaceNotifiDisabled}
+            pendingOrgAction={pendingOrgAction}
           />
         )}
       </div>
@@ -408,7 +702,9 @@ export default function Setting() {
           size="big"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={!hasChanges || isLoading || isNotificationSectionLoading}
+          disabled={
+            !hasChanges || isLoading || isNotificationSectionLoading || isSaving
+          }
         >
           변경사항 저장하기
         </Button>

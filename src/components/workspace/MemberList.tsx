@@ -23,6 +23,14 @@ type TMemberListProps = {
   onDeleteClick: (member: TWorkspaceMember) => void;
   isFetchingNextPage: boolean;
   observerRef: RefObject<HTMLDivElement | null>;
+  notificationReceiveByEmail: Map<
+    string,
+    { membershipId: number; isReceive: boolean }
+  >;
+  isNotificationLoading: boolean;
+  isNotificationError: boolean;
+  onReceiveToggle: (email: string) => void;
+  isReceiveUpdating?: boolean;
 };
 
 export default function MemberList({
@@ -34,6 +42,11 @@ export default function MemberList({
   onDeleteClick,
   isFetchingNextPage,
   observerRef,
+  notificationReceiveByEmail,
+  isNotificationLoading,
+  isNotificationError,
+  onReceiveToggle,
+  isReceiveUpdating = false,
 }: TMemberListProps) {
   const [inviteMemberOpen, setInviteMemberOpen] = useState(false);
 
@@ -73,6 +86,11 @@ export default function MemberList({
           <p className="mt-2 font-body2 text-text-muted">
             현재 {totalCount}명의 구성원이 활동 중입니다
           </p>
+          {isNotificationError && (
+            <p className="mt-2 font-body2 text-info-red">
+              알림 설정을 불러오지 못했습니다
+            </p>
+          )}
         </div>
         <Button
           type="button"
@@ -98,10 +116,16 @@ export default function MemberList({
               <MemberItem
                 key={member.memberId}
                 member={member}
+                isReceive={
+                  notificationReceiveByEmail.get(member.email)?.isReceive
+                }
+                isNotificationLoading={isNotificationLoading}
+                isReceiveUpdating={isReceiveUpdating}
                 onRoleChange={(newRole) =>
                   onRoleChange(member.memberId, newRole)
                 }
                 onDeleteClick={() => onDeleteClick(member)}
+                onReceiveToggle={() => onReceiveToggle(member.email)}
               />
             ))}
           </ul>

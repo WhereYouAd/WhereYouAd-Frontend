@@ -11,13 +11,13 @@ export type TTimelineMetric = (typeof TIMELINE_METRICS)[number];
 
 /*성과 상태
  * ON_TRACK: 최근 추세와 유사한 수준 유지
- * ABOVE_AVERAGE: 최근 평균 대비 눈에 띄게 좋음
+ * ABOVE_AVG: 최근 평균 대비 눈에 띄게 좋음
  * UNDERPERFORM: 최근 평균 대비 눈에 띄게 낮음
  * (미산출 시 null — UI에서는 PENDING으로 표시)
  */
 export const TIMELINE_PERFORMANCE_STATUS = [
   "ON_TRACK",
-  "ABOVE_AVERAGE",
+  "ABOVE_AVG",
   "UNDERPERFORM",
 ] as const;
 export type TTimelinePerformanceStatus =
