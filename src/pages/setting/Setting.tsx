@@ -628,20 +628,29 @@ export default function Setting() {
             email={draftProfile.email}
             masterEnabled={draftOrgNotif.masterEnabled}
             onMasterEnabledChange={(value) => {
+              if (!value) {
+                setDraftOrgNotif((prev) => ({
+                  ...prev,
+                  masterEnabled: false,
+                  slackEnabled: false,
+                  discordEnabled: false,
+                }));
+                setDraftChannel({ browserPush: false, emailNotif: false });
+                setDraftWorkspaceNotif({
+                  clickAlarm: false,
+                  weeklyReport: false,
+                });
+                return;
+              }
               setDraftOrgNotif((prev) => ({
                 ...prev,
-                masterEnabled: value,
-                slackEnabled: value,
-                discordEnabled: value,
+                masterEnabled: true,
+                slackEnabled: prev.slackConnected && savedOrgNotif.slackEnabled,
+                discordEnabled:
+                  prev.discordConnected && savedOrgNotif.discordEnabled,
               }));
-              setDraftChannel({
-                browserPush: value,
-                emailNotif: value,
-              });
-              setDraftWorkspaceNotif({
-                clickAlarm: value,
-                weeklyReport: value,
-              });
+              setDraftChannel(savedChannel);
+              setDraftWorkspaceNotif(savedWorkspaceNotif);
             }}
             browserPush={draftChannel.browserPush}
             emailNotif={draftChannel.emailNotif}
