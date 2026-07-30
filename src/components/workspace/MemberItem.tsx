@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 import type {
   TMemberRole,
   TWorkspaceMember,
@@ -5,18 +7,24 @@ import type {
 
 import MemberRoleSelect from "./MemberRoleSelect";
 
+import BellOffIcon from "@/assets/icon/common/bell-off.svg?react";
+import BellRingingIcon from "@/assets/icon/common/bell-ringing.svg?react";
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TProps = {
   member: TWorkspaceMember;
+  isReceive?: boolean;
+  isNotificationLoading: boolean;
   onRoleChange: (newRole: TMemberRole) => void;
   onDeleteClick: () => void;
 };
 
 export default function MemberItem({
   member,
+  isReceive,
+  isNotificationLoading,
   onRoleChange,
   onDeleteClick,
 }: TProps) {
@@ -43,6 +51,35 @@ export default function MemberItem({
         </div>
       </div>
       <div className="flex items-center gap-4">
+        <span
+          className={twMerge(
+            "inline-flex h-5 w-5 items-center justify-center",
+            isNotificationLoading && "animate-pulse",
+            isReceive === false && "text-text-muted opacity-70",
+            isReceive === true && "text-primary-400/90",
+            isReceive === undefined && "text-text-muted",
+          )}
+          aria-label={
+            isReceive === true
+              ? "알림 수신 중"
+              : isReceive === false
+                ? "알림 수신 안 함"
+                : "알림 설정 확인 중"
+          }
+          title={
+            isReceive === true
+              ? "알림 수신 중"
+              : isReceive === false
+                ? "알림 수신 안함"
+                : undefined
+          }
+        >
+          {isReceive ? (
+            <BellRingingIcon className="h-5 w-5" />
+          ) : (
+            <BellOffIcon className="h-5 w-5" />
+          )}
+        </span>
         {member.isMe ? (
           <span
             className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${
