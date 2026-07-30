@@ -19,6 +19,7 @@ Sentry.init({
 createRoot(document.getElementById("root")!, {
   onCaughtError: Sentry.reactErrorHandler(),
   onUncaughtError: Sentry.reactErrorHandler(),
+  onRecoverableError: Sentry.reactErrorHandler(),
 }).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
