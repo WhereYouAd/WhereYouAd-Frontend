@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Joyride from "react-joyride";
+import { Joyride } from "react-joyride";
 
 import { useOnboardingTour } from "@/hooks/common/useOnboardingTour";
 
