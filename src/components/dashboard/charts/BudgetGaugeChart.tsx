@@ -85,11 +85,11 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
     <div
       className={twMerge(
         "flex h-full w-full flex-col",
-        compact ? "pt-2" : "pt-6",
+        compact ? "pt-0" : "pt-4",
       )}
     >
-      <div className={twMerge("flex flex-col", compact ? "mb-4" : "mb-6")}>
-        <div className="mb-3 flex items-center justify-between gap-2">
+      <div className={twMerge("flex flex-col", compact ? "mb-3" : "mb-4")}>
+        <div className="mb-2 flex items-center justify-between gap-2">
           <h3 className="font-body2 text-text-body">{label}</h3>
           <Badge variant={statusBadgeVariant[status]} className="shrink-0 px-2">
             {status}
@@ -103,7 +103,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className={twMerge("relative w-full", compact ? "mb-4" : "mb-6")}>
+      <div className={twMerge("relative w-full", compact ? "mb-3" : "mb-4")}>
         <div
           role="progressbar"
           aria-label={`${label} 남은 비율`}
@@ -132,14 +132,14 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           />
         </div>
 
-        <div className="mt-3 flex items-center justify-between font-body2 text-text-body">
+        <div className="mt-2 flex items-center justify-between font-body2 text-text-body">
           <span className="tabular-nums">{M.spend.format(spent)}</span>
           <span className="tabular-nums">{M.spend.format(totalBudget)}</span>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 p-4">
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 px-4 py-3">
           <span className="font-caption text-text-muted">남은 예산</span>
           <span
             className={twMerge(
