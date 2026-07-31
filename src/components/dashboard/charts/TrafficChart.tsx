@@ -9,6 +9,8 @@ import {
   useState,
 } from "react";
 
+import { OVERVIEW_TRAFFIC_CHART_HEIGHT } from "@/constants/dashboard/trafficChartHeights";
+
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp";
 
@@ -28,6 +30,11 @@ import { toggleDummyClicks } from "@/api/dashboard/overview";
 import MoreIcon from "@/assets/icon/common/more.svg?react";
 
 const ReactApexChart = lazy(() => import("react-apexcharts"));
+
+interface ITrafficChartProps {
+  /** ApexCharts height — 통합 대시보드 기본 520 */
+  height?: number;
+}
 
 // 차트 우측 상단 다운로드 버튼 + 더미 토글
 export function TrafficChartDownload() {
@@ -100,9 +107,12 @@ const AnomalyBubble = memo(function AnomalyBubble({
   );
 });
 
-const TrafficChart = memo(function TrafficChart() {
+const TrafficChart = memo(function TrafficChart({
+  height = OVERVIEW_TRAFFIC_CHART_HEIGHT,
+}: ITrafficChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { data, suspectDetail, isError } = useClickStream({ mode: "dummy" });
+  const chartAreaStyle = { height: `${height}px` };
 
   // timeSeriesData → datetime 기반 차트 series 변환
   const DAY_MS = 24 * 60 * 60 * 1000;
@@ -262,7 +272,10 @@ const TrafficChart = memo(function TrafficChart() {
 
   if (isError && !data) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-100 gap-2 text-text-muted">
+      <div
+        style={chartAreaStyle}
+        className="flex w-full flex-col items-center justify-center gap-2 text-text-muted"
+      >
         <p className="font-body2">실시간 데이터를 불러오지 못했습니다.</p>
         <p className="font-caption">잠시 후 다시 시도해 주세요.</p>
       </div>
@@ -270,7 +283,7 @@ const TrafficChart = memo(function TrafficChart() {
   }
 
   if (!data) {
-    return <Skeleton className="w-full h-100" />;
+    return <Skeleton className="w-full rounded-xl" style={chartAreaStyle} />;
   }
 
   return (
@@ -283,12 +296,12 @@ const TrafficChart = memo(function TrafficChart() {
         data-hide-tooltip={showBubble || undefined}
         className="relative will-change-transform [&_.apexcharts-toolbar]:hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none"
       >
-        <Suspense fallback={<div className="h-100" />}>
+        <Suspense fallback={<div style={chartAreaStyle} />}>
           <ReactApexChart
             type="area"
             options={chartOptions}
             series={series}
-            height={400}
+            height={height}
           />
         </Suspense>
         {markerPos && (

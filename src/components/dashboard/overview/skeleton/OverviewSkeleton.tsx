@@ -1,3 +1,5 @@
+import { OVERVIEW_TRAFFIC_CHART_HEIGHT } from "@/constants/dashboard/trafficChartHeights";
+
 import {
   Skeleton,
   SkeletonCircle,
@@ -17,7 +19,12 @@ export function OverviewKpiCardSkeleton() {
 
 /** 실시간 트래픽 차트 */
 export function OverviewTrafficChartSkeleton() {
-  return <Skeleton className="min-h-60 w-full flex-1 rounded-2xl" />;
+  return (
+    <Skeleton
+      className="w-full rounded-2xl"
+      style={{ height: `${OVERVIEW_TRAFFIC_CHART_HEIGHT}px` }}
+    />
+  );
 }
 
 /** 예산 게이지 카드 */

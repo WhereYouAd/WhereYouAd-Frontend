@@ -70,7 +70,7 @@ export function OverviewKpiSection({
         }
         RightElement={<TrafficChartDownload />}
       >
-        <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-0 pt-3 flex-1 flex-col">
           <ErrorBoundary FallbackComponent={ChartErrorFallback}>
             <Suspense fallback={<OverviewTrafficChartSkeleton />}>
               <TrafficChart />

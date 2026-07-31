@@ -16,6 +16,10 @@ import type {
   TProviderType,
 } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
+import {
+  PLATFORM_TRAFFIC_CHART_HEIGHT_DUAL_MIN,
+  PLATFORM_TRAFFIC_CHART_HEIGHT_SINGLE,
+} from "@/constants/dashboard/trafficChartHeights";
 
 import {
   formatCountChartAxis,
@@ -38,8 +42,8 @@ interface IPlatformTrafficChartProps {
   fillHeight?: boolean;
 }
 
-const DEFAULT_CHART_HEIGHT = 360;
-const MIN_CHART_HEIGHT = 300;
+const DEFAULT_CHART_HEIGHT = PLATFORM_TRAFFIC_CHART_HEIGHT_SINGLE;
+const MIN_CHART_HEIGHT = PLATFORM_TRAFFIC_CHART_HEIGHT_DUAL_MIN;
 
 // 이상 징후 상세 버블
 const AnomalyBubble = memo(function AnomalyBubble({
