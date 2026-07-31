@@ -132,6 +132,5 @@ export function toBudgetQueryData(
   return {
     viewModel,
     gauges,
-    statusGauge: gauges[0],
   };
 }

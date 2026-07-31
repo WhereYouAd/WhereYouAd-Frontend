@@ -4,7 +4,6 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
-import { getSpentPercentage } from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
 
@@ -13,7 +12,6 @@ import { useClickStream } from "@/hooks/dashboard/useClickStream";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
-import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
@@ -22,10 +20,7 @@ import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import MetricErrorFallback from "@/components/common/error/MetricErrorFallback";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
-import BudgetGaugeChart, {
-  getBudgetStatus,
-  statusBadgeVariant,
-} from "@/components/dashboard/charts/BudgetGaugeChart";
+import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
 
@@ -85,14 +80,6 @@ export default function SinglePlatformView({
     mode: "dummy",
     providerType: platform,
   });
-
-  const budgetStatus = budgetData
-    ? getBudgetStatus(
-        getSpentPercentage(budgetData.statusGauge),
-        budgetData.statusGauge.warningThreshold,
-        budgetData.statusGauge.dangerThreshold,
-      )
-    : null;
 
   const platformColor = PLATFORM_CHART_COLORS[platform];
 
@@ -188,16 +175,6 @@ export default function SinglePlatformView({
                 { label: "위험", colorClass: "bg-info-red" },
               ]}
             />
-          }
-          RightElement={
-            budgetStatus && (
-              <Badge
-                variant={statusBadgeVariant[budgetStatus]}
-                className="px-2"
-              >
-                {budgetStatus}
-              </Badge>
-            )
           }
         >
           <ErrorBoundary

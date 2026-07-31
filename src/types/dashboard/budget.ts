@@ -28,6 +28,4 @@ export interface IBudgetGaugeProps extends IBudgetSlice {
 export interface IBudgetQueryData {
   viewModel: IBudgetViewModel;
   gauges: IBudgetGaugeProps[];
-  /** Badge·상태 계산용 (통합: Google·Meta, 플랫폼: 전체 예산) */
-  statusGauge: IBudgetGaugeProps;
 }

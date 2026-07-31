@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-import { getSpentPercentage } from "@/utils/dashboard/budget";
-
 import { useBudget } from "@/hooks/dashboard/useBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
@@ -9,7 +7,6 @@ import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankin
 import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
-import { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
 
 import { OverviewBudgetSection } from "./sections/OverviewBudgetSection";
 import { OverviewKpiSection } from "./sections/OverviewKpiSection";
@@ -37,15 +34,6 @@ export default function OverviewDashboard() {
     error: rankingsError,
   } = useOverviewRoasRankings();
 
-  const budgetStatus =
-    budget && !isBudgetLoading
-      ? getBudgetStatus(
-          getSpentPercentage(budget.statusGauge),
-          budget.statusGauge.warningThreshold,
-          budget.statusGauge.dangerThreshold,
-        )
-      : null;
-
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
       <div className="grid w-full min-w-0 grid-cols-4 items-stretch gap-6 tablet:grid-cols-1 tablet:gap-6">
@@ -60,7 +48,6 @@ export default function OverviewDashboard() {
           isBudgetLoading={isBudgetLoading}
           isBudgetError={isBudgetError}
           budgetError={budgetError}
-          budgetStatus={budgetStatus}
         />
       </div>
 

@@ -11,7 +11,7 @@ import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
 
-import { type TBadgeVariant } from "@/components/common/badge/Badge";
+import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
@@ -89,7 +89,12 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
       )}
     >
       <div className={twMerge("flex flex-col", compact ? "mb-4" : "mb-6")}>
-        <h3 className="mb-3 font-body2 text-text-body">{label}</h3>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h3 className="font-body2 text-text-body">{label}</h3>
+          <Badge variant={statusBadgeVariant[status]} className="shrink-0 px-2">
+            {status}
+          </Badge>
+        </div>
         <div className="flex items-baseline gap-2">
           <span className="font-heading1 text-text-title tabular-nums leading-none">
             {remainingPct}%

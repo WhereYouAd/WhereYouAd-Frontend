@@ -2,17 +2,13 @@ import type { IApiErrorResponse } from "@/types/common/common";
 
 import type { useBudget } from "@/hooks/dashboard/useBudget";
 
-import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import ChartLegend, {
   type IChartLegendItem,
 } from "@/components/common/chart/ChartLegend";
 import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
-import type { getBudgetStatus } from "@/components/dashboard/charts/BudgetGaugeChart";
-import BudgetGaugeChart, {
-  statusBadgeVariant,
-} from "@/components/dashboard/charts/BudgetGaugeChart";
+import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import { OverviewBudgetGaugeSkeleton } from "@/components/dashboard/overview/skeleton/OverviewSkeleton";
 
 import OverviewCampaignSnapshotCard from "./OverviewCampaignSnapshotCard";
@@ -28,13 +24,11 @@ export function OverviewBudgetSection({
   isBudgetLoading,
   isBudgetError,
   budgetError,
-  budgetStatus,
 }: {
   budget: ReturnType<typeof useBudget>["data"];
   isBudgetLoading: boolean;
   isBudgetError: boolean;
   budgetError: IApiErrorResponse | null;
-  budgetStatus: ReturnType<typeof getBudgetStatus> | null;
 }) {
   return (
     <div className="col-span-1 flex h-full min-h-0 min-w-0 flex-col gap-3 tablet:col-span-1">
@@ -47,16 +41,6 @@ export function OverviewBudgetSection({
               className="flex-wrap gap-x-4 gap-y-1 [&_span]:text-text-muted"
               items={budgetStatusLegendItems}
             />
-          }
-          RightElement={
-            budgetStatus ? (
-              <Badge
-                variant={statusBadgeVariant[budgetStatus]}
-                className="px-2"
-              >
-                {budgetStatus}
-              </Badge>
-            ) : undefined
           }
         >
           <div className="flex min-h-0 flex-1 flex-col">
