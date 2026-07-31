@@ -27,7 +27,7 @@ export default function OnboardingTour({
       scrollToFirstStep
       tooltipComponent={OnboardingTooltip}
       options={{
-        overlayColor: "rgba(17, 24, 39, 0.5)",
+        overlayColor: "rgba(0, 0, 0, 0.5)",
         zIndex: 1000,
       }}
     />
