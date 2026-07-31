@@ -6,6 +6,8 @@ import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
@@ -203,165 +205,170 @@ export default function WorkspaceSetting() {
         </Card>
       )}
       {!loading && !errorMsg && (
-        <>
-          <Card className="p-8">
-            <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
-              <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
-                <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
-                  로고 이미지
-                </div>
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png,image/webp"
-                  className="hidden"
-                  onChange={onPickLogo}
-                />
-                <button
-                  type="button"
-                  onClick={openFilePicker}
-                  disabled={!isAdmin || saving || deleting}
-                  aria-label="로고 이미지 업로드 또는 변경"
-                  className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
-                >
-                  {logoPreview ? (
-                    <img
-                      src={logoPreview}
-                      alt=""
-                      className="h-full w-full object-cover rounded-lg"
-                    />
-                  ) : resolvedLogoUrl ? (
-                    <img
-                      src={resolvedLogoUrl}
-                      alt=""
-                      className="h-full w-full object-cover rounded-lg"
-                      onError={() => {
-                        setImageError(true);
-                      }}
-                    />
-                  ) : (
-                    <BuildingIcon
-                      aria-hidden="true"
-                      className="h-11 w-11 text-text-placeholder"
-                    />
-                  )}
-                </button>
-                <div className="flex gap-2 mt-4 justify-center">
-                  <Button
-                    variant="custom"
+        <ErrorBoundary
+          FallbackComponent={AreaErrorFallback}
+          resetKeys={[detail]}
+        >
+          <>
+            <Card className="p-8">
+              <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
+                <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
+                  <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
+                    로고 이미지
+                  </div>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    className="hidden"
+                    onChange={onPickLogo}
+                  />
+                  <button
                     type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
                     onClick={openFilePicker}
-                    aria-label="로고 이미지 업로드 버튼"
                     disabled={!isAdmin || saving || deleting}
+                    aria-label="로고 이미지 업로드 또는 변경"
+                    className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
                   >
-                    업로드
-                  </Button>
-                  <Button
-                    variant="custom"
-                    type="button"
-                    className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
-                    onClick={onResetLogo}
-                    aria-label="로고 이미지 초기화 버튼"
+                    {logoPreview ? (
+                      <img
+                        src={logoPreview}
+                        alt=""
+                        className="h-full w-full object-cover rounded-lg"
+                      />
+                    ) : resolvedLogoUrl ? (
+                      <img
+                        src={resolvedLogoUrl}
+                        alt=""
+                        className="h-full w-full object-cover rounded-lg"
+                        onError={() => {
+                          setImageError(true);
+                        }}
+                      />
+                    ) : (
+                      <BuildingIcon
+                        aria-hidden="true"
+                        className="h-11 w-11 text-text-placeholder"
+                      />
+                    )}
+                  </button>
+                  <div className="flex gap-2 mt-4 justify-center">
+                    <Button
+                      variant="custom"
+                      type="button"
+                      className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
+                      onClick={openFilePicker}
+                      aria-label="로고 이미지 업로드 버튼"
+                      disabled={!isAdmin || saving || deleting}
+                    >
+                      업로드
+                    </Button>
+                    <Button
+                      variant="custom"
+                      type="button"
+                      className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-surface-100"
+                      onClick={onResetLogo}
+                      aria-label="로고 이미지 초기화 버튼"
+                      disabled={!isAdmin || saving || deleting}
+                    >
+                      초기화
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex-1 w-full space-y-6">
+                  <Input
+                    label="워크스페이스명"
+                    value={name}
+                    placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
+                    onChange={(e) => setName(e.target.value)}
                     disabled={!isAdmin || saving || deleting}
-                  >
-                    초기화
-                  </Button>
+                  />
+                  <TextareaField
+                    id="workspace-setting-desc"
+                    label="워크스페이스 설명"
+                    placeholder="워크스페이스에 대한 설명을 입력해주세요"
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    minRows={4}
+                    className="min-h-90"
+                    disabled={!isAdmin || saving || deleting}
+                  />
                 </div>
               </div>
-              <div className="flex-1 w-full space-y-6">
-                <Input
-                  label="워크스페이스명"
-                  value={name}
-                  placeholder="조직의 이름 또는 워크스페이스 이름을 입력해주세요"
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={!isAdmin || saving || deleting}
-                />
-                <TextareaField
-                  id="workspace-setting-desc"
-                  label="워크스페이스 설명"
-                  placeholder="워크스페이스에 대한 설명을 입력해주세요"
-                  value={desc}
-                  onChange={(e) => setDesc(e.target.value)}
-                  minRows={4}
-                  className="min-h-90"
-                  disabled={!isAdmin || saving || deleting}
-                />
-              </div>
-            </div>
-            {isAdmin && (
-              <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
-                <Button
-                  type="button"
-                  variant="dangerSoft"
-                  size="big"
-                  onClick={openDeleteModal}
-                  disabled={saving || deleting}
-                  className="w-auto tablet:w-full"
-                >
-                  워크스페이스 삭제
-                </Button>
-                <Button
-                  size="big"
-                  variant="primary"
-                  type="button"
-                  onClick={onSave}
-                  disabled={!name.trim() || saving || deleting}
-                  aria-label="변경사항 저장하기"
-                  className="w-auto tablet:w-full"
-                >
-                  {saving ? "저장 중.." : "변경사항 저장하기"}
-                </Button>
-              </div>
-            )}
-          </Card>
+              {isAdmin && (
+                <div className="mt-6 flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
+                  <Button
+                    type="button"
+                    variant="dangerSoft"
+                    size="big"
+                    onClick={openDeleteModal}
+                    disabled={saving || deleting}
+                    className="w-auto tablet:w-full"
+                  >
+                    워크스페이스 삭제
+                  </Button>
+                  <Button
+                    size="big"
+                    variant="primary"
+                    type="button"
+                    onClick={onSave}
+                    disabled={!name.trim() || saving || deleting}
+                    aria-label="변경사항 저장하기"
+                    className="w-auto tablet:w-full"
+                  >
+                    {saving ? "저장 중.." : "변경사항 저장하기"}
+                  </Button>
+                </div>
+              )}
+            </Card>
 
-          <Modal
-            isOpen={deleteOpen}
-            onClose={() => {
-              if (!deleting) {
-                setDeleteOpen(false);
-                setDeleteNameSnapshot("");
-                setDeleteConfirmInput("");
-              }
-            }}
-            title="워크스페이스를 삭제할게요"
-            size="lg"
-            disableOverlayClick={deleting}
-          >
-            <ModalContent
-              icon={
-                <WarnIcon
-                  className="h-7 w-7 text-info-red"
-                  aria-hidden="true"
-                />
-              }
-              title="워크스페이스를 삭제할게요"
-              description={
-                <>
-                  <p>
-                    삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
-                    없어요.
-                  </p>
-                  <p className="mt-2.5">
-                    아래 워크스페이스 이름을 그대로 입력해 주세요.
-                  </p>
-                </>
-              }
-              confirmMatchSubheading={false}
-              confirmMatchText={deleteNameSnapshot}
-              confirmInput={deleteConfirmInput}
-              onConfirmInputChange={setDeleteConfirmInput}
-              confirmMatchInputPlaceholder="워크스페이스 이름"
-              buttonText="영구 삭제"
-              onConfirm={() => {
-                void onDelete();
+            <Modal
+              isOpen={deleteOpen}
+              onClose={() => {
+                if (!deleting) {
+                  setDeleteOpen(false);
+                  setDeleteNameSnapshot("");
+                  setDeleteConfirmInput("");
+                }
               }}
-              isLoading={deleting}
-              variant="danger"
-            />
-          </Modal>
-        </>
+              title="워크스페이스를 삭제할게요"
+              size="lg"
+              disableOverlayClick={deleting}
+            >
+              <ModalContent
+                icon={
+                  <WarnIcon
+                    className="h-7 w-7 text-info-red"
+                    aria-hidden="true"
+                  />
+                }
+                title="워크스페이스를 삭제할게요"
+                description={
+                  <>
+                    <p>
+                      삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
+                      없어요.
+                    </p>
+                    <p className="mt-2.5">
+                      아래 워크스페이스 이름을 그대로 입력해 주세요.
+                    </p>
+                  </>
+                }
+                confirmMatchSubheading={false}
+                confirmMatchText={deleteNameSnapshot}
+                confirmInput={deleteConfirmInput}
+                onConfirmInputChange={setDeleteConfirmInput}
+                confirmMatchInputPlaceholder="워크스페이스 이름"
+                buttonText="영구 삭제"
+                onConfirm={() => {
+                  void onDelete();
+                }}
+                isLoading={deleting}
+                variant="danger"
+              />
+            </Modal>
+          </>
+        </ErrorBoundary>
       )}
     </section>
   );

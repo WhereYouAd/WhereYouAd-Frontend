@@ -18,6 +18,8 @@ import Button from "@/components/common/button/Button";
 import ChartLegend from "@/components/common/chart/ChartLegend";
 import Drawer from "@/components/common/drawer/Drawer";
 import { DropdownMenu } from "@/components/common/dropdownmenu/DropdownMenu";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import TimelinePeriodSelector from "@/components/timeline/TimelinePeriodSelector";
 
@@ -367,13 +369,24 @@ export default function TimelinePerformancePanel({
                 disableNext={!canGoNext}
               />
             </div>
-            <TimelineDailyTrendChart
-              dailyTrend={slicedTrend}
-              metric={chartMetric}
-              viewUnit={viewUnit}
-              rangeStart={chartRangeStart}
-              rangeEnd={chartRangeEnd}
-            />
+            <ErrorBoundary
+              FallbackComponent={ChartErrorFallback}
+              resetKeys={[
+                slicedTrend,
+                chartMetric,
+                viewUnit,
+                chartRangeEnd,
+                chartRangeStart,
+              ]}
+            >
+              <TimelineDailyTrendChart
+                dailyTrend={slicedTrend}
+                metric={chartMetric}
+                viewUnit={viewUnit}
+                rangeStart={chartRangeStart}
+                rangeEnd={chartRangeEnd}
+              />
+            </ErrorBoundary>
           </div>
         </section>
 

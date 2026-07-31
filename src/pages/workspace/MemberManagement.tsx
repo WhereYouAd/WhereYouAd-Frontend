@@ -14,6 +14,8 @@ import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 import { useNotificationMembers } from "@/hooks/setting/useNotificationMembers";
 import { useUpdateNotificationMembers } from "@/hooks/setting/useUpdateNotificationMembers";
 
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import DeleteMemberModal from "@/components/workspace/DeleteMemberModal";
 import MemberList from "@/components/workspace/MemberList";
 import MemberManagementLoading from "@/components/workspace/MemberManagementLoading";
@@ -339,36 +341,41 @@ export default function MemberManagement() {
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-8">
-      <div className="flex w-full min-w-0 flex-col gap-8">
-        <MemberList
-          orgId={orgId}
-          members={members}
-          pendingMembers={pendingMembers}
-          totalCount={totalCount}
-          onRoleChange={handleRoleChange}
-          onDeleteClick={openDeleteMember}
-          isFetchingNextPage={membersQuery.isFetchingNextPage}
-          observerRef={observerRef}
-          notificationReceiveByEmail={notificationReceiveByEmail}
-          isNotificationLoading={
-            notificationMembersQuery.isLoading ||
-            notificationMembersQuery.isFetchingNextPage
-          }
-          isNotificationError={notificationMembersQuery.isError}
-          onReceiveToggle={handleReceiveToggle}
-          updatingMemberId={updatingMemberId}
-        />
+      <ErrorBoundary
+        FallbackComponent={AreaErrorFallback}
+        resetKeys={[members, pendingMembers]}
+      >
+        <div className="flex w-full min-w-0 flex-col gap-8">
+          <MemberList
+            orgId={orgId}
+            members={members}
+            pendingMembers={pendingMembers}
+            totalCount={totalCount}
+            onRoleChange={handleRoleChange}
+            onDeleteClick={openDeleteMember}
+            isFetchingNextPage={membersQuery.isFetchingNextPage}
+            observerRef={observerRef}
+            notificationReceiveByEmail={notificationReceiveByEmail}
+            isNotificationLoading={
+              notificationMembersQuery.isLoading ||
+              notificationMembersQuery.isFetchingNextPage
+            }
+            isNotificationError={notificationMembersQuery.isError}
+            onReceiveToggle={handleReceiveToggle}
+            updatingMemberId={updatingMemberId}
+          />
 
-        <PermissionTable />
+          <PermissionTable />
 
-        <DeleteMemberModal
-          isOpen={isDeleteModalOpen}
-          onClose={closeDeleteMember}
-          member={selectedDeleteMember}
-          onConfirm={handleDeleteMember}
-          isLoading={deleteMemberMutation.isPending}
-        />
-      </div>
+          <DeleteMemberModal
+            isOpen={isDeleteModalOpen}
+            onClose={closeDeleteMember}
+            member={selectedDeleteMember}
+            onConfirm={handleDeleteMember}
+            isLoading={deleteMemberMutation.isPending}
+          />
+        </div>
+      </ErrorBoundary>
     </section>
   );
 }
