@@ -190,9 +190,23 @@ export default function SinglePlatformView({
                 예산 데이터를 불러오지 못했습니다.
               </div>
             ) : budgetData ? (
-              <div className="flex flex-1 flex-col gap-5 overflow-y-auto pt-2">
-                {budgetData.gauges.map((gauge) => (
-                  <BudgetGaugeChart key={gauge.label} {...gauge} />
+              <div
+                className={twMerge(
+                  "flex flex-1 flex-col overflow-y-auto pt-2",
+                  budgetData.gauges.length === 1 && "gap-5",
+                )}
+              >
+                {budgetData.gauges.map((gauge, index) => (
+                  <div
+                    key={gauge.label}
+                    className={twMerge(
+                      index > 0 &&
+                        budgetData.gauges.length > 1 &&
+                        "mt-5 border-t border-surface-300 pt-5",
+                    )}
+                  >
+                    <BudgetGaugeChart {...gauge} />
+                  </div>
                 ))}
               </div>
             ) : (

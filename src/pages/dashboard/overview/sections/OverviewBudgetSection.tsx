@@ -61,9 +61,24 @@ export function OverviewBudgetSection({
               ) : isBudgetLoading ? (
                 <OverviewBudgetGaugeSkeleton />
               ) : budget ? (
-                <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
-                  {budget.gauges.map((gauge) => (
-                    <BudgetGaugeChart key={gauge.label} {...gauge} />
+                <div
+                  className={
+                    budget.gauges.length > 1
+                      ? "flex min-h-0 flex-1 flex-col overflow-y-auto"
+                      : "flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto"
+                  }
+                >
+                  {budget.gauges.map((gauge, index) => (
+                    <div
+                      key={gauge.label}
+                      className={
+                        index > 0 && budget.gauges.length > 1
+                          ? "mt-5 border-t border-surface-300 pt-5"
+                          : undefined
+                      }
+                    >
+                      <BudgetGaugeChart {...gauge} />
+                    </div>
                   ))}
                 </div>
               ) : null}
