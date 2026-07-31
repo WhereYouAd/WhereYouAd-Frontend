@@ -77,7 +77,11 @@ export function OverviewBudgetSection({
               ) : isBudgetLoading ? (
                 <OverviewBudgetGaugeSkeleton />
               ) : budget ? (
-                <BudgetGaugeChart {...budget} />
+                <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto">
+                  {budget.gauges.map((gauge) => (
+                    <BudgetGaugeChart key={gauge.label} {...gauge} />
+                  ))}
+                </div>
               ) : null}
             </ErrorBoundary>
           </div>

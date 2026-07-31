@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
+import { getSpentPercentage } from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
 
@@ -64,7 +65,7 @@ export default function SinglePlatformView({
   const logoInfo = PLATFORM_LOGOS[platform];
 
   const {
-    data: budget,
+    data: budgetData,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
   } = useBudget(platform);
@@ -85,15 +86,11 @@ export default function SinglePlatformView({
     providerType: platform,
   });
 
-  const budgetPct = budget
-    ? Math.round((budget.spent / budget.totalBudget) * 100)
-    : 0;
-
-  const budgetStatus = budget
+  const budgetStatus = budgetData
     ? getBudgetStatus(
-        budgetPct,
-        budget.warningThreshold,
-        budget.dangerThreshold,
+        getSpentPercentage(budgetData.statusGauge),
+        budgetData.statusGauge.warningThreshold,
+        budgetData.statusGauge.dangerThreshold,
       )
     : null;
 
@@ -182,7 +179,7 @@ export default function SinglePlatformView({
 
         <Card
           title="예산 소진 현황"
-          className="col-span-1 tablet:col-span-1 h-120 flex flex-col"
+          className="col-span-1 tablet:col-span-1 min-h-120 flex flex-col"
           description={
             <ChartLegend
               items={[
@@ -205,7 +202,7 @@ export default function SinglePlatformView({
         >
           <ErrorBoundary
             FallbackComponent={ChartErrorFallback}
-            resetKeys={[budget]}
+            resetKeys={[budgetData]}
           >
             {isBudgetLoading ? (
               <div className="flex flex-1 items-center justify-center p-8">
@@ -215,9 +212,11 @@ export default function SinglePlatformView({
               <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
                 예산 데이터를 불러오지 못했습니다.
               </div>
-            ) : budget ? (
-              <div className="flex flex-1 flex-col">
-                <BudgetGaugeChart {...budget} />
+            ) : budgetData ? (
+              <div className="flex flex-1 flex-col gap-5 overflow-y-auto pt-2">
+                {budgetData.gauges.map((gauge) => (
+                  <BudgetGaugeChart key={gauge.label} {...gauge} />
+                ))}
               </div>
             ) : (
               <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">

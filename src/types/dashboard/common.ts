@@ -10,6 +10,12 @@ export interface IMetricsResponse {
   ROASChangeRate: number;
 }
 
+// 예산 금액 단위 (API 분리 응답)
+export interface IBudgetAmountSlice {
+  totalBudget: number;
+  totalSpend: number;
+}
+
 // 예산 소진 현황
 export interface IBudgetResponse {
   providerType: string;
@@ -17,6 +23,12 @@ export interface IBudgetResponse {
   totalBudget: number;
   totalSpend: number;
   remainingBudget: number;
+  /** 통합 대시보드 — Google·Meta / Naver 분리 */
+  googleMeta?: IBudgetAmountSlice;
+  naver?: IBudgetAmountSlice;
+  /** 플랫폼 Google/Meta — 전체 / 일일 분리 */
+  lifetime?: IBudgetAmountSlice;
+  daily?: IBudgetAmountSlice;
 }
 
 // ROAS 순위 항목

@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
+import { getSpentPercentage } from "@/utils/dashboard/budget";
+
 import { useBudget } from "@/hooks/dashboard/useBudget";
 import { useOverviewMetrics } from "@/hooks/dashboard/useOverviewMetrics";
 import { useOverviewRoasRankings } from "@/hooks/dashboard/useOverviewRoasRankings";
@@ -35,16 +37,12 @@ export default function OverviewDashboard() {
     error: rankingsError,
   } = useOverviewRoasRankings();
 
-  const budgetPct =
-    budget && budget.totalBudget > 0
-      ? Math.round((budget.spent / budget.totalBudget) * 100)
-      : 0;
   const budgetStatus =
     budget && !isBudgetLoading
       ? getBudgetStatus(
-          budgetPct,
-          budget.warningThreshold,
-          budget.dangerThreshold,
+          getSpentPercentage(budget.statusGauge),
+          budget.statusGauge.warningThreshold,
+          budget.statusGauge.dangerThreshold,
         )
       : null;
 

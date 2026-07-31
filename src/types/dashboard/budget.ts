@@ -1,14 +1,20 @@
-/** 게이지 1개 (전체 or 일일) */
+/** 게이지 라벨 */
+export type TBudgetGaugeLabel =
+  | "전체 예산"
+  | "일일 예산"
+  | "Google·Meta"
+  | "NAVER";
+
+/** 게이지 1개 분량 */
 export interface IBudgetSlice {
-  label: "전체 예산" | "일일 예산";
+  label: TBudgetGaugeLabel;
   totalBudget: number;
   spent: number;
 }
 
 /** 어댑터가 만드는 ViewModel */
 export interface IBudgetViewModel {
-  lifetime: IBudgetSlice;
-  daily?: IBudgetSlice;
+  slices: IBudgetSlice[];
 }
 
 /** BudgetGaugeChart에 넘기는 props */
@@ -21,6 +27,7 @@ export interface IBudgetGaugeProps extends IBudgetSlice {
 /** useBudget select 결과 */
 export interface IBudgetQueryData {
   viewModel: IBudgetViewModel;
-  lifetimeGauge: IBudgetGaugeProps;
-  dailyGauge?: IBudgetGaugeProps;
+  gauges: IBudgetGaugeProps[];
+  /** Badge·상태 계산용 (통합: Google·Meta, 플랫폼: 전체 예산) */
+  statusGauge: IBudgetGaugeProps;
 }
