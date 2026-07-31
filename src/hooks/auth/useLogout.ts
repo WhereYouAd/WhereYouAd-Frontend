@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -11,9 +12,11 @@ import useAuthStore from "@/store/useAuthStore";
 export function useLogout() {
   const nav = useNavigate();
   const logout = useAuthStore((s) => s.logout);
+  const queryClient = useQueryClient();
 
   return useCoreMutation(postLogout, {
     userOnSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["my-workspaces"] });
       logout();
       nav("/", { replace: true });
     },
