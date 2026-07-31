@@ -44,10 +44,10 @@ export default function LogoutConfirmModal({
         </div>
 
         <h3 className="mb-3 font-heading2 text-text-title">
-          로그아웃 하시겠어요?
+          로그아웃 하시겠습니까?
         </h3>
         <p className="mb-6 font-body1 leading-relaxed text-text-auth-sub">
-          현재 세션이 종료되고 랜딩 페이지로 이동합니다.
+          로그아웃 후 첫 페이지로 이동합니다.
         </p>
 
         <div className="flex items-center">
