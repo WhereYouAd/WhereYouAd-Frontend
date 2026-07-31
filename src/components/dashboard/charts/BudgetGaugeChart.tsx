@@ -1,6 +1,12 @@
 import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
+import type { IBudgetGaugeProps } from "@/types/dashboard/budget";
+
+import {
+  getRemainingPercentage,
+  getSpentPercentage,
+} from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
 import { useIsMounted } from "@/hooks/common/useIsMounted";
@@ -8,13 +14,6 @@ import { useIsMounted } from "@/hooks/common/useIsMounted";
 import { type TBadgeVariant } from "@/components/common/badge/Badge";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
-
-interface IBudgetGaugeChartProps {
-  totalBudget: number;
-  spent: number;
-  warningThreshold: number;
-  dangerThreshold: number;
-}
 
 export type TBudgetStatus = "안정" | "주의" | "위험";
 
@@ -48,28 +47,32 @@ function splitInsightHeadTail(text: string): { head: string; tail?: string } {
 }
 
 const BudgetGaugeChart = memo(function BudgetGaugeChart({
+  label,
   totalBudget,
   spent,
   warningThreshold,
   dangerThreshold,
-}: IBudgetGaugeChartProps) {
+  compact = false,
+}: IBudgetGaugeProps) {
   const mounted = useIsMounted();
 
-  const percentage =
-    totalBudget > 0 ? Math.round((spent / totalBudget) * 100) : 0;
+  const slice = { totalBudget, spent };
+  const spentPct = getSpentPercentage(slice);
+  const remainingPct = getRemainingPercentage(slice);
   const isOverBudget = spent > totalBudget;
-  const remaining = isOverBudget ? spent - totalBudget : totalBudget - spent;
+  const remainingAmount = isOverBudget
+    ? spent - totalBudget
+    : totalBudget - spent;
 
-  const status = getBudgetStatus(percentage, warningThreshold, dangerThreshold);
+  const status = getBudgetStatus(spentPct, warningThreshold, dangerThreshold);
 
-  // 데이터 인사이트 메시지
   let insightDesc = "";
 
   if (isOverBudget) {
     insightDesc = "예산을 초과했습니다. 캠페인 조정이 필요해요.";
-  } else if (percentage >= dangerThreshold) {
+  } else if (spentPct >= dangerThreshold) {
     insightDesc = "예산 소진이 빨라요. 일일 한도 점검을 추천해요.";
-  } else if (percentage >= warningThreshold) {
+  } else if (spentPct >= warningThreshold) {
     insightDesc = "예산 소진 속도가 다소 높아요. 매체 효율을 확인해 보세요.";
   } else {
     insightDesc = "계획된 예산 범위 내에서 잘 사용되고 있어요.";
@@ -79,42 +82,47 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
     splitInsightHeadTail(insightDesc);
 
   return (
-    <div className="flex h-full w-full flex-col pt-6">
-      <div className="flex flex-col mb-6">
-        <h3 className="mb-3 font-body2 text-text-body">사용 예산</h3>
+    <div
+      className={twMerge(
+        "flex h-full w-full flex-col",
+        compact ? "pt-2" : "pt-6",
+      )}
+    >
+      <div className={twMerge("flex flex-col", compact ? "mb-4" : "mb-6")}>
+        <h3 className="mb-3 font-body2 text-text-body">{label}</h3>
         <div className="flex items-baseline gap-2">
           <span className="font-heading1 text-text-title tabular-nums leading-none">
-            {percentage}%
+            {remainingPct}%
           </span>
-          <span className="font-body2 text-text-body tabular-nums">소진</span>
+          <span className="font-body2 text-text-body tabular-nums">남음</span>
         </div>
       </div>
 
-      <div className="relative mb-6 w-full">
+      <div className={twMerge("relative w-full", compact ? "mb-4" : "mb-6")}>
         <div
           role="progressbar"
-          aria-label="전체 예산 소진율"
-          aria-valuenow={Math.min(Math.max(percentage, 0), 100)}
+          aria-label={`${label} 남은 비율`}
+          aria-valuenow={remainingPct}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="relative h-3 w-full bg-surface-200 rounded-full overflow-hidden"
+          className="relative h-3 w-full overflow-hidden rounded-full bg-surface-200"
         >
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-surface-100/60 z-10"
-            style={{ left: `${warningThreshold}%` }}
+            className="absolute top-0 bottom-0 z-10 w-0.5 bg-surface-100/60"
+            style={{ left: `${100 - dangerThreshold}%` }}
           />
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-surface-100/60 z-10"
-            style={{ left: `${dangerThreshold}%` }}
+            className="absolute top-0 bottom-0 z-10 w-0.5 bg-surface-100/60"
+            style={{ left: `${100 - warningThreshold}%` }}
           />
 
           <div
             className={twMerge(
-              "absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-1000 ease-smooth origin-left",
+              "absolute top-0 left-0 h-full w-full origin-left rounded-full transition-transform duration-1000 ease-smooth",
               statusPointClasses[status],
             )}
             style={{
-              transform: `scaleX(${mounted ? Math.min(percentage, 100) / 100 : 0})`,
+              transform: `scaleX(${mounted ? remainingPct / 100 : 0})`,
             }}
           />
         </div>
@@ -125,7 +133,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-3">
+      <div className="flex flex-1 flex-col gap-3">
         <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 p-4">
           <span className="font-caption text-text-muted">남은 예산</span>
           <span
@@ -135,24 +143,26 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             )}
           >
             {isOverBudget ? "-" : ""}
-            {M.spend.format(remaining)}
+            {M.spend.format(remainingAmount)}
           </span>
         </div>
 
-        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
-          <WarnCircleIcon
-            className="block size-5 shrink-0 text-text-muted"
-            aria-hidden="true"
-          />
-          <p className="m-0 min-w-0 flex-1 break-keep font-body2 text-text-body">
-            <span>{insightHead}</span>
-            {insightTail ? (
-              <span className="mt-0.5 block tablet:ml-1 tablet:mt-0 tablet:inline">
-                {insightTail}
-              </span>
-            ) : null}
-          </p>
-        </div>
+        {!compact && (
+          <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+            <WarnCircleIcon
+              className="block size-5 shrink-0 text-text-muted"
+              aria-hidden="true"
+            />
+            <p className="m-0 min-w-0 flex-1 break-keep font-body2 text-text-body">
+              <span>{insightHead}</span>
+              {insightTail ? (
+                <span className="mt-0.5 block tablet:ml-1 tablet:mt-0 tablet:inline">
+                  {insightTail}
+                </span>
+              ) : null}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
