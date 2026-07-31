@@ -1,4 +1,13 @@
-import { memo, useCallback, useId, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
@@ -25,7 +34,12 @@ interface IPlatformTrafficChartProps {
   isError?: boolean;
   suspectDetail: IClickStreamItem["suspectDetail"] | null;
   onRetry?: () => void;
+  /** 예산 게이지 2개일 때 카드 높이에 맞춰 차트 영역 확장 */
+  fillHeight?: boolean;
 }
+
+const DEFAULT_CHART_HEIGHT = 360;
+const MIN_CHART_HEIGHT = 300;
 
 // 이상 징후 상세 버블
 const AnomalyBubble = memo(function AnomalyBubble({
@@ -78,9 +92,15 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   isError = false,
   suspectDetail = null,
   onRetry,
+  fillHeight = false,
 }: IPlatformTrafficChartProps) {
+  const measureRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const anomalyBubbleId = useId();
+  const [chartHeight, setChartHeight] = useState<number | null>(
+    fillHeight ? null : DEFAULT_CHART_HEIGHT,
+  );
+  const [isHeightReady, setIsHeightReady] = useState(!fillHeight);
   const seriesData = useMemo(() => {
     if (!data) return [];
     return data.timeSeriesData.map((d) => ({
@@ -154,7 +174,9 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       toolbar: { show: false },
       zoom: { enabled: false },
       fontFamily: "Pretendard",
-      animations: { enabled: true, speed: 800 },
+      animations: fillHeight
+        ? { enabled: false }
+        : { enabled: true, speed: 800 },
     },
     dataLabels: { enabled: false },
     stroke: {
@@ -255,9 +277,98 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   const handlePointerLeave = useCallback(() => setIsAnomalyHovered(false), []);
   const showBubble = isAnomalyHovered || isAnomalyFocused;
 
+  useEffect(() => {
+    if (!fillHeight) {
+      setChartHeight(DEFAULT_CHART_HEIGHT);
+      setIsHeightReady(true);
+      return;
+    }
+
+    setChartHeight(null);
+    setIsHeightReady(false);
+  }, [fillHeight]);
+
+  const hasChartData = Boolean(data && data.timeSeriesData.length > 0);
+
+  useLayoutEffect(() => {
+    if (!fillHeight || !hasChartData) return;
+
+    const el = measureRef.current;
+    if (!el) return;
+
+    const updateHeight = () => {
+      const next = Math.max(
+        MIN_CHART_HEIGHT,
+        Math.floor(el.getBoundingClientRect().height),
+      );
+      if (next <= 0) return;
+      setChartHeight(next);
+      setIsHeightReady(true);
+    };
+
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fillHeight, hasChartData]);
+
+  const fillContainerClassName = fillHeight
+    ? "min-h-75 flex-1 overflow-hidden"
+    : "h-75";
+
+  const anomalyLayer =
+    anomalyTimestamp !== undefined && anomalyY !== undefined && markerPos ? (
+      <>
+        <span
+          className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-60 [animation-duration:2s]"
+          style={{ left: markerPos.x, top: markerPos.y }}
+        />
+        <span
+          className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-40 [animation-delay:1s] [animation-duration:2s]"
+          style={{ left: markerPos.x, top: markerPos.y }}
+        />
+        <button
+          type="button"
+          className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
+          style={{ left: markerPos.x, top: markerPos.y }}
+          aria-label="클릭 이상 징후 상세 보기"
+          aria-describedby={showBubble ? anomalyBubbleId : undefined}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
+        />
+        {showBubble && (
+          <AnomalyBubble
+            id={anomalyBubbleId}
+            x={markerPos.x}
+            y={markerPos.y}
+            message={suspectDetail?.message}
+            campaignName={suspectDetail?.campaignName}
+            adName={suspectDetail?.adName}
+          />
+        )}
+      </>
+    ) : null;
+
+  const connectionWarning = isError ? (
+    <div className="mb-2 flex shrink-0 flex-wrap items-center gap-2">
+      <p className="font-caption text-text-muted">
+        연결이 원활하지 않아 마지막 데이터를 표시합니다.
+      </p>
+      {onRetry ? (
+        <Button variant="outline" size="small" type="button" onClick={onRetry}>
+          다시 시도
+        </Button>
+      ) : null}
+    </div>
+  ) : null;
+
   if (isError && !data) {
     return (
-      <div className="flex h-75 flex-col items-center justify-center gap-4 text-center">
+      <div
+        className={`flex flex-col items-center justify-center gap-4 text-center ${fillContainerClassName}`}
+      >
         <p className="font-body2 text-text-muted">
           실시간 데이터를 불러오지 못했습니다.
         </p>
@@ -276,83 +387,70 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
   }
 
   if (!data) {
-    return <Skeleton className="w-full h-75 rounded-xl" />;
+    return (
+      <Skeleton
+        className={`w-full rounded-xl ${fillHeight ? "min-h-75 flex-1" : "h-75"}`}
+      />
+    );
   }
 
   if (data.timeSeriesData.length === 0) {
     return (
-      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
+      <div
+        className={`flex items-center justify-center font-body2 text-text-muted ${fillContainerClassName}`}
+      >
         표시할 실시간 트래픽 데이터가 없습니다.
       </div>
     );
   }
 
   return (
-    <div className="flex h-full min-h-75 w-full flex-col">
-      {isError && (
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          <p className="font-caption text-text-muted">
-            연결이 원활하지 않아 마지막 데이터를 표시합니다.
-          </p>
-          {onRetry ? (
-            <Button
-              variant="outline"
-              size="small"
-              type="button"
-              onClick={onRetry}
+    <div
+      className={
+        fillHeight
+          ? "flex w-full min-h-0 flex-1 flex-col overflow-hidden"
+          : "flex h-full min-h-75 w-full flex-col"
+      }
+    >
+      {connectionWarning}
+      {fillHeight ? (
+        <div
+          ref={measureRef}
+          className="relative min-h-0 flex-1 overflow-hidden"
+        >
+          {!isHeightReady || chartHeight === null ? (
+            <Skeleton className="absolute inset-0 rounded-xl" />
+          ) : (
+            <div
+              ref={containerRef}
+              data-hide-tooltip={showBubble || undefined}
+              className="absolute inset-0 overflow-hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible"
             >
-              다시 시도
-            </Button>
-          ) : null}
+              <ReactApexChart
+                options={chartOptions}
+                series={series}
+                type="area"
+                height={chartHeight}
+              />
+              {anomalyLayer}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          ref={containerRef}
+          data-hide-tooltip={showBubble || undefined}
+          className="relative min-h-75 [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible"
+        >
+          <ReactApexChart
+            options={chartOptions}
+            series={series}
+            type="area"
+            height={DEFAULT_CHART_HEIGHT}
+          />
+          {anomalyLayer}
         </div>
       )}
-      <div
-        ref={containerRef}
-        data-hide-tooltip={showBubble || undefined}
-        className="relative min-h-0 flex-1 [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible"
-      >
-        <ReactApexChart
-          options={chartOptions}
-          series={series}
-          type="area"
-          height={360}
-        />
-        {anomalyTimestamp !== undefined &&
-          anomalyY !== undefined &&
-          markerPos && (
-            <>
-              <span
-                className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-60 [animation-duration:2s]"
-                style={{ left: markerPos.x, top: markerPos.y }}
-              />
-              <span
-                className="pointer-events-none absolute size-3 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full bg-info-red opacity-40 [animation-delay:1s] [animation-duration:2s]"
-                style={{ left: markerPos.x, top: markerPos.y }}
-              />
-              <button
-                type="button"
-                className="absolute size-6 -translate-x-1/2 -translate-y-1/2 opacity-0"
-                style={{ left: markerPos.x, top: markerPos.y }}
-                aria-label="클릭 이상 징후 상세 보기"
-                aria-describedby={showBubble ? anomalyBubbleId : undefined}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-                onPointerEnter={handlePointerEnter}
-                onPointerLeave={handlePointerLeave}
-              />
-              {showBubble && (
-                <AnomalyBubble
-                  id={anomalyBubbleId}
-                  x={markerPos.x}
-                  y={markerPos.y}
-                  message={suspectDetail?.message}
-                  campaignName={suspectDetail?.campaignName}
-                  adName={suspectDetail?.adName}
-                />
-              )}
-            </>
-          )}
-      </div>
     </div>
   );
 });

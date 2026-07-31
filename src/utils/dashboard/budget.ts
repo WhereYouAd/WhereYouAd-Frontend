@@ -12,6 +12,9 @@ import type { TProviderType } from "@/types/dashboard/provider";
 const WARNING_THRESHOLD = 50;
 const DANGER_THRESHOLD = 75;
 
+/** 예산 게이지 하단 인사이트 — 팀 논의 후 true로 전환 가능 */
+export const SHOW_BUDGET_GAUGE_INSIGHT = false;
+
 /** Google/Meta 플랫폼 — 일일 예산 게이지 */
 export function supportsDailyBudget(provider?: TProviderType): boolean {
   return provider === "GOOGLE" || provider === "META";
@@ -58,13 +61,14 @@ function toBudgetSlice(
 
 function toGaugeProps(
   slice: IBudgetSlice,
-  compact?: boolean,
+  { compact = false, showInsight = SHOW_BUDGET_GAUGE_INSIGHT } = {},
 ): IBudgetGaugeProps {
   return {
     ...slice,
     warningThreshold: WARNING_THRESHOLD,
     dangerThreshold: DANGER_THRESHOLD,
     compact,
+    showInsight,
   };
 }
 
@@ -124,9 +128,10 @@ export function toBudgetQueryData(
 ) {
   const viewModel = mapBudgetResponseToViewModel(data, provider);
   const isCompact = viewModel.slices.length > 1;
+  const showInsight = viewModel.slices.length === 1;
 
   const gauges = viewModel.slices.map((slice) =>
-    toGaugeProps(slice, isCompact),
+    toGaugeProps(slice, { compact: isCompact, showInsight }),
   );
 
   return {

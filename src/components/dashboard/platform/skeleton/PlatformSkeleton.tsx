@@ -65,3 +65,39 @@ export function PerformanceEfficiencyChartSkeleton() {
 export function BadgeSkeleton({ className }: { className?: string }) {
   return <Skeleton className={twMerge("w-14 h-6 rounded-lg", className)} />;
 }
+
+/** compact BudgetGaugeChart 1칸 (인사이트 없음) */
+function PlatformBudgetGaugeCompactSkeleton() {
+  return (
+    <div className="flex flex-col">
+      <div className="mb-3 flex flex-col">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-6 w-12 rounded-lg" />
+        </div>
+        <Skeleton className="h-8 w-24" />
+      </div>
+      <Skeleton className="mb-3 h-3 w-full rounded-full" />
+      <div className="mb-3 flex items-center justify-between">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+      <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 px-4 py-3">
+        <Skeleton className="h-3 w-16" />
+        <Skeleton className="h-7 w-36" />
+      </div>
+    </div>
+  );
+}
+
+/** Google/Meta — compact 게이지 2개 로딩 (최종 레이아웃 높이 유지) */
+export function PlatformDualBudgetGaugeSkeleton() {
+  return (
+    <div className="flex flex-1 flex-col pt-2">
+      <PlatformBudgetGaugeCompactSkeleton />
+      <div className="mt-5 border-t border-surface-300 pt-5">
+        <PlatformBudgetGaugeCompactSkeleton />
+      </div>
+    </div>
+  );
+}

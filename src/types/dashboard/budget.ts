@@ -21,7 +21,10 @@ export interface IBudgetViewModel {
 export interface IBudgetGaugeProps extends IBudgetSlice {
   warningThreshold: number;
   dangerThreshold: number;
+  /** 2게이지 등 세로 간격 축소 */
   compact?: boolean;
+  /** 하단 인사이트 멘트 표시 (compact와 별도) */
+  showInsight?: boolean;
 }
 
 /** useBudget select 결과 */
