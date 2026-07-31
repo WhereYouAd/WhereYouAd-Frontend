@@ -35,7 +35,10 @@ export default function Login() {
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
       onSuccess: () => {
-        navigate("/dashboard", { replace: true });
+        const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
+        navigate(isFirstLogin ? "/integrations" : "/dashboard", {
+          replace: true,
+        });
       },
       onError: (error) => {
         toast.error(error.message ?? "로그인에 실패했습니다.");

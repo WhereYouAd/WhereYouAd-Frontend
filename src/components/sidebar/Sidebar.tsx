@@ -171,7 +171,7 @@ export default function Sidebar() {
       transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col min-h-0">
-        <div className="px-2">
+        <div className="px-2" data-tour="tour-workspace-switcher">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
@@ -200,6 +200,7 @@ export default function Sidebar() {
               <div
                 key={item.id}
                 className="relative flex flex-col"
+                data-tour={`tour-${item.id}`}
                 {...collapsedSubmenuInteractionProps(
                   isCollapsed && !!item.children?.length,
                   item.id,
@@ -266,6 +267,7 @@ export default function Sidebar() {
               <div
                 key={item.id}
                 className={getFooterItemClass(isActive, isCollapsed)}
+                data-tour={`tour-${item.id}`}
               >
                 <SidebarItem
                   item={item}

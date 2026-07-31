@@ -16,6 +16,7 @@ import { usePlatformConnections } from "@/hooks/integration/usePlatformConnectio
 
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
+import OnboardingTour from "@/components/common/OnboardingTour";
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
 import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
@@ -180,8 +181,11 @@ export default function PlatformIntegrationsPage() {
     });
   };
 
+  const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
+
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
+      <OnboardingTour autoStart={isFirstLogin} />
       {isLoading ? (
         <PlatformIntegrationsPageSkeleton />
       ) : isError ? (
@@ -202,6 +206,7 @@ export default function PlatformIntegrationsPage() {
                 <li
                   key={item.provider}
                   className="flex h-full min-h-0 w-full min-w-0"
+                  data-tour={`tour-platform-${item.provider.toLowerCase()}`}
                 >
                   <PlatformIntegrationCard
                     {...item}
