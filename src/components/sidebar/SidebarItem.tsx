@@ -62,6 +62,7 @@ export const SidebarItem = memo(function SidebarItem({
   return (
     <button
       type="button"
+      aria-label={item.label}
       aria-haspopup={hasChildren ? "menu" : undefined}
       aria-expanded={hasChildren ? isOpen : undefined}
       className={twMerge(itemClassName, "text-left")}
