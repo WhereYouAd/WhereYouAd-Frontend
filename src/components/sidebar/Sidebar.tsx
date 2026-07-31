@@ -1,5 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
@@ -12,6 +12,7 @@ import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
+import { useLogout } from "@/hooks/auth/useLogout";
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useCoreQuery } from "@/hooks/customQuery";
 import {
@@ -22,6 +23,7 @@ import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import Badge from "@/components/common/badge/Badge";
 
+import LogoutConfirmModal from "./LogoutConfirmModal";
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
@@ -131,15 +133,32 @@ export default function Sidebar() {
     [myRole],
   );
 
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const { mutate: logoutMutate, isPending: isLogoutPending } = useLogout();
+
+  const openLogoutModal = useCallback(() => setIsLogoutModalOpen(true), []);
+  const closeLogoutModal = useCallback(() => {
+    if (isLogoutPending) return;
+    setIsLogoutModalOpen(false);
+  }, [isLogoutPending]);
+
+  const handleLogoutConfirm = useCallback(() => {
+    logoutMutate(undefined);
+  }, [logoutMutate]);
+
   const handleFooterItemClick = useCallback(
     (id: string, hasChildren: boolean) => {
       if (id === "notifications") {
         showComingSoon("알림 기능은 준비 중이에요. 나중에 다시 확인해 주세요.");
         return;
       }
+      if (id === "logout") {
+        openLogoutModal();
+        return;
+      }
       handleItemClick(id, hasChildren);
     },
-    [handleItemClick, showComingSoon],
+    [handleItemClick, openLogoutModal, showComingSoon],
   );
 
   return (
@@ -271,9 +290,9 @@ export default function Sidebar() {
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "flex h-[55px] items-center rounded-2xl font-body2 transition-all duration-200",
+                "flex h-13.75 items-center rounded-2xl font-body2 transition-all duration-200",
                 isCollapsed
-                  ? "mx-auto w-[55px] justify-center px-0"
+                  ? "mx-auto w-13.75 justify-center px-0"
                   : "w-full gap-4 px-3",
                 "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
@@ -297,6 +316,12 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        onClose={closeLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        isLoading={isLogoutPending}
+      />
     </motion.div>
   );
 }

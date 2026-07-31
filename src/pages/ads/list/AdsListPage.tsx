@@ -6,8 +6,11 @@ import { useControlModal } from "@/hooks/ads/useControlModal";
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
+import AdsListPageSkeleton from "@/components/ads/skeleton/AdsSkeleton";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
@@ -152,13 +155,7 @@ export default function AdsListPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex h-[90vh] items-center justify-center">
-        <p className="font-body1 text-text-placeholder">
-          데이터를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <AdsListPageSkeleton />;
   }
 
   return (
@@ -217,14 +214,19 @@ export default function AdsListPage() {
         </div>
 
         <div className="min-w-0 flex-1">
-          <CampaignTable
-            embedded
-            campaigns={campaigns}
-            onRowClick={(id) => handleCampaignClick(id)}
-            selectedProjectIds={selectedIds}
-            onToggleProject={toggleProject}
-            onToggleSelectAllVisible={toggleSelectAllVisible}
-          />
+          <ErrorBoundary
+            FallbackComponent={AreaErrorFallback}
+            resetKeys={[campaigns]}
+          >
+            <CampaignTable
+              embedded
+              campaigns={campaigns}
+              onRowClick={(id) => handleCampaignClick(id)}
+              selectedProjectIds={selectedIds}
+              onToggleProject={toggleProject}
+              onToggleSelectAllVisible={toggleSelectAllVisible}
+            />
+          </ErrorBoundary>
         </div>
       </Card>
 

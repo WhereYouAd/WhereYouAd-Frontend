@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 
@@ -17,6 +17,7 @@ import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp
 
 import { useClickStream } from "@/hooks/dashboard/useClickStream";
 
+import Button from "@/components/common/button/Button";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 
 const STREAM_MODE = "dummy" as const;
@@ -36,6 +37,12 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
   });
 
   const streams = [googleStream, naverStream, metaStream];
+
+  const reconnectFailedStreams = useCallback(() => {
+    if (googleStream.isError) googleStream.reconnect();
+    if (naverStream.isError) naverStream.reconnect();
+    if (metaStream.isError) metaStream.reconnect();
+  }, [googleStream, naverStream, metaStream]);
 
   // 첫 응답도 에러도 없는 스트림이 있으면 로딩
   const isLoading = streams.some((s) => s.data == null && !s.isError);
@@ -159,8 +166,18 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
 
   if (isAllFailed) {
     return (
-      <div className="flex h-75 items-center justify-center font-body2 text-text-muted">
-        실시간 데이터를 불러오지 못했습니다.
+      <div className="flex h-75 flex-col items-center justify-center gap-4 text-center">
+        <p className="font-body2 text-text-muted">
+          실시간 데이터를 불러오지 못했습니다.
+        </p>
+        <Button
+          variant="outline"
+          size="small"
+          type="button"
+          onClick={reconnectFailedStreams}
+        >
+          다시 시도
+        </Button>
       </div>
     );
   }
@@ -180,9 +197,19 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
   return (
     <div className="flex h-full min-h-75 w-full flex-col">
       {hasPartialError && (
-        <p className="mb-2 font-caption text-text-muted">
-          일부 플랫폼 실시간 데이터를 불러오지 못했습니다.
-        </p>
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <p className="font-caption text-text-muted">
+            일부 플랫폼 실시간 데이터를 불러오지 못했습니다.
+          </p>
+          <Button
+            variant="outline"
+            size="small"
+            type="button"
+            onClick={reconnectFailedStreams}
+          >
+            다시 시도
+          </Button>
+        </div>
       )}
       <div className="min-h-0 flex-1">
         <ReactApexChart

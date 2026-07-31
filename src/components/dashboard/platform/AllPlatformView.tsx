@@ -13,6 +13,8 @@ import { usePlatformRoasRankings } from "@/hooks/dashboard/usePlatformRoasRankin
 import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import ChartLegend from "@/components/common/chart/ChartLegend";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
 import AllPlatformTrafficChart from "@/components/dashboard/platform/AllPlatformTrafficChart";
@@ -63,19 +65,24 @@ export default function AllPlatformView() {
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isRankingsLoading ? (
-            <TopPerformanceListSkeleton />
-          ) : isRankingsError || !roasRankings ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              데이터를 불러오지 못했습니다.
-            </div>
-          ) : roasRankings.length === 0 ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              표시할 순위 데이터가 없습니다.
-            </div>
-          ) : (
-            <TopPerformanceList rankings={roasRankings} />
-          )}
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[roasRankings]}
+          >
+            {isRankingsLoading ? (
+              <TopPerformanceListSkeleton />
+            ) : isRankingsError || !roasRankings ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                데이터를 불러오지 못했습니다.
+              </div>
+            ) : roasRankings.length === 0 ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                표시할 순위 데이터가 없습니다.
+              </div>
+            ) : (
+              <TopPerformanceList rankings={roasRankings} />
+            )}
+          </ErrorBoundary>
         </Card>
 
         {/* 광고 소재 현황 */}
@@ -98,19 +105,24 @@ export default function AllPlatformView() {
           }
           className="flex-1 min-h-67 flex flex-col"
         >
-          {isAdStatusLoading ? (
-            <AdStatusChartSkeleton />
-          ) : isAdStatusError || !adStatus ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              데이터를 불러오지 못했습니다.
-            </div>
-          ) : adStatus.providerCount.length === 0 ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              표시할 광고 소재가 없습니다.
-            </div>
-          ) : (
-            <AdStatusChart data={adStatus.providerCount} />
-          )}
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[adStatus]}
+          >
+            {isAdStatusLoading ? (
+              <AdStatusChartSkeleton />
+            ) : isAdStatusError || !adStatus ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                데이터를 불러오지 못했습니다.
+              </div>
+            ) : adStatus.providerCount.length === 0 ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                표시할 광고 소재가 없습니다.
+              </div>
+            ) : (
+              <AdStatusChart data={adStatus.providerCount} />
+            )}
+          </ErrorBoundary>
         </Card>
 
         {/* 플랫폼별 성과 효율 비교 */}
@@ -127,19 +139,24 @@ export default function AllPlatformView() {
             />
           }
         >
-          {isPerformanceLoading ? (
-            <PerformanceEfficiencyChartSkeleton />
-          ) : isPerformanceError || !platformPerformance ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              데이터를 불러오지 못했습니다.
-            </div>
-          ) : platformPerformance.length === 0 ? (
-            <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
-              표시할 성과 데이터가 없습니다.
-            </div>
-          ) : (
-            <PerformanceEfficiencyChart data={platformPerformance} />
-          )}
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[platformPerformance]}
+          >
+            {isPerformanceLoading ? (
+              <PerformanceEfficiencyChartSkeleton />
+            ) : isPerformanceError || !platformPerformance ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                데이터를 불러오지 못했습니다.
+              </div>
+            ) : platformPerformance.length === 0 ? (
+              <div className="flex flex-1 items-center justify-center font-body2 text-text-sub">
+                표시할 성과 데이터가 없습니다.
+              </div>
+            ) : (
+              <PerformanceEfficiencyChart data={platformPerformance} />
+            )}
+          </ErrorBoundary>
         </Card>
       </div>
 
@@ -150,30 +167,37 @@ export default function AllPlatformView() {
         description={<ChartLegend items={platformChartLegendItems} />}
       >
         <div className="flex-1 min-h-0">
-          <AllPlatformTrafficChart />
+          <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+            <AllPlatformTrafficChart />
+          </ErrorBoundary>
         </div>
       </Card>
 
       {/* 개별 플랫폼 상세 */}
-      <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
-        {isPerformanceLoading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <PlatformDetailCardSkeleton key={i} />
-          ))
-        ) : isPerformanceError || !platformPerformance ? (
-          <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
-            데이터를 불러오지 못했습니다.
-          </div>
-        ) : platformPerformance.length === 0 ? (
-          <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
-            표시할 플랫폼 데이터가 없습니다.
-          </div>
-        ) : (
-          platformPerformance.map((platform) => (
-            <PlatformDetailCard key={platform.provider} data={platform} />
-          ))
-        )}
-      </div>
+      <ErrorBoundary
+        FallbackComponent={ChartErrorFallback}
+        resetKeys={[platformPerformance]}
+      >
+        <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
+          {isPerformanceLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <PlatformDetailCardSkeleton key={i} />
+            ))
+          ) : isPerformanceError || !platformPerformance ? (
+            <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
+              데이터를 불러오지 못했습니다.
+            </div>
+          ) : platformPerformance.length === 0 ? (
+            <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
+              표시할 플랫폼 데이터가 없습니다.
+            </div>
+          ) : (
+            platformPerformance.map((platform) => (
+              <PlatformDetailCard key={platform.provider} data={platform} />
+            ))
+          )}
+        </div>
+      </ErrorBoundary>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { INavItem } from "@/types/navigation/navItem";
 
+import LogoutIcon from "@/assets/icon/common/logout.svg?react";
 import AdsIcon from "@/assets/icon/sidebar/ads.svg?react";
 import ConnectIcon from "@/assets/icon/sidebar/connect.svg?react";
 import DashboardIcon from "@/assets/icon/sidebar/dashboard.svg?react";
@@ -95,5 +96,10 @@ export const footerNav: INavItem[] = [
     label: "설정",
     icon: SettingsIcon,
     path: "/setting",
+  },
+  {
+    id: "logout",
+    label: "로그아웃",
+    icon: LogoutIcon,
   },
 ];

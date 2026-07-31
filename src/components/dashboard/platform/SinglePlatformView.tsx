@@ -16,6 +16,9 @@ import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
+import ChartErrorFallback from "@/components/common/error/ChartErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
+import MetricErrorFallback from "@/components/common/error/MetricErrorFallback";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
 import BudgetGaugeChart, {
@@ -76,6 +79,7 @@ export default function SinglePlatformView({
     data: clickStreamData,
     suspectDetail,
     isError: isClickStreamError,
+    reconnect: reconnectClickStream,
   } = useClickStream({
     mode: "dummy",
     providerType: platform,
@@ -111,37 +115,42 @@ export default function SinglePlatformView({
       </div>
 
       {/* top */}
-      <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
-        {isMetricsLoading ? (
-          Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
-            >
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-8 w-24" />
-              <Skeleton className="h-6 w-14 rounded-full" />
+      <ErrorBoundary
+        FallbackComponent={MetricErrorFallback}
+        resetKeys={[platformData]}
+      >
+        <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
+          {isMetricsLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
+              >
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-6 w-14 rounded-full" />
+              </div>
+            ))
+          ) : isMetricsError ? (
+            <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
+              지표 데이터를 불러오지 못했습니다.
             </div>
-          ))
-        ) : isMetricsError ? (
-          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
-            지표 데이터를 불러오지 못했습니다.
-          </div>
-        ) : !platformData ? (
-          <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
-            표시할 지표 데이터가 없습니다.
-          </div>
-        ) : (
-          kpis.map((kpi) => (
-            <StatCard
-              key={kpi.title}
-              title={kpi.title}
-              value={kpi.value}
-              trend={kpi.trend}
-            />
-          ))
-        )}
-      </div>
+          ) : !platformData ? (
+            <div className="col-span-4 flex items-center justify-center py-8 text-center font-body2 text-text-muted">
+              표시할 지표 데이터가 없습니다.
+            </div>
+          ) : (
+            kpis.map((kpi) => (
+              <StatCard
+                key={kpi.title}
+                title={kpi.title}
+                value={kpi.value}
+                trend={kpi.trend}
+              />
+            ))
+          )}
+        </div>
+      </ErrorBoundary>
 
       {/* mid */}
       <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
@@ -157,12 +166,18 @@ export default function SinglePlatformView({
             />
           }
         >
-          <PlatformTrafficChart
-            data={clickStreamData}
-            platform={platform}
-            isError={isClickStreamError}
-            suspectDetail={suspectDetail}
-          />
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[clickStreamData, platform]}
+          >
+            <PlatformTrafficChart
+              data={clickStreamData}
+              platform={platform}
+              isError={isClickStreamError}
+              suspectDetail={suspectDetail}
+              onRetry={reconnectClickStream}
+            />
+          </ErrorBoundary>
         </Card>
 
         <Card
@@ -188,23 +203,28 @@ export default function SinglePlatformView({
             )
           }
         >
-          {isBudgetLoading ? (
-            <div className="flex flex-1 items-center justify-center p-8">
-              <Skeleton className="h-32 w-full rounded-2xl" />
-            </div>
-          ) : isBudgetError ? (
-            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
-              예산 데이터를 불러오지 못했습니다.
-            </div>
-          ) : budget ? (
-            <div className="flex flex-1 flex-col">
-              <BudgetGaugeChart {...budget} />
-            </div>
-          ) : (
-            <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
-              표시할 예산 데이터가 없습니다.
-            </div>
-          )}
+          <ErrorBoundary
+            FallbackComponent={ChartErrorFallback}
+            resetKeys={[budget]}
+          >
+            {isBudgetLoading ? (
+              <div className="flex flex-1 items-center justify-center p-8">
+                <Skeleton className="h-32 w-full rounded-2xl" />
+              </div>
+            ) : isBudgetError ? (
+              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
+                예산 데이터를 불러오지 못했습니다.
+              </div>
+            ) : budget ? (
+              <div className="flex flex-1 flex-col">
+                <BudgetGaugeChart {...budget} />
+              </div>
+            ) : (
+              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
+                표시할 예산 데이터가 없습니다.
+              </div>
+            )}
+          </ErrorBoundary>
         </Card>
       </div>
 
@@ -241,30 +261,37 @@ export default function SinglePlatformView({
           </div>
         }
       >
-        {isMetricFactsLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Skeleton className="h-40 w-full rounded-2xl" />
-          </div>
-        ) : isMetricFactsError ? (
-          <div className="flex items-center justify-center py-16 text-center font-body2 text-info-red">
-            광고 현황 데이터를 불러오지 못했습니다.
-          </div>
-        ) : !metricFacts?.dailyRows.length ? (
-          <div className="flex items-center justify-center py-16 text-center font-body2 text-text-muted">
-            표시할 광고 현황 데이터가 없습니다.
-          </div>
-        ) : (
-          <PlatformDetailTable
-            data={metricFacts.dailyRows}
-            total={metricFacts.totalRow}
-          />
-        )}
+        <ErrorBoundary
+          FallbackComponent={ChartErrorFallback}
+          resetKeys={[metricFacts, viewRange]}
+        >
+          {isMetricFactsLoading ? (
+            <div className="flex items-center justify-center py-16">
+              <Skeleton className="h-40 w-full rounded-2xl" />
+            </div>
+          ) : isMetricFactsError ? (
+            <div className="flex items-center justify-center py-16 text-center font-body2 text-info-red">
+              광고 현황 데이터를 불러오지 못했습니다.
+            </div>
+          ) : !metricFacts?.dailyRows.length ? (
+            <div className="flex items-center justify-center py-16 text-center font-body2 text-text-muted">
+              표시할 광고 현황 데이터가 없습니다.
+            </div>
+          ) : (
+            <PlatformDetailTable
+              data={metricFacts.dailyRows}
+              total={metricFacts.totalRow}
+            />
+          )}
+        </ErrorBoundary>
       </Card>
 
-      <DashboardAiSummarySection
-        provider={platform}
-        idPrefix={`platform-ai-${platform.toLowerCase()}`}
-      />
+      <ErrorBoundary FallbackComponent={ChartErrorFallback}>
+        <DashboardAiSummarySection
+          provider={platform}
+          idPrefix={`platform-ai-${platform.toLowerCase()}`}
+        />
+      </ErrorBoundary>
     </div>
   );
 }
