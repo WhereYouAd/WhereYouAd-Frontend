@@ -13,6 +13,8 @@ import { useUpdateMasterNotificationSettings } from "@/hooks/setting/useUpdateMa
 import { useUpdateOrgNotificationSettings } from "@/hooks/setting/useUpdateOrgNotificationSettings";
 
 import Button from "@/components/common/button/Button";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import NotificationSection from "@/components/setting/NotificationSection";
 import PasswordSection from "@/components/setting/PasswordSection";
 import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
@@ -633,83 +635,92 @@ export default function Setting() {
             </Button>
           </div>
         ) : (
-          <NotificationSection
-            email={draftProfile.email}
-            masterEnabled={draftOrgNotif.masterEnabled}
-            onMasterEnabledChange={(value) => {
-              if (!value) {
+          <ErrorBoundary
+            FallbackComponent={AreaErrorFallback}
+            resetKeys={[draftOrgNotif, draftChannel, draftWorkspaceNotif]}
+          >
+            <NotificationSection
+              email={draftProfile.email}
+              masterEnabled={draftOrgNotif.masterEnabled}
+              onMasterEnabledChange={(value) => {
+                if (!value) {
+                  setDraftOrgNotif((prev) => ({
+                    ...prev,
+                    masterEnabled: false,
+                    slackEnabled: false,
+                    discordEnabled: false,
+                  }));
+                  setDraftChannel({ browserPush: false, emailNotif: false });
+                  setDraftWorkspaceNotif({
+                    clickAlarm: false,
+                    weeklyReport: false,
+                  });
+                  return;
+                }
                 setDraftOrgNotif((prev) => ({
                   ...prev,
-                  masterEnabled: false,
-                  slackEnabled: false,
-                  discordEnabled: false,
+                  masterEnabled: true,
+                  slackEnabled:
+                    prev.slackConnected && savedOrgNotif.slackEnabled,
+                  discordEnabled:
+                    prev.discordConnected && savedOrgNotif.discordEnabled,
                 }));
-                setDraftChannel({ browserPush: false, emailNotif: false });
-                setDraftWorkspaceNotif({
-                  clickAlarm: false,
-                  weeklyReport: false,
-                });
-                return;
+                setDraftChannel(savedChannel);
+                setDraftWorkspaceNotif(savedWorkspaceNotif);
+              }}
+              browserPush={draftChannel.browserPush}
+              emailNotif={draftChannel.emailNotif}
+              onBrowserPushChange={(value) =>
+                setDraftChannel((prev) => ({ ...prev, browserPush: value }))
               }
-              setDraftOrgNotif((prev) => ({
-                ...prev,
-                masterEnabled: true,
-                slackEnabled: prev.slackConnected && savedOrgNotif.slackEnabled,
-                discordEnabled:
-                  prev.discordConnected && savedOrgNotif.discordEnabled,
-              }));
-              setDraftChannel(savedChannel);
-              setDraftWorkspaceNotif(savedWorkspaceNotif);
-            }}
-            browserPush={draftChannel.browserPush}
-            emailNotif={draftChannel.emailNotif}
-            onBrowserPushChange={(value) =>
-              setDraftChannel((prev) => ({ ...prev, browserPush: value }))
-            }
-            onEmailNotifChange={(value) =>
-              setDraftChannel((prev) => ({ ...prev, emailNotif: value }))
-            }
-            slackEnabled={draftOrgNotif.slackEnabled}
-            slackConnected={draftOrgNotif.slackConnected}
-            slackWebhookUrl={slackWebhookUrl}
-            slackWebhookError={slackWebhookError}
-            onSlackWebhookUrlChange={(value) => {
-              setSlackWebhookUrl(value);
-              if (slackWebhookError) setSlackWebhookError("");
-            }}
-            onSlackEnabledChange={(value) =>
-              setDraftOrgNotif((prev) => ({ ...prev, slackEnabled: value }))
-            }
-            onConnectSlack={handleConnectSlack}
-            onDisconnectSlack={handleDisconnectSlack}
-            discordEnabled={draftOrgNotif.discordEnabled}
-            discordConnected={draftOrgNotif.discordConnected}
-            discordWebhookUrl={discordWebhookUrl}
-            discordWebhookError={discordWebhookError}
-            onDiscordWebhookUrlChange={(value) => {
-              setDiscordWebhookUrl(value);
-              if (discordWebhookError) setDiscordWebhookError("");
-            }}
-            onDiscordEnabledChange={(value) =>
-              setDraftOrgNotif((prev) => ({ ...prev, discordEnabled: value }))
-            }
-            onConnectDiscord={handleConnectDiscord}
-            onDisconnectDiscord={handleDisconnectDiscord}
-            workspaceName={currentWorkspaceName}
-            clickAlarm={draftWorkspaceNotif.clickAlarm}
-            weeklyReport={draftWorkspaceNotif.weeklyReport}
-            onClickAlarmChange={(value) =>
-              setDraftWorkspaceNotif((prev) => ({ ...prev, clickAlarm: value }))
-            }
-            onWeeklyReportChange={(value) =>
-              setDraftWorkspaceNotif((prev) => ({
-                ...prev,
-                weeklyReport: value,
-              }))
-            }
-            workspaceNotifiDisabled={workspaceNotifiDisabled}
-            pendingOrgAction={pendingOrgAction}
-          />
+              onEmailNotifChange={(value) =>
+                setDraftChannel((prev) => ({ ...prev, emailNotif: value }))
+              }
+              slackEnabled={draftOrgNotif.slackEnabled}
+              slackConnected={draftOrgNotif.slackConnected}
+              slackWebhookUrl={slackWebhookUrl}
+              slackWebhookError={slackWebhookError}
+              onSlackWebhookUrlChange={(value) => {
+                setSlackWebhookUrl(value);
+                if (slackWebhookError) setSlackWebhookError("");
+              }}
+              onSlackEnabledChange={(value) =>
+                setDraftOrgNotif((prev) => ({ ...prev, slackEnabled: value }))
+              }
+              onConnectSlack={handleConnectSlack}
+              onDisconnectSlack={handleDisconnectSlack}
+              discordEnabled={draftOrgNotif.discordEnabled}
+              discordConnected={draftOrgNotif.discordConnected}
+              discordWebhookUrl={discordWebhookUrl}
+              discordWebhookError={discordWebhookError}
+              onDiscordWebhookUrlChange={(value) => {
+                setDiscordWebhookUrl(value);
+                if (discordWebhookError) setDiscordWebhookError("");
+              }}
+              onDiscordEnabledChange={(value) =>
+                setDraftOrgNotif((prev) => ({ ...prev, discordEnabled: value }))
+              }
+              onConnectDiscord={handleConnectDiscord}
+              onDisconnectDiscord={handleDisconnectDiscord}
+              workspaceName={currentWorkspaceName}
+              clickAlarm={draftWorkspaceNotif.clickAlarm}
+              weeklyReport={draftWorkspaceNotif.weeklyReport}
+              onClickAlarmChange={(value) =>
+                setDraftWorkspaceNotif((prev) => ({
+                  ...prev,
+                  clickAlarm: value,
+                }))
+              }
+              onWeeklyReportChange={(value) =>
+                setDraftWorkspaceNotif((prev) => ({
+                  ...prev,
+                  weeklyReport: value,
+                }))
+              }
+              workspaceNotifiDisabled={workspaceNotifiDisabled}
+              pendingOrgAction={pendingOrgAction}
+            />
+          </ErrorBoundary>
         )}
       </div>
 
