@@ -22,6 +22,8 @@ import { useTimelineDetail } from "@/hooks/timeline/useTimelineDetail";
 import { useTimelineList } from "@/hooks/timeline/useTimelineList";
 
 import Button from "@/components/common/button/Button";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 import TimelineSkeleton from "@/components/timeline/skeleton/TimelineSkeleton";
@@ -279,115 +281,121 @@ export default function Timeline() {
       className="flex w-full min-w-0 flex-col"
       style={{ height: TIMELINE_PAGE_HEIGHT }}
     >
-      <div className="flex min-h-0 flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
-        <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5">
-          <div className="flex items-center justify-between gap-8">
-            <TimelineStatusLegend className="min-w-0 flex-1" />
-            <Button
-              type="button"
-              size="small"
-              variant="custom"
-              onClick={() => setIsCreateOpen(true)}
-              leftIcon={
-                <PlusIcon
-                  className="h-4 w-4 shrink-0 text-primary-500"
-                  aria-hidden
-                />
-              }
-              className={twMerge(
-                "h-10 shrink-0 rounded-2xl px-4",
-                "bg-primary-400/20 text-primary-500",
-                "font-body2 shadow-Soft",
-                "transition-ui-smooth hover:bg-primary-500/30",
-              )}
-            >
-              타임라인 생성
-            </Button>
-          </div>
+      <ErrorBoundary
+        FallbackComponent={AreaErrorFallback}
+        resetKeys={[timelineList, viewUnit, periodIndex]}
+      >
+        <div className="flex min-h-0 flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
+          <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5">
+            <div className="flex items-center justify-between gap-8">
+              <TimelineStatusLegend className="min-w-0 flex-1" />
+              <Button
+                type="button"
+                size="small"
+                variant="custom"
+                onClick={() => setIsCreateOpen(true)}
+                leftIcon={
+                  <PlusIcon
+                    className="h-4 w-4 shrink-0 text-primary-500"
+                    aria-hidden
+                  />
+                }
+                className={twMerge(
+                  "h-10 shrink-0 rounded-2xl px-4",
+                  "bg-primary-400/20 text-primary-500",
+                  "font-body2 shadow-Soft",
+                  "transition-ui-smooth hover:bg-primary-500/30",
+                )}
+              >
+                타임라인 생성
+              </Button>
+            </div>
 
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-            <TimelineViewUnitSegment
-              viewUnit={viewUnit}
-              onViewUnitChange={handleViewUnitChange}
-              className="justify-self-start"
-            />
-            <TimelinePeriodNav
-              periodLabel={periodLabel}
-              onPrevPeriod={handlePrevPeriod}
-              onNextPeriod={handleNextPeriod}
-              onGoToToday={handleGoToToday}
-              className="justify-self-center"
-            />
-            <div className="flex items-center justify-self-end gap-3">
-              <span
-                className={TOOLBAR_ACTION_CLASS}
-                title="준비 중"
-                aria-disabled
-              >
-                <SortIcon className="h-4 w-4" />
-                Sort
-              </span>
-              <span
-                className={TOOLBAR_ACTION_CLASS}
-                title="준비 중"
-                aria-disabled
-              >
-                <FilterIcon className="h-4 w-4" />
-                Filter
-              </span>
-            </div>
-          </div>
-        </div>
-        {hasNoTimelines ? (
-          <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
-        ) : (
-          <div
-            ref={scrollRef}
-            className="flex min-h-0 w-full flex-1 flex-col overflow-auto"
-          >
-            <div
-              style={{ width: totalWidth, minHeight: "100%" }}
-              className="flex min-h-full flex-1 flex-col"
-            >
-              <TimelineAxis
-                columns={columns}
-                colWidth={colWidth}
-                className="sticky top-0"
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+              <TimelineViewUnitSegment
+                viewUnit={viewUnit}
+                onViewUnitChange={handleViewUnitChange}
+                className="justify-self-start"
               />
-              {hasNoVisibleBars ? (
-                <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
-                  <p className="font-heading4 text-text-title">
-                    이 기간에 표시할 타임라인이 없어요
-                  </p>
-                  <p className="max-w-sm font-body2 text-text-muted">
-                    다른 기간으로 이동하거나 보기 단위를 변경해 보세요
-                  </p>
-                </div>
-              ) : (
-                <TimelineGrid
-                  columns={columns}
-                  rowCount={maxRow}
-                  colWidth={colWidth}
+              <TimelinePeriodNav
+                periodLabel={periodLabel}
+                onPrevPeriod={handlePrevPeriod}
+                onNextPeriod={handleNextPeriod}
+                onGoToToday={handleGoToToday}
+                className="justify-self-center"
+              />
+              <div className="flex items-center justify-self-end gap-3">
+                <span
+                  className={TOOLBAR_ACTION_CLASS}
+                  title="준비 중"
+                  aria-disabled
                 >
-                  {bars.map((bar) => (
-                    <TimelineBar
-                      key={`${viewUnit}-${bar.id}`}
-                      bar={bar}
-                      colWidth={colWidth}
-                      isSelected={selectedBarId === bar.id && isPanelOpen}
-                      onBarClick={handleBarClick}
-                      onEdit={() => handleEditTimeline(bar.id)}
-                      onDelete={() =>
-                        handleDeleteTimeline({ id: bar.id, name: bar.title })
-                      }
-                    />
-                  ))}
-                </TimelineGrid>
-              )}
+                  <SortIcon className="h-4 w-4" />
+                  Sort
+                </span>
+                <span
+                  className={TOOLBAR_ACTION_CLASS}
+                  title="준비 중"
+                  aria-disabled
+                >
+                  <FilterIcon className="h-4 w-4" />
+                  Filter
+                </span>
+              </div>
             </div>
           </div>
-        )}
-      </div>
+          {hasNoTimelines ? (
+            <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
+          ) : (
+            <div
+              ref={scrollRef}
+              className="flex min-h-0 w-full flex-1 flex-col overflow-auto"
+            >
+              <div
+                style={{ width: totalWidth, minHeight: "100%" }}
+                className="flex min-h-full flex-1 flex-col"
+              >
+                <TimelineAxis
+                  columns={columns}
+                  colWidth={colWidth}
+                  className="sticky top-0"
+                />
+                {hasNoVisibleBars ? (
+                  <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
+                    <p className="font-heading4 text-text-title">
+                      이 기간에 표시할 타임라인이 없어요
+                    </p>
+                    <p className="max-w-sm font-body2 text-text-muted">
+                      다른 기간으로 이동하거나 보기 단위를 변경해 보세요
+                    </p>
+                  </div>
+                ) : (
+                  <TimelineGrid
+                    columns={columns}
+                    rowCount={maxRow}
+                    colWidth={colWidth}
+                  >
+                    {bars.map((bar) => (
+                      <TimelineBar
+                        key={`${viewUnit}-${bar.id}`}
+                        bar={bar}
+                        colWidth={colWidth}
+                        isSelected={selectedBarId === bar.id && isPanelOpen}
+                        onBarClick={handleBarClick}
+                        onEdit={() => handleEditTimeline(bar.id)}
+                        onDelete={() =>
+                          handleDeleteTimeline({ id: bar.id, name: bar.title })
+                        }
+                      />
+                    ))}
+                  </TimelineGrid>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </ErrorBoundary>
+
       {/* 생성 */}
       <TimelineCreateModal
         isOpen={isCreateOpen}

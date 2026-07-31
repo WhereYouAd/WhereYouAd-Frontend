@@ -13,6 +13,8 @@ import type { TCreateOrgRequest } from "@/types/workspace/workspace";
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import TextareaField from "@/components/common/textarea/TextareaField";
@@ -211,8 +213,12 @@ export default function WorkspacePage() {
           <span className="hidden tablet:inline">생성하기</span>
         </Button>
       </div>
-
-      {renderWorkspaceContent()}
+      <ErrorBoundary
+        FallbackComponent={AreaErrorFallback}
+        resetKeys={[workspaces]}
+      >
+        {renderWorkspaceContent()}
+      </ErrorBoundary>
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="md" padding="lg">
         <div className="flex flex-col items-start pr-10 px-2 tablet:px-0">
