@@ -181,11 +181,10 @@ export default function PlatformIntegrationsPage() {
     });
   };
 
-  const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
-
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
-      <OnboardingTour autoStart={isFirstLogin} />
+      {/* TODO: 디자인 확인용 임시 — 배포 전 isFirstLogin으로 교체 */}
+      <OnboardingTour autoStart />
       {isLoading ? (
         <PlatformIntegrationsPageSkeleton />
       ) : isError ? (

@@ -3,6 +3,8 @@ import { Joyride } from "react-joyride";
 
 import { useOnboardingTour } from "@/hooks/common/useOnboardingTour";
 
+import OnboardingTooltip from "@/components/common/OnboardingTooltip";
+
 interface IOnboardingTourProps {
   autoStart?: boolean;
 }
@@ -23,18 +25,10 @@ export default function OnboardingTour({
       onEvent={handleEvent}
       continuous
       scrollToFirstStep
-      locale={{
-        back: "이전",
-        close: "닫기",
-        last: "완료",
-        next: "다음",
-        skip: "건너뛰기",
-      }}
+      tooltipComponent={OnboardingTooltip}
       options={{
-        primaryColor: "#2f5bea",
+        overlayColor: "rgba(17, 24, 39, 0.5)",
         zIndex: 1000,
-        showProgress: true,
-        buttons: ["back", "close", "primary", "skip"],
       }}
     />
   );
