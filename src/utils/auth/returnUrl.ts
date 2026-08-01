@@ -18,12 +18,12 @@ export function getSafeReturnUrl(
   return value;
 }
 
-/*path에 안전한 returnUrl 쿼리를 붙인다. 없으면 path 그대로(소셜로그인은 나가면 url잃어버리니까 미리 저장해놓기)*/
+/*path에 안전한 returnUrl 쿼리를 붙인다. 없으면 path 그대로(즉, path에 쿼리붙이기)*/
 export function buildPathWithReturnUrl(
   path: string,
   returnUrl: string | null | undefined,
 ): string {
-  const safe = getSafeReturnUrl(returnUrl);
+  const safe = getSafeReturnUrl(returnUrl, "");
   if (!safe) return path;
 
   const params = new URLSearchParams({ returnUrl: safe });
