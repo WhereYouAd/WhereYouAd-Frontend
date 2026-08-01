@@ -17,7 +17,12 @@ import { QUERY_KEYS } from "@/lib/queryKeys";
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-type TInviteUiStatus = "loading" | "needLogin" | "invalidToken";
+type TInviteUiStatus =
+  | "loading"
+  | "needLogin"
+  | "invalidToken"
+  | "error"
+  | "success";
 
 const LOGIN_REDIRECT_SECONDS = 3;
 
@@ -30,13 +35,16 @@ function getInviteErrorCopy(error: IApiErrorResponse | null): {
 
   if (
     code.includes("EXPIRED") ||
+    code.includes("ORG_INVITATION_400") ||
     message.includes("만료") ||
-    message.toLowerCase().includes("expired")
+    message.includes("유효하지 않") ||
+    message.toLowerCase().includes("expired") ||
+    message.toLowerCase().includes("invalid")
   ) {
     return {
-      title: "초대 링크가 만료 되었습니다",
+      title: "초대 링크가 만료되었거나\n유효하지 않습니다",
       description:
-        "초대 링크 유효시간(24시간)이 지났습니다.\n워크스페이스 관리자에게 다시 초대를 요청해 주세요",
+        "초대 링크가 만료되었거나 더 이상 사용할 수 없습니다.\n워크스페이스 관리자에게 다시 초대를 요청해 주세요",
     };
   }
   if (
@@ -78,23 +86,29 @@ export default function InviteAcceptPage() {
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
   const [uiStatus, setUiStatus] = useState<TInviteUiStatus>("loading");
+  const [acceptError, setAcceptError] = useState<IApiErrorResponse | null>(
+    null,
+  );
   const [countdown, setCountdown] = useState(LOGIN_REDIRECT_SECONDS);
   const processedRef = useRef<string | null>(null);
 
-  const {
-    mutate: acceptInvite,
-    isError,
-    isSuccess,
-    error,
-  } = useCoreMutation(acceptInvitaton, {
+  const { mutate: acceptInvite } = useCoreMutation(acceptInvitaton, {
     invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
     userOnSuccess: async (data: TAcceptInvitationResponse) => {
       await saveSelectedWorkspace(data.orgId);
       setSelectedOrgId(data.orgId);
       toast.success(data.message || "초대를 수락했습니다");
+      setUiStatus("success");
       nav("/dashboard", { replace: true });
     },
+    userOnError: (err) => {
+      setAcceptError(err);
+      setUiStatus("error");
+    },
   });
+
+  const acceptInviteRef = useRef(acceptInvite);
+  acceptInviteRef.current = acceptInvite;
 
   useEffect(() => {
     if (!isTokenInitialized) return;
@@ -111,9 +125,10 @@ export default function InviteAcceptPage() {
 
     if (processedRef.current === token) return;
     processedRef.current = token;
+    setAcceptError(null);
     setUiStatus("loading");
-    acceptInvite(token);
-  }, [isTokenInitialized, isLoggedIn, token, acceptInvite]);
+    acceptInviteRef.current(token);
+  }, [isTokenInitialized, isLoggedIn, token]);
 
   useEffect(() => {
     if (uiStatus !== "needLogin" || !token) return;
@@ -144,9 +159,9 @@ export default function InviteAcceptPage() {
     requestURI: "/api/org/invitations",
   };
 
-  if (uiStatus === "invalidToken" || isError) {
+  if (uiStatus === "invalidToken" || uiStatus === "error") {
     const copy = getInviteErrorCopy(
-      uiStatus === "invalidToken" ? invalidTokenError : (error ?? null),
+      uiStatus === "invalidToken" ? invalidTokenError : acceptError,
     );
     return (
       <ErrorLayout
@@ -196,7 +211,9 @@ export default function InviteAcceptPage() {
   return (
     <div className="relative flex h-screen w-full items-center justify-center bg-surface-100">
       <p className="animate-pulse font-body1 text-text-muted">
-        {isSuccess ? "워크스페이스로 이동 중..." : "초대를 확인하는 중..."}
+        {uiStatus === "success"
+          ? "워크스페이스로 이동 중..."
+          : "초대를 확인하는 중..."}
       </p>
     </div>
   );
