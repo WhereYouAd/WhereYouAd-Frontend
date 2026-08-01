@@ -93,7 +93,7 @@ export default function InviteAcceptPage() {
   const processedRef = useRef<string | null>(null);
 
   const { mutate: acceptInvite } = useCoreMutation(acceptInvitaton, {
-    invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
+    invalidateKeys: [QUERY_KEYS.workspace.list()],
     userOnSuccess: async (data: TAcceptInvitationResponse) => {
       try {
         await saveSelectedWorkspace(data.orgId);
