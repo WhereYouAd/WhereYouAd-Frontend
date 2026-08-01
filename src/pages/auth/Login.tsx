@@ -1,9 +1,13 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import {
+  buildPathWithReturnUrl,
+  getSafeReturnUrl,
+} from "@/utils/auth/returnUrl";
 import { loginSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -29,13 +33,17 @@ export default function Login() {
   });
 
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl");
+
   const { useLogin } = useAuth();
   const { handleSocialLogin } = useSocialLogin();
 
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
       onSuccess: () => {
-        navigate("/dashboard", { replace: true });
+        navigate(getSafeReturnUrl(returnUrl), { replace: true });
       },
       onError: (error) => {
         toast.error(error.message ?? "로그인에 실패했습니다.");
@@ -68,7 +76,7 @@ export default function Login() {
         />
 
         <Link
-          to="/find-email"
+          to={buildPathWithReturnUrl("/find-email", returnUrl)}
           className="block w-full text-center mt-3 font-caption text-text-body underline underline-offset-4 hover:text-text-auth-sub"
         >
           이메일/비밀번호를 잊어버렸어요
@@ -111,7 +119,7 @@ export default function Login() {
         </div>
 
         <Link
-          to="/signup"
+          to={buildPathWithReturnUrl("/signup", returnUrl)}
           state={{ step: 1 }}
           className="mt-6 font-body2 text-text-placeholder underline underline-offset-4 hover:text-text-auth-sub"
         >
