@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
+import type { TAcceptInvitationResponse } from "@/types/workspace/workspace";
 
 import { buildPathWithReturnUrl } from "@/utils/auth/returnUrl";
+
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import Button from "@/components/common/button/Button";
 import ErrorLayout from "@/components/common/error/ErrorLayout";
@@ -15,7 +17,7 @@ import { QUERY_KEYS } from "@/lib/queryKeys";
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-type TInviteStatus = "loading" | "success" | "error" | "needLogin";
+type TInviteUiStatus = "loading" | "needLogin" | "invalidToken";
 
 const LOGIN_REDIRECT_SECONDS = 3;
 
@@ -67,75 +69,54 @@ function getInviteErrorCopy(error: IApiErrorResponse | null): {
   };
 }
 
-export default function getInviteAcceptPage() {
+export default function InviteAcceptPage() {
   const { token } = useParams<{ token: string }>();
   const nav = useNavigate();
-  const queryClient = useQueryClient();
 
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const isTokenInitialized = useAuthStore((s) => s.isTokenInitialized);
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
 
-  const [status, setStatus] = useState<TInviteStatus>("loading");
-  const [error, setError] = useState<IApiErrorResponse | null>(null);
+  const [uiStatus, setUiStatus] = useState<TInviteUiStatus>("loading");
   const [countdown, setCountdown] = useState(LOGIN_REDIRECT_SECONDS);
   const processedRef = useRef<string | null>(null);
+
+  const {
+    mutate: acceptInvite,
+    isError,
+    isSuccess,
+    error,
+  } = useCoreMutation(acceptInvitaton, {
+    invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
+    userOnSuccess: async (data: TAcceptInvitationResponse) => {
+      await saveSelectedWorkspace(data.orgId);
+      setSelectedOrgId(data.orgId);
+      toast.success(data.message || "초대를 수락했습니다");
+      nav("/dashboard", { replace: true });
+    },
+  });
 
   useEffect(() => {
     if (!isTokenInitialized) return;
 
     if (!token) {
-      setStatus("error");
-      setError({
-        status: "error",
-        code: "INVALID_TOKEN",
-        message: "유효하지 않은 초대 링크입니다",
-        method: "POST",
-        requestURI: "/api/org/invitations",
-      });
+      setUiStatus("invalidToken");
       return;
     }
+
     if (!isLoggedIn) {
-      setStatus("needLogin");
+      setUiStatus("needLogin");
       return;
     }
+
     if (processedRef.current === token) return;
     processedRef.current = token;
-
-    const accept = async () => {
-      try {
-        const data = await acceptInvitaton(token);
-        await saveSelectedWorkspace(data.orgId);
-        setSelectedOrgId(data.orgId);
-
-        await queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.list(),
-        });
-        await queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.workspace.saved(),
-        });
-
-        toast.success(data.message || "초대를 수락했습니다");
-        setStatus("success");
-        nav("/dashboard", { replace: true });
-      } catch (err) {
-        const apiError = err as IApiErrorResponse;
-        setError(apiError);
-        setStatus("error");
-      }
-    };
-    void accept();
-  }, [
-    isTokenInitialized,
-    isLoggedIn,
-    token,
-    nav,
-    queryClient,
-    setSelectedOrgId,
-  ]);
+    setUiStatus("loading");
+    acceptInvite(token);
+  }, [isTokenInitialized, isLoggedIn, token, acceptInvite]);
 
   useEffect(() => {
-    if (status !== "needLogin" || !token) return;
+    if (uiStatus !== "needLogin" || !token) return;
 
     setCountdown(LOGIN_REDIRECT_SECONDS);
 
@@ -153,10 +134,20 @@ export default function getInviteAcceptPage() {
       window.clearInterval(interval);
       window.clearTimeout(timer);
     };
-  }, [status, token, nav]);
+  }, [uiStatus, token, nav]);
 
-  if (status === "error") {
-    const copy = getInviteErrorCopy(error);
+  const invalidTokenError: IApiErrorResponse = {
+    status: "error",
+    code: "INVALID_TOKEN",
+    message: "유효하지 않은 초대 링크입니다",
+    method: "POST",
+    requestURI: "/api/org/invitations",
+  };
+
+  if (uiStatus === "invalidToken" || isError) {
+    const copy = getInviteErrorCopy(
+      uiStatus === "invalidToken" ? invalidTokenError : (error ?? null),
+    );
     return (
       <ErrorLayout
         title={copy.title}
@@ -185,7 +176,7 @@ export default function getInviteAcceptPage() {
     );
   }
 
-  if (status === "needLogin") {
+  if (uiStatus === "needLogin") {
     return (
       <div className="relative flex h-screen w-full flex-col items-center justify-center gap-5 bg-surface-100">
         <span
@@ -205,9 +196,7 @@ export default function getInviteAcceptPage() {
   return (
     <div className="relative flex h-screen w-full items-center justify-center bg-surface-100">
       <p className="animate-pulse font-body1 text-text-muted">
-        {status === "success"
-          ? "워크스페이스로 이동 중..."
-          : "초대를 확인하는 중..."}
+        {isSuccess ? "워크스페이스로 이동 중..." : "초대를 확인하는 중..."}
       </p>
     </div>
   );
