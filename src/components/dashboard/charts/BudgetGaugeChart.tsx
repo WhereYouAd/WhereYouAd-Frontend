@@ -140,12 +140,22 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
 
         <div
           className={twMerge(
-            "flex items-center justify-between font-body2 text-text-body",
+            "flex items-end justify-between",
             compact ? "mt-2" : "mt-3",
           )}
         >
-          <span className="tabular-nums">{M.spend.format(spent)}</span>
-          <span className="tabular-nums">{M.spend.format(totalBudget)}</span>
+          <div className="flex flex-col gap-0.5">
+            <span className="font-caption text-text-muted">사용</span>
+            <span className="font-body2 text-text-body tabular-nums">
+              {M.spend.format(spent)}
+            </span>
+          </div>
+          <div className="flex flex-col items-end gap-0.5">
+            <span className="font-caption text-text-muted">전체</span>
+            <span className="font-body2 text-text-body tabular-nums">
+              {M.spend.format(totalBudget)}
+            </span>
+          </div>
         </div>
       </div>
 

@@ -78,9 +78,15 @@ function PlatformBudgetGaugeCompactSkeleton() {
         <Skeleton className="h-8 w-24" />
       </div>
       <Skeleton className="mb-3 h-3 w-full rounded-full" />
-      <div className="mb-3 flex items-center justify-between">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="h-4 w-24" />
+      <div className="mb-3 flex items-end justify-between">
+        <div className="flex flex-col gap-0.5">
+          <Skeleton className="h-3 w-6" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+        <div className="flex flex-col items-end gap-0.5">
+          <Skeleton className="h-3 w-6" />
+          <Skeleton className="h-4 w-24" />
+        </div>
       </div>
       <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 px-4 py-3">
         <Skeleton className="h-3 w-16" />
@@ -101,9 +107,15 @@ export function PlatformSingleBudgetGaugeSkeleton() {
         </div>
         <Skeleton className="mb-6 h-8 w-24" />
         <Skeleton className="mb-3 h-3 w-full rounded-full" />
-        <div className="mb-6 flex items-center justify-between">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-24" />
+        <div className="mb-6 flex items-end justify-between">
+          <div className="flex flex-col gap-0.5">
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <div className="flex flex-col items-end gap-0.5">
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-4 w-24" />
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-3">
