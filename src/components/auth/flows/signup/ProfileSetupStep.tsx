@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import type { z } from "zod";
 
 import { stripPhoneHyphens } from "@/utils/auth/formatPhoneNumber";
+import { buildPathWithReturnUrl } from "@/utils/auth/returnUrl";
 import { signupProfileSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -25,15 +26,18 @@ interface IProfileSetupStepProps {
 
 export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl");
   const { email, resetAuth } = useAuthStore();
   const { openModal } = useModalStore();
   const { useSignUp } = useAuth();
 
   useEffect(() => {
     if (!email || !password) {
-      navigate("/signup", { replace: true });
+      navigate(buildPathWithReturnUrl("/signup", returnUrl), { replace: true });
     }
-  }, [email, password, navigate]);
+  }, [email, password, navigate, returnUrl]);
 
   const {
     register,
@@ -60,7 +64,9 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
             description: `${data.name}님, 환영합니다!`,
           });
           resetAuth();
-          navigate("/login");
+          navigate(buildPathWithReturnUrl("/login", returnUrl), {
+            replace: true,
+          });
         },
         onError: (error) => {
           toast.error(error.message ?? "회원가입에 실패했습니다.");
