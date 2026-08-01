@@ -24,7 +24,10 @@ import DashboardAiSummarySection from "@/components/dashboard/ai-report/componen
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
-import { PlatformDualBudgetGaugeSkeleton } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
+import {
+  PlatformDualBudgetGaugeSkeleton,
+  PlatformSingleBudgetGaugeSkeleton,
+} from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
@@ -207,9 +210,7 @@ export default function SinglePlatformView({
                 hasDualBudgetGauges ? (
                   <PlatformDualBudgetGaugeSkeleton />
                 ) : (
-                  <div className="flex flex-1 items-center justify-center p-8">
-                    <Skeleton className="h-32 w-full rounded-2xl" />
-                  </div>
+                  <PlatformSingleBudgetGaugeSkeleton />
                 )
               ) : isBudgetError ? (
                 <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">

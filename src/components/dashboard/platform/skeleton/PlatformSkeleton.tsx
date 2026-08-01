@@ -90,6 +90,36 @@ function PlatformBudgetGaugeCompactSkeleton() {
   );
 }
 
+/** Naver 등 게이지 1개 — showInsight 레이아웃 */
+export function PlatformSingleBudgetGaugeSkeleton() {
+  return (
+    <div className="flex flex-1 flex-col pt-2">
+      <div className="flex shrink-0 flex-col">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-6 w-12 rounded-lg" />
+        </div>
+        <Skeleton className="mb-6 h-8 w-24" />
+        <Skeleton className="mb-3 h-3 w-full rounded-full" />
+        <div className="mb-6 flex items-center justify-between">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 p-4">
+          <Skeleton className="h-3 w-16" />
+          <Skeleton className="h-7 w-36" />
+        </div>
+        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+          <Skeleton className="size-5 shrink-0 rounded-full" />
+          <Skeleton className="h-10 flex-1 rounded-md" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** Google/Meta — compact 게이지 2개 로딩 (최종 레이아웃 높이 유지) */
 export function PlatformDualBudgetGaugeSkeleton() {
   return (
