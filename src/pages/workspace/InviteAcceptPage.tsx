@@ -95,11 +95,16 @@ export default function InviteAcceptPage() {
   const { mutate: acceptInvite } = useCoreMutation(acceptInvitaton, {
     invalidateKeys: [QUERY_KEYS.workspace.list(), QUERY_KEYS.workspace.saved()],
     userOnSuccess: async (data: TAcceptInvitationResponse) => {
-      await saveSelectedWorkspace(data.orgId);
-      setSelectedOrgId(data.orgId);
-      toast.success(data.message || "초대를 수락했습니다");
-      setUiStatus("success");
-      nav("/dashboard", { replace: true });
+      try {
+        await saveSelectedWorkspace(data.orgId);
+        setSelectedOrgId(data.orgId);
+        toast.success(data.message || "초대를 수락했습니다");
+        setUiStatus("success");
+        nav("/dashboard", { replace: true });
+      } catch (err) {
+        setAcceptError(err as IApiErrorResponse);
+        setUiStatus("error");
+      }
     },
     userOnError: (err) => {
       setAcceptError(err);
