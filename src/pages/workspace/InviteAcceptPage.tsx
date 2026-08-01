@@ -17,6 +17,8 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 type TInviteStatus = "loading" | "success" | "error" | "needLogin";
 
+const LOGIN_REDIRECT_SECONDS = 3;
+
 function getInviteErrorCopy(error: IApiErrorResponse | null): {
   title: string;
   description: string;
@@ -76,6 +78,7 @@ export default function getInviteAcceptPage() {
 
   const [status, setStatus] = useState<TInviteStatus>("loading");
   const [error, setError] = useState<IApiErrorResponse | null>(null);
+  const [countdown, setCountdown] = useState(LOGIN_REDIRECT_SECONDS);
   const processedRef = useRef(false);
 
   useEffect(() => {
@@ -134,12 +137,22 @@ export default function getInviteAcceptPage() {
   useEffect(() => {
     if (status !== "needLogin" || !token) return;
 
+    setCountdown(LOGIN_REDIRECT_SECONDS);
+
+    const interval = window.setInterval(() => {
+      setCountdown((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+
     const timer = window.setTimeout(() => {
       nav(buildPathWithReturnUrl("/login", `/invite/${token}`), {
         replace: true,
       });
-    }, 3500); //약 3.5초로 대기시간설정
-    return () => window.clearTimeout(timer);
+    }, LOGIN_REDIRECT_SECONDS * 1000);
+
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(timer);
+    };
   }, [status, token, nav]);
 
   if (status === "error") {
@@ -174,30 +187,24 @@ export default function getInviteAcceptPage() {
 
   if (status === "needLogin") {
     return (
-      <ErrorLayout
-        title="로그인이 필요합니다"
-        description="계정 로그인이 되어 있지 않습니다.\n잠시 후 로그인 페이지로 이동합니다"
-        actions={
-          <Button
-            size="big"
-            variant="primary"
-            fullWidth
-            onClick={() =>
-              nav(buildPathWithReturnUrl("/login", `/invite/${token}`), {
-                replace: true,
-              })
-            }
-          >
-            바로 로그인하기
-          </Button>
-        }
-      />
+      <div className="relative flex h-screen w-full flex-col items-center justify-center gap-5 bg-surface-100">
+        <span
+          className="h-12 w-12 animate-spin rounded-full border-4 border-primary-400 border-t-transparent"
+          aria-hidden
+        />
+        <p className="text-center font-heading3 text-text-title">
+          로그인이 필요합니다
+        </p>
+        <p className="text-center font-body1 text-text-muted">
+          {countdown}초 후 로그인 페이지로 이동합니다
+        </p>
+      </div>
     );
   }
 
   return (
     <div className="relative flex h-screen w-full items-center justify-center bg-surface-100">
-      <p className="animate-pulse font-body2 text-text-muted">
+      <p className="animate-pulse font-body1 text-text-muted">
         {status === "success"
           ? "워크스페이스로 이동 중..."
           : "초대를 확인하는 중..."}
