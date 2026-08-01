@@ -15,7 +15,7 @@ import { QUERY_KEYS } from "@/lib/queryKeys";
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-type TInviteStatus = "loading" | "success" | "error";
+type TInviteStatus = "loading" | "success" | "error" | "needLogin";
 
 function getInviteErrorCopy(error: IApiErrorResponse | null): {
   title: string;
@@ -32,7 +32,7 @@ function getInviteErrorCopy(error: IApiErrorResponse | null): {
     return {
       title: "초대 링크가 만료 되었습니다",
       description:
-        "초대 링크 유효시간(24시간)이 지났습니다. \n워크스페이스 관리자에게 다시 초대를 요청해 주세요",
+        "초대 링크 유효시간(24시간)이 지났습니다.\n워크스페이스 관리자에게 다시 초대를 요청해 주세요",
     };
   }
   if (
@@ -51,7 +51,7 @@ function getInviteErrorCopy(error: IApiErrorResponse | null): {
     message.toLowerCase().includes("email")
   ) {
     return {
-      title: "초대 이메일이 일치하지 않습니다",
+      title: "초대 이메일이\n일치하지 않습니다",
       description:
         "초대받은 이메일 계정으로 로그인한 뒤\n다시 링크를 열어주세요",
     };
@@ -61,7 +61,7 @@ function getInviteErrorCopy(error: IApiErrorResponse | null): {
     title: "초대를 수락할 수 없습니다",
     description:
       message ||
-      "초대 처리 중 오류가 발생했습니다. \n잠시 후 다시 시도해 주세요",
+      "초대 처리 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요",
   };
 }
 
@@ -93,9 +93,8 @@ export default function getInviteAcceptPage() {
       return;
     }
     if (!isLoggedIn) {
-      nav(buildPathWithReturnUrl("/login", `/invite/${token}`), {
-        replace: true,
-      });
+      setStatus("needLogin");
+      return;
     }
     if (processedRef.current) return;
     processedRef.current = true;
@@ -132,6 +131,17 @@ export default function getInviteAcceptPage() {
     setSelectedOrgId,
   ]);
 
+  useEffect(() => {
+    if (status !== "needLogin" || !token) return;
+
+    const timer = window.setTimeout(() => {
+      nav(buildPathWithReturnUrl("/login", `/invite/${token}`), {
+        replace: true,
+      });
+    }, 3500); //약 3.5초로 대기시간설정
+    return () => window.clearTimeout(timer);
+  }, [status, token, nav]);
+
   if (status === "error") {
     const copy = getInviteErrorCopy(error);
     return (
@@ -157,6 +167,29 @@ export default function getInviteAcceptPage() {
               홈으로 이동
             </Button>
           </>
+        }
+      />
+    );
+  }
+
+  if (status === "needLogin") {
+    return (
+      <ErrorLayout
+        title="로그인이 필요합니다"
+        description="계정 로그인이 되어 있지 않습니다.\n잠시 후 로그인 페이지로 이동합니다"
+        actions={
+          <Button
+            size="big"
+            variant="primary"
+            fullWidth
+            onClick={() =>
+              nav(buildPathWithReturnUrl("/login", `/invite/${token}`), {
+                replace: true,
+              })
+            }
+          >
+            바로 로그인하기
+          </Button>
         }
       />
     );
