@@ -10,6 +10,12 @@ export function getSafeReturnUrl(
   if (!raw) return fallback;
 
   const value = raw.trim();
+  // if (/[\u0000-\u001F\u007F]/.test(value)) return fallback;
+  // ESLint가 정규식 리터럴을 막기 때문에 같은 조건의 charCodeAt 사용
+  for (let i = 0; i < value.length; i++) {
+    const code = value.charCodeAt(i);
+    if (code <= 0x1f || code === 0x7f) return fallback;
+  }
   if (!value.startsWith("/")) return fallback;
   if (value.startsWith("//")) return fallback;
   if (value.includes("://")) return fallback;
