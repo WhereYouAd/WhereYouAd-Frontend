@@ -79,7 +79,7 @@ export default function getInviteAcceptPage() {
   const [status, setStatus] = useState<TInviteStatus>("loading");
   const [error, setError] = useState<IApiErrorResponse | null>(null);
   const [countdown, setCountdown] = useState(LOGIN_REDIRECT_SECONDS);
-  const processedRef = useRef(false);
+  const processedRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!isTokenInitialized) return;
@@ -99,8 +99,8 @@ export default function getInviteAcceptPage() {
       setStatus("needLogin");
       return;
     }
-    if (processedRef.current) return;
-    processedRef.current = true;
+    if (processedRef.current === token) return;
+    processedRef.current = token;
 
     const accept = async () => {
       try {
