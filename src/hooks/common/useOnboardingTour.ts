@@ -52,6 +52,13 @@ const TOUR_STEPS: Step[] = [
     skipBeacon: true,
   },
   {
+    target: "[data-tour='tour-platform-meta']",
+    title: "Meta 광고 연동",
+    content: "Facebook과 Instagram 광고 성과를 통합해서 분석할 수 있어요.",
+    placement: "bottom",
+    skipBeacon: true,
+  },
+  {
     target: "[data-tour='tour-platform-google']",
     title: "Google Ads 연동",
     content: "검색, 디스플레이, 쇼핑 광고 성과를 실시간으로 확인할 수 있어요.",
@@ -65,13 +72,6 @@ const TOUR_STEPS: Step[] = [
     placement: "bottom",
     skipBeacon: true,
     floatingOptions: { flipOptions: false },
-  },
-  {
-    target: "[data-tour='tour-platform-meta']",
-    title: "Meta 광고 연동",
-    content: "Facebook과 Instagram 광고 성과를 통합해서 분석할 수 있어요.",
-    placement: "bottom",
-    skipBeacon: true,
   },
   {
     target: "body",
