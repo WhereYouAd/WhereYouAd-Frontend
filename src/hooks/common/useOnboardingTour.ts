@@ -38,7 +38,7 @@ const TOUR_STEPS: Step[] = [
   },
   {
     target: "[data-tour='tour-workspace']",
-    title: "워크스페이스 설정",
+    title: "워크스페이스 관리",
     content:
       "멤버 초대, 역할 관리, 플랜과 결제를 여기서 모두 처리할 수 있어요.",
     placement: "right",
