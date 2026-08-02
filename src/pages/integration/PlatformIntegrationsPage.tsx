@@ -183,8 +183,7 @@ export default function PlatformIntegrationsPage() {
 
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
-      {/* TODO: 디자인 확인용 임시 — 배포 전 isFirstLogin으로 교체 */}
-      <OnboardingTour autoStart={!isLoading} />
+      <OnboardingTour autoStart={!localStorage.getItem("hasSeenOnboarding")} />
       {isLoading ? (
         <PlatformIntegrationsPageSkeleton />
       ) : isError ? (
