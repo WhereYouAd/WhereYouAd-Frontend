@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { EventData, Step } from "react-joyride";
-import { EVENTS, STATUS } from "react-joyride";
+import { STATUS } from "react-joyride";
 
 const ONBOARDING_KEY = "hasSeenOnboarding";
 
@@ -91,12 +91,11 @@ export function useOnboardingTour() {
   }, []);
 
   const handleEvent = useCallback((data: EventData) => {
-    const { status, type } = data;
+    const { status } = data;
 
     const isFinished = status === STATUS.FINISHED || status === STATUS.SKIPPED;
-    const isError = type === EVENTS.TARGET_NOT_FOUND;
 
-    if (isFinished || isError) {
+    if (isFinished) {
       setRun(false);
       localStorage.setItem(ONBOARDING_KEY, "true");
     }
