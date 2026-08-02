@@ -44,6 +44,7 @@ interface IPlatformTrafficChartProps {
 
 const DEFAULT_CHART_HEIGHT = PLATFORM_TRAFFIC_CHART_HEIGHT_SINGLE;
 const MIN_CHART_HEIGHT = PLATFORM_TRAFFIC_CHART_HEIGHT_DUAL_MIN;
+const CHART_ARIA_LABEL = "실시간 트래픽 변화 차트: 시간대별 클릭수 추이";
 
 // 이상 징후 상세 버블
 const AnomalyBubble = memo(function AnomalyBubble({
@@ -427,6 +428,8 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
           ) : (
             <div
               ref={containerRef}
+              role="group"
+              aria-label={CHART_ARIA_LABEL}
               data-hide-tooltip={showBubble || undefined}
               className="absolute inset-0 overflow-hidden [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible"
             >
@@ -443,6 +446,8 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       ) : (
         <div
           ref={containerRef}
+          role="group"
+          aria-label={CHART_ARIA_LABEL}
           data-hide-tooltip={showBubble || undefined}
           className="relative min-h-75 [&[data-hide-tooltip]_.apexcharts-tooltip]:pointer-events-none [&[data-hide-tooltip]_.apexcharts-tooltip]:invisible"
         >
