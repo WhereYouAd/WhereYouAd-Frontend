@@ -65,6 +65,7 @@ const TOUR_STEPS: Step[] = [
     content: "네이버 검색 광고 성과를 대시보드에서 바로 확인할 수 있어요.",
     placement: "bottom",
     skipBeacon: true,
+    floatingOptions: { flipOptions: false },
   },
   {
     target: "[data-tour='tour-platform-meta']",
