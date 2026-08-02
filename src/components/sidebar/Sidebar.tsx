@@ -200,14 +200,16 @@ export default function Sidebar() {
               <div
                 key={item.id}
                 className="relative flex flex-col"
-                data-tour={`tour-${item.id}`}
                 {...collapsedSubmenuInteractionProps(
                   isCollapsed && !!item.children?.length,
                   item.id,
                   setOpenId,
                 )}
               >
-                <div className={getMainItemClass(isParentActive, isCollapsed)}>
+                <div
+                  className={getMainItemClass(isParentActive, isCollapsed)}
+                  data-tour={`tour-${item.id}`}
+                >
                   <SidebarItem
                     item={item}
                     isCollapsed={isCollapsed}
