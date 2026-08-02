@@ -41,9 +41,11 @@ export default function RedirectPage() {
 
       toast.success("소셜 로그인되었습니다.");
       const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
-      navigate(isFirstLogin ? "/integrations" : "/dashboard", {
-        replace: true,
-      });
+      if (isFirstLogin) {
+        navigate("/integrations", { replace: true });
+      } else {
+        navigate(getSafeReturnUrl(storedReturnUrl), { replace: true });
+      }
     } else {
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
       navigate(buildPathWithReturnUrl("/login", storedReturnUrl), {

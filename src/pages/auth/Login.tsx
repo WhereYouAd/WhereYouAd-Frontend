@@ -44,9 +44,11 @@ export default function Login() {
     useLogin.mutate(data, {
       onSuccess: () => {
         const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
-        navigate(isFirstLogin ? "/integrations" : "/dashboard", {
-          replace: true,
-        });
+        if (isFirstLogin) {
+          navigate("/integrations", { replace: true });
+        } else {
+          navigate(getSafeReturnUrl(returnUrl), { replace: true });
+        }
       },
       onError: (error) => {
         toast.error(error.message ?? "로그인에 실패했습니다.");
