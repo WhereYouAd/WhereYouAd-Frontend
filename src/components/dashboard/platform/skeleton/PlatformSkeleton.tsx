@@ -66,7 +66,7 @@ export function BadgeSkeleton({ className }: { className?: string }) {
   return <Skeleton className={twMerge("w-14 h-6 rounded-lg", className)} />;
 }
 
-/** compact BudgetGaugeChart 1칸 (인사이트 없음) */
+/** compact BudgetGaugeChart 1칸 */
 function PlatformBudgetGaugeCompactSkeleton() {
   return (
     <div className="flex flex-col">
@@ -88,9 +88,9 @@ function PlatformBudgetGaugeCompactSkeleton() {
           <Skeleton className="h-4 w-24" />
         </div>
       </div>
-      <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 px-4 py-3">
-        <Skeleton className="h-3 w-16" />
-        <Skeleton className="h-7 w-36" />
+      <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+        <Skeleton className="size-5 shrink-0 rounded-full" />
+        <Skeleton className="h-10 flex-1 rounded-md" />
       </div>
     </div>
   );
@@ -118,15 +118,9 @@ export function PlatformSingleBudgetGaugeSkeleton() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50 p-4">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-7 w-36" />
-        </div>
-        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
-          <Skeleton className="size-5 shrink-0 rounded-full" />
-          <Skeleton className="h-10 flex-1 rounded-md" />
-        </div>
+      <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+        <Skeleton className="size-5 shrink-0 rounded-full" />
+        <Skeleton className="h-10 flex-1 rounded-md" />
       </div>
     </div>
   );

@@ -61,9 +61,6 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   const spentPct = getSpentPercentage(slice);
   const remainingPct = getRemainingPercentage(slice);
   const isOverBudget = spent > totalBudget;
-  const remainingAmount = isOverBudget
-    ? spent - totalBudget
-    : totalBudget - spent;
 
   const status = getBudgetStatus(spentPct, warningThreshold, dangerThreshold);
 
@@ -159,44 +156,22 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
         </div>
       </div>
 
-      <div
-        className={twMerge("flex flex-1 flex-col", compact ? "gap-2" : "gap-3")}
-      >
-        <div
-          className={twMerge(
-            "flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/50",
-            compact ? "px-4 py-3" : "p-4",
-          )}
-        >
-          <span className="font-caption text-text-muted">남은 예산</span>
-          <span
-            className={twMerge(
-              "font-heading3 text-text-title tabular-nums",
-              isOverBudget && "text-info-red",
-            )}
-          >
-            {isOverBudget ? "-" : ""}
-            {M.spend.format(remainingAmount)}
-          </span>
+      {showInsight && (
+        <div className="flex flex-1 items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+          <WarnCircleIcon
+            className="block size-5 shrink-0 text-text-muted"
+            aria-hidden="true"
+          />
+          <p className="m-0 min-w-0 flex-1 break-keep font-body2 text-text-body">
+            <span>{insightHead}</span>
+            {insightTail ? (
+              <span className="mt-0.5 block tablet:ml-1 tablet:mt-0 tablet:inline">
+                {insightTail}
+              </span>
+            ) : null}
+          </p>
         </div>
-
-        {showInsight && (
-          <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
-            <WarnCircleIcon
-              className="block size-5 shrink-0 text-text-muted"
-              aria-hidden="true"
-            />
-            <p className="m-0 min-w-0 flex-1 break-keep font-body2 text-text-body">
-              <span>{insightHead}</span>
-              {insightTail ? (
-                <span className="mt-0.5 block tablet:ml-1 tablet:mt-0 tablet:inline">
-                  {insightTail}
-                </span>
-              ) : null}
-            </p>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 });
