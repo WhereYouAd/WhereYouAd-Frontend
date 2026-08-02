@@ -16,7 +16,7 @@ export default function OnboardingTooltip({
   return (
     <div
       {...tooltipProps}
-      className="animate-tooltip-enter bg-surface-100 rounded-3xl shadow-Soft p-6 w-84 flex flex-col gap-4"
+      className="animate-tooltip-enter bg-surface-100 rounded-3xl shadow-tooltip p-6 w-84 flex flex-col gap-4"
     >
       <div className="flex items-start justify-between gap-4">
         {step.title && (
