@@ -32,7 +32,7 @@ import MoreIcon from "@/assets/icon/common/more.svg?react";
 const ReactApexChart = lazy(() => import("react-apexcharts"));
 
 interface ITrafficChartProps {
-  /** ApexCharts height — 통합 대시보드 기본 520 */
+  /** ApexCharts height — 통합 대시보드 기본 590 */
   height?: number;
 }
 
