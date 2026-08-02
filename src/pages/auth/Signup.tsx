@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+
+import { buildPathWithReturnUrl } from "@/utils/auth/returnUrl";
 
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import { useStepNavigation } from "@/hooks/common/useStepNavigation";
@@ -18,6 +20,9 @@ import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {
   const location = useLocation();
+
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl");
   const { resetAuth } = useAuthStore();
   const { step, setStep, handleNext } = useStepNavigation(
     location.state?.step || 0,
@@ -102,7 +107,7 @@ export default function Signup() {
       <div className="font-body2 text-text-body mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
         <Link
-          to="/login"
+          to={buildPathWithReturnUrl("/login", returnUrl)}
           className="text-text-body underline hover:text-text-auth-sub"
         >
           로그인하기
