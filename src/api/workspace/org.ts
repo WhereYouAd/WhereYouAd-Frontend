@@ -1,5 +1,6 @@
 import type { ICommonResponse } from "@/types/common/common";
 import {
+  type TAcceptInvitationResponse,
   type TCreateOrgRequest,
   type TCreateOrgResponse,
   type TDeleteWorkspaceMemberResponse,
@@ -153,4 +154,13 @@ export const getSavedWorkspace = async () => {
 
 export const saveSelectedWorkspace = async (orgId: number): Promise<void> => {
   await axiosInstance.post(`/api/org/${orgId}/workspace`);
+};
+
+export const acceptInvitaton = async (
+  token: string,
+): Promise<TAcceptInvitationResponse> => {
+  const { data } = await axiosInstance.post<
+    ICommonResponse<TAcceptInvitationResponse>
+  >(`/api/org/invitations/${token}`);
+  return data.data;
 };

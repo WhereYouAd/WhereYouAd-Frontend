@@ -29,6 +29,11 @@ const RedirectPage = loadable(
 
 const Signup = lazy(() => import("@/pages/auth/Signup"));
 
+const InviteAcceptPage = loadable(
+  lazy(() => import("@/pages/workspace/InviteAcceptPage")),
+  <AuthFormSkeleton />,
+);
+
 function SignupPage() {
   const location = useLocation();
   const step = location.state?.step;
@@ -68,6 +73,10 @@ const AuthRoutes: RouteObject[] = [
   {
     path: "oauth2/meta/result",
     element: <MetaOAuthResultPage />,
+  },
+  {
+    path: "invite/:token",
+    element: <InviteAcceptPage />,
   },
 ];
 

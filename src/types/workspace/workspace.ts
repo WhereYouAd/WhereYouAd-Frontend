@@ -124,3 +124,9 @@ export type TPendingMemberData = {
 export type TPendingMemberResponse = {
   pendingMembers: TPendingMemberData[];
 };
+
+export type TAcceptInvitationResponse = {
+  orgId: number;
+  message: string;
+  email: string;
+};
