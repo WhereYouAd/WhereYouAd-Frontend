@@ -30,7 +30,7 @@ export function OverviewTrafficChartSkeleton() {
 
 /** 예산 게이지 카드 — Google·Meta + NAVER compact 2개 */
 export function OverviewBudgetGaugeSkeleton() {
-  return <PlatformDualBudgetGaugeSkeleton />;
+  return <PlatformDualBudgetGaugeSkeleton mergedBudgetHeader={false} />;
 }
 
 /** 플랫폼별 ROAS 랭킹 테이블 */

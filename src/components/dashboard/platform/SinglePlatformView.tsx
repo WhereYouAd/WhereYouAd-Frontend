@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
+import { PLATFORM_MID_SECTION_HEIGHT_SINGLE } from "@/constants/dashboard/trafficChartHeights";
 
 import { supportsDailyBudget } from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
@@ -148,7 +149,9 @@ export default function SinglePlatformView({
           title="실시간 트래픽 변화"
           className={twMerge(
             "col-span-2 flex flex-col tablet:col-span-1",
-            hasDualBudgetGauges ? "min-h-120 h-full overflow-hidden" : "h-120",
+            hasDualBudgetGauges
+              ? "min-h-120 h-full overflow-hidden"
+              : PLATFORM_MID_SECTION_HEIGHT_SINGLE,
           )}
           description={
             <ChartLegend
@@ -185,7 +188,9 @@ export default function SinglePlatformView({
           title="예산 소진 현황"
           className={twMerge(
             "col-span-1 flex flex-col tablet:col-span-1",
-            hasDualBudgetGauges ? "min-h-120 h-full" : "min-h-120",
+            hasDualBudgetGauges
+              ? "min-h-120 h-full"
+              : PLATFORM_MID_SECTION_HEIGHT_SINGLE,
           )}
           description={
             <ChartLegend
@@ -219,8 +224,9 @@ export default function SinglePlatformView({
               ) : budgetData ? (
                 <div
                   className={twMerge(
-                    "flex flex-1 flex-col overflow-y-auto pt-2",
-                    budgetData.gauges.length === 1 && "gap-5",
+                    "flex flex-col",
+                    hasDualBudgetGauges ? "pt-2" : "pt-1",
+                    hasDualBudgetGauges && "min-h-0 flex-1 overflow-y-auto",
                   )}
                 >
                   {budgetData.gauges.map((gauge, index) => (

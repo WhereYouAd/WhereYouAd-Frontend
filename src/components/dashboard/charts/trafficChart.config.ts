@@ -172,7 +172,7 @@ export function buildChartOptions(params: {
       borderColor: "var(--color-surface-200)",
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
-      padding: { left: 16, right: 24 },
+      padding: { top: 12, left: 12, right: 16 },
     },
 
     tooltip: {

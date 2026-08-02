@@ -1,7 +1,10 @@
 import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { IBudgetGaugeProps } from "@/types/dashboard/budget";
+import type {
+  IBudgetGaugeProps,
+  TBudgetGaugeLabel,
+} from "@/types/dashboard/budget";
 
 import {
   getRemainingPercentage,
@@ -46,6 +49,13 @@ function splitInsightHeadTail(text: string): { head: string; tail?: string } {
   return { head: m[1], tail: m[3].trim() };
 }
 
+/** 게이지 label이 예산 종류면 금액을 label 옆에 표시 */
+function isBudgetTypeLabel(label: TBudgetGaugeLabel): boolean {
+  return label === "전체 예산" || label === "일일 예산";
+}
+
+const budgetAmountClass = "font-heading4 text-text-title tabular-nums";
+
 const BudgetGaugeChart = memo(function BudgetGaugeChart({
   label,
   totalBudget,
@@ -61,6 +71,9 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   const spentPct = getSpentPercentage(slice);
   const remainingPct = getRemainingPercentage(slice);
   const isOverBudget = spent > totalBudget;
+  const remainingAmount = isOverBudget
+    ? spent - totalBudget
+    : totalBudget - spent;
 
   const status = getBudgetStatus(spentPct, warningThreshold, dangerThreshold);
 
@@ -79,26 +92,50 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   const { head: insightHead, tail: insightTail } =
     splitInsightHeadTail(insightDesc);
 
+  const showBudgetAmountOnLabelRow = isBudgetTypeLabel(label);
+  const headerRowGap = compact ? "mb-2" : "mb-3";
+
   return (
     <div
       className={twMerge(
-        "flex h-full w-full flex-col",
-        compact ? "pt-0" : "pt-4",
+        "flex w-full flex-col",
+        compact && "h-full",
+        compact ? "pt-0" : "pt-3",
       )}
     >
       <div className={twMerge("flex flex-col", compact ? "mb-3" : "mb-6")}>
         <div
           className={twMerge(
             "flex items-center justify-between gap-2",
-            compact ? "mb-2" : "mb-3",
+            headerRowGap,
           )}
         >
-          <h3 className="font-body2 text-text-body">{label}</h3>
+          <div className="flex min-w-0 items-baseline gap-2">
+            <h3 className="shrink-0 font-body2 text-text-body">{label}</h3>
+            {showBudgetAmountOnLabelRow && (
+              <span className={twMerge("truncate", budgetAmountClass)}>
+                {M.spend.format(totalBudget)}
+              </span>
+            )}
+          </div>
           <Badge variant={statusBadgeVariant[status]} className="shrink-0 px-2">
             {status}
           </Badge>
         </div>
-        <div className="flex items-baseline gap-2">
+        {!showBudgetAmountOnLabelRow && (
+          <div className={twMerge("flex items-baseline gap-2", headerRowGap)}>
+            <span className="font-caption text-text-muted">전체 예산</span>
+            <span className={budgetAmountClass}>
+              {M.spend.format(totalBudget)}
+            </span>
+          </div>
+        )}
+        <div
+          className={twMerge(
+            "flex items-baseline gap-2",
+            compact ? "mt-2" : "mt-3",
+          )}
+        >
           <span className="font-heading1 text-text-title tabular-nums leading-none">
             {remainingPct}%
           </span>
@@ -148,16 +185,27 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             </span>
           </div>
           <div className="flex flex-col items-end gap-0.5">
-            <span className="font-caption text-text-muted">전체</span>
-            <span className="font-body2 text-text-body tabular-nums">
-              {M.spend.format(totalBudget)}
+            <span className="font-caption text-text-muted">남은 예산</span>
+            <span
+              className={twMerge(
+                "font-body2 text-text-body tabular-nums",
+                isOverBudget && "text-info-red",
+              )}
+            >
+              {isOverBudget ? "-" : ""}
+              {M.spend.format(remainingAmount)}
             </span>
           </div>
         </div>
       </div>
 
       {showInsight && (
-        <div className="flex flex-1 items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+        <div
+          className={twMerge(
+            "flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4",
+            compact && "flex-1",
+          )}
+        >
           <WarnCircleIcon
             className="block size-5 shrink-0 text-text-muted"
             aria-hidden="true"
