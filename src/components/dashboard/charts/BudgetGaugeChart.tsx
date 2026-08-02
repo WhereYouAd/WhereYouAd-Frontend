@@ -185,14 +185,15 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             </span>
           </div>
           <div className="flex flex-col items-end gap-0.5">
-            <span className="font-caption text-text-muted">남은 예산</span>
+            <span className="font-caption text-text-muted">
+              {isOverBudget ? "초과 금액" : "남은 예산"}
+            </span>
             <span
               className={twMerge(
                 "font-body2 text-text-body tabular-nums",
                 isOverBudget && "text-info-red",
               )}
             >
-              {isOverBudget ? "-" : ""}
               {M.spend.format(remainingAmount)}
             </span>
           </div>
