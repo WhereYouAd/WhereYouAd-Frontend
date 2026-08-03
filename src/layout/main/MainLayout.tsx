@@ -18,6 +18,7 @@ import {
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
+import OnboardingTour from "@/components/common/OnboardingTour";
 import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
@@ -157,6 +158,11 @@ export default function MainLayout() {
 
   return (
     <div className="flex h-dvh w-full overflow-hidden bg-surface-200">
+      {myRole === "MEMBER" && (
+        <OnboardingTour
+          autoStart={!localStorage.getItem("hasSeenOnboarding")}
+        />
+      )}
       <div className="flex h-full shrink-0">
         <Sidebar />
       </div>
