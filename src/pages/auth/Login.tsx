@@ -45,7 +45,7 @@ export default function Login() {
       onSuccess: () => {
         const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
         if (isFirstLogin) {
-          navigate("/integrations", { replace: true });
+          navigate("/workspace", { replace: true });
         } else {
           navigate(getSafeReturnUrl(returnUrl), { replace: true });
         }

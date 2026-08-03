@@ -42,7 +42,7 @@ export default function RedirectPage() {
       toast.success("소셜 로그인되었습니다.");
       const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
       if (isFirstLogin) {
-        navigate("/integrations", { replace: true });
+        navigate("/workspace", { replace: true });
       } else {
         navigate(getSafeReturnUrl(storedReturnUrl), { replace: true });
       }
