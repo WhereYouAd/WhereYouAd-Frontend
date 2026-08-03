@@ -24,6 +24,10 @@ export default function OnboardingTour({
       navigate("/workspace", { replace: true });
       return;
     }
+    if (myRole === "MEMBER" && pathname !== "/dashboard") {
+      navigate("/dashboard", { replace: true });
+      return;
+    }
     tourStarted.current = true;
     startTour();
   }, [autoStart, myRole, pathname, navigate, startTour]);
