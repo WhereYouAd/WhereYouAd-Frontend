@@ -202,6 +202,7 @@ export default function PlatformIntegrationsPage() {
                 <li
                   key={item.provider}
                   className="flex h-full min-h-0 w-full min-w-0"
+                  data-tour={`tour-platform-${item.provider.toLowerCase()}`}
                 >
                   <PlatformIntegrationCard
                     {...item}

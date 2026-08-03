@@ -52,7 +52,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
     "flex cursor-pointer items-center rounded-2xl px-3 font-body2 transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
-      : "h-[55px] gap-4 px-3",
+      : "h-[55px] w-full gap-4 px-3",
     isActive
       ? "bg-primary-400 text-surface-100"
       : "text-text-auth-sub hover:bg-surface-200",
@@ -171,7 +171,7 @@ export default function Sidebar() {
       transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col min-h-0">
-        <div className="px-2">
+        <div className="px-2" data-tour="tour-workspace-switcher">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
@@ -206,7 +206,10 @@ export default function Sidebar() {
                   setOpenId,
                 )}
               >
-                <div className={getMainItemClass(isParentActive, isCollapsed)}>
+                <div
+                  className={getMainItemClass(isParentActive, isCollapsed)}
+                  data-tour={`tour-${item.id}`}
+                >
                   <SidebarItem
                     item={item}
                     isCollapsed={isCollapsed}
@@ -266,6 +269,7 @@ export default function Sidebar() {
               <div
                 key={item.id}
                 className={getFooterItemClass(isActive, isCollapsed)}
+                data-tour={`tour-${item.id}`}
               >
                 <SidebarItem
                   item={item}
