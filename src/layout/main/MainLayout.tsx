@@ -158,7 +158,7 @@ export default function MainLayout() {
 
   return (
     <div className="flex h-dvh w-full overflow-hidden bg-surface-200">
-      {myRole === "MEMBER" && (
+      {myRole !== null && (
         <OnboardingTour
           autoStart={!localStorage.getItem("hasSeenOnboarding")}
         />
@@ -166,7 +166,7 @@ export default function MainLayout() {
       <div className="flex h-full shrink-0">
         <Sidebar />
       </div>
-      <main className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
+      <main className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-y-auto scroll-pt-14">
         <header className="sticky top-0 z-30 shrink-0 border-b border-surface-300 bg-surface-100">
           <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
             <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">

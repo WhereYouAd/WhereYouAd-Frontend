@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Joyride } from "react-joyride";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useOnboardingTour } from "@/hooks/common/useOnboardingTour";
 
@@ -12,11 +13,20 @@ interface IOnboardingTourProps {
 export default function OnboardingTour({
   autoStart = false,
 }: IOnboardingTourProps) {
-  const { run, startTour, handleEvent, steps } = useOnboardingTour();
+  const { run, startTour, handleEvent, steps, myRole } = useOnboardingTour();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const tourStarted = useRef(false);
 
   useEffect(() => {
-    if (autoStart) startTour();
-  }, [autoStart, startTour]);
+    if (!autoStart || tourStarted.current) return;
+    if (myRole === "ADMIN" && pathname !== "/workspace") {
+      navigate("/workspace", { replace: true });
+      return;
+    }
+    tourStarted.current = true;
+    startTour();
+  }, [autoStart, myRole, pathname, navigate, startTour]);
 
   return (
     <Joyride

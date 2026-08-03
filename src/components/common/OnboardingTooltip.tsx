@@ -24,18 +24,20 @@ export default function OnboardingTooltip({
       >
         <div className="flex items-start justify-between gap-4">
           {step.title && (
-            <h3 className="font-heading4 text-text-title">{step.title}</h3>
+            <h3 className="font-heading4 text-text-title whitespace-pre-line">
+              {step.title}
+            </h3>
           )}
           <span className="font-caption text-text-muted shrink-0 pt-1">
             {index + 1} / {size}
           </span>
         </div>
 
-        <p className="font-body2 text-text-body leading-relaxed break-keep">
+        <p className="font-body2 text-text-body leading-relaxed break-keep whitespace-pre-line">
           {step.content}
         </p>
 
-        <div className="flex items-center justify-between pt-3 border-t border-surface-300">
+        <div className="flex items-center justify-between pt-3 ">
           {!isLastStep ? (
             <button
               {...skipProps}
