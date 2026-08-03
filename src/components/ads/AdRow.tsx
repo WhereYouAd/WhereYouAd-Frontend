@@ -10,13 +10,43 @@ import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
-/** 체크박스 | 광고 명 | 상태 | 플랫폼 | 펼침 — AdListTable과 동일 그리드 (CampaignTable 패딩과 통일) */
-const adListTableGridCols =
-  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto_auto_2.5rem] items-center gap-x-3";
+/** 체크박스 | 광고 명 | 상태 | (플랫폼) | 펼침 — AdListTable과 동일 그리드 */
+const adListTableGridColsWithPlatform =
+  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.75rem_2.5rem] items-center gap-x-3";
 
-export const adListTableHeaderGridClass = `${adListTableGridCols} px-6 py-4 tablet:px-5 tablet:py-3.5`;
+const adListTableGridColsWithoutPlatform =
+  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.5rem] items-center gap-x-3";
 
-export const adListTableRowGridClass = `${adListTableGridCols} px-6 py-5 tablet:px-5 tablet:py-4`;
+const adListTableGridPadding = {
+  header: "px-6 py-4 tablet:px-5 tablet:py-3.5",
+  row: "px-6 py-5 tablet:px-5 tablet:py-4",
+} as const;
+
+export function getAdListTableStatusCellClass() {
+  return "flex min-w-0 items-center justify-center justify-self-center self-center";
+}
+
+export function getAdListTableHeaderGridClass(hidePlatformColumn = false) {
+  return twMerge(
+    hidePlatformColumn
+      ? adListTableGridColsWithoutPlatform
+      : adListTableGridColsWithPlatform,
+    adListTableGridPadding.header,
+  );
+}
+
+export function getAdListTableRowGridClass(hidePlatformColumn = false) {
+  return twMerge(
+    hidePlatformColumn
+      ? adListTableGridColsWithoutPlatform
+      : adListTableGridColsWithPlatform,
+    adListTableGridPadding.row,
+  );
+}
+
+export const adListTableHeaderGridClass = getAdListTableHeaderGridClass(false);
+
+export const adListTableRowGridClass = getAdListTableRowGridClass(false);
 
 /** @deprecated 행 패딩과 동일. 명시적으로 `adListTableRowGridClass` 사용 권장 */
 export const adListTableGridClass = adListTableRowGridClass;
@@ -27,6 +57,7 @@ interface IAdRowProps {
   runStatus: "running" | "stopped";
   runStatusText: string;
   platform: TPlatform;
+  hidePlatformColumn?: boolean;
   isOpen: boolean;
   isSelected: boolean;
   selectable: boolean;
@@ -46,6 +77,7 @@ export default function AdRow({
   runStatus,
   runStatusText,
   platform,
+  hidePlatformColumn = false,
   isOpen,
   isSelected,
   selectable,
@@ -63,7 +95,7 @@ export default function AdRow({
         isPaused && !isSelected && !isOpen && "bg-surface-200/40",
       )}
     >
-      <div className={adListTableRowGridClass}>
+      <div className={getAdListTableRowGridClass(hidePlatformColumn)}>
         <div
           className="flex items-center justify-center"
           role="presentation"
@@ -93,19 +125,21 @@ export default function AdRow({
           {name}
         </button>
 
-        <div className="flex min-w-0 justify-start justify-self-start items-center pr-8 tablet:pr-6">
+        <div className={getAdListTableStatusCellClass()}>
           <Badge variant={runStatus === "running" ? "infoBlue" : "surface"}>
             {runStatusText}
           </Badge>
         </div>
 
-        <div className="flex min-w-11 items-center justify-start justify-self-start">
-          <span className="flex shrink-0" title={platform}>
-            {LogoMap[platform] ?? (
-              <span className="font-caption text-text-muted">?</span>
-            )}
-          </span>
-        </div>
+        {!hidePlatformColumn ? (
+          <div className="flex min-w-11 items-center justify-start justify-self-start">
+            <span className="flex shrink-0" title={platform}>
+              {LogoMap[platform] ?? (
+                <span className="font-caption text-text-muted">?</span>
+              )}
+            </span>
+          </div>
+        ) : null}
 
         <div className="flex items-center justify-end">
           <button

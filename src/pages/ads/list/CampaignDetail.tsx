@@ -375,6 +375,7 @@ export default function CampaignDetail() {
                     >
                       <AdListTable
                         embedded
+                        hidePlatformColumn
                         ads={platformAds}
                         refetchAds={refetchAds}
                         selectedAdIds={selectedAdIds}

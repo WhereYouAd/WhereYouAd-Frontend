@@ -23,7 +23,7 @@ const PLATFORM_LABEL: Record<TPlatform, string> = {
 };
 
 const budgetGridClass =
-  "grid grid-cols-2 items-start gap-x-8 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0";
+  "grid grid-cols-2 items-start gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0";
 
 interface ICampaignPlatformSectionProps {
   platform: TPlatform;

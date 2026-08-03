@@ -1,6 +1,6 @@
 import {
-  adListTableHeaderGridClass,
-  adListTableRowGridClass,
+  getAdListTableHeaderGridClass,
+  getAdListTableRowGridClass,
 } from "@/components/ads/AdRow";
 import Card from "@/components/common/card/Card";
 import {
@@ -118,21 +118,31 @@ export function CampaignDetailHeaderSkeleton() {
   );
 }
 
-function AdListTableRowSkeleton() {
+function AdListTableRowSkeleton({
+  hidePlatformColumn = false,
+}: {
+  hidePlatformColumn?: boolean;
+}) {
   return (
-    <div className={adListTableRowGridClass} aria-hidden>
+    <div className={getAdListTableRowGridClass(hidePlatformColumn)} aria-hidden>
       <div className="flex items-center justify-center">
         <Skeleton className="h-4 w-4 rounded" />
       </div>
       <Skeleton className="h-4 w-full max-w-52" />
-      <Skeleton className="h-6 w-14 rounded-full" />
-      <SkeletonCircle className="h-7 w-7" />
+      <div className="flex items-center justify-center">
+        <Skeleton className="h-6 w-14 rounded-full" />
+      </div>
+      {!hidePlatformColumn ? <SkeletonCircle className="h-7 w-7" /> : null}
       <Skeleton className="ml-auto h-4 w-4 rounded" />
     </div>
   );
 }
 
-export function AdListTableSkeleton() {
+export function AdListTableSkeleton({
+  hidePlatformColumn = false,
+}: {
+  hidePlatformColumn?: boolean;
+}) {
   return (
     <div
       className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-surface-100"
@@ -140,13 +150,15 @@ export function AdListTableSkeleton() {
       aria-label="광고 목록 로딩 중"
     >
       <div
-        className={`${adListTableHeaderGridClass} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
+        className={`${getAdListTableHeaderGridClass(hidePlatformColumn)} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
         aria-hidden
       >
         <Skeleton className="mx-auto h-4 w-4 rounded" />
         <Skeleton className="h-4 w-12" />
-        <Skeleton className="h-4 w-10" />
-        <Skeleton className="h-4 w-12" />
+        <div className="flex items-center justify-center">
+          <Skeleton className="h-4 w-10" />
+        </div>
+        {!hidePlatformColumn ? <Skeleton className="h-4 w-12" /> : null}
         <span aria-hidden />
       </div>
 
@@ -156,7 +168,7 @@ export function AdListTableSkeleton() {
             key={i}
             className="border-b border-surface-400/50 last:border-b-0"
           >
-            <AdListTableRowSkeleton />
+            <AdListTableRowSkeleton hidePlatformColumn={hidePlatformColumn} />
           </div>
         ))}
       </div>
@@ -183,11 +195,11 @@ export function CampaignDetailAdsSectionSkeleton() {
           <SkeletonCircle className="h-10 w-10 shrink-0" />
           <Skeleton className="h-6 w-24" />
         </div>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0">
           <Skeleton className="h-28 rounded-xl" />
           <Skeleton className="h-28 rounded-xl" />
         </div>
-        <AdListTableSkeleton />
+        <AdListTableSkeleton hidePlatformColumn />
       </div>
     </Card>
   );

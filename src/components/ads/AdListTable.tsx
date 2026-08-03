@@ -6,12 +6,16 @@ import type { IAd } from "@/types/ads/campaign";
 import { providerToPlatform } from "@/utils/ads/adPlatform";
 
 import AdDetailContent from "./AdDetailContent";
-import AdRow, { adListTableHeaderGridClass } from "./AdRow";
+import AdRow, {
+  getAdListTableHeaderGridClass,
+  getAdListTableStatusCellClass,
+} from "./AdRow";
 
 interface IAdsListTableProps {
   ads: IAd[];
   refetchAds: () => void;
   embedded?: boolean;
+  hidePlatformColumn?: boolean;
   selectedAdIds: ReadonlySet<number>;
   onToggleAd: (adId: number) => void;
   onToggleSelectAllVisible: () => void;
@@ -21,6 +25,7 @@ export default function AdListTable({
   ads,
   refetchAds,
   embedded = false,
+  hidePlatformColumn = false,
   selectedAdIds,
   onToggleAd,
   onToggleSelectAllVisible,
@@ -69,7 +74,10 @@ export default function AdListTable({
       )}
     >
       <div
-        className={`${adListTableHeaderGridClass} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
+        className={twMerge(
+          getAdListTableHeaderGridClass(hidePlatformColumn),
+          "shrink-0 border-b border-surface-400/50 bg-surface-200/60",
+        )}
       >
         <div
           className="flex items-center justify-center"
@@ -89,12 +97,19 @@ export default function AdListTable({
         <div className="min-w-0 justify-self-start self-center font-label text-text-muted">
           광고 명
         </div>
-        <div className="flex min-w-0 items-center justify-start justify-self-start self-center pr-8 font-label text-text-muted tablet:pr-6">
+        <div
+          className={twMerge(
+            getAdListTableStatusCellClass(),
+            "font-label text-text-muted",
+          )}
+        >
           상태
         </div>
-        <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start self-center font-label text-text-muted">
-          플랫폼
-        </div>
+        {!hidePlatformColumn ? (
+          <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start self-center font-label text-text-muted">
+            플랫폼
+          </div>
+        ) : null}
         <div className="text-right font-label text-text-muted" aria-hidden>
           &nbsp;
         </div>
@@ -125,6 +140,7 @@ export default function AdListTable({
                 runStatus={runStatus}
                 runStatusText={runStatusText}
                 platform={platform}
+                hidePlatformColumn={hidePlatformColumn}
                 isOpen={isOpen}
                 isSelected={selectedAdIds.has(ad.id)}
                 selectable={selectable}
