@@ -183,9 +183,9 @@ export function CampaignDetailAdsSectionSkeleton() {
           <SkeletonCircle className="h-10 w-10 shrink-0" />
           <Skeleton className="h-6 w-24" />
         </div>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4 tablet:grid-cols-1 tablet:gap-x-0">
-          <Skeleton className="min-h-36 rounded-2xl" />
-          <Skeleton className="min-h-36 rounded-2xl" />
+        <div className="grid grid-cols-2 gap-x-8 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0">
+          <Skeleton className="h-28 rounded-xl" />
+          <Skeleton className="h-28 rounded-xl" />
         </div>
         <AdListTableSkeleton />
       </div>

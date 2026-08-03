@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
 
 import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
 
 import { mapPlatformProjectBudgetToGauges } from "@/utils/ads/projectBudget";
 
-import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
+import PlatformBudgetItem from "@/components/ads/PlatformBudgetItem";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
@@ -23,11 +22,8 @@ const PLATFORM_LABEL: Record<TPlatform, string> = {
   naver: "NAVER",
 };
 
-const gaugeGridClass =
-  "grid grid-cols-2 items-stretch gap-x-8 gap-y-4 tablet:grid-cols-1 tablet:gap-x-0";
-
-const gaugeBoxClass =
-  "flex h-full min-h-36 flex-col rounded-2xl border border-surface-400/40 bg-surface-100 px-5 py-5";
+const budgetGridClass =
+  "grid grid-cols-2 items-start gap-x-8 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0";
 
 interface ICampaignPlatformSectionProps {
   platform: TPlatform;
@@ -43,16 +39,16 @@ export default function CampaignPlatformSection({
     : [];
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="flex flex-col gap-4">
       <header className="flex min-w-0 flex-col gap-1">
         <div className="flex min-w-0 items-center gap-3">
           {PLATFORM_LOGO[platform]}
-          <div className="flex min-w-0 flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1">
             <h2 className="font-heading3 text-text-title">
               {PLATFORM_LABEL[platform]}
             </h2>
             {platformBudget?.adCampaignName ? (
-              <p className="truncate font-caption text-text-muted">
+              <p className="truncate font-body2 text-text-muted">
                 {platformBudget.adCampaignName}
               </p>
             ) : null}
@@ -61,23 +57,13 @@ export default function CampaignPlatformSection({
       </header>
 
       {gauges.length === 0 ? (
-        <p className="py-6 text-center font-body2 text-text-placeholder">
+        <p className="py-4 text-center font-body2 text-text-placeholder">
           예산 정보가 없습니다.
         </p>
       ) : (
-        <div className={gaugeGridClass}>
+        <div className={budgetGridClass}>
           {gauges.map((gauge) => (
-            <div
-              key={`${platform}-${gauge.label}`}
-              className={twMerge(gaugeBoxClass, "min-w-0")}
-            >
-              <BudgetGaugeChart
-                {...gauge}
-                compact
-                tightHeader
-                showInsight={false}
-              />
-            </div>
+            <PlatformBudgetItem key={`${platform}-${gauge.label}`} {...gauge} />
           ))}
         </div>
       )}
