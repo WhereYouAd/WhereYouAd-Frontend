@@ -23,7 +23,7 @@ const TOUR_STEPS: Step[] = [
   },
   {
     target: "[data-tour='tour-dashboard']",
-    title: "통합 대시보드",
+    title: "통합·플랫폼 대시보드",
     content:
       "Google, Naver, Meta 성과를 한 화면에서 확인하고 AI 분석 리포트도 받아볼 수 있어요.",
     placement: "right",
