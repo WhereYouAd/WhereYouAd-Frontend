@@ -40,7 +40,7 @@ export default function CampaignPlatformSection({
 
   return (
     <section className="flex flex-col gap-4">
-      <header className="flex min-w-0 flex-col gap-1">
+      <header className="border-b border-surface-400/45 pb-4">
         <div className="flex min-w-0 items-center gap-3">
           {PLATFORM_LOGO[platform]}
           <div className="flex min-w-0 flex-col gap-1">

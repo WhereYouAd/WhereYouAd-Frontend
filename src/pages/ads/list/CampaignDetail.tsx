@@ -37,6 +37,11 @@ const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   google: "GOOGLE",
 };
 
+const platformSectionBlockClass =
+  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-6";
+
+const platformSectionDividerClass = "border-t border-surface-400/75";
+
 function providerWordmark(provider: string): string {
   const key = provider.toLowerCase() as TPlatform;
   if (key === "naver" || key === "meta" || key === "google") {
@@ -304,7 +309,7 @@ export default function CampaignDetail() {
         <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <p className="font-caption text-text-placeholder">광고</p>
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -355,8 +360,8 @@ export default function CampaignDetail() {
                   key={platform}
                   className={
                     index > 0
-                      ? "flex flex-col gap-6 border-t border-surface-400/45 px-6 py-6 tablet:px-5 tablet:py-5"
-                      : "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5"
+                      ? `${platformSectionBlockClass} ${platformSectionDividerClass}`
+                      : platformSectionBlockClass
                   }
                 >
                   <CampaignPlatformSection
