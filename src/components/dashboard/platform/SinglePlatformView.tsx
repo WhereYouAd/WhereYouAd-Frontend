@@ -3,7 +3,9 @@ import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
+import { PLATFORM_MID_SECTION_HEIGHT_SINGLE } from "@/constants/dashboard/trafficChartHeights";
 
+import { supportsDailyBudget } from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 import { metricsToKpis } from "@/utils/dashboard/metricsToKpis";
 
@@ -12,7 +14,6 @@ import { useClickStream } from "@/hooks/dashboard/useClickStream";
 import { usePlatformMetricFacts } from "@/hooks/dashboard/usePlatformMetricFacts";
 import { usePlatformMetrics } from "@/hooks/dashboard/usePlatformMetrics";
 
-import Badge from "@/components/common/badge/Badge";
 import Card from "@/components/common/card/Card";
 import StatCard from "@/components/common/card/StatCard";
 import ChartLegend from "@/components/common/chart/ChartLegend";
@@ -21,12 +22,13 @@ import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import MetricErrorFallback from "@/components/common/error/MetricErrorFallback";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import DashboardAiSummarySection from "@/components/dashboard/ai-report/components/DashboardAiSummarySection";
-import BudgetGaugeChart, {
-  getBudgetStatus,
-  statusBadgeVariant,
-} from "@/components/dashboard/charts/BudgetGaugeChart";
+import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
+import {
+  PlatformDualBudgetGaugeSkeleton,
+  PlatformSingleBudgetGaugeSkeleton,
+} from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 
 import GoogleLogo from "@/assets/logo/social-logo/wordmark/google-wordmark.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/wordmark/meta-wordmark.svg?react";
@@ -64,7 +66,7 @@ export default function SinglePlatformView({
   const logoInfo = PLATFORM_LOGOS[platform];
 
   const {
-    data: budget,
+    data: budgetData,
     isLoading: isBudgetLoading,
     isError: isBudgetError,
   } = useBudget(platform);
@@ -85,19 +87,8 @@ export default function SinglePlatformView({
     providerType: platform,
   });
 
-  const budgetPct = budget
-    ? Math.round((budget.spent / budget.totalBudget) * 100)
-    : 0;
-
-  const budgetStatus = budget
-    ? getBudgetStatus(
-        budgetPct,
-        budget.warningThreshold,
-        budget.dangerThreshold,
-      )
-    : null;
-
   const platformColor = PLATFORM_CHART_COLORS[platform];
+  const hasDualBudgetGauges = supportsDailyBudget(platform);
 
   return (
     <div className="flex flex-col gap-8">
@@ -153,10 +144,15 @@ export default function SinglePlatformView({
       </ErrorBoundary>
 
       {/* mid */}
-      <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
+      <div className="grid grid-cols-3 items-stretch gap-6 tablet:grid-cols-1">
         <Card
           title="실시간 트래픽 변화"
-          className="col-span-2 tablet:col-span-1 h-120 flex-col"
+          className={twMerge(
+            "col-span-2 flex flex-col tablet:col-span-1",
+            hasDualBudgetGauges
+              ? "min-h-120 h-full overflow-hidden"
+              : PLATFORM_MID_SECTION_HEIGHT_SINGLE,
+          )}
           description={
             <ChartLegend
               items={[
@@ -166,23 +162,36 @@ export default function SinglePlatformView({
             />
           }
         >
-          <ErrorBoundary
-            FallbackComponent={ChartErrorFallback}
-            resetKeys={[clickStreamData, platform]}
+          <div
+            className={twMerge(
+              hasDualBudgetGauges &&
+                "flex min-h-0 flex-1 flex-col overflow-hidden",
+            )}
           >
-            <PlatformTrafficChart
-              data={clickStreamData}
-              platform={platform}
-              isError={isClickStreamError}
-              suspectDetail={suspectDetail}
-              onRetry={reconnectClickStream}
-            />
-          </ErrorBoundary>
+            <ErrorBoundary
+              FallbackComponent={ChartErrorFallback}
+              resetKeys={[clickStreamData, platform]}
+            >
+              <PlatformTrafficChart
+                data={clickStreamData}
+                platform={platform}
+                isError={isClickStreamError}
+                suspectDetail={suspectDetail}
+                onRetry={reconnectClickStream}
+                fillHeight={hasDualBudgetGauges}
+              />
+            </ErrorBoundary>
+          </div>
         </Card>
 
         <Card
           title="예산 소진 현황"
-          className="col-span-1 tablet:col-span-1 h-120 flex flex-col"
+          className={twMerge(
+            "col-span-1 flex flex-col tablet:col-span-1",
+            hasDualBudgetGauges
+              ? "min-h-120 h-full"
+              : PLATFORM_MID_SECTION_HEIGHT_SINGLE,
+          )}
           description={
             <ChartLegend
               items={[
@@ -192,39 +201,50 @@ export default function SinglePlatformView({
               ]}
             />
           }
-          RightElement={
-            budgetStatus && (
-              <Badge
-                variant={statusBadgeVariant[budgetStatus]}
-                className="px-2"
-              >
-                {budgetStatus}
-              </Badge>
-            )
-          }
         >
-          <ErrorBoundary
-            FallbackComponent={ChartErrorFallback}
-            resetKeys={[budget]}
-          >
-            {isBudgetLoading ? (
-              <div className="flex flex-1 items-center justify-center p-8">
-                <Skeleton className="h-32 w-full rounded-2xl" />
-              </div>
-            ) : isBudgetError ? (
-              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
-                예산 데이터를 불러오지 못했습니다.
-              </div>
-            ) : budget ? (
-              <div className="flex flex-1 flex-col">
-                <BudgetGaugeChart {...budget} />
-              </div>
-            ) : (
-              <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
-                표시할 예산 데이터가 없습니다.
-              </div>
-            )}
-          </ErrorBoundary>
+          <div className="flex min-h-0 flex-1 flex-col">
+            <ErrorBoundary
+              FallbackComponent={ChartErrorFallback}
+              resetKeys={[budgetData]}
+            >
+              {isBudgetLoading ? (
+                hasDualBudgetGauges ? (
+                  <PlatformDualBudgetGaugeSkeleton />
+                ) : (
+                  <PlatformSingleBudgetGaugeSkeleton />
+                )
+              ) : isBudgetError ? (
+                <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-info-red">
+                  예산 데이터를 불러오지 못했습니다.
+                </div>
+              ) : budgetData ? (
+                <div
+                  className={twMerge(
+                    "flex flex-col",
+                    hasDualBudgetGauges ? "pt-2" : "pt-1",
+                    hasDualBudgetGauges && "min-h-0 flex-1 overflow-y-auto",
+                  )}
+                >
+                  {budgetData.gauges.map((gauge, index) => (
+                    <div
+                      key={gauge.label}
+                      className={twMerge(
+                        index > 0 &&
+                          budgetData.gauges.length > 1 &&
+                          "mt-5 border-t border-surface-300 pt-5",
+                      )}
+                    >
+                      <BudgetGaugeChart {...gauge} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-1 items-center justify-center px-4 py-4 text-center font-body2 text-text-muted">
+                  표시할 예산 데이터가 없습니다.
+                </div>
+              )}
+            </ErrorBoundary>
+          </div>
         </Card>
       </div>
 
