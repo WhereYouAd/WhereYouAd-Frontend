@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { IAd, TPlatform } from "@/types/ads/campaign";
+import type { IAd } from "@/types/ads/campaign";
+
+import { providerToPlatform } from "@/utils/ads/adPlatform";
 
 import AdDetailContent from "./AdDetailContent";
 import AdRow, { adListTableHeaderGridClass } from "./AdRow";
@@ -13,29 +15,6 @@ interface IAdsListTableProps {
   selectedAdIds: ReadonlySet<number>;
   onToggleAd: (adId: number) => void;
   onToggleSelectAllVisible: () => void;
-}
-
-function normalizeProvider(raw: string | undefined): TPlatform | null {
-  if (!raw) return null;
-  const p = String(raw).trim().toLowerCase();
-  if (p === "meta" || p === "google" || p === "naver") return p;
-  return null;
-}
-
-function firstProviderRaw(ad: IAd): string | undefined {
-  if (ad.providerType) return String(ad.providerType);
-  const p = ad.provider;
-  if (p == null) return undefined;
-  if (Array.isArray(p)) return p[0] != null ? String(p[0]) : undefined;
-  return String(p);
-}
-
-function providerToPlatform(ad: IAd): TPlatform {
-  const fromPlatform = ad.platform ? normalizeProvider(ad.platform) : null;
-  if (fromPlatform) return fromPlatform;
-  const fromSource = normalizeProvider(firstProviderRaw(ad));
-  if (fromSource) return fromSource;
-  return "naver";
 }
 
 export default function AdListTable({
