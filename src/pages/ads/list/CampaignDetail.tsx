@@ -86,23 +86,18 @@ export default function CampaignDetail() {
     });
   }, []);
 
-  const operableIds = useMemo(
-    () => adsList.filter((a) => a.status !== "OVER").map((a) => a.id),
-    [adsList],
-  );
-
-  const toggleSelectAllVisible = useCallback(() => {
+  const toggleSelectAllVisible = useCallback((targetIds: readonly number[]) => {
     setSelectedAdIds((prev) => {
       const allOn =
-        operableIds.length > 0 && operableIds.every((id) => prev.has(id));
+        targetIds.length > 0 && targetIds.every((id) => prev.has(id));
       if (allOn) {
         const next = new Set(prev);
-        operableIds.forEach((id) => next.delete(id));
+        targetIds.forEach((id) => next.delete(id));
         return next;
       }
-      return new Set([...prev, ...operableIds]);
+      return new Set([...prev, ...targetIds]);
     });
-  }, [operableIds]);
+  }, []);
 
   const selectedOngoingIds = useMemo(
     () =>

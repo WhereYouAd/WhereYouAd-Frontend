@@ -18,7 +18,7 @@ interface IAdsListTableProps {
   hidePlatformColumn?: boolean;
   selectedAdIds: ReadonlySet<number>;
   onToggleAd: (adId: number) => void;
-  onToggleSelectAllVisible: () => void;
+  onToggleSelectAllVisible: (operableIds: readonly number[]) => void;
 }
 
 export default function AdListTable({
@@ -89,7 +89,7 @@ export default function AdListTable({
             type="checkbox"
             className="checkbox"
             checked={allSelected}
-            onChange={onToggleSelectAllVisible}
+            onChange={() => onToggleSelectAllVisible(operableIds)}
             disabled={operableIds.length === 0}
             aria-label="표시 중인 광고 전체 선택"
           />
