@@ -35,7 +35,7 @@ export default function WithdrawConfirmModal({
       hideCloseButton={isLoading}
       disableOverlayClick={isLoading}
     >
-      <div className="px-2 py-6 text-center">
+      <div className="px-2 text-center">
         <div className="mb-6 flex justify-center">
           <WarnIcon className="h-15 w-15 text-info-red" aria-hidden="true" />
         </div>
