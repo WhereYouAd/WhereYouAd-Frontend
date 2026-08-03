@@ -100,17 +100,11 @@ export function CampaignDetailHeaderSkeleton() {
           <Skeleton className="h-4 w-24" />
         </div>
 
-        <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 tablet:gap-x-10 tablet:gap-y-4">
-          <div className="min-w-0">
-            <Skeleton className="mb-2 h-3 w-16" />
-            <Skeleton className="h-5 w-28" />
-          </div>
-          <div className="min-w-0">
-            <Skeleton className="mb-2 h-3 w-20" />
-            <div className="flex flex-wrap gap-2">
-              <Skeleton className="h-8 w-16 rounded-lg" />
-              <Skeleton className="h-8 w-16 rounded-lg" />
-            </div>
+        <div className="min-w-0">
+          <Skeleton className="mb-2 h-3 w-20" />
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-8 w-16 rounded-lg" />
+            <Skeleton className="h-8 w-16 rounded-lg" />
           </div>
         </div>
 
@@ -184,7 +178,15 @@ export function CampaignDetailAdsSectionSkeleton() {
         </div>
       </div>
 
-      <div className="min-h-0 min-w-0 flex-1">
+      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5">
+        <div className="flex items-center gap-3">
+          <SkeletonCircle className="h-10 w-10 shrink-0" />
+          <Skeleton className="h-6 w-24" />
+        </div>
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 tablet:grid-cols-1 tablet:gap-x-0">
+          <Skeleton className="min-h-36 rounded-2xl" />
+          <Skeleton className="min-h-36 rounded-2xl" />
+        </div>
         <AdListTableSkeleton />
       </div>
     </Card>

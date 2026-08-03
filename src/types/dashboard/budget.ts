@@ -23,6 +23,8 @@ export interface IBudgetGaugeProps extends IBudgetSlice {
   dangerThreshold: number;
   /** 2게이지 등 세로 간격 축소 */
   compact?: boolean;
+  /** 라벨 행 ↔ 남은 % 행 간격 추가 축소 (ads 상세 등) */
+  tightHeader?: boolean;
   /** 하단 인사이트 멘트 표시 (compact와 별도) */
   showInsight?: boolean;
 }

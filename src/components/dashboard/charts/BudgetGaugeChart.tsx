@@ -63,6 +63,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   warningThreshold,
   dangerThreshold,
   compact = false,
+  tightHeader = false,
   showInsight = false,
 }: IBudgetGaugeProps) {
   const mounted = useIsMounted();
@@ -93,7 +94,8 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
     splitInsightHeadTail(insightDesc);
 
   const showBudgetAmountOnLabelRow = isBudgetTypeLabel(label);
-  const headerRowGap = compact ? "mb-2" : "mb-3";
+  const headerRowGap = tightHeader ? "mb-1" : compact ? "mb-2" : "mb-3";
+  const remainingRowGap = tightHeader ? "mt-1" : compact ? "mt-2" : "mt-3";
 
   return (
     <div
@@ -130,12 +132,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             </span>
           </div>
         )}
-        <div
-          className={twMerge(
-            "flex items-baseline gap-2",
-            compact ? "mt-2" : "mt-3",
-          )}
-        >
+        <div className={twMerge("flex items-baseline gap-2", remainingRowGap)}>
           <span className="font-heading1 text-text-title tabular-nums leading-none">
             {remainingPct}%
           </span>
