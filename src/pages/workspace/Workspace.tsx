@@ -207,6 +207,7 @@ export default function WorkspacePage() {
           size="big"
           variant="primary"
           className="flex shrink-0 items-center justify-center gap-2 whitespace-nowrap tablet:w-full tablet:justify-center"
+          data-tour="tour-create-workspace"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           <span className="tablet:hidden">워크스페이스 생성하기</span>

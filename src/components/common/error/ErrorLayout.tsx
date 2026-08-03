@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import WarningIcon from "@/assets/icon/ai/warning.svg?react";
@@ -8,6 +8,16 @@ interface IErrorLayoutProps {
   title: string;
   description: string;
   actions: ReactNode;
+}
+
+function renderMultilineText(text: string) {
+  // 실제 개행과 문자 그대로의 "\n" 둘 다 줄바꿈으로 처리
+  return text.split(/\r?\n|\\n/).map((line, index) => (
+    <Fragment key={index}>
+      {index > 0 && <br />}
+      {line}
+    </Fragment>
+  ));
 }
 
 function ErrorLayout({ title, description, actions }: IErrorLayoutProps) {
@@ -32,19 +42,19 @@ function ErrorLayout({ title, description, actions }: IErrorLayoutProps) {
         </motion.div>
 
         <motion.h1
-          className="mb-4 text-balance font-heading1 text-text-title"
+          className="mb-4 break-keep font-heading1 text-text-title"
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          {title}
+          {renderMultilineText(title)}
         </motion.h1>
 
         <motion.p
-          className="whitespace-pre-line break-keep font-body1 leading-relaxed text-text-auth-sub"
+          className="break-keep font-body1 leading-relaxed text-text-auth-sub"
           variants={itemVariants}
           custom={!!reduceMotion}
         >
-          {description}
+          {renderMultilineText(description)}
         </motion.p>
 
         <motion.div

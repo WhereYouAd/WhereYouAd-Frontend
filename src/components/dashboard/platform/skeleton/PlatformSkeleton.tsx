@@ -65,3 +65,103 @@ export function PerformanceEfficiencyChartSkeleton() {
 export function BadgeSkeleton({ className }: { className?: string }) {
   return <Skeleton className={twMerge("w-14 h-6 rounded-lg", className)} />;
 }
+
+/** compact BudgetGaugeChart 1칸 */
+function PlatformBudgetGaugeCompactSkeleton({
+  mergedBudgetHeader = true,
+}: {
+  mergedBudgetHeader?: boolean;
+}) {
+  return (
+    <div className="flex flex-col">
+      <div className="mb-3 flex flex-col">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <Skeleton
+            className={twMerge("h-4", mergedBudgetHeader ? "w-36" : "w-20")}
+          />
+          <Skeleton className="h-6 w-12 shrink-0 rounded-lg" />
+        </div>
+        {!mergedBudgetHeader && (
+          <div className="mb-2 flex items-baseline gap-2">
+            <Skeleton className="h-3 w-12" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        )}
+        <Skeleton className="mt-2 h-8 w-24" />
+      </div>
+      <Skeleton className="mb-3 h-3 w-full rounded-full" />
+      <div className="mb-3 flex items-end justify-between">
+        <div className="flex flex-col gap-0.5">
+          <Skeleton className="h-3 w-6" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+        <div className="flex flex-col items-end gap-0.5">
+          <Skeleton className="h-3 w-14" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+      <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+        <Skeleton className="size-5 shrink-0 rounded-full" />
+        <Skeleton className="h-10 flex-1 rounded-md" />
+      </div>
+    </div>
+  );
+}
+
+/** Naver 등 게이지 1개 — showInsight 레이아웃 (BudgetGaugeChart non-compact) */
+export function PlatformSingleBudgetGaugeSkeleton() {
+  return (
+    <div className="flex w-full flex-col pt-1">
+      <div className="mb-6 flex flex-col">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-baseline gap-2">
+            <Skeleton className="h-4 w-16" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <Skeleton className="h-6 w-12 shrink-0 rounded-lg" />
+        </div>
+        <div className="mt-3 flex items-baseline gap-2">
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-4 w-8" />
+        </div>
+      </div>
+      <div className="mb-6">
+        <Skeleton className="mb-3 h-3 w-full rounded-full" />
+        <div className="flex items-end justify-between">
+          <div className="flex flex-col gap-0.5">
+            <Skeleton className="h-3 w-6" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+          <div className="flex flex-col items-end gap-0.5">
+            <Skeleton className="h-3 w-14" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
+        <Skeleton className="size-5 shrink-0 rounded-full" />
+        <Skeleton className="h-10 flex-1 rounded-md" />
+      </div>
+    </div>
+  );
+}
+
+/** Google/Meta — compact 게이지 2개 로딩 (최종 레이아웃 높이 유지) */
+export function PlatformDualBudgetGaugeSkeleton({
+  mergedBudgetHeader = true,
+}: {
+  mergedBudgetHeader?: boolean;
+} = {}) {
+  return (
+    <div className="flex flex-1 flex-col pt-2">
+      <PlatformBudgetGaugeCompactSkeleton
+        mergedBudgetHeader={mergedBudgetHeader}
+      />
+      <div className="mt-5 border-t border-surface-300 pt-5">
+        <PlatformBudgetGaugeCompactSkeleton
+          mergedBudgetHeader={mergedBudgetHeader}
+        />
+      </div>
+    </div>
+  );
+}

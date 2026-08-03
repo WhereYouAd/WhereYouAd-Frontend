@@ -1,8 +1,11 @@
+import { OVERVIEW_TRAFFIC_CHART_HEIGHT } from "@/constants/dashboard/trafficChartHeights";
+
 import {
   Skeleton,
   SkeletonCircle,
 } from "@/components/common/skeleton/Skeleton";
 import { PLATFORM_ROAS_TABLE_COL } from "@/components/dashboard/platform/PlatformRoasTable";
+import { PlatformDualBudgetGaugeSkeleton } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 
 /** KPI StatCard 1칸 */
 export function OverviewKpiCardSkeleton() {
@@ -17,40 +20,17 @@ export function OverviewKpiCardSkeleton() {
 
 /** 실시간 트래픽 차트 */
 export function OverviewTrafficChartSkeleton() {
-  return <Skeleton className="min-h-60 w-full flex-1 rounded-2xl" />;
+  return (
+    <Skeleton
+      className="w-full rounded-2xl"
+      style={{ height: `${OVERVIEW_TRAFFIC_CHART_HEIGHT}px` }}
+    />
+  );
 }
 
-/** 예산 게이지 카드 */
+/** 예산 게이지 카드 — Google·Meta + NAVER compact 2개 */
 export function OverviewBudgetGaugeSkeleton() {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col gap-3 pt-1">
-      <div className="flex shrink-0 flex-col gap-2">
-        <Skeleton className="h-4 w-20" />
-        <Skeleton className="h-8 w-24" />
-        <Skeleton className="h-2 w-full rounded-full" />
-        <div className="flex justify-between gap-3">
-          <div className="flex flex-col gap-1">
-            <Skeleton className="h-3 w-10" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-          <div className="flex flex-col items-end gap-1">
-            <Skeleton className="h-3 w-14" />
-            <Skeleton className="h-4 w-20" />
-          </div>
-        </div>
-      </div>
-      <div className="flex shrink-0 flex-col gap-3">
-        <div className="flex flex-col gap-1 rounded-2xl border border-surface-400/25 bg-surface-200/40 p-4">
-          <Skeleton className="h-3 w-16" />
-          <Skeleton className="h-7 w-36" />
-        </div>
-        <div className="flex items-center gap-3 rounded-2xl bg-surface-300 px-5 py-4">
-          <Skeleton className="size-5 shrink-0 rounded-full" />
-          <Skeleton className="h-10 flex-1 rounded-md" />
-        </div>
-      </div>
-    </div>
-  );
+  return <PlatformDualBudgetGaugeSkeleton mergedBudgetHeader={false} />;
 }
 
 /** 플랫폼별 ROAS 랭킹 테이블 */

@@ -130,6 +130,12 @@
       0 4px 20px color-mix(in srgb, var(--color-text-400) 6%, transparent);
   }
 
+  .shadow-tooltip {
+    box-shadow:
+      0 4px 6px color-mix(in srgb, var(--color-text-400) 6%, transparent),
+      0 12px 32px color-mix(in srgb, var(--color-text-400) 14%, transparent);
+  }
+
   /* UI 트랜지션  */
   .transition-ui-smooth {
     transition-property: transform, opacity, background-color, border-color, color,
@@ -235,6 +241,28 @@
 
   @media (prefers-reduced-motion: reduce) {
     .animate-shimmer::after {
+      animation: none;
+    }
+  }
+
+  /* 온보딩 툴팁 등장 애니메이션 */
+  @keyframes tooltip-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-tooltip-enter {
+    animation: tooltip-enter 160ms var(--ease-out) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-tooltip-enter {
       animation: none;
     }
   }

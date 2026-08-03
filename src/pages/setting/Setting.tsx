@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import type { IApiErrorResponse } from "@/types/common/common";
 import type { IUpdateOrgNotificationSettingsRequest } from "@/types/setting/notification";
 
+import { useDeleteMyAccount } from "@/hooks/auth/useDeleteMyAccount";
 import { useImageUploader } from "@/hooks/common/useImageUploader";
 import { useCoreQuery } from "@/hooks/customQuery";
 import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
@@ -20,6 +21,7 @@ import PasswordSection from "@/components/setting/PasswordSection";
 import PasswordSectionSkeleton from "@/components/setting/PasswordSectionSkeleton";
 import ProfileSection from "@/components/setting/ProfileSection";
 import ProfileSectionSkeleton from "@/components/setting/ProfileSectionSkeleton";
+import WithdrawConfirmModal from "@/components/setting/WithdrawConfirmModal";
 
 import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces } from "@/api/workspace/org";
@@ -111,6 +113,8 @@ export default function Setting() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
   const {
     fileRef,
     file,
@@ -156,6 +160,9 @@ export default function Setting() {
   const updateAlerts = useUpdateAlertsNotificationSettings();
   const updateOrg = useUpdateOrgNotificationSettings();
   const updateMaster = useUpdateMasterNotificationSettings();
+
+  const { mutate: deleteMyAccountMutate, isPending: isWithdrawPending } =
+    useDeleteMyAccount();
 
   const buildOrgBody = (
     overrides: Partial<IUpdateOrgNotificationSettingsRequest> = {},
@@ -724,7 +731,15 @@ export default function Setting() {
         )}
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex items-start justify-between">
+        <button
+          type="button"
+          className="ml-3 font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title"
+          onClick={() => setIsWithdrawModalOpen(true)}
+          aria-label="회원 탈퇴"
+        >
+          회원 탈퇴
+        </button>
         <Button
           variant="primary"
           type="button"
@@ -738,6 +753,12 @@ export default function Setting() {
           변경사항 저장하기
         </Button>
       </div>
+      <WithdrawConfirmModal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => setIsWithdrawModalOpen(false)}
+        onConfirm={() => deleteMyAccountMutate(undefined)}
+        isLoading={isWithdrawPending}
+      />
     </section>
   );
 }
