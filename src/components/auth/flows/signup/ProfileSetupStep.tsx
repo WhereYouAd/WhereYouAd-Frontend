@@ -29,7 +29,7 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
 
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get("returnUrl");
-  const { email, resetAuth } = useAuthStore();
+  const { email } = useAuthStore();
   const { openModal } = useModalStore();
   const { useSignUp } = useAuth();
 
@@ -63,7 +63,6 @@ export default function ProfileSetupStep({ password }: IProfileSetupStepProps) {
           toast.success("회원가입이 완료되었습니다!", {
             description: `${data.name}님, 환영합니다!`,
           });
-          resetAuth();
           navigate(buildPathWithReturnUrl("/login", returnUrl), {
             replace: true,
           });
