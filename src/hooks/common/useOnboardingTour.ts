@@ -132,7 +132,12 @@ export function useOnboardingTour() {
     }
   }, []);
 
-  const steps = myRole === "MEMBER" ? MEMBER_STEPS : ADMIN_STEPS;
+  const steps =
+    myRole === "MEMBER"
+      ? MEMBER_STEPS
+      : myRole === "ADMIN"
+        ? ADMIN_STEPS
+        : ADMIN_STEPS;
 
   return { run, startTour, handleEvent, steps, myRole };
 }

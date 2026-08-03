@@ -20,7 +20,7 @@ export default function OnboardingTour({
 
   useEffect(() => {
     if (!autoStart || tourStarted.current) return;
-    if (myRole === "ADMIN" && pathname !== "/workspace") {
+    if ((myRole === "ADMIN" || myRole === null) && pathname !== "/workspace") {
       navigate("/workspace", { replace: true });
       return;
     }

@@ -158,7 +158,8 @@ export default function MainLayout() {
 
   return (
     <div className="flex h-dvh w-full overflow-hidden bg-surface-200">
-      {myRole !== null && (
+      {(myRole !== null ||
+        (workspaces !== undefined && workspaces.length === 0)) && (
         <OnboardingTour
           autoStart={!localStorage.getItem("hasSeenOnboarding")}
         />
