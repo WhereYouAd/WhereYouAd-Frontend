@@ -41,17 +41,23 @@ export default function CampaignPlatformSection({
   return (
     <section className="flex flex-col gap-4">
       <header className="border-b border-surface-400/45 pb-4">
-        <div className="flex min-w-0 items-center gap-3">
-          {PLATFORM_LOGO[platform]}
-          <div className="flex min-w-0 flex-col gap-1">
-            <h2 className="font-heading3 text-text-title">
-              {PLATFORM_LABEL[platform]}
-            </h2>
-            {platformBudget?.adCampaignName ? (
-              <p className="truncate font-body2 text-text-muted">
-                {platformBudget.adCampaignName}
-              </p>
-            ) : null}
+        <div className="flex min-w-0 items-stretch gap-3">
+          <span
+            className="w-1 shrink-0 rounded-r-md bg-surface-400"
+            aria-hidden
+          />
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            {PLATFORM_LOGO[platform]}
+            <div className="flex min-w-0 flex-col gap-1">
+              <h2 className="font-heading3 text-text-title">
+                {PLATFORM_LABEL[platform]}
+              </h2>
+              {platformBudget?.adCampaignName ? (
+                <p className="truncate font-body2 text-text-muted">
+                  {platformBudget.adCampaignName}
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
       </header>

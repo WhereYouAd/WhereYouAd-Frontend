@@ -28,7 +28,7 @@ export default function PlatformBudgetItem({
 
   return (
     <article
-      className="flex min-w-0 flex-col gap-3 rounded-xl border border-surface-400/40 bg-surface-100 px-4 py-4"
+      className="flex min-w-0 flex-col gap-3 rounded-xl border border-surface-400/70 bg-surface-100 px-4 py-4"
       aria-label={`${label} 예산`}
     >
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">

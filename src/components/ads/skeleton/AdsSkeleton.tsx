@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 import {
   getAdListTableHeaderGridClass,
   getAdListTableRowGridClass,
@@ -140,12 +142,17 @@ function AdListTableRowSkeleton({
 
 export function AdListTableSkeleton({
   hidePlatformColumn = false,
+  embedded = false,
 }: {
   hidePlatformColumn?: boolean;
+  embedded?: boolean;
 }) {
   return (
     <div
-      className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-surface-100"
+      className={twMerge(
+        "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-surface-100",
+        embedded && "rounded-lg border border-surface-400/50",
+      )}
       aria-busy="true"
       aria-label="광고 목록 로딩 중"
     >
@@ -191,15 +198,21 @@ export function CampaignDetailAdsSectionSkeleton() {
       </div>
 
       <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5">
-        <div className="flex items-center gap-3">
-          <SkeletonCircle className="h-10 w-10 shrink-0" />
-          <Skeleton className="h-6 w-24" />
+        <div className="flex items-stretch gap-3">
+          <span
+            className="w-1 shrink-0 self-stretch rounded-r-md bg-surface-400"
+            aria-hidden
+          />
+          <div className="flex flex-1 items-center gap-3">
+            <SkeletonCircle className="h-10 w-10 shrink-0" />
+            <Skeleton className="h-6 w-24" />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0">
-          <Skeleton className="h-28 rounded-xl" />
-          <Skeleton className="h-28 rounded-xl" />
+          <Skeleton className="h-28 rounded-xl border border-surface-400/70" />
+          <Skeleton className="h-28 rounded-xl border border-surface-400/70" />
         </div>
-        <AdListTableSkeleton hidePlatformColumn />
+        <AdListTableSkeleton hidePlatformColumn embedded />
       </div>
     </Card>
   );

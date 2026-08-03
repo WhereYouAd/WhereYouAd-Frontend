@@ -69,8 +69,10 @@ export default function AdListTable({
   const listInner = (
     <div
       className={twMerge(
-        "flex min-h-0 min-w-0 flex-1 flex-col overflow-x-auto overflow-y-auto bg-surface-100",
-        !embedded && "rounded-xl border border-surface-400/40",
+        "flex min-h-0 min-w-0 flex-1 flex-col bg-surface-100",
+        embedded
+          ? "overflow-hidden rounded-lg border border-surface-400/50"
+          : "overflow-x-auto overflow-y-auto rounded-xl border border-surface-400/40",
       )}
     >
       <div
