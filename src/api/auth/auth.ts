@@ -169,3 +169,8 @@ export const postLogout = async () => {
   );
   return response.data;
 };
+
+export const deleteMyAccount = async (): Promise<ICommonResponse<string>> => {
+  const { data } = await axiosInstance.delete("/api/users/my");
+  return data;
+};
