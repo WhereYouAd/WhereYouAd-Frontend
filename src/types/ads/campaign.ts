@@ -1,6 +1,17 @@
+import type { IBudgetAmountSlice } from "@/types/dashboard/common";
+
 export type TPlatform = "meta" | "google" | "naver"; //UI
 export type TProvider = "META" | "GOOGLE" | "NAVER"; //API
 export type TStatus = "ON_GOING" | "PAUSED" | "OVER";
+
+/** project 상세 — 플랫폼(매체 캠페인) 단위 예산 */
+export interface IPlatformProjectBudget {
+  providerType: TProvider;
+  adCampaignId?: number;
+  adCampaignName?: string;
+  lifetime: IBudgetAmountSlice;
+  daily?: IBudgetAmountSlice | null;
+}
 
 // Ad List
 export interface IAd {
@@ -34,9 +45,11 @@ export interface ICampaign {
 
 // Campaign Detail
 export interface ICampaignDetail extends ICampaign {
+  /** @deprecated BE platformBudgets 전환 후 제거 예정 */
   budget: number;
   createdAt: string;
   ads: IAd[];
+  platformBudgets?: IPlatformProjectBudget[];
 }
 
 export interface IPlatformCampaign {

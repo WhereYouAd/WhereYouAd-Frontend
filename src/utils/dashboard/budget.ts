@@ -138,3 +138,12 @@ export function toBudgetQueryData(
     gauges,
   };
 }
+
+/** IBudgetSlice[] → BudgetGaugeChart props (ads project 예산 등) */
+export function buildBudgetGaugesFromSlices(
+  slices: IBudgetSlice[],
+  { showInsight = SHOW_BUDGET_GAUGE_INSIGHT } = {},
+): IBudgetGaugeProps[] {
+  const compact = slices.length > 1;
+  return slices.map((slice) => toGaugeProps(slice, { compact, showInsight }));
+}
