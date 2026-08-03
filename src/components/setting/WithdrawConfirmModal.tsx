@@ -66,7 +66,7 @@ export default function WithdrawConfirmModal({
             className="flex-1"
             onClick={handleConfirm}
             disabled={isLoading}
-            aria-label="회원 탈퇴 확인"
+            aria-label={isLoading ? "탈퇴 진행 중" : "회원 탈퇴 확인"}
           >
             {isLoading ? "탈퇴 진행 중..." : "회원 탈퇴"}
           </Button>
