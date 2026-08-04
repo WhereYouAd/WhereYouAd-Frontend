@@ -210,10 +210,7 @@ export function CampaignDetailAdsSectionSkeleton() {
             <Skeleton className="h-6 w-24" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0">
-          <Skeleton className="h-28 rounded-xl border border-surface-400/70" />
-          <Skeleton className="h-28 rounded-xl border border-surface-400/70" />
-        </div>
+        <Skeleton className="h-28 w-full rounded-xl border border-surface-400/70" />
         <AdListTableSkeleton hidePlatformColumn embedded />
       </div>
     </Card>

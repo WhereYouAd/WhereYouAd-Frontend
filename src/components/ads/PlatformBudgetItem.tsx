@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { IBudgetGaugeProps } from "@/types/dashboard/budget";
@@ -10,12 +11,15 @@ import { useIsMounted } from "@/hooks/common/useIsMounted";
 interface IPlatformBudgetItemProps extends Pick<
   IBudgetGaugeProps,
   "label" | "totalBudget" | "spent"
-> {}
+> {
+  headerAction?: ReactNode;
+}
 
 export default function PlatformBudgetItem({
   label,
   totalBudget,
   spent,
+  headerAction,
 }: IPlatformBudgetItemProps) {
   const mounted = useIsMounted();
 
@@ -31,14 +35,19 @@ export default function PlatformBudgetItem({
       className="flex min-w-0 flex-col gap-3 rounded-xl border border-surface-400/70 bg-surface-100 px-4 py-4"
       aria-label={`${label} 예산`}
     >
-      <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="font-caption text-text-placeholder">{label}</span>
-        <div className="flex items-baseline gap-2">
-          <span className="font-heading4 text-text-title tabular-nums leading-none">
-            {remainingPct}%
-          </span>
-          <span className="font-caption text-text-body tabular-nums">남음</span>
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span className="font-caption text-text-placeholder">{label}</span>
+          <div className="flex items-baseline gap-2">
+            <span className="font-heading4 text-text-title tabular-nums leading-none">
+              {remainingPct}%
+            </span>
+            <span className="font-caption text-text-body tabular-nums">
+              남음
+            </span>
+          </div>
         </div>
+        {headerAction ? <div className="shrink-0">{headerAction}</div> : null}
       </div>
 
       <div

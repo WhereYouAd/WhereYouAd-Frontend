@@ -30,24 +30,40 @@ export function mapPlatformProjectBudgetToGauges(
   budget: IPlatformProjectBudget,
 ): IBudgetGaugeProps[] {
   const provider = budget.providerType as TProviderType;
+  const slice = resolvePlatformBudgetDisplaySlice(budget, provider);
 
-  const slices: IBudgetSlice[] = [
-    {
+  return buildBudgetGaugesFromSlices([slice], { showInsight: true });
+}
+
+/** Meta/Google: activeBudgetType 기준 1개 · Naver: 전체 예산만 */
+function resolvePlatformBudgetDisplaySlice(
+  budget: IPlatformProjectBudget,
+  provider: TProviderType,
+): IBudgetSlice {
+  if (!supportsDailyBudget(provider)) {
+    return {
       label: "전체 예산",
       totalBudget: budget.lifetime.totalBudget,
       spent: budget.lifetime.totalSpend,
-    },
-  ];
+    };
+  }
 
-  if (supportsDailyBudget(provider) && budget.daily) {
-    slices.push({
+  const activeType =
+    budget.activeBudgetType ?? (budget.daily ? "DAILY" : "LIFETIME");
+
+  if (activeType === "DAILY" && budget.daily) {
+    return {
       label: "일일 예산",
       totalBudget: budget.daily.totalBudget,
       spent: budget.daily.totalSpend,
-    });
+    };
   }
 
-  return buildBudgetGaugesFromSlices(slices, { showInsight: true });
+  return {
+    label: "전체 예산",
+    totalBudget: budget.lifetime.totalBudget,
+    spent: budget.lifetime.totalSpend,
+  };
 }
 
 /** API 미준비 시 dev placeholder */
@@ -71,7 +87,10 @@ export function buildPlaceholderPlatformBudgets(
         totalBudget: 50_000,
         totalSpend: 12_000 + index * 2_000,
       };
+      item.activeBudgetType = index % 2 === 0 ? "DAILY" : "LIFETIME";
     }
+
+    item.canEditBudget = false;
 
     return item;
   });

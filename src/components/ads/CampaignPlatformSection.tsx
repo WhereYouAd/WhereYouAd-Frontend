@@ -1,10 +1,16 @@
 import type { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
 
+import {
+  BUDGET_EDIT_BLOCK_MESSAGES,
+  canSubmitPlatformBudgetEdit,
+} from "@/utils/ads/budgetEdit";
 import { mapPlatformProjectBudgetToGauges } from "@/utils/ads/projectBudget";
 
 import PlatformBudgetItem from "@/components/ads/PlatformBudgetItem";
+import Button from "@/components/common/button/Button";
 
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
@@ -22,21 +28,28 @@ const PLATFORM_LABEL: Record<TPlatform, string> = {
   naver: "NAVER",
 };
 
-const budgetGridClass =
-  "grid grid-cols-2 items-start gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-x-0";
-
 interface ICampaignPlatformSectionProps {
   platform: TPlatform;
   platformBudget?: IPlatformProjectBudget;
+  onEditBudget?: () => void;
 }
 
 export default function CampaignPlatformSection({
   platform,
   platformBudget,
+  onEditBudget,
 }: ICampaignPlatformSectionProps) {
   const gauges = platformBudget
     ? mapPlatformProjectBudgetToGauges(platformBudget)
     : [];
+
+  const editCheck = canSubmitPlatformBudgetEdit(platformBudget);
+  const isBudgetEditDisabled = !onEditBudget || !editCheck.ok;
+  const budgetEditDisabledReason = !onEditBudget
+    ? undefined
+    : editCheck.ok
+      ? undefined
+      : BUDGET_EDIT_BLOCK_MESSAGES[editCheck.reason];
 
   return (
     <section className="flex flex-col gap-4">
@@ -67,9 +80,28 @@ export default function CampaignPlatformSection({
           예산 정보가 없습니다.
         </p>
       ) : (
-        <div className={budgetGridClass}>
+        <div className="w-full min-w-0">
           {gauges.map((gauge) => (
-            <PlatformBudgetItem key={`${platform}-${gauge.label}`} {...gauge} />
+            <PlatformBudgetItem
+              key={`${platform}-${gauge.label}`}
+              {...gauge}
+              headerAction={
+                <Button
+                  type="button"
+                  size="small"
+                  variant="outline"
+                  className={twMerge(
+                    "shrink-0",
+                    isBudgetEditDisabled && "opacity-60",
+                  )}
+                  onClick={onEditBudget}
+                  disabled={isBudgetEditDisabled}
+                  title={budgetEditDisabledReason}
+                >
+                  예산 수정
+                </Button>
+              }
+            />
           ))}
         </div>
       )}
