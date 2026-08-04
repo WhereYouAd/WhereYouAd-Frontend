@@ -1,6 +1,8 @@
 import type { ICommonResponse } from "@/types/common/common";
-import {
+import type {
   type TAcceptInvitationResponse,
+  type TChangeOwnerRequest,
+  TChangeOwnerResponse,
   type TCreateOrgRequest,
   type TCreateOrgResponse,
   type TDeleteWorkspaceMemberResponse,
@@ -162,5 +164,16 @@ export const acceptInvitaton = async (
   const { data } = await axiosInstance.post<
     ICommonResponse<TAcceptInvitationResponse>
   >(`/api/org/invitations/${token}`);
+  return data.data;
+};
+
+export const changeWorkspaceOwner = async (
+  orgId: number,
+  body: TChangeOwnerRequest,
+): Promise<TChangeOwnerResponse> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TChangeOwnerResponse>
+  >(`/api/org/${orgId}/changeOwner`, body);
+
   return data.data;
 };
