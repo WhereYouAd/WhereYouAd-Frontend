@@ -64,7 +64,7 @@ export default function TransferOwnerModal({
           현재 소유자: {currentOwnerName}
         </p>
         <p className="mb-6 text-center font-body2 text-text-muted">
-          양도 대상은 같은 대상의 관리자(ADMIN)만 선택할 수 있습니다.
+          양도 대상은 같은 조직의 관리자(ADMIN)만 선택할 수 있습니다.
           <br />
           양도 후에는 되돌릴 수 없으며, 새 소유자만 다시 양도 가능합니다.
         </p>
