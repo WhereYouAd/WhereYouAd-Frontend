@@ -3,11 +3,18 @@ import { useOutletContext, useParams } from "react-router-dom";
 
 import type { TPlatform } from "@/types/ads/campaign";
 
+import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
+import {
+  providerTypeToPlatform,
+  resolvePlatformBudgets,
+} from "@/utils/ads/projectBudget";
+
 import { useAdList } from "@/hooks/ads/useAdList";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
+import CampaignPlatformSection from "@/components/ads/CampaignPlatformSection";
 import {
   CampaignDetailAdsSectionSkeleton,
   CampaignDetailPageSkeleton,
@@ -29,6 +36,11 @@ const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   meta: "META",
   google: "GOOGLE",
 };
+
+const platformSectionBlockClass =
+  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-6";
+
+const platformSectionDividerClass = "border-t border-surface-400/75";
 
 function providerWordmark(provider: string): string {
   const key = provider.toLowerCase() as TPlatform;
@@ -74,23 +86,18 @@ export default function CampaignDetail() {
     });
   }, []);
 
-  const operableIds = useMemo(
-    () => adsList.filter((a) => a.status !== "OVER").map((a) => a.id),
-    [adsList],
-  );
-
-  const toggleSelectAllVisible = useCallback(() => {
+  const toggleSelectAllVisible = useCallback((targetIds: readonly number[]) => {
     setSelectedAdIds((prev) => {
       const allOn =
-        operableIds.length > 0 && operableIds.every((id) => prev.has(id));
+        targetIds.length > 0 && targetIds.every((id) => prev.has(id));
       if (allOn) {
         const next = new Set(prev);
-        operableIds.forEach((id) => next.delete(id));
+        targetIds.forEach((id) => next.delete(id));
         return next;
       }
-      return new Set([...prev, ...operableIds]);
+      return new Set([...prev, ...targetIds]);
     });
-  }, [operableIds]);
+  }, []);
 
   const selectedOngoingIds = useMemo(
     () =>
@@ -174,6 +181,45 @@ export default function CampaignDetail() {
     return rows.map((a) => ({ id: a.id, label: a.name }));
   }, [resumeScope, adsList, selectedPausedIds]);
 
+  const platformBudgets = useMemo(
+    () =>
+      resolvePlatformBudgets({
+        providers: data?.providers ?? [],
+        platformBudgets: data?.platformBudgets,
+      }),
+    [data?.providers, data?.platformBudgets],
+  );
+
+  const budgetByPlatform = useMemo(() => {
+    const map = new Map<TPlatform, (typeof platformBudgets)[number]>();
+    for (const budget of platformBudgets) {
+      map.set(providerTypeToPlatform(budget.providerType), budget);
+    }
+    return map;
+  }, [platformBudgets]);
+
+  const platformSections = useMemo(() => {
+    if (!data) return [];
+
+    const fromAds = groupAdsByPlatform(adsList, data.providers);
+    const seen = new Set(fromAds.map((section) => section.platform));
+
+    // 광고 0개여도 예산 mock/API 있으면 섹션 표시
+    for (const budget of platformBudgets) {
+      const platform = providerTypeToPlatform(budget.providerType);
+      if (!seen.has(platform)) {
+        fromAds.push({ platform, ads: [] });
+        seen.add(platform);
+      }
+    }
+
+    return fromAds.sort(
+      (a, b) =>
+        AD_PLATFORM_ORDER.indexOf(a.platform) -
+        AD_PLATFORM_ORDER.indexOf(b.platform),
+    );
+  }, [adsList, data, platformBudgets]);
+
   useEffect(() => {
     if (!setCampaignDetailHeaderTitle) return;
     if (data?.name) {
@@ -222,32 +268,22 @@ export default function CampaignDetail() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 tablet:gap-x-10 tablet:gap-y-4">
-            <div className="min-w-0">
-              <p className="mb-1 font-caption text-text-placeholder">
-                캠페인 예산
-              </p>
-              <p className="font-body1 tabular-nums leading-snug text-text-title">
-                {data.budget.toLocaleString()}원
-              </p>
-            </div>
-            <div className="min-w-0">
-              <p className="mb-2 font-caption text-text-placeholder">
-                연결 플랫폼
-              </p>
-              <div
-                className="flex flex-wrap items-center gap-2"
-                aria-label="연결된 광고 플랫폼"
-              >
-                {data.providers.map((provider) => (
-                  <span
-                    key={provider}
-                    className="inline-flex items-center rounded-lg border border-surface-400/60 bg-surface-200/70 px-2.5 py-1 font-body2 font-medium tracking-wide text-text-title"
-                  >
-                    {providerWordmark(provider)}
-                  </span>
-                ))}
-              </div>
+          <div className="min-w-0">
+            <p className="mb-2 font-caption text-text-placeholder">
+              연결 플랫폼
+            </p>
+            <div
+              className="flex flex-wrap items-center gap-2"
+              aria-label="연결된 광고 플랫폼"
+            >
+              {data.providers.map((provider) => (
+                <span
+                  key={provider}
+                  className="inline-flex items-center rounded-lg border border-surface-400/60 bg-surface-200/70 px-2.5 py-1 font-body2 font-medium tracking-wide text-text-title"
+                >
+                  {providerWordmark(provider)}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -268,7 +304,7 @@ export default function CampaignDetail() {
         <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <p className="font-caption text-text-placeholder">광고</p>
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -312,21 +348,49 @@ export default function CampaignDetail() {
             </div>
           </div>
 
-          <div className="min-h-0 min-w-0 flex-1">
-            <ErrorBoundary
-              FallbackComponent={AreaErrorFallback}
-              resetKeys={[adsList]}
-            >
-              <AdListTable
-                embedded
-                ads={adsList}
-                refetchAds={refetchAds}
-                selectedAdIds={selectedAdIds}
-                onToggleAd={toggleAd}
-                onToggleSelectAllVisible={toggleSelectAllVisible}
-              />
-            </ErrorBoundary>
-          </div>
+          {platformSections.length > 0 ? (
+            <div className="flex flex-col">
+              {platformSections.map(({ platform, ads: platformAds }, index) => (
+                <div
+                  key={platform}
+                  className={
+                    index > 0
+                      ? `${platformSectionBlockClass} ${platformSectionDividerClass}`
+                      : platformSectionBlockClass
+                  }
+                >
+                  <CampaignPlatformSection
+                    platform={platform}
+                    platformBudget={budgetByPlatform.get(platform)}
+                  />
+                  {platformAds.length > 0 ? (
+                    <ErrorBoundary
+                      FallbackComponent={AreaErrorFallback}
+                      resetKeys={[platformAds]}
+                    >
+                      <AdListTable
+                        embedded
+                        hidePlatformColumn
+                        ads={platformAds}
+                        refetchAds={refetchAds}
+                        selectedAdIds={selectedAdIds}
+                        onToggleAd={toggleAd}
+                        onToggleSelectAllVisible={toggleSelectAllVisible}
+                      />
+                    </ErrorBoundary>
+                  ) : (
+                    <p className="py-8 text-center font-body2 text-text-placeholder">
+                      이 플랫폼에 연결된 광고 소재가 없습니다.
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="px-6 py-16 text-center font-body1 text-text-placeholder tablet:px-5">
+              연결된 광고 소재가 없습니다.
+            </p>
+          )}
         </Card>
       )}
 

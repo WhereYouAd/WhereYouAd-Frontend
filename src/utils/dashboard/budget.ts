@@ -36,6 +36,24 @@ export function getRemainingPercentage(slice: {
   return Math.max(0, 100 - getSpentPercentage(slice));
 }
 
+export type TBudgetStatus = "안정" | "주의" | "위험";
+
+export function getBudgetStatus(
+  percentage: number,
+  warningThreshold: number,
+  dangerThreshold: number,
+): TBudgetStatus {
+  if (percentage >= dangerThreshold) return "위험";
+  if (percentage >= warningThreshold) return "주의";
+  return "안정";
+}
+
+export const statusPointClasses: Record<TBudgetStatus, string> = {
+  안정: "bg-info-blue",
+  주의: "bg-info-yellow",
+  위험: "bg-info-red",
+};
+
 function toAmountSlice(
   data: IBudgetResponse,
   slice?: IBudgetAmountSlice,
@@ -137,4 +155,13 @@ export function toBudgetQueryData(
     viewModel,
     gauges,
   };
+}
+
+/** IBudgetSlice[] → BudgetGaugeChart props (ads project 예산 등) */
+export function buildBudgetGaugesFromSlices(
+  slices: IBudgetSlice[],
+  { showInsight = SHOW_BUDGET_GAUGE_INSIGHT } = {},
+): IBudgetGaugeProps[] {
+  const compact = slices.length > 1;
+  return slices.map((slice) => toGaugeProps(slice, { compact, showInsight }));
 }

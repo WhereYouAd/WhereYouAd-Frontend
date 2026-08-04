@@ -1,47 +1,31 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { IAd, TPlatform } from "@/types/ads/campaign";
+import type { IAd } from "@/types/ads/campaign";
+
+import { providerToPlatform } from "@/utils/ads/adPlatform";
 
 import AdDetailContent from "./AdDetailContent";
-import AdRow, { adListTableHeaderGridClass } from "./AdRow";
+import AdRow, {
+  getAdListTableHeaderGridClass,
+  getAdListTableStatusCellClass,
+} from "./AdRow";
 
 interface IAdsListTableProps {
   ads: IAd[];
   refetchAds: () => void;
   embedded?: boolean;
+  hidePlatformColumn?: boolean;
   selectedAdIds: ReadonlySet<number>;
   onToggleAd: (adId: number) => void;
-  onToggleSelectAllVisible: () => void;
-}
-
-function normalizeProvider(raw: string | undefined): TPlatform | null {
-  if (!raw) return null;
-  const p = String(raw).trim().toLowerCase();
-  if (p === "meta" || p === "google" || p === "naver") return p;
-  return null;
-}
-
-function firstProviderRaw(ad: IAd): string | undefined {
-  if (ad.providerType) return String(ad.providerType);
-  const p = ad.provider;
-  if (p == null) return undefined;
-  if (Array.isArray(p)) return p[0] != null ? String(p[0]) : undefined;
-  return String(p);
-}
-
-function providerToPlatform(ad: IAd): TPlatform {
-  const fromPlatform = ad.platform ? normalizeProvider(ad.platform) : null;
-  if (fromPlatform) return fromPlatform;
-  const fromSource = normalizeProvider(firstProviderRaw(ad));
-  if (fromSource) return fromSource;
-  return "naver";
+  onToggleSelectAllVisible: (operableIds: readonly number[]) => void;
 }
 
 export default function AdListTable({
   ads,
   refetchAds,
   embedded = false,
+  hidePlatformColumn = false,
   selectedAdIds,
   onToggleAd,
   onToggleSelectAllVisible,
@@ -85,12 +69,17 @@ export default function AdListTable({
   const listInner = (
     <div
       className={twMerge(
-        "flex min-h-0 min-w-0 flex-1 flex-col overflow-x-auto overflow-y-auto bg-surface-100",
-        !embedded && "rounded-xl border border-surface-400/40",
+        "flex min-h-0 min-w-0 flex-1 flex-col bg-surface-100",
+        embedded
+          ? "overflow-hidden rounded-lg border border-surface-400/50"
+          : "overflow-x-auto overflow-y-auto rounded-xl border border-surface-400/40",
       )}
     >
       <div
-        className={`${adListTableHeaderGridClass} shrink-0 border-b border-surface-400/50 bg-surface-200/60`}
+        className={twMerge(
+          getAdListTableHeaderGridClass(hidePlatformColumn),
+          "shrink-0 border-b border-surface-400/50 bg-surface-200/60",
+        )}
       >
         <div
           className="flex items-center justify-center"
@@ -102,7 +91,7 @@ export default function AdListTable({
             type="checkbox"
             className="checkbox"
             checked={allSelected}
-            onChange={onToggleSelectAllVisible}
+            onChange={() => onToggleSelectAllVisible(operableIds)}
             disabled={operableIds.length === 0}
             aria-label="표시 중인 광고 전체 선택"
           />
@@ -110,12 +99,19 @@ export default function AdListTable({
         <div className="min-w-0 justify-self-start self-center font-label text-text-muted">
           광고 명
         </div>
-        <div className="flex min-w-0 items-center justify-start justify-self-start self-center pr-8 font-label text-text-muted tablet:pr-6">
+        <div
+          className={twMerge(
+            getAdListTableStatusCellClass(),
+            "font-label text-text-muted",
+          )}
+        >
           상태
         </div>
-        <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start self-center font-label text-text-muted">
-          플랫폼
-        </div>
+        {!hidePlatformColumn ? (
+          <div className="flex min-w-[2.75rem] items-center justify-start justify-self-start self-center font-label text-text-muted">
+            플랫폼
+          </div>
+        ) : null}
         <div className="text-right font-label text-text-muted" aria-hidden>
           &nbsp;
         </div>
@@ -146,6 +142,7 @@ export default function AdListTable({
                 runStatus={runStatus}
                 runStatusText={runStatusText}
                 platform={platform}
+                hidePlatformColumn={hidePlatformColumn}
                 isOpen={isOpen}
                 isSelected={selectedAdIds.has(ad.id)}
                 selectable={selectable}
