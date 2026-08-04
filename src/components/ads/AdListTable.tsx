@@ -13,7 +13,6 @@ import AdRow, {
 
 interface IAdsListTableProps {
   ads: IAd[];
-  refetchAds: () => void;
   embedded?: boolean;
   hidePlatformColumn?: boolean;
   selectedAdIds: ReadonlySet<number>;
@@ -23,7 +22,6 @@ interface IAdsListTableProps {
 
 export default function AdListTable({
   ads,
-  refetchAds,
   embedded = false,
   hidePlatformColumn = false,
   selectedAdIds,
@@ -152,7 +150,7 @@ export default function AdListTable({
 
               {isOpen ? (
                 <div className="w-full min-w-0 origin-top border-b-2 border-surface-400 bg-surface-300">
-                  <AdDetailContent ad={ad} refetchAds={refetchAds} />
+                  <AdDetailContent ad={ad} />
                 </div>
               ) : null}
             </div>
