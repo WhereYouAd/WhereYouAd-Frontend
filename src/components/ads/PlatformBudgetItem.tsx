@@ -32,19 +32,25 @@ export default function PlatformBudgetItem({
 
   return (
     <article
-      className="flex min-w-0 flex-col gap-3 rounded-xl border border-surface-400/70 bg-surface-100 px-4 py-4"
+      className={twMerge(
+        "flex min-w-0 flex-col rounded-xl border border-surface-400/70 bg-surface-100 px-4 py-4",
+        headerAction ? "gap-2" : "gap-3",
+      )}
       aria-label={`${label} 예산`}
     >
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="font-caption text-text-placeholder">{label}</span>
+      <div
+        className={twMerge(
+          "flex min-w-0 justify-between gap-3",
+          headerAction ? "items-center" : "items-start",
+        )}
+      >
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+          <span className="font-body2 text-text-placeholder">{label}</span>
           <div className="flex items-baseline gap-2">
             <span className="font-heading4 text-text-title tabular-nums leading-none">
               {remainingPct}%
             </span>
-            <span className="font-caption text-text-body tabular-nums">
-              남음
-            </span>
+            <span className="font-body2 text-text-body tabular-nums">남음</span>
           </div>
         </div>
         {headerAction ? <div className="shrink-0">{headerAction}</div> : null}
@@ -56,7 +62,7 @@ export default function PlatformBudgetItem({
         aria-valuenow={remainingPct}
         aria-valuemin={0}
         aria-valuemax={100}
-        className="relative h-2 w-full overflow-hidden rounded-full bg-surface-200"
+        className="relative h-2.5 w-full overflow-hidden rounded-full bg-surface-200"
       >
         <div
           className="absolute top-0 left-0 h-full w-full origin-left rounded-full bg-info-blue transition-transform duration-700 ease-smooth"

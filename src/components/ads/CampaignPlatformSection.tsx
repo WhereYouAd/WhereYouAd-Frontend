@@ -91,7 +91,7 @@ export default function CampaignPlatformSection({
                   size="small"
                   variant="outline"
                   className={twMerge(
-                    "shrink-0",
+                    "h-9 shrink-0 px-3.5",
                     isBudgetEditDisabled && "opacity-60",
                   )}
                   onClick={onEditBudget}
