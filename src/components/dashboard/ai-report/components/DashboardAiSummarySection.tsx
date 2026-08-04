@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import type { TAiAnalysisProvider } from "@/types/dashboard/aiAnalysis";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
@@ -32,23 +32,41 @@ export default function DashboardAiSummarySection({
   const {
     reportData,
     requestAnalysis,
-    reset,
     isLoading,
+    isCheckingSharedReport,
     loadingMessage,
     isError,
     errorMessage,
   } = useAiAnalysisReport(provider);
 
+  /** 공유 조회 중에 카드를 펼쳤을 때 POST를 보류했음을 기록 */
+  const pendingExpandRef = useRef(false);
+
   const handleExpand = useCallback(() => {
     if (!reportData && !isLoading && !isError) {
       requestAnalysis();
+    } else if (isCheckingSharedReport) {
+      pendingExpandRef.current = true;
     }
-  }, [reportData, isLoading, isError, requestAnalysis]);
+  }, [reportData, isLoading, isError, isCheckingSharedReport, requestAnalysis]);
+
+  /** 공유 조회가 끝났을 때 결과가 없으면 POST fallback 실행 */
+  useEffect(() => {
+    if (
+      pendingExpandRef.current &&
+      !isCheckingSharedReport &&
+      !reportData &&
+      !isLoading &&
+      !isError
+    ) {
+      pendingExpandRef.current = false;
+      requestAnalysis();
+    }
+  }, [isCheckingSharedReport, reportData, isLoading, isError, requestAnalysis]);
 
   const handleRetry = useCallback(() => {
-    reset();
     requestAnalysis();
-  }, [reset, requestAnalysis]);
+  }, [requestAnalysis]);
 
   return (
     <AiSummaryCard
