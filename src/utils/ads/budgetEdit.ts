@@ -57,6 +57,11 @@ export type TBudgetEditFormValues =
   | TLifetimeBudgetFormValues
   | TNaverBudgetFormValues;
 
+export type TBudgetEditModalFormValues = {
+  dailyBudget?: number;
+  lifetimeBudget?: number;
+};
+
 /**
  * platformBudget → API 호출 가능 여부
  * BE 필드 없거나 mock이면 ok: false → 수정 버튼 disabled
@@ -129,4 +134,61 @@ export function resolveBudgetEditFormSchema(budget: IPlatformProjectBudget) {
     default:
       return dailyBudgetFormSchema;
   }
+}
+
+/** 모달 input — 필드명·라벨 (게이지 라벨과 동일) */
+export function resolveBudgetEditFieldMeta(budget: IPlatformProjectBudget): {
+  fieldName: "dailyBudget" | "lifetimeBudget";
+  label: string;
+} {
+  if (budget.providerType === "NAVER") {
+    return { fieldName: "dailyBudget", label: "일일 예산" };
+  }
+  if (budget.activeBudgetType === "LIFETIME") {
+    return { fieldName: "lifetimeBudget", label: "전체 예산" };
+  }
+  return { fieldName: "dailyBudget", label: "일일 예산" };
+}
+
+/** platformBudget → 폼 defaultValues */
+export function resolveBudgetEditDefaultValues(
+  budget: IPlatformProjectBudget,
+): TBudgetEditModalFormValues {
+  const { fieldName } = resolveBudgetEditFieldMeta(budget);
+
+  if (fieldName === "lifetimeBudget") {
+    return { lifetimeBudget: budget.lifetime.totalBudget };
+  }
+
+  const dailyAmount = budget.daily?.totalBudget ?? budget.lifetime.totalBudget;
+
+  return { dailyBudget: dailyAmount };
+}
+
+/** budget + form values → mutation variables */
+export function buildUpdatePlatformBudgetVariables(
+  budget: IPlatformProjectBudget,
+  values: TBudgetEditModalFormValues,
+): {
+  providerType: IPlatformProjectBudget["providerType"];
+  adCampaignId?: number;
+  activeBudgetType?: TPlatformBudgetType;
+  naverConnectionId?: number;
+  naverCampaignId?: string;
+  dailyBudget?: number;
+  lifetimeBudget?: number;
+} {
+  const base = {
+    providerType: budget.providerType,
+    adCampaignId: budget.adCampaignId,
+    activeBudgetType: budget.activeBudgetType,
+    naverConnectionId: budget.naverConnectionId,
+    naverCampaignId: budget.naverCampaignId,
+  };
+
+  if (values.lifetimeBudget !== undefined) {
+    return { ...base, lifetimeBudget: values.lifetimeBudget };
+  }
+
+  return { ...base, dailyBudget: values.dailyBudget };
 }
