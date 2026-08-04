@@ -17,6 +17,7 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 type TMemberListProps = {
   orgId: number;
   members: TWorkspaceMember[];
+  creatorId: number | null;
   pendingMembers: TPendingMemberData[];
   totalCount: number;
   onRoleChange: (targetMemberId: number, newRole: TMemberRole) => void;
@@ -36,6 +37,7 @@ type TMemberListProps = {
 export default function MemberList({
   orgId,
   members,
+  creatorId,
   pendingMembers,
   totalCount,
   onRoleChange,
@@ -116,6 +118,7 @@ export default function MemberList({
               <MemberItem
                 key={member.memberId}
                 member={member}
+                isCreator={creatorId !== null && member.memberId === creatorId}
                 isReceive={
                   notificationReceiveByEmail.get(member.email)?.isReceive
                 }

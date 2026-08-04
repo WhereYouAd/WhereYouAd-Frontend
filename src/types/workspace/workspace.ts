@@ -58,10 +58,17 @@ export type TUpdateMemberRoleRequest = {
 
 export type TUpdateMemberRoleResponse = TWorkspaceMember;
 
+export type TChangeOwnerRequest = {
+  newOwnerUserId: number;
+};
+
+export type TChangeOwnerResponse = string;
+
 export type TGetWorkspaceMembersData = {
   hasNext: boolean;
   nextCursor: string | null;
   members: TWorkspaceMember[];
+  creatorId: number;
 };
 
 export type TWorkspaceMemberCount = {

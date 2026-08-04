@@ -68,6 +68,8 @@ export default function MemberManagement() {
     return membersQuery.data?.pages.flatMap((page) => page.members) ?? [];
   }, [membersQuery.data]);
 
+  const creatorId = membersQuery.data?.pages[0]?.creatorId ?? null;
+
   const totalCount = memberCountQuery?.data?.totalCount ?? 0;
 
   const adminCount = useMemo(() => {
@@ -349,6 +351,7 @@ export default function MemberManagement() {
           <MemberList
             orgId={orgId}
             members={members}
+            creatorId={creatorId}
             pendingMembers={pendingMembers}
             totalCount={totalCount}
             onRoleChange={handleRoleChange}
