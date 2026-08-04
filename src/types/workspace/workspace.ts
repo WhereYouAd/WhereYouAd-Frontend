@@ -62,6 +62,7 @@ export type TGetWorkspaceMembersData = {
   hasNext: boolean;
   nextCursor: string | null;
   members: TWorkspaceMember[];
+  creatorId: number;
 };
 
 export type TWorkspaceMemberCount = {
