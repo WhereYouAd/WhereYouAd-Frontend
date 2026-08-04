@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import type { TAiAnalysisProvider } from "@/types/dashboard/aiAnalysis";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
@@ -34,10 +34,18 @@ export default function DashboardAiSummarySection({
     requestAnalysis,
     isLoading,
     isCheckingSharedReport,
+    sharedReportCreatedAt,
     loadingMessage,
     isError,
     errorMessage,
   } = useAiAnalysisReport(provider);
+
+  const periodLabel = useMemo(() => {
+    const base = formatAiAnalysisPeriodLabel();
+    if (!sharedReportCreatedAt) return base;
+    const date = sharedReportCreatedAt.slice(0, 10).replaceAll("-", ".");
+    return `${base} · 팀 공유 분석 (${date})`;
+  }, [sharedReportCreatedAt]);
 
   /** 공유 조회 중에 카드를 펼쳤을 때 POST를 보류했음을 기록 */
   const pendingExpandRef = useRef(false);
@@ -80,7 +88,7 @@ export default function DashboardAiSummarySection({
       title={title ?? getAiSummaryTitle(provider)}
       idPrefix={idPrefix}
       print={{ documentTitle: getAiSummaryDocumentTitle(provider) }}
-      periodLabel={formatAiAnalysisPeriodLabel()}
+      periodLabel={periodLabel}
     />
   );
 }

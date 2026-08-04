@@ -41,6 +41,10 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
   const [workspaceErrorShown, setWorkspaceErrorShown] = useState(false);
   /** true면 조직 공유 리포트 조회를 건너뛰고 POST 플로우로 직행 (명시적 요청) */
   const [skipSharedLookup, setSkipSharedLookup] = useState(false);
+  /** 공유 리포트 채택 시 해당 리포트의 생성일 (ISO 문자열) */
+  const [sharedReportCreatedAt, setSharedReportCreatedAt] = useState<
+    string | null
+  >(null);
 
   /** 재요청 전 상태 초기화 */
   const reset = useCallback(() => {
@@ -48,6 +52,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     setPollStartedAt(null);
     setWorkspaceErrorShown(false);
     setSkipSharedLookup(false);
+    setSharedReportCreatedAt(null);
   }, []);
 
   useEffect(() => {
@@ -90,6 +95,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     if (!latest || latest.status === "FAILED") return;
 
     setAccessToken(latest.reportAccessToken);
+    setSharedReportCreatedAt(latest.createdAt);
     setPollStartedAt(Date.now());
   }, [
     accessToken,
@@ -240,6 +246,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     reset,
     isLoading,
     isCheckingSharedReport,
+    sharedReportCreatedAt,
     loadingMessage,
     isError,
     errorMessage,
