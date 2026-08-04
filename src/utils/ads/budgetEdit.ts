@@ -91,10 +91,12 @@ export function canSubmitPlatformBudgetEdit(
       return { ok: true };
 
     case "NAVER":
-      if (!budget.naverConnectionId || !budget.naverCampaignId) {
-        return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
-      }
-      return { ok: true };
+      //TODO: BE 확인 후 수정 필요
+      return { ok: false, reason: "NOT_EDITABLE" };
+    //   if (!budget.naverConnectionId || !budget.naverCampaignId) {
+    //     return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
+    //   }
+    //   return { ok: true };
 
     default:
       return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };

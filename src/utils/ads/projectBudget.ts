@@ -90,7 +90,7 @@ export function buildPlaceholderPlatformBudgets(
       item.activeBudgetType = index % 2 === 0 ? "DAILY" : "LIFETIME";
     }
 
-    item.canEditBudget = false;
+    item.canEditBudget = providerType !== "NAVER";
 
     return item;
   });

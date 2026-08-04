@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 
-import type { TPlatform } from "@/types/ads/campaign";
+import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
 
 import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
 import {
@@ -15,6 +15,7 @@ import { useControlModal } from "@/hooks/ads/useControlModal";
 
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignPlatformSection from "@/components/ads/CampaignPlatformSection";
+import EditPlatformBudgetModal from "@/components/ads/EditPlatformBudgetModal";
 import {
   CampaignDetailAdsSectionSkeleton,
   CampaignDetailPageSkeleton,
@@ -72,6 +73,9 @@ export default function CampaignDetail() {
   );
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
+
+  const [budgetEditTarget, setBudgetEditTarget] =
+    useState<IPlatformProjectBudget | null>(null);
 
   const clearAdSelection = useCallback(() => {
     setSelectedAdIds(new Set());
@@ -362,6 +366,10 @@ export default function CampaignDetail() {
                   <CampaignPlatformSection
                     platform={platform}
                     platformBudget={budgetByPlatform.get(platform)}
+                    onEditBudget={() => {
+                      const budget = budgetByPlatform.get(platform);
+                      if (budget) setBudgetEditTarget(budget);
+                    }}
                   />
                   {platformAds.length > 0 ? (
                     <ErrorBoundary
@@ -480,6 +488,17 @@ export default function CampaignDetail() {
           variant="primary"
         />
       </Modal>
+      {orgIdNum != null && projectIdNum != null ? (
+        <EditPlatformBudgetModal
+          isOpen={!!budgetEditTarget}
+          onClose={() => {
+            setBudgetEditTarget(null);
+          }}
+          budget={budgetEditTarget ?? null}
+          orgId={orgIdNum}
+          projectId={projectIdNum}
+        />
+      ) : null}
     </section>
   );
 }
