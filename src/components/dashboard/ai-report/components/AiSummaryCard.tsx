@@ -294,17 +294,15 @@ export default function AiSummaryCard({
   );
 
   const handleToggle = useCallback(() => {
-    setIsExpanded((prev) => {
-      const next = !prev;
-      if (next) {
-        onExpand?.();
-        if (!data) autoExpandOnResultRef.current = true;
-      } else if (isLoading) {
-        autoExpandOnResultRef.current = false;
-      }
-      return next;
-    });
-  }, [data, isLoading, onExpand]);
+    const next = !isExpanded;
+    setIsExpanded(next);
+    if (next) {
+      onExpand?.();
+      if (!data) autoExpandOnResultRef.current = true;
+    } else if (isLoading) {
+      autoExpandOnResultRef.current = false;
+    }
+  }, [isExpanded, data, isLoading, onExpand]);
 
   const handleDownloadPdf = useCallback(() => {
     if (!printDocument) return;
