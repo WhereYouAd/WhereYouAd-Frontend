@@ -19,7 +19,7 @@ export default function MemberSearchSelect({
   onSelect,
   isOpen,
   onOpenChange,
-  placeholder = "권한을 양도할 멤버를 검색하세요",
+  placeholder = "소유권을 양도할 멤버를 검색하세요",
 }: TMemberSearchSelectProps) {
   return (
     <SearchSelect
