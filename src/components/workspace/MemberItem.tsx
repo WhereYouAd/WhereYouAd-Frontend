@@ -5,8 +5,9 @@ import type {
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
+import Badge from "@/components/common/badge/Badge";
+
 import MemberRoleSelect from "./MemberRoleSelect";
-import Badge from "../common/badge/Badge";
 
 import BellOffIcon from "@/assets/icon/common/bell-off.svg?react";
 import BellRingingIcon from "@/assets/icon/common/bell-ringing.svg?react";
