@@ -1,5 +1,7 @@
 import type { ICommonResponse } from "@/types/common/common";
 import type {
+  IAiReportListParams,
+  IAiReportListResponse,
   IAnalysisRequest,
   IReportStatusResponse,
 } from "@/types/dashboard/aiAnalysis";
@@ -29,5 +31,16 @@ export const getAiReportByAccessToken = async (
   const { data } = await axiosInstance.get<
     ICommonResponse<IReportStatusResponse>
   >(`/api/ai/reports/${encodeURIComponent(accessToken)}`);
+  return data.data;
+};
+
+/** 조직 단위 AI 분석 리포트 목록 조회 (최신순, 본문 제외) */
+export const getOrgAiReports = async (
+  orgId: number,
+  params?: IAiReportListParams,
+): Promise<IAiReportListResponse> => {
+  const { data } = await axiosInstance.get<
+    ICommonResponse<IAiReportListResponse>
+  >(`/api/ai/organizations/${orgId}/reports`, { params });
   return data.data;
 };

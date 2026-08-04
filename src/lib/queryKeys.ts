@@ -73,6 +73,9 @@ export const QUERY_KEYS = {
     /** AI 분석 리포트 폴링 쿼리 */
     report: (provider: string, orgId: number | null) =>
       ["ai", "report", provider, orgId] as const,
+    /** 조직 단위 최신 AI 분석 리포트 목록 조회 (공유 결과 확인용) */
+    reportList: (provider: string, orgId: number | null) =>
+      ["ai", "reportList", provider, orgId] as const,
   },
 
   timeline: {
