@@ -6,6 +6,7 @@ import type {
 } from "@/types/workspace/workspace";
 
 import MemberRoleSelect from "./MemberRoleSelect";
+import Badge from "../common/badge/Badge";
 
 import BellOffIcon from "@/assets/icon/common/bell-off.svg?react";
 import BellRingingIcon from "@/assets/icon/common/bell-ringing.svg?react";
@@ -15,6 +16,7 @@ import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TProps = {
   member: TWorkspaceMember;
+  isCreator?: boolean;
   isReceive?: boolean;
   isNotificationLoading: boolean;
   isReceiveUpdating?: boolean;
@@ -25,6 +27,7 @@ type TProps = {
 
 export default function MemberItem({
   member,
+  isCreator = false,
   isReceive,
   isNotificationLoading,
   isReceiveUpdating = false,
@@ -51,8 +54,20 @@ export default function MemberItem({
             <UserIcon className="text-text-auth-sub h-6 w-6" />
           )}
         </div>
+
         <div className="min-w-0 flex-1">
-          <p className="truncate font-body1 text-text-title">{member.name}</p>
+          <div className="flex items-center gap-2 min-w-0 mb-1">
+            <p className="truncate font-body1 text-text-title">{member.name}</p>
+            {isCreator ? (
+              <Badge
+                variant="infoBlue"
+                className="h-5! shrink-0 px-2! font-caption"
+              >
+                소유자
+              </Badge>
+            ) : null}
+          </div>
+
           <div className="flex text-text-auth-sub items-center gap-2 min-w-0">
             <MailIcon className="w-4 h-4" />
             <p className="truncate">{member.email}</p>
