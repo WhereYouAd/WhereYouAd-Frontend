@@ -104,6 +104,12 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     sharedReportListQuery.data,
   ]);
 
+  /** 사용 가능한 공유 리포트가 있는지 여부 (query data 기반 — 렌더 시점에 즉시 반영) */
+  const hasUsableSharedReport =
+    sharedReportListQuery.isSuccess &&
+    !!sharedReportListQuery.data?.reports[0] &&
+    sharedReportListQuery.data.reports[0].status !== "FAILED";
+
   /** POST /analysis — accessToken 발급 */
   const requestMutation = useCoreMutation(
     (params: TRequestAiAnalysisParams) => {
@@ -246,6 +252,7 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     reset,
     isLoading,
     isCheckingSharedReport,
+    hasUsableSharedReport,
     sharedReportCreatedAt,
     loadingMessage,
     isError,

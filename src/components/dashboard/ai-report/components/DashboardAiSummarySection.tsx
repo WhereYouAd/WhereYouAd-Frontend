@@ -34,11 +34,16 @@ export default function DashboardAiSummarySection({
     requestAnalysis,
     isLoading,
     isCheckingSharedReport,
+    hasUsableSharedReport,
     sharedReportCreatedAt,
     loadingMessage,
     isError,
     errorMessage,
   } = useAiAnalysisReport(provider);
+
+  /** ref로 유지해 fallback effect deps에 포함하지 않음 */
+  const hasUsableSharedReportRef = useRef(false);
+  hasUsableSharedReportRef.current = hasUsableSharedReport;
 
   const periodLabel = useMemo(() => {
     const base = formatAiAnalysisPeriodLabel();
@@ -65,7 +70,8 @@ export default function DashboardAiSummarySection({
       !isCheckingSharedReport &&
       !reportData &&
       !isLoading &&
-      !isError
+      !isError &&
+      !hasUsableSharedReportRef.current
     ) {
       pendingExpandRef.current = false;
       requestAnalysis();
