@@ -17,6 +17,7 @@ import type {
   TUpdateWorkspaceRequest,
   TWorkspace,
   TWorkspaceDetail,
+  TWorkspaceMember,
   TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
@@ -176,4 +177,25 @@ export const changeWorkspaceOwner = async (
   >(`/api/org/${orgId}/changeOwner`, body);
 
   return data.data;
+};
+
+// 양도 후보 등 전체 멤버가 필요할 때 cursor 끝까지 돌기
+export const getAllWorkspaceMembers = async (
+  orgId: number,
+  size = 100,
+): Promise<{ creatorId: number; members: TWorkspaceMember[] }> => {
+  const members: TWorkspaceMember[] = [];
+  let cursor: string | null = null;
+  let creatorId = 0;
+  let hasNext = true;
+
+  while (hasNext) {
+    const page = await getWorkspaceMembers(orgId, cursor, size);
+    creatorId = page.creatorId;
+    members.push(...page.members);
+    hasNext = page.hasNext;
+    cursor = page.nextCursor;
+  }
+
+  return { creatorId, members };
 };

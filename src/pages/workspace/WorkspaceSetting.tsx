@@ -19,17 +19,15 @@ import { getMyInfo } from "@/api/auth/auth";
 import {
   changeWorkspaceOwner,
   deleteWorkspace,
+  getAllWorkspaceMembers,
   getMyWorkspaces,
   getWorkspace,
-  getWorkspaceMembers,
   updateWorkspace,
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { QUERY_KEYS } from "@/lib/queryKeys";
-
-const MEMBER_PAGE_SIZE = 100;
 
 export default function WorkspaceSetting() {
   const navigate = useNavigate();
@@ -79,8 +77,8 @@ export default function WorkspaceSetting() {
   const errorMsg = isError ? (error.message ?? "불러오기 실패") : null;
 
   const membersQuery = useCoreQuery(
-    QUERY_KEYS.workspace.membersWithPageSize(orgId ?? 0, MEMBER_PAGE_SIZE),
-    () => getWorkspaceMembers(orgId!, null, MEMBER_PAGE_SIZE),
+    QUERY_KEYS.workspace.members(orgId ?? 0),
+    () => getAllWorkspaceMembers(orgId!),
     { enabled: orgId !== null },
   );
 
