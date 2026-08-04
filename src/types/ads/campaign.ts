@@ -13,7 +13,7 @@ export interface IPlatformProjectBudget {
   adCampaignName?: string;
   lifetime: IBudgetAmountSlice;
   daily?: IBudgetAmountSlice | null;
-  /** Meta — 기존 daily / lifetime 중 어떤 유형인지 */
+  /** Meta / Google — 기존 daily / lifetime 중 어떤 유형인지 */
   activeBudgetType?: TPlatformBudgetType;
   /** Naver — /api/naver/{connectionId}/campaigns/{campaignId}/budget */
   naverConnectionId?: number;
