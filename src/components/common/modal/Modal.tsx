@@ -125,7 +125,9 @@ function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  const handleOverlayClick = useCallback(
+  // mousedown으로 닫아야 드롭다운 축소 후 따라오는 click이 오버레이에
+  // 떨어져 모달이 같이 닫히는 문제를 막을 수 있음
+  const handleOverlayMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (disableOverlayClick) return;
       if (e.target === e.currentTarget) {
@@ -135,7 +137,7 @@ function Modal({
     [disableOverlayClick, onClose],
   );
 
-  const handleContentClick = useCallback(
+  const handleContentMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
     },
@@ -182,7 +184,7 @@ function Modal({
               transition: { duration: closeMs, ease: easeIn },
             }}
             transition={{ duration: openMs, ease: easeOut }}
-            onClick={handleOverlayClick}
+            onMouseDown={handleOverlayMouseDown}
           >
             <motion.div
               ref={modalRef}
@@ -200,7 +202,7 @@ function Modal({
                 transition: { duration: closeMs, ease: easeIn },
               }}
               transition={{ duration: openMs, ease: easeOut }}
-              onClick={handleContentClick}
+              onMouseDown={handleContentMouseDown}
               onKeyDown={handleKeyDown}
               tabIndex={-1}
             >

@@ -29,6 +29,7 @@ export default function MemberSearchSelect({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       placeholder={placeholder}
+      listPlacement="flow"
       getOptionKey={(member) => member.memberId}
       getOptionLabel={(member) => member.name}
       getSearchText={(member) => `${member.name} ${member.email}`}
