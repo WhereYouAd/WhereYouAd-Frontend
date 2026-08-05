@@ -159,12 +159,12 @@ export const saveSelectedWorkspace = async (orgId: number): Promise<void> => {
   await axiosInstance.post(`/api/org/${orgId}/workspace`);
 };
 
-export const acceptInvitaton = async (
+export const acceptInvitation = async (
   token: string,
 ): Promise<TAcceptInvitationResponse> => {
   const { data } = await axiosInstance.post<
     ICommonResponse<TAcceptInvitationResponse>
-  >(`/api/org/invitations/${token}`);
+  >(`/api/org/invitations/${encodeURIComponent(token)}`);
   return data.data;
 };
 

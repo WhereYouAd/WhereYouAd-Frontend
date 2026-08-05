@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import { useCoreMutation } from "../customQuery";
+import { useCoreMutation } from "@/hooks/customQuery";
 
 import { deleteMyAccount } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
