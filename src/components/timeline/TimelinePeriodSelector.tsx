@@ -36,7 +36,7 @@ export function TimelineViewUnitSegment({
             aria-pressed={isSelected}
             onClick={() => onViewUnitChange(option.value)}
             className={twMerge(
-              "rounded-md px-3 py-1.5 font-caption transition-ui-smooth",
+              "rounded-md px-3 py-1.5 font-caption transition-ui-smooth tablet:flex-1",
               isSelected
                 ? "bg-surface-100 text-text-title shadow-Soft"
                 : "text-text-muted hover:text-text-body",
@@ -86,7 +86,10 @@ export function TimelinePeriodNav({
         <ChevronLeftIcon className="h-3.5 w-3.5" />
       </button>
 
-      <span aria-live="polite" className="min-w-40 truncate text-center">
+      <span
+        aria-live="polite"
+        className="min-w-40 truncate text-center tablet:min-w-0 tablet:flex-1"
+      >
         {periodLabel}
       </span>
 
