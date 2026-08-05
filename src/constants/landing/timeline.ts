@@ -1,47 +1,37 @@
-export type TLandingTimelineColumn = {
-  day: string;
-  date: number;
-  isWeekend: boolean;
-  isToday?: boolean;
-};
+import type {
+  ITimelineCampaignBar,
+  ITimelineGridColumn,
+} from "@/types/timeline/ui";
 
-export type TLandingTimelineCard = {
-  id: number;
-  title: string;
-  subtitle: string;
-  colStart: number;
-  colEnd: number;
-  row: number;
-  colorClass: string;
-};
-
-export const LANDING_TIMELINE_COLUMNS: TLandingTimelineColumn[] = [
-  { day: "M", date: 30, isWeekend: false },
-  { day: "T", date: 31, isWeekend: false },
-  { day: "W", date: 1, isWeekend: false },
-  { day: "T", date: 2, isWeekend: false, isToday: true },
-  { day: "F", date: 3, isWeekend: false },
-  { day: "S", date: 4, isWeekend: true },
-  { day: "S", date: 5, isWeekend: true },
+export const LANDING_TIMELINE_COLUMNS: ITimelineGridColumn[] = [
+  { day: "일", date: 2, isWeekend: false },
+  { day: "월", date: 3, isWeekend: false, isToday: true },
+  { day: "화", date: 4, isWeekend: false },
+  { day: "수", date: 5, isWeekend: false },
+  { day: "목", date: 6, isWeekend: false },
+  { day: "금", date: 7, isWeekend: true },
+  { day: "토", date: 8, isWeekend: true },
 ];
 
-export const LANDING_TIMELINE_CARDS: TLandingTimelineCard[] = [
+export const LANDING_TIMLINE_BARS: ITimelineCampaignBar[] = [
   {
     id: 1,
-    title: "봄 프로모션 캠페인",
-    subtitle: "Google Ads · 전환",
+    title: "썸머 프로모션 캠페인",
+    subtitle: "08.01 - 08.31",
+    providers: ["GOOGLE"],
     colStart: 1,
-    colEnd: 4.8,
+    colEnd: 8,
     row: 1,
-    colorClass: "bg-primary-300",
+    performanceStatus: "ON_TRACK",
   },
   {
     id: 2,
-    title: "리타겟팅 캠페인",
-    subtitle: "Meta · 트래픽",
+    title: "신구회원 프로모션 캠페인",
+    subtitle: "08.03 - 08.16",
+    providers: ["GOOGLE"],
     colStart: 3,
-    colEnd: 7,
+    colEnd: 8,
     row: 2,
-    colorClass: "bg-primary-400",
+    performanceStatus: "ABOVE_AVG",
   },
 ];
