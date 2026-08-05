@@ -134,12 +134,11 @@ export default function PlatformIntegrationsPage() {
     },
   );
 
-  const googleSyncMutation = useCoreMutation<IGoogleSyncData, void>(
+  const googleSyncMutation = useCoreMutation<IGoogleSyncData, number>(
     () => syncGoogleAdData(),
     {
-      userOnSuccess: async (data) => {
-        if (orgId == null) return;
-        await invalidateConnections(orgId);
+      userOnSuccess: async (data, requestOrgId) => {
+        await invalidateConnections(requestOrgId);
         const { type, message } = getPlatformSyncToast("GOOGLE", data);
         if (type === "success") toast.success(message);
         else toast.warning(message);
@@ -282,7 +281,7 @@ export default function PlatformIntegrationsPage() {
     }
 
     if (provider === "GOOGLE") {
-      googleSyncMutation.mutate(undefined);
+      googleSyncMutation.mutate(orgId);
     }
   };
 
