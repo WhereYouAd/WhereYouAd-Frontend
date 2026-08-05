@@ -1,4 +1,11 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 import type { TStatus } from "@/types/ads/campaign";
+
+import {
+  assertBulkSettleResult,
+  settleBulkRequests,
+} from "@/utils/ads/settleBulkRequests";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 
@@ -15,6 +22,8 @@ export function useUpdateAdStatus(
   orgId: number | null,
   projectId: number | null,
 ) {
+  const queryClient = useQueryClient();
+
   return useCoreMutation<void, IUpdateAdStatusVariables>(
     async (vars) => {
       if (orgId == null || projectId == null) {
@@ -23,11 +32,22 @@ export function useUpdateAdStatus(
 
       if (vars.adContentIds.length === 0) return;
 
-      await Promise.all(
+      const result = await settleBulkRequests(
         vars.adContentIds.map((adContentId) =>
           updateAdStatus(orgId, projectId, adContentId, vars.status),
         ),
       );
+
+      if (result.successCount > 0 && result.successCount < result.total) {
+        await queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.campaign.ads(orgId, projectId),
+        });
+      }
+
+      assertBulkSettleResult(result, {
+        partial: (successCount, total) =>
+          `${total}개 중 ${successCount}개 광고 소재만 반영되었습니다.`,
+      });
     },
     {
       invalidateKeys:

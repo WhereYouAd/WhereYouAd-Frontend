@@ -1,4 +1,11 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 import type { TStatus } from "@/types/ads/campaign";
+
+import {
+  assertBulkSettleResult,
+  settleBulkRequests,
+} from "@/utils/ads/settleBulkRequests";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 
@@ -13,6 +20,8 @@ export interface IUpdateCampaignStatusVariables {
 }
 
 export function useUpdateCampaignStatus(orgId: number | null) {
+  const queryClient = useQueryClient();
+
   return useCoreMutation<void, IUpdateCampaignStatusVariables>(
     async (vars) => {
       if (orgId == null) {
@@ -27,11 +36,22 @@ export function useUpdateCampaignStatus(orgId: number | null) {
       const projectIds = vars.projectIds ?? [];
       if (projectIds.length === 0) return;
 
-      await Promise.all(
+      const result = await settleBulkRequests(
         projectIds.map((projectId) =>
           updateCampaignStatus(orgId, projectId, vars.status),
         ),
       );
+
+      if (result.successCount > 0 && result.successCount < result.total) {
+        await queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.campaign.list(orgId),
+        });
+      }
+
+      assertBulkSettleResult(result, {
+        partial: (successCount, total) =>
+          `${total}개 중 ${successCount}개 캠페인만 반영되었습니다.`,
+      });
     },
     {
       invalidateKeys: orgId != null ? [QUERY_KEYS.campaign.list(orgId)] : [],
