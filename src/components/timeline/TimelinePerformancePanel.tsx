@@ -311,7 +311,7 @@ export default function TimelinePerformancePanel({
         </section>
 
         {/* KPI — 선택한 지표 수만큼 가로 균등 분할 */}
-        <section className="grid w-full gap-2 tablet:flex-wrap">
+        <section className="flex w-full gap-2 tablet:flex-wrap">
           {data.metrics.map((metric) => (
             <div
               key={metric.metric}

@@ -75,7 +75,7 @@ export default function MemberItem({
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-4 shrink-0 tablet: justify-end">
+      <div className="flex items-center gap-4 shrink-0 tablet:justify-end">
         <button
           type="button"
           disabled={!canToggleReceive}
