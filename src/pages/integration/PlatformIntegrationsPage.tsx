@@ -7,7 +7,14 @@ import type {
   IPlatformConnectionItem,
   TIntegrationProvider,
 } from "@/types/integration/platformConnection";
+import type {
+  IGoogleSyncData,
+  IMetaSyncData,
+  INaverSyncData,
+} from "@/types/integration/platformSync";
 
+import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
+import { getPlatformSyncToast } from "@/utils/integration/platformSync";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { useCoreMutation } from "@/hooks/customQuery";
@@ -17,6 +24,7 @@ import { usePlatformConnections } from "@/hooks/integration/usePlatformConnectio
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
+import NaverSyncModal from "@/components/integration/NaverSyncModal";
 import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
 import PlatformIntegrationsPageSkeleton from "@/components/integration/skeleton/PlatformIntegrationsSkeleton";
@@ -25,6 +33,9 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
+import { syncGoogleAdData } from "@/api/integration/google";
+import { syncMetaAdData } from "@/api/integration/meta";
+import { syncNaverAdData } from "@/api/integration/naver";
 import {
   disconnectPlatformAccount,
   reconnectPlatformAccount,
@@ -47,6 +58,9 @@ export default function PlatformIntegrationsPage() {
     "connect",
   );
   const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
+  const [isNaverSyncModalOpen, setIsNaverSyncModalOpen] = useState(false);
+  const [syncingProvider, setSyncingProvider] =
+    useState<TIntegrationProvider | null>(null);
 
   const [disconnectTarget, setDisconnectTarget] =
     useState<TDisconnectTarget | null>(null);
@@ -96,6 +110,70 @@ export default function PlatformIntegrationsPage() {
       },
     },
   );
+
+  const invalidateConnections = async (requestOrgId: number) => {
+    await queryClient.invalidateQueries({
+      queryKey: QUERY_KEYS.platform.connections(requestOrgId),
+    });
+  };
+
+  const metaSyncMutation = useCoreMutation<IMetaSyncData, number>(
+    (requestOrgId) => syncMetaAdData(requestOrgId),
+    {
+      userOnSuccess: async (data, requestOrgId) => {
+        await invalidateConnections(requestOrgId);
+        const { type, message } = getPlatformSyncToast("META", data);
+        if (type === "success") toast.success(message);
+        else toast.warning(message);
+        setSyncingProvider(null);
+      },
+      userOnError: (apiError) => {
+        toast.error(apiError.message ?? "Meta 동기화에 실패했습니다.");
+        setSyncingProvider(null);
+      },
+    },
+  );
+
+  const googleSyncMutation = useCoreMutation<IGoogleSyncData, void>(
+    () => syncGoogleAdData(),
+    {
+      userOnSuccess: async (data) => {
+        if (orgId == null) return;
+        await invalidateConnections(orgId);
+        const { type, message } = getPlatformSyncToast("GOOGLE", data);
+        if (type === "success") toast.success(message);
+        else toast.warning(message);
+        setSyncingProvider(null);
+      },
+      userOnError: (apiError) => {
+        toast.error(apiError.message ?? "Google 동기화에 실패했습니다.");
+        setSyncingProvider(null);
+      },
+    },
+  );
+
+  const naverSyncMutation = useCoreMutation<
+    INaverSyncData,
+    { requestOrgId: number; body: TNaverSyncFormValues }
+  >(({ requestOrgId, body }) => syncNaverAdData(requestOrgId, body), {
+    userOnSuccess: async (data, { requestOrgId }) => {
+      await invalidateConnections(requestOrgId);
+      const { type, message } = getPlatformSyncToast("NAVER", data);
+      if (type === "success") toast.success(message);
+      else toast.warning(message);
+      setSyncingProvider(null);
+      setIsNaverSyncModalOpen(false);
+    },
+    userOnError: (apiError) => {
+      toast.error(apiError.message ?? "네이버 동기화에 실패했습니다.");
+      setSyncingProvider(null);
+    },
+  });
+
+  const isSyncPending =
+    metaSyncMutation.isPending ||
+    googleSyncMutation.isPending ||
+    naverSyncMutation.isPending;
 
   useIntegrationOAuthReturn(orgId);
 
@@ -180,6 +258,41 @@ export default function PlatformIntegrationsPage() {
     });
   };
 
+  const handleSync = (provider: TIntegrationProvider) => {
+    if (orgId == null) {
+      toast.error("워크스페이스를 선택해 주세요.");
+      return;
+    }
+
+    if (isSyncPending) return;
+
+    const item = platformConnections.find((p) => p.provider === provider);
+    if (item?.status !== "connected") return;
+
+    if (provider === "NAVER") {
+      setIsNaverSyncModalOpen(true);
+      return;
+    }
+
+    setSyncingProvider(provider);
+
+    if (provider === "META") {
+      metaSyncMutation.mutate(orgId);
+      return;
+    }
+
+    if (provider === "GOOGLE") {
+      googleSyncMutation.mutate(undefined);
+    }
+  };
+
+  const handleNaverSyncSubmit = (values: TNaverSyncFormValues) => {
+    if (orgId == null || naverSyncMutation.isPending) return;
+
+    setSyncingProvider("NAVER");
+    naverSyncMutation.mutate({ requestOrgId: orgId, body: values });
+  };
+
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
       {isLoading ? (
@@ -209,10 +322,14 @@ export default function PlatformIntegrationsPage() {
                     onConnect={() => handleConnect(item.provider)}
                     onReconnect={() => handleConnect(item.provider)}
                     onDisconnect={() => handleDisconnect(item)}
+                    onSync={() => handleSync(item.provider)}
                     isConnectLoading={
                       reconnectMutation.isPending &&
                       reconnectMutation.variables?.accountId ===
                         item.platformAccountId
+                    }
+                    isSyncLoading={
+                      syncingProvider === item.provider && isSyncPending
                     }
                   />
                 </li>
@@ -244,6 +361,17 @@ export default function PlatformIntegrationsPage() {
           orgId={orgId}
           mode={naverModalMode}
           initialCustomerId={naverCustomerId}
+        />
+      ) : null}
+      {orgId != null ? (
+        <NaverSyncModal
+          isOpen={isNaverSyncModalOpen}
+          onClose={() => {
+            if (naverSyncMutation.isPending) return;
+            setIsNaverSyncModalOpen(false);
+          }}
+          onSubmit={handleNaverSyncSubmit}
+          isLoading={naverSyncMutation.isPending}
         />
       ) : null}
       <PlatformDisconnectModal

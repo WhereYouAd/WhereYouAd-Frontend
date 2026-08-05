@@ -1,4 +1,5 @@
 import { memo, type ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
 import type {
@@ -16,6 +17,7 @@ import {
 import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 
+import SyncIcon from "@/assets/icon/common/sync.svg?react";
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
@@ -54,8 +56,13 @@ type TProps = IPlatformConnectionItem & {
   onConnect?: () => void;
   onReconnect?: () => void;
   onDisconnect?: () => void;
+  onSync?: () => void;
   isConnectLoading?: boolean;
+  isSyncLoading?: boolean;
 };
+
+const SYNC_LINK_CLASS =
+  "inline-flex shrink-0 items-center gap-1 font-body2 text-text-muted transition-colors hover:text-primary-400 disabled:cursor-wait disabled:opacity-50";
 
 function PlatformConnectionMeta({
   status,
@@ -63,6 +70,8 @@ function PlatformConnectionMeta({
   externalAccountId,
   platformAccountId,
   tokenExpireAt,
+  onSync,
+  isSyncLoading = false,
 }: Pick<
   IPlatformConnectionItem,
   | "status"
@@ -70,7 +79,10 @@ function PlatformConnectionMeta({
   | "externalAccountId"
   | "platformAccountId"
   | "tokenExpireAt"
->) {
+> & {
+  onSync?: () => void;
+  isSyncLoading?: boolean;
+}) {
   const syncedLabel = formatConnectionDateTime(syncedAt);
   const expireLabel = formatConnectionDate(tokenExpireAt);
   const expireTone = getTokenExpireTone(tokenExpireAt);
@@ -117,6 +129,64 @@ function PlatformConnectionMeta({
             <span>토큰 만료 예정 · </span>
             <span className="text-text-muted/60">—</span>
           </p>
+        </>
+      ) : status === "connected" ? (
+        <>
+          <div className="flex min-w-0 items-center justify-between gap-3">
+            <p className="min-w-0 font-body2 text-text-muted">
+              <span>마지막 동기화 · </span>
+              <span className="text-text-title">{syncedLabel ?? "—"}</span>
+            </p>
+            {onSync ? (
+              <button
+                type="button"
+                onClick={onSync}
+                disabled={isSyncLoading}
+                className={SYNC_LINK_CLASS}
+              >
+                <SyncIcon
+                  className={twMerge(
+                    "h-4 w-4 shrink-0",
+                    isSyncLoading && "animate-spin",
+                  )}
+                  aria-hidden
+                />
+                {isSyncLoading ? "동기화 중..." : "동기화"}
+              </button>
+            ) : null}
+          </div>
+
+          {!syncedAt ? (
+            <p className="font-body2 text-text-muted/80">
+              아직 동기화된 데이터가 없습니다. 동기화를 진행해 주세요.
+            </p>
+          ) : null}
+
+          {externalAccountId ? (
+            <p className="min-w-0 font-body2 text-text-muted">
+              <span>연동 계정 · </span>
+              <span
+                className="truncate text-text-title"
+                title={externalAccountId}
+              >
+                {externalAccountId}
+              </span>
+            </p>
+          ) : null}
+
+          {expireLabel ? (
+            <p className="font-body2 text-text-muted">
+              <span>토큰 만료 예정 · </span>
+              <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
+                {expireLabel}
+              </span>
+            </p>
+          ) : (
+            <p className="font-body2 text-text-muted">
+              <span>토큰 만료 예정 · </span>
+              <span className="text-text-muted/60">—</span>
+            </p>
+          )}
         </>
       ) : (
         <>
@@ -169,7 +239,9 @@ function PlatformIntegrationCard({
   onConnect,
   onReconnect,
   onDisconnect,
+  onSync,
   isConnectLoading = false,
+  isSyncLoading = false,
 }: TProps) {
   const label = PLATFORM_MAP[provider] ?? provider;
   const statusLabel =
@@ -200,6 +272,8 @@ function PlatformIntegrationCard({
         externalAccountId={externalAccountId}
         platformAccountId={platformAccountId}
         tokenExpireAt={tokenExpireAt}
+        onSync={status === "connected" ? onSync : undefined}
+        isSyncLoading={isSyncLoading}
       />
 
       {status === "error" && errorMessage ? (
@@ -252,6 +326,7 @@ function PlatformIntegrationCard({
                 size="big"
                 className="min-w-0 flex-1"
                 onClick={onReconnect}
+                disabled={isSyncLoading}
               >
                 재연동
               </Button>
@@ -261,6 +336,7 @@ function PlatformIntegrationCard({
                 size="big"
                 className="min-w-0 flex-1"
                 onClick={onDisconnect}
+                disabled={isSyncLoading}
               >
                 연동 해제
               </Button>
