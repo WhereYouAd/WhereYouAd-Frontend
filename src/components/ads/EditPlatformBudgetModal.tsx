@@ -177,9 +177,9 @@ export default function EditPlatformBudgetModal({
       disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start">
-        <h2 className="mb-2 font-heading3 text-text-title">
+        <p aria-hidden className="mb-2 font-heading3 text-text-title">
           {PROVIDER_LABEL[budget.providerType]} 예산 수정
-        </h2>
+        </p>
         {budget.adCampaignName ? (
           <p className="mb-1 max-w-full truncate font-body2 text-text-muted">
             {budget.adCampaignName}
