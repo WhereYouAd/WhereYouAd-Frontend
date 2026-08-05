@@ -1,8 +1,17 @@
-/** Meta / Google 예산 수정 요청 */
-export interface IMetaGoogleBudgetUpdateRequest {
-  dailyBudget?: number;
-  lifetimeBudget?: number;
+/** Meta / Google 일일 예산 수정 요청 */
+export interface IMetaGoogleDailyBudgetUpdateRequest {
+  dailyBudget: number;
 }
+
+/** Meta / Google 총 예산 수정 요청 */
+export interface IMetaGoogleLifetimeBudgetUpdateRequest {
+  lifetimeBudget: number;
+}
+
+/** Meta / Google 예산 수정 요청 — daily / lifetime 중 하나만 */
+export type TMetaGoogleBudgetUpdateRequest =
+  | IMetaGoogleDailyBudgetUpdateRequest
+  | IMetaGoogleLifetimeBudgetUpdateRequest;
 
 /** Naver 예산 수정 요청 */
 export interface INaverBudgetUpdateRequest {

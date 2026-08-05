@@ -1,8 +1,8 @@
 import type {
   IMetaGoogleBudgetUpdateData,
-  IMetaGoogleBudgetUpdateRequest,
   INaverBudgetUpdateData,
   INaverBudgetUpdateRequest,
+  TMetaGoogleBudgetUpdateRequest,
 } from "@/types/ads/budget";
 import type { ICommonResponse } from "@/types/common/common";
 
@@ -15,7 +15,7 @@ import { axiosInstance } from "@/lib/axiosInstance";
  */
 export async function updateMetaCampaignBudget(
   adCampaignId: number,
-  body: IMetaGoogleBudgetUpdateRequest,
+  body: TMetaGoogleBudgetUpdateRequest,
 ): Promise<IMetaGoogleBudgetUpdateData> {
   const { data } = await axiosInstance.patch<
     ICommonResponse<IMetaGoogleBudgetUpdateData>
@@ -44,7 +44,7 @@ export async function updateNaverCampaignBudget(
  */
 export async function updateGoogleCampaignBudget(
   adCampaignId: number,
-  body: IMetaGoogleBudgetUpdateRequest,
+  body: TMetaGoogleBudgetUpdateRequest,
 ): Promise<IMetaGoogleBudgetUpdateData> {
   const { data } = await axiosInstance.patch<
     ICommonResponse<IMetaGoogleBudgetUpdateData>

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 import type {
-  IMetaGoogleBudgetUpdateRequest,
   INaverBudgetUpdateRequest,
+  TMetaGoogleBudgetUpdateRequest,
   TPlatformBudgetType,
 } from "@/types/ads/budget";
 import type { IPlatformProjectBudget } from "@/types/ads/campaign";
@@ -108,7 +108,7 @@ export function canSubmitPlatformBudgetEdit(
 export function buildMetaGoogleBudgetPayload(
   activeBudgetType: TPlatformBudgetType,
   values: { dailyBudget?: number; lifetimeBudget?: number },
-): IMetaGoogleBudgetUpdateRequest {
+): TMetaGoogleBudgetUpdateRequest {
   if (activeBudgetType === "DAILY") {
     return { dailyBudget: values.dailyBudget! };
   }
