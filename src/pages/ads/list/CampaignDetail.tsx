@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 
-import type { TPlatform } from "@/types/ads/campaign";
+import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
 
 import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
 import {
@@ -12,9 +12,11 @@ import {
 import { useAdList } from "@/hooks/ads/useAdList";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useUpdateAdStatus } from "@/hooks/ads/useUpdateAdStatus";
 
 import AdListTable from "@/components/ads/AdListTable";
 import CampaignPlatformSection from "@/components/ads/CampaignPlatformSection";
+import EditPlatformBudgetModal from "@/components/ads/EditPlatformBudgetModal";
 import {
   CampaignDetailAdsSectionSkeleton,
   CampaignDetailPageSkeleton,
@@ -27,7 +29,6 @@ import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { updateAdStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 
@@ -60,7 +61,11 @@ export default function CampaignDetail() {
 
   const { data, isLoading } = useCampaignDetail();
 
-  const { ads, isAdLoading, refetchAds } = useAdList(orgIdNum, projectIdNum);
+  const { ads, isAdLoading } = useAdList(orgIdNum, projectIdNum);
+  const { mutateAsync: mutateAdStatus } = useUpdateAdStatus(
+    orgIdNum,
+    projectIdNum,
+  );
 
   const { setCampaignDetailHeaderTitle } =
     useOutletContext<TMainLayoutOutletContext>();
@@ -72,6 +77,10 @@ export default function CampaignDetail() {
   );
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
+
+  const [budgetEditTarget, setBudgetEditTarget] =
+    useState<IPlatformProjectBudget | null>(null);
+  const [isBudgetEditOpen, setIsBudgetEditOpen] = useState(false);
 
   const clearAdSelection = useCallback(() => {
     setSelectedAdIds(new Set());
@@ -138,19 +147,13 @@ export default function CampaignDetail() {
   const bulkAdPause = useControlModal({
     successMessage: "광고 소재 운영 상태가 반영되었습니다.",
     errorMessage: "중단 처리에 실패했습니다.",
-    onSuccess: () => {
-      void refetchAds();
-      clearAdSelection();
-    },
+    onSuccess: clearAdSelection,
   });
 
   const bulkAdResume = useControlModal({
     successMessage: "광고 소재 운영 상태가 반영되었습니다.",
     errorMessage: "재개 처리에 실패했습니다.",
-    onSuccess: () => {
-      void refetchAds();
-      clearAdSelection();
-    },
+    onSuccess: clearAdSelection,
   });
 
   const openAdPauseModal = () => {
@@ -362,6 +365,13 @@ export default function CampaignDetail() {
                   <CampaignPlatformSection
                     platform={platform}
                     platformBudget={budgetByPlatform.get(platform)}
+                    onEditBudget={() => {
+                      const budget = budgetByPlatform.get(platform);
+                      if (budget) {
+                        setBudgetEditTarget(budget);
+                        setIsBudgetEditOpen(true);
+                      }
+                    }}
                   />
                   {platformAds.length > 0 ? (
                     <ErrorBoundary
@@ -372,7 +382,6 @@ export default function CampaignDetail() {
                         embedded
                         hidePlatformColumn
                         ads={platformAds}
-                        refetchAds={refetchAds}
                         selectedAdIds={selectedAdIds}
                         onToggleAd={toggleAd}
                         onToggleSelectAllVisible={toggleSelectAllVisible}
@@ -415,20 +424,17 @@ export default function CampaignDetail() {
           detailListTitle="중단 대상 광고"
           buttonText="중단하기"
           onConfirm={() =>
-            bulkAdPause.handleConfirm(async () => {
-              if (orgIdNum == null || projectIdNum == null) return;
-              const ids =
-                pauseScope === "all"
-                  ? adsList
-                      .filter((a) => a.status === "ON_GOING")
-                      .map((a) => a.id)
-                  : selectedOngoingIds;
-              await Promise.all(
-                ids.map((adContentId) =>
-                  updateAdStatus(orgIdNum, projectIdNum, adContentId, "PAUSED"),
-                ),
-              );
-            })
+            bulkAdPause.handleConfirm(() =>
+              mutateAdStatus({
+                adContentIds:
+                  pauseScope === "all"
+                    ? adsList
+                        .filter((a) => a.status === "ON_GOING")
+                        .map((a) => a.id)
+                    : selectedOngoingIds,
+                status: "PAUSED",
+              }),
+            )
           }
           isLoading={bulkAdPause.isLoading}
           variant="danger"
@@ -456,30 +462,36 @@ export default function CampaignDetail() {
           detailListTitle="재개 대상 광고"
           buttonText="재개하기"
           onConfirm={() =>
-            bulkAdResume.handleConfirm(async () => {
-              if (orgIdNum == null || projectIdNum == null) return;
-              const ids =
-                resumeScope === "all"
-                  ? adsList
-                      .filter((a) => a.status === "PAUSED")
-                      .map((a) => a.id)
-                  : selectedPausedIds;
-              await Promise.all(
-                ids.map((adContentId) =>
-                  updateAdStatus(
-                    orgIdNum,
-                    projectIdNum,
-                    adContentId,
-                    "ON_GOING",
-                  ),
-                ),
-              );
-            })
+            bulkAdResume.handleConfirm(() =>
+              mutateAdStatus({
+                adContentIds:
+                  resumeScope === "all"
+                    ? adsList
+                        .filter((a) => a.status === "PAUSED")
+                        .map((a) => a.id)
+                    : selectedPausedIds,
+                status: "ON_GOING",
+              }),
+            )
           }
           isLoading={bulkAdResume.isLoading}
           variant="primary"
         />
       </Modal>
+      {orgIdNum != null && projectIdNum != null ? (
+        <EditPlatformBudgetModal
+          isOpen={isBudgetEditOpen}
+          onClose={() => {
+            setIsBudgetEditOpen(false);
+          }}
+          onClosed={() => {
+            setBudgetEditTarget(null);
+          }}
+          budget={budgetEditTarget}
+          orgId={orgIdNum}
+          projectId={projectIdNum}
+        />
+      ) : null}
     </section>
   );
 }

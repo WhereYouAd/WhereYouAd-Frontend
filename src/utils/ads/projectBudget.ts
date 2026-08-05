@@ -3,9 +3,9 @@ import type {
   TPlatform,
   TProvider,
 } from "@/types/ads/campaign";
-import type { IBudgetGaugeProps, IBudgetSlice } from "@/types/dashboard/budget";
-import type { TProviderType } from "@/types/dashboard/provider";
+import type { IBudgetGaugeProps } from "@/types/dashboard/budget";
 
+import { resolveEffectivePlatformBudget } from "@/utils/ads/budgetEdit";
 import {
   buildBudgetGaugesFromSlices,
   supportsDailyBudget,
@@ -29,25 +29,18 @@ export function platformToProviderType(platform: TPlatform): TProvider {
 export function mapPlatformProjectBudgetToGauges(
   budget: IPlatformProjectBudget,
 ): IBudgetGaugeProps[] {
-  const provider = budget.providerType as TProviderType;
+  const effective = resolveEffectivePlatformBudget(budget);
 
-  const slices: IBudgetSlice[] = [
-    {
-      label: "전체 예산",
-      totalBudget: budget.lifetime.totalBudget,
-      spent: budget.lifetime.totalSpend,
-    },
-  ];
-
-  if (supportsDailyBudget(provider) && budget.daily) {
-    slices.push({
-      label: "일일 예산",
-      totalBudget: budget.daily.totalBudget,
-      spent: budget.daily.totalSpend,
-    });
-  }
-
-  return buildBudgetGaugesFromSlices(slices, { showInsight: true });
+  return buildBudgetGaugesFromSlices(
+    [
+      {
+        label: effective.label,
+        totalBudget: effective.totalBudget,
+        spent: effective.totalSpend,
+      },
+    ],
+    { showInsight: true },
+  );
 }
 
 /** API 미준비 시 dev placeholder */
@@ -66,11 +59,21 @@ export function buildPlaceholderPlatformBudgets(
       lifetime: { totalBudget, totalSpend },
     };
 
-    if (supportsDailyBudget(providerType)) {
+    if (providerType === "NAVER") {
       item.daily = {
         totalBudget: 50_000,
         totalSpend: 12_000 + index * 2_000,
       };
+      item.naverConnectionId = 1;
+      item.naverCampaignId = `mock-campaign-${index}`;
+      item.canEditBudget = true;
+    } else if (supportsDailyBudget(providerType)) {
+      item.daily = {
+        totalBudget: 50_000,
+        totalSpend: 12_000 + index * 2_000,
+      };
+      item.activeBudgetType = index % 2 === 0 ? "DAILY" : "LIFETIME";
+      item.canEditBudget = true;
     }
 
     return item;
