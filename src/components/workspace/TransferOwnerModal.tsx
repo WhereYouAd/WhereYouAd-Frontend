@@ -52,7 +52,7 @@ export default function TransferOwnerModal({
       title="조직 소유권 양도"
       disableOverlayClick={isLoading}
     >
-      <div className="px-2 py-4">
+      <div className="px-2 py-4 tablet:px-0">
         <div className="mb-5 flex justify-center">
           <WarnIcon className="h-12 w-12 text-info-yellow" aria-hidden="true" />
         </div>
@@ -63,7 +63,7 @@ export default function TransferOwnerModal({
         <p className="mb-1 text-center font-body1 text-text-auth-sub">
           현재 소유자: {currentOwnerName}
         </p>
-        <p className="mb-6 text-center font-body2 text-text-muted">
+        <p className="mb-6 text-center font-body2 text-text-muted break-keep text-pretty">
           양도 대상은 같은 조직의 관리자(ADMIN)만 선택할 수 있습니다.
           <br />
           양도 후에는 되돌릴 수 없으며, 새 소유자만 다시 양도 가능합니다.
@@ -85,7 +85,7 @@ export default function TransferOwnerModal({
             </p>
           )}
         </div>
-        <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-3 tablet:flex-col">
           <Button
             type="button"
             variant="outline"

@@ -118,9 +118,9 @@ export default function TimelineBar({
         <span className="truncate font-caption text-text-muted">
           {bar.subtitle}
         </span>
-        <span className="flex items-center gap-1 font-caption text-text-body">
+        <span className="flex min-w-0 items-center gap-1 font-caption text-text-body">
           <span className={twMerge("h-1.5 w-1.5 rounded-full", status.dot)} />
-          {status.label}
+          <span className="truncate">{status.label}</span>
         </span>
       </div>
       <div

@@ -277,7 +277,7 @@ export default function WorkspaceSetting() {
           resetKeys={[detail]}
         >
           <>
-            <Card className="p-8">
+            <Card className="p-8 tablet:p-6">
               <h2 className="font-heading3 text-text-title">조직 기본 정보</h2>
               <div className="mt-6 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
                 <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
@@ -400,10 +400,13 @@ export default function WorkspaceSetting() {
                     <p className="mt-2 font-body1 text-text-auth-sub">
                       현재 소유자: {currentOwner?.name ?? myName ?? "-"}
                     </p>
-                    <p className="mt-1 font-body2 text-text-muted">
+                    <p className="mt-1 font-body2 text-text-muted break-keep">
                       소유권은 같은 조직의 관리자(ADMIN)에게만 양도할 수
-                      있습니다. 양도 후에야 멤버가 있는 조직의 소유자가 회원
-                      탈퇴를 진행할 수 있습니다.
+                      있습니다.
+                    </p>
+                    <p className="mt-1 font-body2 text-text-muted break-keep">
+                      양도 후에야 멤버가 있는 조직의 소유자가 회원 탈퇴를 진행할
+                      수 있습니다.
                     </p>
                   </div>
                   <Button

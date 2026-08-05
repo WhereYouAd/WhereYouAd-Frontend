@@ -99,22 +99,22 @@ export default function InviteMemberModal({
       title="팀원 초대하기"
       className="w-full max-w-190 overflow-hidden"
     >
-      <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6">
-        <div className="flex justify-between items-center px-8 py-6 pb-3 shrink-0">
+      <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6 tablet:px-0 tablet:py-4">
+        <div className="flex justify-between items-center px-8 py-6 pb-3 shrink-0 tablet:px-5 tablet:flex-col tablet:items-stretch tablet:gap-3">
           <p className="font-heading4 text-text-title">팀원 초대하기</p>
           <button
             type="button"
             aria-label="팀원 초대 링크 복사 버튼"
             onClick={handleCopyLink}
-            className="flex items-center gap-2 rounded-lg px-2 py-1 text-primary-500 transition-opacity hover:opacity-80"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 text-primary-500 transition-opacity hover:opacity-80 tablet:self-end"
           >
             <CopyIcon />
             <span className="font-body1">링크 복사</span>
           </button>
         </div>
-        <div className="px-8 py-4 shrink-0">
-          <div className="flex items-center gap-7">
-            <div className="flex-1">
+        <div className="px-8 py-4 shrink-0 tablet:px-5">
+          <div className="flex items-center gap-7 tablet:flex-col tablet:items-stretch tablet:gap-3">
+            <div className="flex-1 tablet:w-full">
               <Input
                 value={form.email}
                 placeholder="이메일을 입력해서 팀원을 초대하세요"
@@ -129,13 +129,13 @@ export default function InviteMemberModal({
               size="big"
               onClick={handleInvite}
               disabled={isInviteDisabled}
-              className="min-w-22"
+              className="min-w-22 tablet:w-full"
             >
               {inviteMutation.isPending ? "초대 중..." : "초대"}
             </Button>
           </div>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-8 py-4">
+        <div className="min-h-0 flex-1 overflow-y-auto px-8 py-4 tablet:px-5">
           <ul>
             {inviteItems.map((item) => {
               if (item.inviteStatus === "PENDING") {

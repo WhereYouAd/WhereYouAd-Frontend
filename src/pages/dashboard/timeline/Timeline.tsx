@@ -285,9 +285,9 @@ export default function Timeline() {
         FallbackComponent={AreaErrorFallback}
         resetKeys={[timelineList, viewUnit, periodIndex]}
       >
-        <div className="flex min-h-0 flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
-          <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5">
-            <div className="flex items-center justify-between gap-8">
+        <div className="flex min-h-full flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
+          <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5 tablet:px-4 tablet:py-4 tablet:gap-3">
+            <div className="flex items-center justify-between gap-8 tablet:flex-col tablet:items-stretch tablet:gap-3">
               <TimelineStatusLegend className="min-w-0 flex-1" />
               <Button
                 type="button"
@@ -305,17 +305,18 @@ export default function Timeline() {
                   "bg-primary-400/20 text-primary-500",
                   "font-body2 shadow-Soft",
                   "transition-ui-smooth hover:bg-primary-500/30",
+                  "tablet:w-full tablet:justify-center",
                 )}
               >
                 타임라인 생성
               </Button>
             </div>
 
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 tablet:grid-cols-1 tablet:gap-3">
               <TimelineViewUnitSegment
                 viewUnit={viewUnit}
                 onViewUnitChange={handleViewUnitChange}
-                className="justify-self-start"
+                className="justify-self-start tablet:justify-self-stretch tablet:w-full"
               />
               <TimelinePeriodNav
                 periodLabel={periodLabel}
@@ -324,7 +325,7 @@ export default function Timeline() {
                 onGoToToday={handleGoToToday}
                 className="justify-self-center"
               />
-              <div className="flex items-center justify-self-end gap-3">
+              <div className="flex items-center justify-self-end gap-3 tablet:justify-self-end">
                 <span
                   className={TOOLBAR_ACTION_CLASS}
                   title="준비 중"

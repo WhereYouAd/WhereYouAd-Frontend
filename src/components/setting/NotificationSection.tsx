@@ -85,7 +85,7 @@ export default function NotificationSection({
   const isDiscordPending = pendingOrgAction === "discord";
   const isAnyOrgPending = pendingOrgAction != null;
   return (
-    <Card className="p-8 tablet:p-10">
+    <Card className="p-8">
       <header className="mb-7 flex items-center gap-4">
         <BellIcon />
         <h2 className="font-heading4 text-text-title">알림 설정</h2>
@@ -159,7 +159,7 @@ export default function NotificationSection({
             </div>
           </div>
 
-          <div className="flex items-center gap-4 py-5">
+          <div className="flex items-center gap-4 py-5 tablet:flex-col tablet:items-stretch">
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <SlackIcon className={rowIconClass} />
               <div className="min-w-0">
@@ -172,7 +172,7 @@ export default function NotificationSection({
               </div>
             </div>
             {slackConnected ? (
-              <div className="flex shrink-0 items-center gap-3">
+              <div className="flex shrink-0 items-center gap-3 tablet:justify-between">
                 {slackEnabled && !channelDisabled && (
                   <Badge variant="infoBlue">켜짐</Badge>
                 )}
@@ -194,7 +194,7 @@ export default function NotificationSection({
                 </Button>
               </div>
             ) : (
-              <>
+              <div className="flex shrink-0 items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
                 <Input
                   aria-label="슬랙 Webhook URL"
                   placeholder="https://hooks.slack.com/..."
@@ -203,7 +203,7 @@ export default function NotificationSection({
                   error={!!slackWebhookError}
                   helperText={slackWebhookError}
                   disabled={channelDisabled || isAnyOrgPending}
-                  wrapperClassName="w-1/4 shrink-0"
+                  wrapperClassName="w-1/4 shrink-0 tablet:w-full"
                   containerClassName="h-10 rounded-lg"
                   inputClassName="px-3 font-body2"
                 />
@@ -211,7 +211,7 @@ export default function NotificationSection({
                   variant="outline"
                   size="small"
                   type="button"
-                  className="shrink-0"
+                  className="shrink-0 tablet:w-full"
                   disabled={
                     channelDisabled ||
                     isAnyOrgPending ||
@@ -222,7 +222,7 @@ export default function NotificationSection({
                 >
                   연동
                 </Button>
-              </>
+              </div>
             )}
           </div>
 
@@ -239,7 +239,7 @@ export default function NotificationSection({
               </div>
             </div>
             {discordConnected ? (
-              <div className="flex shrink-0 items-center gap-3">
+              <div className="flex shrink-0 items-center gap-3 tablet:justify-between">
                 {discordEnabled && !channelDisabled && (
                   <Badge variant="infoBlue">켜짐</Badge>
                 )}
@@ -261,7 +261,7 @@ export default function NotificationSection({
                 </Button>
               </div>
             ) : (
-              <>
+              <div className="flex shrink-0 items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
                 <Input
                   aria-label="디스코드 Webhook URL"
                   placeholder="https://discord.com/api/webhooks/..."
@@ -270,7 +270,7 @@ export default function NotificationSection({
                   error={!!discordWebhookError}
                   helperText={discordWebhookError}
                   disabled={channelDisabled || isAnyOrgPending}
-                  wrapperClassName="w-1/4 shrink-0"
+                  wrapperClassName="w-1/4 shrink-0 tablet:w-full"
                   containerClassName="h-10 rounded-lg"
                   inputClassName="px-3 font-body2"
                 />
@@ -278,7 +278,7 @@ export default function NotificationSection({
                   variant="outline"
                   size="small"
                   type="button"
-                  className="shrink-0"
+                  className="shrink-0 tablet:w-full"
                   disabled={
                     channelDisabled ||
                     isAnyOrgPending ||
@@ -289,7 +289,7 @@ export default function NotificationSection({
                 >
                   연동
                 </Button>
-              </>
+              </div>
             )}
           </div>
         </div>
