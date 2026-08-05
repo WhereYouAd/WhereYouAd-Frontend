@@ -80,6 +80,7 @@ export default function CampaignDetail() {
 
   const [budgetEditTarget, setBudgetEditTarget] =
     useState<IPlatformProjectBudget | null>(null);
+  const [isBudgetEditOpen, setIsBudgetEditOpen] = useState(false);
 
   const clearAdSelection = useCallback(() => {
     setSelectedAdIds(new Set());
@@ -366,7 +367,10 @@ export default function CampaignDetail() {
                     platformBudget={budgetByPlatform.get(platform)}
                     onEditBudget={() => {
                       const budget = budgetByPlatform.get(platform);
-                      if (budget) setBudgetEditTarget(budget);
+                      if (budget) {
+                        setBudgetEditTarget(budget);
+                        setIsBudgetEditOpen(true);
+                      }
                     }}
                   />
                   {platformAds.length > 0 ? (
@@ -476,11 +480,14 @@ export default function CampaignDetail() {
       </Modal>
       {orgIdNum != null && projectIdNum != null ? (
         <EditPlatformBudgetModal
-          isOpen={!!budgetEditTarget}
+          isOpen={isBudgetEditOpen}
           onClose={() => {
+            setIsBudgetEditOpen(false);
+          }}
+          onClosed={() => {
             setBudgetEditTarget(null);
           }}
-          budget={budgetEditTarget ?? null}
+          budget={budgetEditTarget}
           orgId={orgIdNum}
           projectId={projectIdNum}
         />

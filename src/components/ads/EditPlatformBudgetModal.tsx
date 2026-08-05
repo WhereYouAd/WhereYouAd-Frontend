@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import {
   Controller,
   type Resolver,
@@ -97,6 +97,7 @@ const PROVIDER_LABEL: Record<IPlatformProjectBudget["providerType"], string> = {
 interface IEditPlatformBudgetModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onClosed?: () => void;
   budget: IPlatformProjectBudget | null;
   orgId: number;
   projectId: number;
@@ -105,16 +106,24 @@ interface IEditPlatformBudgetModalProps {
 export default function EditPlatformBudgetModal({
   isOpen,
   onClose,
+  onClosed,
   budget,
   orgId,
   projectId,
 }: IEditPlatformBudgetModalProps) {
+  const budgetRef = useRef<IPlatformProjectBudget | null>(null);
+  if (budget) budgetRef.current = budget;
+
+  const activeBudget = budget ?? budgetRef.current;
+
   const { mutate, isPending } = useUpdatePlatformBudget(orgId, projectId);
 
   const schema = useMemo(
     () =>
-      budget ? resolveBudgetEditFormSchema(budget) : dailyBudgetFormSchema,
-    [budget],
+      activeBudget
+        ? resolveBudgetEditFormSchema(activeBudget)
+        : dailyBudgetFormSchema,
+    [activeBudget],
   );
 
   const {
@@ -127,7 +136,9 @@ export default function EditPlatformBudgetModal({
     resolver: zodResolver(schema) as Resolver<TBudgetEditModalFormValues>,
   });
 
-  const fieldMeta = budget ? resolveBudgetEditFieldMeta(budget) : null;
+  const fieldMeta = activeBudget
+    ? resolveBudgetEditFieldMeta(activeBudget)
+    : null;
   const budgetFieldName = fieldMeta?.fieldName ?? "dailyBudget";
   const fieldError =
     budgetFieldName === "lifetimeBudget"
@@ -135,9 +146,9 @@ export default function EditPlatformBudgetModal({
       : errors.dailyBudget;
 
   useEffect(() => {
-    if (!isOpen || !budget) return;
-    reset(resolveBudgetEditDefaultValues(budget));
-  }, [isOpen, budget, reset]);
+    if (!isOpen || !activeBudget) return;
+    reset(resolveBudgetEditDefaultValues(activeBudget));
+  }, [isOpen, activeBudget, reset]);
 
   const handleClose = () => {
     if (isPending) return;
@@ -145,9 +156,9 @@ export default function EditPlatformBudgetModal({
   };
 
   const onSubmit: SubmitHandler<TBudgetEditModalFormValues> = (values) => {
-    if (!budget) return;
+    if (!activeBudget) return;
 
-    mutate(buildUpdatePlatformBudgetVariables(budget, values), {
+    mutate(buildUpdatePlatformBudgetVariables(activeBudget, values), {
       onSuccess: () => {
         toast.success("예산이 수정되었습니다.");
         onClose();
@@ -158,31 +169,33 @@ export default function EditPlatformBudgetModal({
     });
   };
 
-  if (!budget) return null;
+  if (!activeBudget) return null;
 
   const currentBudgetAmount =
     fieldMeta?.fieldName === "lifetimeBudget"
-      ? budget.lifetime.totalBudget
-      : budget.providerType === "NAVER"
-        ? (budget.daily?.totalBudget ?? 0)
-        : (budget.daily?.totalBudget ?? budget.lifetime.totalBudget);
+      ? activeBudget.lifetime.totalBudget
+      : activeBudget.providerType === "NAVER"
+        ? (activeBudget.daily?.totalBudget ?? 0)
+        : (activeBudget.daily?.totalBudget ??
+          activeBudget.lifetime.totalBudget);
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
+      onExitComplete={onClosed}
       size="md"
       padding="lg"
-      title={`${PROVIDER_LABEL[budget.providerType]} 예산 수정`}
+      title={`${PROVIDER_LABEL[activeBudget.providerType]} 예산 수정`}
       disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start">
         <p aria-hidden className="mb-2 font-heading3 text-text-title">
-          {PROVIDER_LABEL[budget.providerType]} 예산 수정
+          {PROVIDER_LABEL[activeBudget.providerType]} 예산 수정
         </p>
-        {budget.adCampaignName ? (
+        {activeBudget.adCampaignName ? (
           <p className="mb-1 max-w-full truncate font-body2 text-text-muted">
-            {budget.adCampaignName}
+            {activeBudget.adCampaignName}
           </p>
         ) : null}
         <p className="mb-5 font-body2 text-text-muted">
@@ -190,7 +203,7 @@ export default function EditPlatformBudgetModal({
         </p>
 
         <form
-          key={`${budget.providerType}-${budget.activeBudgetType ?? "daily"}`}
+          key={`${activeBudget.providerType}-${activeBudget.activeBudgetType ?? "daily"}`}
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-8"
           noValidate

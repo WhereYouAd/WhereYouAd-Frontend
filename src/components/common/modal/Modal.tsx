@@ -46,6 +46,7 @@ export interface IModalProps {
   hideCloseButton?: boolean;
   disableOverlayClick?: boolean;
   title?: string;
+  onExitComplete?: () => void;
 }
 
 const easeOut = [0, 0, 0.2, 1] as const;
@@ -61,6 +62,7 @@ function Modal({
   hideCloseButton = false,
   disableOverlayClick = false,
   title,
+  onExitComplete,
 }: IModalProps) {
   const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -87,7 +89,8 @@ function Modal({
   const handleExitComplete = useCallback(() => {
     setScrollLocked(false);
     previousActiveElement.current?.focus();
-  }, []);
+    onExitComplete?.();
+  }, [onExitComplete]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
