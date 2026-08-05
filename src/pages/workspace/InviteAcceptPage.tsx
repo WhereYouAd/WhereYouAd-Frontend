@@ -198,16 +198,16 @@ export default function InviteAcceptPage() {
 
   if (uiStatus === "needLogin") {
     return (
-      <div
-        role="status"
-        aria-live="polite"
-        className="relative flex h-screen w-full flex-col items-center justify-center gap-5 bg-surface-100"
-      >
+      <div className="relative flex h-screen w-full flex-col items-center justify-center gap-5 bg-surface-100">
         <span
           className="h-12 w-12 animate-spin rounded-full border-4 border-primary-400 border-t-transparent"
           aria-hidden
         />
-        <p className="text-center font-heading3 text-text-title">
+        <p
+          role="status"
+          aria-live="polite"
+          className="text-center font-heading3 text-text-title"
+        >
           로그인이 필요합니다
         </p>
         <p className="text-center font-body1 text-text-muted">
