@@ -12,10 +12,12 @@ export interface IPlatformProjectBudget {
   adCampaignId?: number;
   adCampaignName?: string;
   lifetime: IBudgetAmountSlice;
+  /** Meta / Google — activeBudgetType에 따라 표시
+   *  Naver — 일일 예산 */
   daily?: IBudgetAmountSlice | null;
   /** Meta / Google — 기존 daily / lifetime 중 어떤 유형인지 */
   activeBudgetType?: TPlatformBudgetType;
-  /** Naver — /api/naver/{connectionId}/campaigns/{campaignId}/budget */
+  /** Naver 일일 예산 수정 — /api/naver/{connectionId}/campaigns/{campaignId}/budget */
   naverConnectionId?: number;
   naverCampaignId?: string;
   /** 소유자 등 수정 가능 여부 */

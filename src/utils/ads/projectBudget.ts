@@ -35,16 +35,17 @@ export function mapPlatformProjectBudgetToGauges(
   return buildBudgetGaugesFromSlices([slice], { showInsight: true });
 }
 
-/** Meta/Google: activeBudgetType 기준 1개 · Naver: 전체 예산만 */
+/** Meta/Google: activeBudgetType 기준 1개 · Naver: 일일 예산만 */
 function resolvePlatformBudgetDisplaySlice(
   budget: IPlatformProjectBudget,
   provider: TProviderType,
 ): IBudgetSlice {
-  if (!supportsDailyBudget(provider)) {
+  if (provider === "NAVER") {
+    const daily = budget.daily ?? { totalBudget: 0, totalSpend: 0 };
     return {
-      label: "전체 예산",
-      totalBudget: budget.lifetime.totalBudget,
-      spent: budget.lifetime.totalSpend,
+      label: "일일 예산",
+      totalBudget: daily.totalBudget,
+      spent: daily.totalSpend,
     };
   }
 
@@ -82,15 +83,22 @@ export function buildPlaceholderPlatformBudgets(
       lifetime: { totalBudget, totalSpend },
     };
 
-    if (supportsDailyBudget(providerType)) {
+    if (providerType === "NAVER") {
+      item.daily = {
+        totalBudget: 50_000,
+        totalSpend: 12_000 + index * 2_000,
+      };
+      item.naverConnectionId = 1;
+      item.naverCampaignId = `mock-campaign-${index}`;
+      item.canEditBudget = true;
+    } else if (supportsDailyBudget(providerType)) {
       item.daily = {
         totalBudget: 50_000,
         totalSpend: 12_000 + index * 2_000,
       };
       item.activeBudgetType = index % 2 === 0 ? "DAILY" : "LIFETIME";
+      item.canEditBudget = true;
     }
-
-    item.canEditBudget = providerType !== "NAVER";
 
     return item;
   });

@@ -163,7 +163,9 @@ export default function EditPlatformBudgetModal({
   const currentBudgetAmount =
     fieldMeta?.fieldName === "lifetimeBudget"
       ? budget.lifetime.totalBudget
-      : (budget.daily?.totalBudget ?? budget.lifetime.totalBudget);
+      : budget.providerType === "NAVER"
+        ? (budget.daily?.totalBudget ?? 0)
+        : (budget.daily?.totalBudget ?? budget.lifetime.totalBudget);
 
   return (
     <Modal

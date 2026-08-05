@@ -91,12 +91,13 @@ export function canSubmitPlatformBudgetEdit(
       return { ok: true };
 
     case "NAVER":
-      //TODO: BE 확인 후 수정 필요
-      return { ok: false, reason: "NOT_EDITABLE" };
-    //   if (!budget.naverConnectionId || !budget.naverCampaignId) {
-    //     return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
-    //   }
-    //   return { ok: true };
+      if (!budget.naverConnectionId || !budget.naverCampaignId) {
+        return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
+      }
+      if (!budget.daily) {
+        return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
+      }
+      return { ok: true };
 
     default:
       return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
@@ -160,6 +161,10 @@ export function resolveBudgetEditDefaultValues(
 
   if (fieldName === "lifetimeBudget") {
     return { lifetimeBudget: budget.lifetime.totalBudget };
+  }
+
+  if (budget.providerType === "NAVER") {
+    return { dailyBudget: budget.daily?.totalBudget ?? 0 };
   }
 
   const dailyAmount = budget.daily?.totalBudget ?? budget.lifetime.totalBudget;
