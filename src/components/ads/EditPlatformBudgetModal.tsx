@@ -16,6 +16,7 @@ import {
   resolveBudgetEditDefaultValues,
   resolveBudgetEditFieldMeta,
   resolveBudgetEditFormSchema,
+  resolveEffectivePlatformBudget,
   type TBudgetEditModalFormValues,
 } from "@/utils/ads/budgetEdit";
 import {
@@ -139,6 +140,9 @@ export default function EditPlatformBudgetModal({
   const fieldMeta = activeBudget
     ? resolveBudgetEditFieldMeta(activeBudget)
     : null;
+  const effectiveBudget = activeBudget
+    ? resolveEffectivePlatformBudget(activeBudget)
+    : null;
   const budgetFieldName = fieldMeta?.fieldName ?? "dailyBudget";
   const fieldError =
     budgetFieldName === "lifetimeBudget"
@@ -171,13 +175,7 @@ export default function EditPlatformBudgetModal({
 
   if (!activeBudget) return null;
 
-  const currentBudgetAmount =
-    fieldMeta?.fieldName === "lifetimeBudget"
-      ? activeBudget.lifetime.totalBudget
-      : activeBudget.providerType === "NAVER"
-        ? (activeBudget.daily?.totalBudget ?? 0)
-        : (activeBudget.daily?.totalBudget ??
-          activeBudget.lifetime.totalBudget);
+  const currentBudgetAmount = effectiveBudget?.totalBudget ?? 0;
 
   return (
     <Modal
@@ -203,7 +201,7 @@ export default function EditPlatformBudgetModal({
         </p>
 
         <form
-          key={`${activeBudget.providerType}-${activeBudget.activeBudgetType ?? "daily"}`}
+          key={`${activeBudget.providerType}-${effectiveBudget?.activeBudgetType ?? "daily"}`}
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-8"
           noValidate

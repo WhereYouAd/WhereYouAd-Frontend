@@ -3,9 +3,9 @@ import type {
   TPlatform,
   TProvider,
 } from "@/types/ads/campaign";
-import type { IBudgetGaugeProps, IBudgetSlice } from "@/types/dashboard/budget";
-import type { TProviderType } from "@/types/dashboard/provider";
+import type { IBudgetGaugeProps } from "@/types/dashboard/budget";
 
+import { resolveEffectivePlatformBudget } from "@/utils/ads/budgetEdit";
 import {
   buildBudgetGaugesFromSlices,
   supportsDailyBudget,
@@ -29,42 +29,18 @@ export function platformToProviderType(platform: TPlatform): TProvider {
 export function mapPlatformProjectBudgetToGauges(
   budget: IPlatformProjectBudget,
 ): IBudgetGaugeProps[] {
-  const provider = budget.providerType as TProviderType;
-  const slice = resolvePlatformBudgetDisplaySlice(budget, provider);
+  const effective = resolveEffectivePlatformBudget(budget);
 
-  return buildBudgetGaugesFromSlices([slice], { showInsight: true });
-}
-
-/** Meta/Google: activeBudgetType 기준 1개 · Naver: 일일 예산만 */
-function resolvePlatformBudgetDisplaySlice(
-  budget: IPlatformProjectBudget,
-  provider: TProviderType,
-): IBudgetSlice {
-  if (provider === "NAVER") {
-    const daily = budget.daily ?? { totalBudget: 0, totalSpend: 0 };
-    return {
-      label: "일일 예산",
-      totalBudget: daily.totalBudget,
-      spent: daily.totalSpend,
-    };
-  }
-
-  const activeType =
-    budget.activeBudgetType ?? (budget.daily ? "DAILY" : "LIFETIME");
-
-  if (activeType === "DAILY" && budget.daily) {
-    return {
-      label: "일일 예산",
-      totalBudget: budget.daily.totalBudget,
-      spent: budget.daily.totalSpend,
-    };
-  }
-
-  return {
-    label: "전체 예산",
-    totalBudget: budget.lifetime.totalBudget,
-    spent: budget.lifetime.totalSpend,
-  };
+  return buildBudgetGaugesFromSlices(
+    [
+      {
+        label: effective.label,
+        totalBudget: effective.totalBudget,
+        spent: effective.totalSpend,
+      },
+    ],
+    { showInsight: true },
+  );
 }
 
 /** API 미준비 시 dev placeholder */

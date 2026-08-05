@@ -62,6 +62,55 @@ export type TBudgetEditModalFormValues = {
   lifetimeBudget?: number;
 };
 
+/** 게이지/모달/payload 공통 — 실제 표시·수정할 예산 필드 */
+export interface IEffectivePlatformBudget {
+  activeBudgetType: TPlatformBudgetType;
+  fieldName: "dailyBudget" | "lifetimeBudget";
+  label: "일일 예산" | "전체 예산";
+  totalBudget: number;
+  totalSpend: number;
+}
+
+/**
+ * activeBudgetType + daily/lifetime 데이터 존재 여부로 실제 활성 예산 결정
+ * — DAILY인데 daily 없으면 LIFETIME fallback
+ */
+export function resolveEffectivePlatformBudget(
+  budget: IPlatformProjectBudget,
+): IEffectivePlatformBudget {
+  if (budget.providerType === "NAVER") {
+    const daily = budget.daily ?? { totalBudget: 0, totalSpend: 0 };
+    return {
+      activeBudgetType: "DAILY",
+      fieldName: "dailyBudget",
+      label: "일일 예산",
+      totalBudget: daily.totalBudget,
+      totalSpend: daily.totalSpend,
+    };
+  }
+
+  const declaredType =
+    budget.activeBudgetType ?? (budget.daily ? "DAILY" : "LIFETIME");
+
+  if (declaredType === "DAILY" && budget.daily) {
+    return {
+      activeBudgetType: "DAILY",
+      fieldName: "dailyBudget",
+      label: "일일 예산",
+      totalBudget: budget.daily.totalBudget,
+      totalSpend: budget.daily.totalSpend,
+    };
+  }
+
+  return {
+    activeBudgetType: "LIFETIME",
+    fieldName: "lifetimeBudget",
+    label: "전체 예산",
+    totalBudget: budget.lifetime.totalBudget,
+    totalSpend: budget.lifetime.totalSpend,
+  };
+}
+
 /**
  * platformBudget → API 호출 가능 여부
  * BE 필드 없거나 mock이면 ok: false → 수정 버튼 disabled
@@ -133,17 +182,14 @@ export function buildNaverBudgetPayload(
  * 모달 — provider + activeBudgetType에 맞는 zod schema
  */
 export function resolveBudgetEditFormSchema(budget: IPlatformProjectBudget) {
-  switch (budget.providerType) {
-    case "META":
-    case "GOOGLE":
-      return budget.activeBudgetType === "LIFETIME"
-        ? lifetimeBudgetFormSchema
-        : dailyBudgetFormSchema;
-    case "NAVER":
-      return naverBudgetFormSchema;
-    default:
-      return dailyBudgetFormSchema;
+  if (budget.providerType === "NAVER") {
+    return naverBudgetFormSchema;
   }
+
+  const { fieldName } = resolveEffectivePlatformBudget(budget);
+  return fieldName === "lifetimeBudget"
+    ? lifetimeBudgetFormSchema
+    : dailyBudgetFormSchema;
 }
 
 /** 모달 input — 필드명·라벨 (게이지 라벨과 동일) */
@@ -151,32 +197,21 @@ export function resolveBudgetEditFieldMeta(budget: IPlatformProjectBudget): {
   fieldName: "dailyBudget" | "lifetimeBudget";
   label: string;
 } {
-  if (budget.providerType === "NAVER") {
-    return { fieldName: "dailyBudget", label: "일일 예산" };
-  }
-  if (budget.activeBudgetType === "LIFETIME") {
-    return { fieldName: "lifetimeBudget", label: "전체 예산" };
-  }
-  return { fieldName: "dailyBudget", label: "일일 예산" };
+  const { fieldName, label } = resolveEffectivePlatformBudget(budget);
+  return { fieldName, label };
 }
 
 /** platformBudget → 폼 defaultValues */
 export function resolveBudgetEditDefaultValues(
   budget: IPlatformProjectBudget,
 ): TBudgetEditModalFormValues {
-  const { fieldName } = resolveBudgetEditFieldMeta(budget);
+  const { fieldName, totalBudget } = resolveEffectivePlatformBudget(budget);
 
   if (fieldName === "lifetimeBudget") {
-    return { lifetimeBudget: budget.lifetime.totalBudget };
+    return { lifetimeBudget: totalBudget };
   }
 
-  if (budget.providerType === "NAVER") {
-    return { dailyBudget: budget.daily?.totalBudget ?? 0 };
-  }
-
-  const dailyAmount = budget.daily?.totalBudget ?? budget.lifetime.totalBudget;
-
-  return { dailyBudget: dailyAmount };
+  return { dailyBudget: totalBudget };
 }
 
 /** budget + form values → mutation variables */
@@ -192,10 +227,12 @@ export function buildUpdatePlatformBudgetVariables(
   dailyBudget?: number;
   lifetimeBudget?: number;
 } {
+  const { activeBudgetType } = resolveEffectivePlatformBudget(budget);
+
   const base = {
     providerType: budget.providerType,
     adCampaignId: budget.adCampaignId,
-    activeBudgetType: budget.activeBudgetType,
+    activeBudgetType,
     naverConnectionId: budget.naverConnectionId,
     naverCampaignId: budget.naverCampaignId,
   };
