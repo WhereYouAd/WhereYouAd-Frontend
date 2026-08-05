@@ -1,6 +1,10 @@
 import z from "zod";
 
-const dateFieldSchema = z.string().trim().min(1, "날짜를 선택해 주세요");
+const dateFieldSchema = z
+  .string()
+  .trim()
+  .min(1, { error: "날짜를 선택해 주세요" })
+  .pipe(z.iso.date({ error: "유효한 날짜를 입력해 주세요" }));
 
 export const naverSyncSchema = z
   .object({
