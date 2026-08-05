@@ -165,7 +165,7 @@ export default function PermissionTable() {
         </table>
       </div>
 
-      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 sm:px-6">
+      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 tablet:px-5">
         {hasChanges ? (
           <p
             role="status"
@@ -182,14 +182,14 @@ export default function PermissionTable() {
             있습니다.
           </p>
         )}
-        <div className="flex flex-wrap items-center justify-end gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
           <Button
             type="button"
             variant="outline"
             size="big"
             onClick={handleResetChange}
             disabled={!hasChanges || isSaving}
-            className="rounded-2xl"
+            className="rounded-2xl tablet:w-full"
           >
             변경 취소
           </Button>
@@ -199,7 +199,7 @@ export default function PermissionTable() {
             size="big"
             onClick={handleSaveChanges}
             disabled={!hasChanges || isSaving}
-            className="rounded-2xl"
+            className="rounded-2xl tablet:w-full"
           >
             {isSaving ? "저장 중..." : "변경사항 저장하기"}
           </Button>

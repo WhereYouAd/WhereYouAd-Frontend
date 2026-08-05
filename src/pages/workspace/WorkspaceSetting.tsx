@@ -277,7 +277,7 @@ export default function WorkspaceSetting() {
           resetKeys={[detail]}
         >
           <>
-            <Card className="p-8">
+            <Card className="p-8 tablet:p-6">
               <h2 className="font-heading3 text-text-title">조직 기본 정보</h2>
               <div className="mt-6 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
                 <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">

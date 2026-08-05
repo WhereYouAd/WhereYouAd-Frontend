@@ -52,7 +52,7 @@ export default function TransferOwnerModal({
       title="조직 소유권 양도"
       disableOverlayClick={isLoading}
     >
-      <div className="px-2 py-4">
+      <div className="px-2 py-4 tablet:px-0">
         <div className="mb-5 flex justify-center">
           <WarnIcon className="h-12 w-12 text-info-yellow" aria-hidden="true" />
         </div>
@@ -85,7 +85,7 @@ export default function TransferOwnerModal({
             </p>
           )}
         </div>
-        <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-3 tablet:flex-col">
           <Button
             type="button"
             variant="outline"

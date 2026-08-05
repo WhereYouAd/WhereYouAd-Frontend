@@ -81,8 +81,8 @@ export default function MemberList({
   const hasVisibleItems = members.length > 0;
 
   return (
-    <Card className="p-8">
-      <header className="mb-7 flex items-start justify-between gap-4">
+    <Card className="p-8 tablet:p-6">
+      <header className="mb-7 flex items-start justify-between gap-4 tablet:flex-col tablet:items-stretch">
         <div>
           <h2 className="font-heading4 text-text-title">팀 구성원</h2>
           <p className="mt-2 font-body2 text-text-muted">
@@ -100,7 +100,7 @@ export default function MemberList({
           size="small"
           aria-label="팀원 초대 버튼"
           onClick={openInviteMember}
-          className="p-5 py-6 rounded-2xl"
+          className="p-5 py-6 rounded-2xl tablet:w-full tablet:justify-stretch"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           팀원 초대
