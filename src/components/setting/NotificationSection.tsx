@@ -13,6 +13,7 @@ import SlackIcon from "@/assets/logo/social-logo/plain/slack.svg?react";
 
 type TNotificationSectionProps = {
   email: string;
+  isAdmin: boolean;
   masterEnabled: boolean;
   onMasterEnabledChange: (value: boolean) => void;
   //channel
@@ -48,6 +49,7 @@ type TNotificationSectionProps = {
 
 export default function NotificationSection({
   email,
+  isAdmin,
   masterEnabled,
   onMasterEnabledChange,
   browserPush,
@@ -158,140 +160,145 @@ export default function NotificationSection({
               />
             </div>
           </div>
-
-          <div className="flex items-center gap-4 py-5">
-            <div className="flex min-w-0 flex-1 items-center gap-4">
-              <SlackIcon className={rowIconClass} />
-              <div className="min-w-0">
-                <p className="font-body1 text-text-title">슬랙 연동하기</p>
-                <p className="font-body2 text-text-muted">
-                  {slackConnected
-                    ? "연동됨 • 알림 on/off는 저장 시 반영"
-                    : "Webhook URL로 연동"}
-                </p>
+          {isAdmin && (
+            <div className="flex items-center gap-4 py-5">
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <SlackIcon className={rowIconClass} />
+                <div className="min-w-0">
+                  <p className="font-body1 text-text-title">슬랙 연동하기</p>
+                  <p className="font-body2 text-text-muted">
+                    {slackConnected
+                      ? "연동됨 • 알림 on/off는 저장 시 반영"
+                      : "Webhook URL로 연동"}
+                  </p>
+                </div>
               </div>
+              {slackConnected ? (
+                <div className="flex shrink-0 items-center gap-3">
+                  {slackEnabled && !channelDisabled && (
+                    <Badge variant="infoBlue">켜짐</Badge>
+                  )}
+                  <Toggle
+                    checked={slackEnabled}
+                    disabled={channelDisabled || isAnyOrgPending}
+                    onToggle={() => onSlackEnabledChange(!slackEnabled)}
+                    ariaLabel="슬랙 알림 켜기/끄기"
+                  />
+                  <Button
+                    variant="outline"
+                    size="small"
+                    type="button"
+                    disabled={channelDisabled || isAnyOrgPending}
+                    isLoading={isSlackPending}
+                    onClick={onDisconnectSlack}
+                  >
+                    연동 해제
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Input
+                    aria-label="슬랙 Webhook URL"
+                    placeholder="https://hooks.slack.com/..."
+                    value={slackWebhookUrl}
+                    onChange={(e) => onSlackWebhookUrlChange(e.target.value)}
+                    error={!!slackWebhookError}
+                    helperText={slackWebhookError}
+                    disabled={channelDisabled || isAnyOrgPending}
+                    wrapperClassName="w-1/4 shrink-0"
+                    containerClassName="h-10 rounded-lg"
+                    inputClassName="px-3 font-body2"
+                  />
+                  <Button
+                    variant="outline"
+                    size="small"
+                    type="button"
+                    className="shrink-0"
+                    disabled={
+                      channelDisabled ||
+                      isAnyOrgPending ||
+                      !slackWebhookUrl.trim()
+                    }
+                    isLoading={isSlackPending}
+                    onClick={onConnectSlack}
+                  >
+                    연동
+                  </Button>
+                </>
+              )}
             </div>
-            {slackConnected ? (
-              <div className="flex shrink-0 items-center gap-3">
-                {slackEnabled && !channelDisabled && (
-                  <Badge variant="infoBlue">켜짐</Badge>
-                )}
-                <Toggle
-                  checked={slackEnabled}
-                  disabled={channelDisabled || isAnyOrgPending}
-                  onToggle={() => onSlackEnabledChange(!slackEnabled)}
-                  ariaLabel="슬랙 알림 켜기/끄기"
-                />
-                <Button
-                  variant="outline"
-                  size="small"
-                  type="button"
-                  disabled={channelDisabled || isAnyOrgPending}
-                  isLoading={isSlackPending}
-                  onClick={onDisconnectSlack}
-                >
-                  연동 해제
-                </Button>
-              </div>
-            ) : (
-              <>
-                <Input
-                  aria-label="슬랙 Webhook URL"
-                  placeholder="https://hooks.slack.com/..."
-                  value={slackWebhookUrl}
-                  onChange={(e) => onSlackWebhookUrlChange(e.target.value)}
-                  error={!!slackWebhookError}
-                  helperText={slackWebhookError}
-                  disabled={channelDisabled || isAnyOrgPending}
-                  wrapperClassName="w-1/4 shrink-0"
-                  containerClassName="h-10 rounded-lg"
-                  inputClassName="px-3 font-body2"
-                />
-                <Button
-                  variant="outline"
-                  size="small"
-                  type="button"
-                  className="shrink-0"
-                  disabled={
-                    channelDisabled ||
-                    isAnyOrgPending ||
-                    !slackWebhookUrl.trim()
-                  }
-                  isLoading={isSlackPending}
-                  onClick={onConnectSlack}
-                >
-                  연동
-                </Button>
-              </>
-            )}
-          </div>
+          )}
 
-          <div className="flex items-center gap-4 py-5 last:pb-0">
-            <div className="flex min-w-0 flex-1 items-center gap-4">
-              <DiscordIcon className={rowIconClass} />
-              <div className="min-w-0">
-                <p className="font-body1 text-text-title">디스코드 연동하기</p>
-                <p className="font-body2 text-text-muted">
-                  {discordConnected
-                    ? "연동됨 • 알림 on/off는 저장 시 반영"
-                    : "Webhook URL로 연동"}
-                </p>
+          {isAdmin && (
+            <div className="flex items-center gap-4 py-5 last:pb-0">
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <DiscordIcon className={rowIconClass} />
+                <div className="min-w-0">
+                  <p className="font-body1 text-text-title">
+                    디스코드 연동하기
+                  </p>
+                  <p className="font-body2 text-text-muted">
+                    {discordConnected
+                      ? "연동됨 • 알림 on/off는 저장 시 반영"
+                      : "Webhook URL로 연동"}
+                  </p>
+                </div>
               </div>
+              {discordConnected ? (
+                <div className="flex shrink-0 items-center gap-3">
+                  {discordEnabled && !channelDisabled && (
+                    <Badge variant="infoBlue">켜짐</Badge>
+                  )}
+                  <Toggle
+                    checked={discordEnabled}
+                    disabled={channelDisabled || isAnyOrgPending}
+                    onToggle={() => onDiscordEnabledChange(!discordEnabled)}
+                    ariaLabel="디스코드 알림 켜기/끄기"
+                  />
+                  <Button
+                    variant="outline"
+                    size="small"
+                    type="button"
+                    disabled={channelDisabled || isAnyOrgPending}
+                    isLoading={isDiscordPending}
+                    onClick={onDisconnectDiscord}
+                  >
+                    연동 해제
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Input
+                    aria-label="디스코드 Webhook URL"
+                    placeholder="https://discord.com/api/webhooks/..."
+                    value={discordWebhookUrl}
+                    onChange={(e) => onDiscordWebhookUrlChange(e.target.value)}
+                    error={!!discordWebhookError}
+                    helperText={discordWebhookError}
+                    disabled={channelDisabled || isAnyOrgPending}
+                    wrapperClassName="w-1/4 shrink-0"
+                    containerClassName="h-10 rounded-lg"
+                    inputClassName="px-3 font-body2"
+                  />
+                  <Button
+                    variant="outline"
+                    size="small"
+                    type="button"
+                    className="shrink-0"
+                    disabled={
+                      channelDisabled ||
+                      isAnyOrgPending ||
+                      !discordWebhookUrl.trim()
+                    }
+                    isLoading={isDiscordPending}
+                    onClick={onConnectDiscord}
+                  >
+                    연동
+                  </Button>
+                </>
+              )}
             </div>
-            {discordConnected ? (
-              <div className="flex shrink-0 items-center gap-3">
-                {discordEnabled && !channelDisabled && (
-                  <Badge variant="infoBlue">켜짐</Badge>
-                )}
-                <Toggle
-                  checked={discordEnabled}
-                  disabled={channelDisabled || isAnyOrgPending}
-                  onToggle={() => onDiscordEnabledChange(!discordEnabled)}
-                  ariaLabel="디스코드 알림 켜기/끄기"
-                />
-                <Button
-                  variant="outline"
-                  size="small"
-                  type="button"
-                  disabled={channelDisabled || isAnyOrgPending}
-                  isLoading={isDiscordPending}
-                  onClick={onDisconnectDiscord}
-                >
-                  연동 해제
-                </Button>
-              </div>
-            ) : (
-              <>
-                <Input
-                  aria-label="디스코드 Webhook URL"
-                  placeholder="https://discord.com/api/webhooks/..."
-                  value={discordWebhookUrl}
-                  onChange={(e) => onDiscordWebhookUrlChange(e.target.value)}
-                  error={!!discordWebhookError}
-                  helperText={discordWebhookError}
-                  disabled={channelDisabled || isAnyOrgPending}
-                  wrapperClassName="w-1/4 shrink-0"
-                  containerClassName="h-10 rounded-lg"
-                  inputClassName="px-3 font-body2"
-                />
-                <Button
-                  variant="outline"
-                  size="small"
-                  type="button"
-                  className="shrink-0"
-                  disabled={
-                    channelDisabled ||
-                    isAnyOrgPending ||
-                    !discordWebhookUrl.trim()
-                  }
-                  isLoading={isDiscordPending}
-                  onClick={onConnectDiscord}
-                >
-                  연동
-                </Button>
-              </>
-            )}
-          </div>
+          )}
         </div>
       </section>
 

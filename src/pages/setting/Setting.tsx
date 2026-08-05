@@ -131,6 +131,9 @@ export default function Setting() {
     getMyWorkspaces,
   );
 
+  const myRole = useWorkspaceStore((s) => s.myRole);
+  const isAdmin = myRole === "ADMIN";
+
   const {
     data: notificationSettings,
     isLoading: isNotificationLoading,
@@ -419,7 +422,10 @@ export default function Setting() {
       const shouldSaveMaster =
         canSaveNotification && hasMasterChanges && selectedOrgId != null;
       const shouldSaveOrg =
-        canSaveNotification && hasOrgToggleChanges && selectedOrgId != null;
+        canSaveNotification &&
+        hasOrgToggleChanges &&
+        selectedOrgId != null &&
+        isAdmin;
 
       if (
         shouldSaveChannel ||
@@ -648,6 +654,7 @@ export default function Setting() {
           >
             <NotificationSection
               email={draftProfile.email}
+              isAdmin={isAdmin}
               masterEnabled={draftOrgNotif.masterEnabled}
               onMasterEnabledChange={(value) => {
                 if (!value) {
