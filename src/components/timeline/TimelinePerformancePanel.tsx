@@ -37,7 +37,8 @@ type TAiSummaryUiState = "idle" | "loading" | "done";
 const SECTION_SHELL_CLASS =
   "rounded-3xl border border-surface-300/70 bg-surface-100";
 
-const SECTION_INNER_CLASS = "flex flex-col gap-5 px-6 py-6";
+const SECTION_INNER_CLASS =
+  "flex flex-col gap-5 px-6 py-6 tablet:px-5 tablet:gap-6 tablet:pb-8";
 
 const SOFT_CARD_CLASS = "rounded-2xl bg-surface-100 shadow-Soft";
 
@@ -209,7 +210,7 @@ export default function TimelinePerformancePanel({
       hideHeader
       className={twMerge("max-w-2xl", className)}
     >
-      <div className="flex flex-col gap-7 px-7 pb-10 pt-6">
+      <div className="flex flex-col gap-7 px-7 pb-10 pt-6 tablet:px-5 tablet:gap-6 tablet:pb-8">
         {/* 헤더 */}
         <header className="flex flex-col gap-5">
           <div className="flex items-center justify-between">
@@ -310,13 +311,13 @@ export default function TimelinePerformancePanel({
         </section>
 
         {/* KPI — 선택한 지표 수만큼 가로 균등 분할 */}
-        <section className="flex w-full gap-2">
+        <section className="flex w-full gap-2 tablet:flex-wrap">
           {data.metrics.map((metric) => (
             <div
               key={metric.metric}
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "flex min-w-0 flex-1 flex-col gap-1 px-4 py-3.5",
+                "flex min-w-0 flex-1 flex-col gap-1 px-4 py-3.5 tablet:min-w-[calc(50%-0.25rem)]",
               )}
             >
               <span className="ml-1 flex flex-col">

@@ -1,21 +1,26 @@
 import {
-  LANDING_TIMELINE_CARDS,
+  LANDING_TIMELINE_BARS,
   LANDING_TIMELINE_COLUMNS,
 } from "@/constants/landing/timeline";
+import { TIMELINE_COL_WIDTH } from "@/constants/timeline/layout";
+
+import TimelineAxis from "@/components/timeline/TimelineAxis";
+import TimelineBar from "@/components/timeline/TimelineBar";
+import TimelineGrid from "@/components/timeline/TimelineGrid";
 
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
-import KebabIcon from "@/assets/icon/timeline/kebab.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
 export default function GuideTimeline() {
-  const colWidth = 55;
-  const rowHeight = 92;
-  const rowOffset = 24;
+  //랜딩 가이드 column 폭이 좁아서 실제 타임라인보다는 작게
+  const colWidth = Math.min(TIMELINE_COL_WIDTH, 72);
   const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
+  const rowCount = Math.max(...LANDING_TIMELINE_BARS.map((bar) => bar.row), 1);
 
   return (
-    <div className="landing-guide-timeline flex h-75 w-full flex-col overflow-hidden bg-surface-100 md:h-85">
-      <style>{`
+    <div className="landing-guide-timeline flex h-75 w-full flex-col overflow-hidden rounded-2xl border border-surface-400/70 bg-surface-100 md:h-85">
+      <style>
+        {`
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
           height: 0px;
         }
@@ -25,117 +30,55 @@ export default function GuideTimeline() {
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar-thumb {
           background: transparent;
         }
-      `}</style>
-      {/* Top Navigation */}
-      <div className="flex-none flex items-center justify-between px-5 py-3 border-b border-surface-400/80 bg-surface-100 z-20">
+      `}
+      </style>
+      <div className="z-20 flex flex-none items-center justify-between border-b border-surface-400/80 bg-surface-100 px-5 py-3">
         <div
           aria-label="보기 모드(목업)"
-          className="flex items-center bg-surface-100 p-0.5 rounded-lg border border-surface-400/70"
+          className="flex items-center rounded-lg border border-surface-400/70 bg-surface-100 p-0.5"
           role="group"
         >
-          <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
-            Day
+          <span className="select-none rounded-md px-3 py-1.5 font-caption text-text-muted opacity-60">
+            일
           </span>
-          <span className="rounded-md bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-Soft select-none">
-            Week
+          <span className="select-none rounded-md bg-surface-100 px-3 py-1.5 font-caption text-text-title shadow-Soft">
+            주
           </span>
-          <span className="rounded-md px-3 py-1.5 font-caption text-text-muted select-none opacity-60">
-            Month
+          <span className="select-none rounded-md px-3 py-1.5 font-caption text-text-muted opacity-60">
+            월
           </span>
         </div>
-
-        <div className="flex items-center gap-5 font-caption text-text-auth-sub">
-          <div
-            aria-label="정렬/필터(목업)"
-            className="flex select-none items-center gap-5 font-caption text-text-auth-sub"
-            role="group"
-          >
-            <span className="flex items-center gap-1.5 opacity-70">
-              <SortIcon className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">Sort</span>
-            </span>
-            <span className="flex items-center gap-1.5 opacity-70">
-              <FilterIcon className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">Filter</span>
-            </span>
-          </div>
+        <div
+          aria-label="정렬/필터(목업)"
+          className="flex select-none items-center gap-5 font-caption text-text-auth-sub"
+          role="group"
+        >
+          <span className="flex items-center gap-1.5 opacity-70">
+            <SortIcon className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">Sort</span>
+          </span>
+          <span className="flex items-center gap-1.5 opacity-70">
+            <FilterIcon className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">Filter</span>
+          </span>
         </div>
       </div>
 
-      {/* Chart Area */}
-      <div className="flex-1 overflow-x-auto overflow-y-hidden custom-scrollbar relative pb-4 bg-surface-100">
-        <div
-          className="h-full flex flex-col relative"
-          style={{ width: totalWidth }}
-        >
-          {/* Header (Dates) */}
-          <div className="h-7 flex items-center border-b border-surface-400/80 relative bg-surface-100 z-10">
-            {LANDING_TIMELINE_COLUMNS.map((c, i) => (
-              <div
-                key={i}
-                className="flex w-13.75 justify-center font-caption text-text-placeholder"
-              >
-                <span className="relative flex items-center gap-1">
-                  {c.day} <span className="text-text-title">{c.date}</span>
-                </span>
-              </div>
+      <div className="custom-scrollbar relative flex-1 overflow-x-auto overflow-y-hidden bg-surface-100">
+        <div className="flex h-full flex-col" style={{ width: totalWidth }}>
+          <TimelineAxis
+            columns={LANDING_TIMELINE_COLUMNS}
+            colWidth={colWidth}
+          />
+          <TimelineGrid
+            columns={LANDING_TIMELINE_COLUMNS}
+            rowCount={rowCount}
+            colWidth={colWidth}
+          >
+            {LANDING_TIMELINE_BARS.map((bar) => (
+              <TimelineBar key={bar.id} bar={bar} colWidth={colWidth} />
             ))}
-          </div>
-
-          {/* Timeline Body Grid */}
-          <div className="relative flex-1">
-            {/* Columns Background */}
-            {LANDING_TIMELINE_COLUMNS.map((_, i) => (
-              <div
-                key={i}
-                className="absolute top-0 bottom-0 border-r border-surface-400/80"
-                style={{ left: `${i * colWidth}px`, width: `${colWidth}px` }}
-              />
-            ))}
-
-            {/* Today Line removed for cleaner mock */}
-
-            {/* Cards */}
-            {LANDING_TIMELINE_CARDS.map((card) => {
-              const x = (card.colStart - 1) * colWidth;
-              const width = (card.colEnd - card.colStart) * colWidth;
-              const y = rowOffset + (card.row - 1) * rowHeight;
-
-              return (
-                <div
-                  key={card.id}
-                  className="absolute flex items-center px-3 gap-2.5 rounded-xl h-13 z-20 cursor-pointer border border-surface-400/80 bg-surface-100 shadow-Soft transition-transform hover:scale-[1.01] hover:z-30"
-                  style={{ left: `${x}px`, top: `${y}px`, width: `${width}px` }}
-                >
-                  {/* Left Indicator */}
-                  <div
-                    className={`w-1 h-7.5 rounded-full shrink-0 ${card.colorClass}`}
-                  />
-
-                  {/* Text */}
-                  <div className="flex flex-col min-w-0 pr-2">
-                    <span className="truncate font-body2 text-text-title">
-                      {card.title}
-                    </span>
-                    <span className="mt-0.5 flex items-center gap-1.5 font-caption text-text-muted">
-                      {card.subtitle}
-                    </span>
-                  </div>
-
-                  {/* Menu */}
-                  <div className="ml-auto flex items-center gap-2 shrink-0">
-                    <button
-                      type="button"
-                      aria-label="캠페인 메뉴"
-                      className="w-5 h-5 flex items-center justify-center rounded-full hover:bg-surface-500/5 transition-colors text-text-placeholder"
-                    >
-                      <KebabIcon className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          </TimelineGrid>
         </div>
       </div>
     </div>

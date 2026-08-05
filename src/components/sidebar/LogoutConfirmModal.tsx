@@ -36,7 +36,7 @@ export default function LogoutConfirmModal({
       hideCloseButton={isLoading}
       disableOverlayClick={isLoading}
     >
-      <div className="px-2 pt-4 pb-0 text-center">
+      <div className="px-2 pt-4 pb-0 text-center tablet:px-0">
         <div className="mb-5 flex justify-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-info-red/8 ring-1 ring-info-red/15">
             <LogoutIcon className="h-8 w-8 text-info-red" aria-hidden />
