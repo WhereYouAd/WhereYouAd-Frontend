@@ -12,7 +12,7 @@ import { useCoreMutation } from "@/hooks/customQuery";
 import Button from "@/components/common/button/Button";
 import ErrorLayout from "@/components/common/error/ErrorLayout";
 
-import { acceptInvitaton, saveSelectedWorkspace } from "@/api/workspace/org";
+import { acceptInvitation, saveSelectedWorkspace } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -92,7 +92,7 @@ export default function InviteAcceptPage() {
   const [countdown, setCountdown] = useState(LOGIN_REDIRECT_SECONDS);
   const processedRef = useRef<string | null>(null);
 
-  const { mutate: acceptInvite } = useCoreMutation(acceptInvitaton, {
+  const { mutate: acceptInvite } = useCoreMutation(acceptInvitation, {
     invalidateKeys: [QUERY_KEYS.workspace.list()],
     userOnSuccess: async (data: TAcceptInvitationResponse) => {
       try {
