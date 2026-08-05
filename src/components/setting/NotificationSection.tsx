@@ -85,7 +85,7 @@ export default function NotificationSection({
   const isDiscordPending = pendingOrgAction === "discord";
   const isAnyOrgPending = pendingOrgAction != null;
   return (
-    <Card className="p-8 tablet:p-6">
+    <Card className="p-8">
       <header className="mb-7 flex items-center gap-4">
         <BellIcon />
         <h2 className="font-heading4 text-text-title">알림 설정</h2>

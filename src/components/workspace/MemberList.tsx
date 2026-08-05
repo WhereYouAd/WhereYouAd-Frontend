@@ -100,7 +100,7 @@ export default function MemberList({
           size="small"
           aria-label="팀원 초대 버튼"
           onClick={openInviteMember}
-          className="p-5 py-6 rounded-2xl tablet:w-full tablet:justify-stretch"
+          className="p-5 py-6 rounded-2xl tablet:w-full"
         >
           <PlusIcon className="w-3 h-3 fill-white" />
           팀원 초대

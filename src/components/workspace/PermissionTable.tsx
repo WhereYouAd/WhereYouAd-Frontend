@@ -165,11 +165,11 @@ export default function PermissionTable() {
         </table>
       </div>
 
-      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 tablet:px-5">
+      <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 tablet:px-4 tablet:py-4">
         {hasChanges ? (
           <p
             role="status"
-            className="mb-4 rounded-xl bg-primary-100/50 px-4 py-3 font-body2 text-text-title"
+            className="mb-4 rounded-xl bg-primary-100/50 px-4 py-3 font-body2 text-text-title break-keep text-pretty"
           >
             <span className="font-label text-primary-500">저장 필요</span>
             <span className="text-text-muted"> · </span>
@@ -177,7 +177,7 @@ export default function PermissionTable() {
             이전 설정으로 돌아갑니다.
           </p>
         ) : (
-          <p className="mb-4 font-body2 text-text-muted">
+          <p className="mb-4 font-body2 text-text-muted break-keep text-pretty">
             멤버 열의 토글을 바꾼 뒤, 아래에서 저장하거나 변경을 취소할 수
             있습니다.
           </p>
