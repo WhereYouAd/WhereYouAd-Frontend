@@ -285,7 +285,7 @@ export default function Timeline() {
         FallbackComponent={AreaErrorFallback}
         resetKeys={[timelineList, viewUnit, periodIndex]}
       >
-        <div className="flex min-h-0 flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
+        <div className="flex min-h-full flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
           <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5 tablet:px-4 tablet:py-4 tablet:gap-3">
             <div className="flex items-center justify-between gap-8 tablet:flex-col tablet:items-stretch tablet:gap-3">
               <TimelineStatusLegend className="min-w-0 flex-1" />
