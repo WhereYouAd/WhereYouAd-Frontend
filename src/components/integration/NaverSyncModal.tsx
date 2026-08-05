@@ -79,7 +79,7 @@ export default function NaverSyncModal({
         className="flex flex-col gap-5"
         noValidate
       >
-        <p className="font-body2 text-text-muted">
+        <p className="font-body1 text-text-muted">
           동기화할 기간을 선택해 주세요.
         </p>
 
