@@ -6,9 +6,12 @@ import type {
   INaverSyncData,
 } from "@/types/integration/platformSync";
 
-/** 오늘 기준 yyyy-MM-dd */
+/** 로컬 기준 yyyy-MM-dd */
 function toDateString(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /** Naver sync 모달 기본값: 최근 30일 */
