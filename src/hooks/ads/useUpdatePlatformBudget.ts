@@ -34,6 +34,18 @@ export function useUpdatePlatformBudget(orgId: number, projectId: number) {
           if (!vars.adCampaignId || !vars.activeBudgetType) {
             throw new Error("Meta 예산 수정 정보가 부족합니다.");
           }
+          if (
+            vars.activeBudgetType === "DAILY" &&
+            vars.dailyBudget === undefined
+          ) {
+            throw new Error("일일 예산을 입력해 주세요.");
+          }
+          if (
+            vars.activeBudgetType === "LIFETIME" &&
+            vars.lifetimeBudget === undefined
+          ) {
+            throw new Error("전체 예산을 입력해 주세요.");
+          }
           await updateMetaCampaignBudget(
             vars.adCampaignId,
             buildMetaGoogleBudgetPayload(vars.activeBudgetType, vars),
@@ -43,6 +55,18 @@ export function useUpdatePlatformBudget(orgId: number, projectId: number) {
         case "GOOGLE": {
           if (!vars.adCampaignId || !vars.activeBudgetType) {
             throw new Error("Google 예산 수정 정보가 부족합니다.");
+          }
+          if (
+            vars.activeBudgetType === "DAILY" &&
+            vars.dailyBudget === undefined
+          ) {
+            throw new Error("일일 예산을 입력해 주세요.");
+          }
+          if (
+            vars.activeBudgetType === "LIFETIME" &&
+            vars.lifetimeBudget === undefined
+          ) {
+            throw new Error("전체 예산을 입력해 주세요.");
           }
           await updateGoogleCampaignBudget(
             vars.adCampaignId,

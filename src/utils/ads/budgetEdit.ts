@@ -110,9 +110,16 @@ export function buildMetaGoogleBudgetPayload(
   values: { dailyBudget?: number; lifetimeBudget?: number },
 ): TMetaGoogleBudgetUpdateRequest {
   if (activeBudgetType === "DAILY") {
-    return { dailyBudget: values.dailyBudget! };
+    if (values.dailyBudget === undefined) {
+      throw new Error("일일 예산을 입력해 주세요.");
+    }
+    return { dailyBudget: values.dailyBudget };
   }
-  return { lifetimeBudget: values.lifetimeBudget! };
+
+  if (values.lifetimeBudget === undefined) {
+    throw new Error("전체 예산을 입력해 주세요.");
+  }
+  return { lifetimeBudget: values.lifetimeBudget };
 }
 
 /** Naver — useDailyBudget 항상 true */
