@@ -50,6 +50,36 @@ export default function CampaignPlatformSection({
     : editCheck.ok
       ? undefined
       : BUDGET_EDIT_BLOCK_MESSAGES[editCheck.reason];
+  const budgetEditHintId = `budget-edit-hint-${platform}`;
+
+  const budgetEditAction = (
+    <div className="flex flex-col items-end gap-1">
+      <Button
+        type="button"
+        size="small"
+        variant="outline"
+        className={twMerge(
+          "h-9 shrink-0 px-3.5",
+          isBudgetEditDisabled && "opacity-60",
+        )}
+        onClick={onEditBudget}
+        disabled={isBudgetEditDisabled}
+        aria-describedby={
+          budgetEditDisabledReason ? budgetEditHintId : undefined
+        }
+      >
+        예산 수정
+      </Button>
+      {budgetEditDisabledReason ? (
+        <p
+          id={budgetEditHintId}
+          className="max-w-48 text-right font-caption text-text-muted"
+        >
+          {budgetEditDisabledReason}
+        </p>
+      ) : null}
+    </div>
+  );
 
   return (
     <section className="flex flex-col gap-4">
@@ -85,22 +115,7 @@ export default function CampaignPlatformSection({
             <PlatformBudgetItem
               key={`${platform}-${gauge.label}`}
               {...gauge}
-              headerAction={
-                <Button
-                  type="button"
-                  size="small"
-                  variant="outline"
-                  className={twMerge(
-                    "h-9 shrink-0 px-3.5",
-                    isBudgetEditDisabled && "opacity-60",
-                  )}
-                  onClick={onEditBudget}
-                  disabled={isBudgetEditDisabled}
-                  title={budgetEditDisabledReason}
-                >
-                  예산 수정
-                </Button>
-              }
+              headerAction={budgetEditAction}
             />
           ))}
         </div>
