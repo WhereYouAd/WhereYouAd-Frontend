@@ -35,7 +35,7 @@ export default function WithdrawConfirmModal({
       hideCloseButton={isLoading}
       disableOverlayClick={isLoading}
     >
-      <div className="px-2 text-center">
+      <div className="px-2 text-center tablet:px-0">
         <div className="mb-6 flex justify-center">
           <WarnIcon className="h-15 w-15 text-info-red" aria-hidden="true" />
         </div>
@@ -48,12 +48,12 @@ export default function WithdrawConfirmModal({
           탈퇴 요청 시 계정은 바로 비활성화되며, <br /> 30일 후 서버에서 완전히
           삭제됩니다. <br />이 작업은 되돌리기 어려우니 신중히 결정해 주세요
         </p>
-        <div className="flex gap-4">
+        <div className="flex gap-4 tablet:flex-col">
           <Button
             type="button"
             variant="outline"
             size="big"
-            className="flex-1"
+            className="flex-1 tablet:w-full"
             onClick={handleClose}
             disabled={isLoading}
           >
@@ -63,7 +63,7 @@ export default function WithdrawConfirmModal({
             type="button"
             variant="danger"
             size="big"
-            className="flex-1"
+            className="flex-1 tablet:w-full"
             onClick={handleConfirm}
             disabled={isLoading}
             aria-label={isLoading ? "탈퇴 진행 중" : "회원 탈퇴 확인"}

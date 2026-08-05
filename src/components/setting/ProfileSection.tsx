@@ -32,16 +32,16 @@ export default function ProfileSection({
   resetImage,
 }: TProfileSectionProps) {
   return (
-    <Card className="p-8 tablet:p-10">
+    <Card className="p-8 tablet:p-6">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
           <h2 className="font-heading4 text-text-title">프로필</h2>
         </div>
       </header>
-      <div className="flex tablet:flex-row gap-10">
-        <div className="flex flex-col items-center basis-1/4 shrink-0">
-          <div className="mb-4 w-full select-none text-text-title">
+      <div className="flex flex-row gap-10 tablet:flex-col tablet:gap-8">
+        <div className="flex flex-col items-center basis-1/4 shrink-0 tablet:w-full">
+          <div className="mb-4 w-full select-none text-text-title tablet:text-center">
             프로필 이미지
           </div>
           <input
