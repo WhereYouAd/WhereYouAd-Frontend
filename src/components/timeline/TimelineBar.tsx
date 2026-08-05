@@ -55,7 +55,8 @@ export default function TimelineBar({
     bar.providers?.includes(provider),
   );
 
-  const isElevated = isMenuOpen || isSelected;
+  const showActions = onEdit != null || onDelete != null;
+  const isElevated = (showActions && isMenuOpen) || isSelected;
 
   return (
     <div
@@ -123,39 +124,47 @@ export default function TimelineBar({
           {status.label}
         </span>
       </div>
-      <div
-        className={twMerge(
-          "ml-auto flex shrink-0 self-center items-center opacity-0 transition-opacity",
-          "group-hover/bar:opacity-100 group-focus-within/bar:opacity-100",
-          isSelected && "opacity-100",
-        )}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DropdownMenu
-          aria-label="캠페인 메뉴"
-          placement="auto"
-          onOpenChange={setIsMenuOpen}
-          menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
-          trigger={
-            <button
-              type="button"
-              aria-label="캠페인 메뉴"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-placeholder transition-colors hover:bg-surface-500/10"
-            >
-              <KebabIcon className="h-4 w-4" />
-            </button>
-          }
-          items={[
-            { label: "수정하기", onClick: () => onEdit?.(bar) },
-            {
-              label: "삭제하기",
-              danger: true,
-              labelClassName: "text-info-red",
-              onClick: () => onDelete?.(bar),
-            },
-          ]}
-        />
-      </div>
+      {showActions ? (
+        <div
+          className={twMerge(
+            "ml-auto flex shrink-0 self-center items-center opacity-0 transition-opacity",
+            "group-hover/bar:opacity-100 group-focus-within/bar:opacity-100",
+            isSelected && "opacity-100",
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <DropdownMenu
+            aria-label="캠페인 메뉴"
+            placement="auto"
+            onOpenChange={setIsMenuOpen}
+            menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
+            trigger={
+              <button
+                type="button"
+                aria-label="캠페인 메뉴"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-text-placeholder transition-colors hover:bg-surface-500/10"
+              >
+                <KebabIcon className="h-4 w-4" />
+              </button>
+            }
+            items={[
+              ...(onEdit
+                ? [{ label: "수정하기", onClick: () => onEdit(bar) }]
+                : []),
+              ...(onDelete
+                ? [
+                    {
+                      label: "삭제하기",
+                      danger: true,
+                      labelClassName: "text-info-red",
+                      onClick: () => onDelete(bar),
+                    },
+                  ]
+                : []),
+            ]}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

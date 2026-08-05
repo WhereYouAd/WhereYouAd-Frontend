@@ -29,7 +29,7 @@ export const LANDING_TIMELINE_BARS: ITimelineCampaignBar[] = [
     title: "신규회원 프로모션 캠페인",
     subtitle: "08.03 - 08.16",
     providers: ["GOOGLE"],
-    colStart: 3,
+    colStart: 2,
     colEnd: 8,
     row: 2,
     performanceStatus: "ABOVE_AVG",
