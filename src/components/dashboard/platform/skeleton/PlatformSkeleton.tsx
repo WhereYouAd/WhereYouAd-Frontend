@@ -33,10 +33,11 @@ export function PlatformDetailCardSkeleton() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="flex flex-col gap-3 rounded-2xl bg-surface-100/40 p-5"
+            className="flex flex-col gap-2 rounded-2xl bg-surface-100/40 p-2"
           >
             <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-15 w-30" />
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-5 w-14 rounded-full" />
           </div>
         ))}
       </div>

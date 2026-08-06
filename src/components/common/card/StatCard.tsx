@@ -16,6 +16,8 @@ export interface IStatCardProps extends HTMLAttributes<HTMLDivElement> {
   trend?: ITrend;
   /** 수치·트렌드 배지를 기본보다 한 단계 작게 (제목은 동일) */
   compact?: boolean;
+  /** 수치 타이포 오버라이드 (중첩 카드 등) */
+  valueClassName?: string;
 }
 
 const trendClasses: Record<ITrend["direction"], string> = {
@@ -61,6 +63,7 @@ const StatCard = memo(function StatCard({
   trend,
   className,
   compact = false,
+  valueClassName,
   ...rest
 }: IStatCardProps) {
   return (
@@ -76,6 +79,7 @@ const StatCard = memo(function StatCard({
         className={twMerge(
           "text-text-title tracking-tight",
           compact ? "font-heading2" : "font-heading1",
+          valueClassName,
         )}
       >
         {value}
