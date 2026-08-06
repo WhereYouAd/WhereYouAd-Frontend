@@ -110,7 +110,7 @@ export default function SinglePlatformView({
         FallbackComponent={MetricErrorFallback}
         resetKeys={[platformData]}
       >
-        <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4 tablet:grid-cols-2 grid-mobile-1">
           {isMetricsLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div
