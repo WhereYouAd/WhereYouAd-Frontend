@@ -13,7 +13,7 @@ export function TopPerformanceListSkeleton() {
         <div key={i} className="flex items-center gap-4 w-full">
           <Skeleton className="h-4 w-4 shrink-0" /> {/* 순위 숫자 */}
           <SkeletonCircle className="h-8 w-8 shrink-0" /> {/* 로고 */}
-          <Skeleton className="h-4 flex-1" /> {/* 이름 */}
+          <Skeleton className="h-4 flex-1 mobile:hidden" /> {/* 이름 */}
           <Skeleton className="h-6 w-20" /> {/* 수치 */}
         </div>
       ))}
