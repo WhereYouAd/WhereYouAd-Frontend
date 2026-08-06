@@ -43,8 +43,7 @@ export const PlatformDetailCard = memo(
               value={kpi.value}
               trend={kpi.trend}
               className={innerCardClass}
-              compact
-              valueClassName="font-heading3"
+              valueClassName="font-heading2"
             />
           ))}
         </div>
