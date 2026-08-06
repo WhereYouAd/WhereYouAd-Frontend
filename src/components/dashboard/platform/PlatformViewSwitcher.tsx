@@ -63,9 +63,7 @@ export default function PlatformViewSwitcher({
               variant={!isAllView ? "primary" : "custom"}
               className={twMerge(
                 "flex items-center rounded-2xl py-5",
-                isMobileLayout
-                  ? "w-full min-w-0 justify-between"
-                  : "w-34 shrink-0",
+                isMobileLayout ? "w-full min-w-0" : "w-34 shrink-0",
                 isAllView &&
                   "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
               )}
