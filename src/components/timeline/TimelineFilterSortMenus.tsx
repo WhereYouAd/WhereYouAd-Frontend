@@ -10,7 +10,7 @@ import {
 import {
   DropdownMenu,
   type TMenuItem,
-} from "../common/dropdownmenu/DropdownMenu";
+} from "@/components/common/dropdownmenu/DropdownMenu";
 
 import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
 import SortIcon from "@/assets/icon/timeline/sort.svg?react";
