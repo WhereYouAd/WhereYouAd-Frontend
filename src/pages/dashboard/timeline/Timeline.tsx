@@ -179,7 +179,7 @@ export default function Timeline() {
     if (hasNoTimelines) return;
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollLeft = el.scrollWidth - el.clientWidth;
+    el.scrollLeft = viewUnit === "MONTH" ? 0 : el.scrollWidth - el.clientWidth;
   }, [columns, hasNoTimelines, viewUnit]);
 
   useEffect(() => {
