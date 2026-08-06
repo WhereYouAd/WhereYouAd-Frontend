@@ -110,7 +110,10 @@ export default function PlatformIntegrationsPage() {
     });
 
   useIntegrationOAuthReturn(orgId, {
-    onGoogleConnectSuccess: (requestOrgId) => syncGoogle(requestOrgId),
+    onGoogleConnectSuccess: (requestOrgId) => {
+      setSyncingProvider("GOOGLE");
+      syncGoogle(requestOrgId);
+    },
   });
 
   const handleNaverConnectSuccess = () => {
