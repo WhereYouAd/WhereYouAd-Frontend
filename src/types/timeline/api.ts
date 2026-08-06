@@ -47,6 +47,7 @@ export interface ITimelineListItem {
   endDate: string;
   /** 성과 미산출 시 null일 수 있음 */
   performanceStatus: TTimelinePerformanceStatus | null;
+  displayOrder: number;
 }
 
 export interface ITimelineDailyTrend {

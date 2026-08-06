@@ -82,7 +82,20 @@ export const QUERY_KEYS = {
   },
 
   timeline: {
+    /*invalidate용 prefix - status/sort 없이 */
     list: (orgId: number | null) => ["timeline", "list", orgId] as const,
+    /*실제 useQuery용*/
+    listWithParams: (
+      orgId: number | null,
+      params: { status?: string | null; sort?: string } = {},
+    ) =>
+      [
+        "timeline",
+        "list",
+        orgId,
+        params.status ?? null,
+        params.sort ?? "DISPLAY_ORDER",
+      ] as const,
     detail: (orgId: number | null, timelineId: number | null) =>
       ["timeline", "detail", orgId, timelineId] as const,
   },
