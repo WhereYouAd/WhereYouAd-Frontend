@@ -109,7 +109,9 @@ export default function PlatformIntegrationsPage() {
       onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
     });
 
-  useIntegrationOAuthReturn(orgId);
+  useIntegrationOAuthReturn(orgId, {
+    onGoogleConnectSuccess: (requestOrgId) => syncGoogle(requestOrgId),
+  });
 
   const startNewConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
