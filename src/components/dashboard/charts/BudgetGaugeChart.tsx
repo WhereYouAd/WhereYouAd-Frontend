@@ -122,7 +122,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
           </div>
         )}
         <div className={twMerge("flex items-baseline gap-2", remainingRowGap)}>
-          <span className="font-heading1 text-text-title tabular-nums leading-none">
+          <span className="font-heading2 text-text-title tabular-nums leading-none">
             {remainingPct}%
           </span>
           <span className="font-body2 text-text-body tabular-nums">남음</span>
