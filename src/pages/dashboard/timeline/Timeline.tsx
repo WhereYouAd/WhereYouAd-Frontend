@@ -2,11 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
+import type { TTimelineSort } from "@/types/timeline/api";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import type {
   ITimelineCampaignBar,
   TTimelineViewUnit,
 } from "@/types/timeline/ui";
+import type { TTimelineStatusFilter } from "@/constants/timeline/filterSort";
 import {
   TIMELINE_COL_WIDTH,
   TIMELINE_PAGE_HEIGHT,
@@ -31,6 +33,7 @@ import TimelineAxis from "@/components/timeline/TimelineAxis";
 import TimelineBar from "@/components/timeline/TimelineBar";
 import TimelineCreateModal from "@/components/timeline/TimelineCreateModal";
 import TimelineEmptyState from "@/components/timeline/TimelineEmptyState";
+import TimelineFilterSortMenus from "@/components/timeline/TimelineFilterSortMenus";
 import TimelineGrid from "@/components/timeline/TimelineGrid";
 import TimelinePerformancePanel from "@/components/timeline/TimelinePerformancePanel";
 import {
@@ -41,14 +44,9 @@ import TimelineStatusLegend from "@/components/timeline/TimelineStatusLegend";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
-import FilterIcon from "@/assets/icon/timeline/filter.svg?react";
-import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
 const SUMMARY_POLL_INTERVAL_MS = 1500;
 const SUMMARY_POLL_TIMEOUT_MS = 90000;
-
-const TOOLBAR_ACTION_CLASS =
-  "flex items-center gap-1.5 rounded-lg px-2 py-1.5 font-caption text-text-muted opacity-50 cursor-not-allowed";
 
 export default function Timeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -71,12 +69,9 @@ export default function Timeline() {
     number | null
   >(null);
 
-  const {
-    data: timelineList = [],
-    isLoading,
-    isError,
-    error,
-  } = useTimelineList();
+  const [statusFilter, setStatusFilter] =
+    useState<TTimelineStatusFilter>("ALL");
+  const [sort, setSort] = useState<TTimelineSort>("DISPLAY_ORDER");
 
   const { mutate: deleteTimeline, isPending: isDeleting } = useDeleteTimeline();
   const { mutate: requestSummary, isPending: isSummaryPending } =
@@ -102,6 +97,21 @@ export default function Timeline() {
       comparisonPeriodType: editDetail.comparisonPeriodType,
     };
   }, [editDetail]);
+
+  const listParams = useMemo(
+    () => ({
+      status: statusFilter === "ALL" ? undefined : statusFilter,
+      sort,
+    }),
+    [statusFilter, sort],
+  );
+
+  const {
+    data: timelineList = [],
+    isLoading,
+    isError,
+    error,
+  } = useTimelineList(listParams);
 
   const gridData = useMemo(
     () => buildTimelineGrid({ items: timelineList, viewUnit, periodIndex }),
@@ -325,24 +335,13 @@ export default function Timeline() {
                 onGoToToday={handleGoToToday}
                 className="justify-self-center"
               />
-              <div className="flex items-center justify-self-end gap-3 tablet:justify-self-end">
-                <span
-                  className={TOOLBAR_ACTION_CLASS}
-                  title="준비 중"
-                  aria-disabled
-                >
-                  <SortIcon className="h-4 w-4" />
-                  Sort
-                </span>
-                <span
-                  className={TOOLBAR_ACTION_CLASS}
-                  title="준비 중"
-                  aria-disabled
-                >
-                  <FilterIcon className="h-4 w-4" />
-                  Filter
-                </span>
-              </div>
+              <TimelineFilterSortMenus
+                statusFilter={statusFilter}
+                sort={sort}
+                onStatusFilterChange={setStatusFilter}
+                onSortChange={setSort}
+                className="justify-self-end"
+              />
             </div>
           </div>
           {hasNoTimelines ? (
