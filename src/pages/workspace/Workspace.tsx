@@ -156,7 +156,7 @@ export default function WorkspacePage() {
 
   const renderWorkspaceContent = () => {
     if (isListLoading) {
-      return <WorkspaceListLoading />;
+      return <WorkspaceListLoading listOnly />;
     }
     if (listErrorMsg) {
       return (
