@@ -3,6 +3,10 @@ import type {
   INaverConnectResponseData,
   INaverCredentialsRequest,
 } from "@/types/integration/naver";
+import type {
+  INaverSyncData,
+  INaverSyncRequest,
+} from "@/types/integration/platformSync";
 
 import { encryptAesCbcBase64 } from "@/utils/integration/encryptAesCbcBase64";
 
@@ -37,4 +41,15 @@ export async function updateNaverAccount(
     `/api/platform/${orgId}/accounts/naver`,
     toNaverEncryptedBody(body),
   );
+}
+
+export async function syncNaverAdData(
+  orgId: number,
+  body: INaverSyncRequest,
+): Promise<INaverSyncData> {
+  const { data } = await axiosInstance.post<ICommonResponse<INaverSyncData>>(
+    `/api/naver/${orgId}/sync`,
+    body,
+  );
+  return data.data;
 }

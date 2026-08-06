@@ -1,4 +1,5 @@
 import type { ICommonResponse } from "@/types/common/common";
+import type { IMetaSyncData } from "@/types/integration/platformSync";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 
@@ -29,4 +30,11 @@ export async function startMetaOAuthLogin(orgId: number): Promise<void> {
   }
 
   window.location.assign(authUrl);
+}
+
+export async function syncMetaAdData(orgId: number): Promise<IMetaSyncData> {
+  const { data } = await axiosInstance.post<ICommonResponse<IMetaSyncData>>(
+    `/api/meta/${orgId}/refresh`,
+  );
+  return data.data;
 }
