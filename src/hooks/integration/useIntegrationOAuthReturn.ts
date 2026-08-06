@@ -19,11 +19,22 @@ const PROVIDER_LABEL: Record<TOAuthReturnProvider, string> = {
   GOOGLE: "Google",
 };
 
+interface IUseIntegrationOAuthReturnOptions {
+  /** Google OAuth success 직후 초기 sync */
+  onGoogleConnectSuccess?: (requestOrgId: number) => void;
+}
+
 /** OAuth 연동 완료 후 `/integrations?status=&provider=` 쿼리 처리 (Google 전용) */
-export function useIntegrationOAuthReturn(orgId: number | null) {
+export function useIntegrationOAuthReturn(
+  orgId: number | null,
+  options?: IUseIntegrationOAuthReturnOptions,
+) {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const processedRef = useRef(false);
+
+  const onGoogleConnectSuccessRef = useRef(options?.onGoogleConnectSuccess);
+  onGoogleConnectSuccessRef.current = options?.onGoogleConnectSuccess;
 
   useLayoutEffect(() => {
     if (orgId == null) return;
@@ -45,6 +56,7 @@ export function useIntegrationOAuthReturn(orgId: number | null) {
 
     if (status === "success") {
       toast.success(`${label} 광고 계정을 연동했습니다.`);
+      onGoogleConnectSuccessRef.current?.(orgId);
     } else {
       toast.error(detail ?? `${label} 연동에 실패했습니다.`);
     }
