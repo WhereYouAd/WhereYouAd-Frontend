@@ -169,7 +169,9 @@ export default function WorkspacePage() {
     if (sortedWorkspaces.length === 0) {
       return (
         <ul className="grid grid-cols-2 gap-5 rounded-2xl bg-surface-200/80 p-4 tablet:grid-cols-1">
-          <WorkspaceEmptyState message="워크스페이스가 없습니다" />
+          <li className="col-span-full">
+            <WorkspaceEmptyState message="워크스페이스가 없습니다" />
+          </li>
         </ul>
       );
     }
