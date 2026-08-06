@@ -2,13 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
-import type { TTimelineSort } from "@/types/timeline/api";
 import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
 import type {
   ITimelineCampaignBar,
   TTimelineViewUnit,
 } from "@/types/timeline/ui";
-import type { TTimelineStatusFilter } from "@/constants/timeline/filterSort";
 import {
   TIMELINE_COL_WIDTH,
   TIMELINE_PAGE_HEIGHT,
@@ -44,6 +42,7 @@ import TimelineStatusLegend from "@/components/timeline/TimelineStatusLegend";
 
 import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
+import useTimelineStore from "@/store/useTimelineStore";
 
 const SUMMARY_POLL_INTERVAL_MS = 1500;
 const SUMMARY_POLL_TIMEOUT_MS = 90000;
@@ -69,9 +68,10 @@ export default function Timeline() {
     number | null
   >(null);
 
-  const [statusFilter, setStatusFilter] =
-    useState<TTimelineStatusFilter>("ALL");
-  const [sort, setSort] = useState<TTimelineSort>("DISPLAY_ORDER");
+  const statusFilter = useTimelineStore((s) => s.statusFilter);
+  const sort = useTimelineStore((s) => s.sort);
+  const setStatusFilter = useTimelineStore((s) => s.setStatusFilter);
+  const setSort = useTimelineStore((s) => s.setSort);
 
   const { mutate: deleteTimeline, isPending: isDeleting } = useDeleteTimeline();
   const { mutate: requestSummary, isPending: isSummaryPending } =
