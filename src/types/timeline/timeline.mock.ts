@@ -43,6 +43,7 @@ export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
     startDate: "2026-06-01",
     endDate: "2026-06-30",
     performanceStatus: "ON_TRACK",
+    displayOrder: 1,
   },
   {
     timelineId: 2,
@@ -50,6 +51,7 @@ export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
     startDate: "2026-06-10",
     endDate: "2026-06-30",
     performanceStatus: "UNDERPERFORM",
+    displayOrder: 2,
   },
 ];
 
