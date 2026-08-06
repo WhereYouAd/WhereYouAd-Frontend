@@ -40,16 +40,16 @@ export default function CampaignGroup() {
   } = useCampaignGroup();
 
   return (
-    <section className="flex w-full flex-col gap-8 pb-20">
+    <section className="flex w-full flex-col gap-8 pb-20 mobile:gap-6 mobile:pb-12">
       {/* 캠페인 기본 정보 */}
-      <Card className="flex flex-col gap-8 p-8 tablet:p-10">
+      <Card className="flex flex-col gap-8 p-8 mobile:gap-6 mobile:p-5">
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
           <p className="font-body1 leading-relaxed text-text-muted">
             워크스페이스에서 묶어 관리할 통합 캠페인 그룹의 기본 정보입니다.
           </p>
         </div>
-        <div className="flex w-full flex-col gap-10">
+        <div className="flex w-full flex-col gap-10 mobile:gap-6">
           {/* 캠페인명 */}
           <div className="flex flex-col gap-2">
             <label
@@ -87,7 +87,7 @@ export default function CampaignGroup() {
       </Card>
 
       {/* 플랫폼별 캠페인 연결 */}
-      <Card className="flex flex-col gap-8 p-8 tablet:p-10">
+      <Card className="flex flex-col gap-8 p-8 mobile:gap-6 mobile:p-5">
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">
             플랫폼별 캠페인 연결
@@ -104,7 +104,7 @@ export default function CampaignGroup() {
           {isPlatformCampaignsLoading ? (
             <CampaignGroupDropdownSkeleton />
           ) : (
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-10 mobile:gap-6">
               {/* Google */}
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 px-1">
