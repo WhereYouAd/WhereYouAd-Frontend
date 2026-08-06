@@ -30,7 +30,7 @@ export const TIMELINE_SORT_OPTIONS: {
   value: TTimelineSort;
   label: string;
 }[] = [
-  { value: "DISPLAY_ORDER", label: "생성 순서" },
-  { value: "LATEST", label: "종료일 가까운 순" },
-  { value: "OLDEST", label: "종료일 먼 순" },
+  { value: "DISPLAY_ORDER", label: "기본 순서" },
+  { value: "LATEST", label: "종료일 먼 순" },
+  { value: "OLDEST", label: "종료일 가까운 순" },
 ];
