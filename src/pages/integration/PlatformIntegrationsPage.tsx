@@ -113,6 +113,10 @@ export default function PlatformIntegrationsPage() {
     onGoogleConnectSuccess: (requestOrgId) => syncGoogle(requestOrgId),
   });
 
+  const handleNaverConnectSuccess = () => {
+    setIsNaverSyncModalOpen(true);
+  };
+
   const startNewConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
       toast.error("워크스페이스를 선택해 주세요.");
@@ -297,6 +301,7 @@ export default function PlatformIntegrationsPage() {
           orgId={orgId}
           mode={naverModalMode}
           initialCustomerId={naverCustomerId}
+          onConnectSuccess={handleNaverConnectSuccess}
         />
       ) : null}
       {orgId != null ? (
