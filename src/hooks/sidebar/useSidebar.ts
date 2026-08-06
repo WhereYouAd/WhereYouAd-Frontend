@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useLocation } from "react-router-dom";
 
 import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
@@ -9,13 +15,29 @@ import useSidebarStore from "@/store/useSidebarStore";
 export const useSidebar = () => {
   const location = useLocation();
   const [openId, setOpenId] = useState<string | null>(null);
-  const isCollapsed = useSidebarStore((s) => s.isCollapsed);
+  const isCollapsedStore = useSidebarStore((s) => s.isCollapsed);
+  const isMobileOpen = useSidebarStore((s) => s.isMobileOpen);
+  const closeMobileFromStore = useSidebarStore((s) => s.closeMobile);
   const setIsCollapsed = useSidebarStore((s) => s.setIsCollapsed);
+  /** tablet drawer 열림 시 항상 expanded */
+  const isCollapsed = isMobileOpen ? false : isCollapsedStore;
 
   const lastPathRef = useRef("");
   const pathname = normalizePathname(location.pathname);
 
   const { childIdToParentId } = mainNavSidebar;
+
+  /** drawer 닫힘 시 flyout submenu(openId) 잔류 방지 */
+  useLayoutEffect(() => {
+    if (!isMobileOpen) {
+      setOpenId(null);
+    }
+  }, [isMobileOpen]);
+
+  const closeMobileDrawer = useCallback(() => {
+    setOpenId(null);
+    closeMobileFromStore();
+  }, [closeMobileFromStore]);
 
   useEffect(() => {
     if (isCollapsed) return;
@@ -28,8 +50,8 @@ export const useSidebar = () => {
   }, [pathname, isCollapsed]);
 
   const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-    if (!isCollapsed) lastPathRef.current = "";
+    setIsCollapsed(!isCollapsedStore);
+    if (!isCollapsedStore) lastPathRef.current = "";
     setOpenId(null);
   };
 
@@ -51,11 +73,14 @@ export const useSidebar = () => {
 
   return {
     isCollapsed,
+    isCollapsedStore,
+    isMobileOpen,
     openId,
     setOpenId,
     pathname,
     toggleSidebar,
     handleItemClick,
     toggleOpenId,
+    closeMobileDrawer,
   };
 };
