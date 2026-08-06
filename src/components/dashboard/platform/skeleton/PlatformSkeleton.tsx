@@ -56,8 +56,8 @@ export function AdStatusChartSkeleton() {
 //플랫폼별 성과 효율
 export function PerformanceEfficiencyChartSkeleton() {
   return (
-    <div className="flex-1 flex items-center justify-center w-full px-5">
-      <Skeleton className="w-full h-35 rounded-2xl mb-2" />
+    <div className="flex w-full flex-1 items-center justify-center px-5">
+      <Skeleton className="mb-2 h-35 w-full rounded-2xl" />
     </div>
   );
 }
