@@ -45,7 +45,7 @@ export default function CampaignGroup() {
       <Card className="flex flex-col gap-8 p-8 mobile:gap-6 mobile:p-5">
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
-          <p className="font-body1 leading-relaxed text-text-muted">
+          <p className="font-body1-rsp leading-relaxed text-text-muted">
             워크스페이스에서 묶어 관리할 통합 캠페인 그룹의 기본 정보입니다.
           </p>
         </div>
@@ -92,7 +92,7 @@ export default function CampaignGroup() {
           <h3 className="font-heading3 text-text-title">
             플랫폼별 캠페인 연결
           </h3>
-          <p className="font-body1 leading-relaxed text-text-muted">
+          <p className="font-body1-rsp leading-relaxed text-text-muted">
             매체별 운영 중인 캠페인을 선택해 통합 그룹에 연결합니다. 최소 1개
             매체에서 캠페인을 선택해야 합니다.
           </p>
