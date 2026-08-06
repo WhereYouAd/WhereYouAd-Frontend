@@ -115,11 +115,11 @@ export default function SinglePlatformView({
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
+                className="flex flex-col gap-3 rounded-3xl border border-surface-100/40 bg-surface-100/80 px-7 py-5 shadow-Soft backdrop-blur-sm"
               >
                 <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-6 w-14 rounded-full" />
+                <Skeleton className="h-7 w-24" />
+                <Skeleton className="h-5 w-14 rounded-full" />
               </div>
             ))
           ) : isMetricsError ? (
@@ -137,6 +137,8 @@ export default function SinglePlatformView({
                 title={kpi.title}
                 value={kpi.value}
                 trend={kpi.trend}
+                className="gap-3 py-5"
+                compact
               />
             ))
           )}
