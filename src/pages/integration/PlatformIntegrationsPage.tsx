@@ -280,8 +280,8 @@ export default function PlatformIntegrationsPage() {
             </ul>
           </ErrorBoundary>
 
-          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15">
-            <p className="w-full text-center font-body1 text-text-muted/70">
+          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15 mobile:gap-6 mobile:pt-10">
+            <p className="w-full text-center font-body1-rsp text-text-muted/70">
               더 많은 플랫폼 연동을 준비하고 있어요. 지원 범위는 변경될 수
               있습니다.
             </p>

@@ -284,9 +284,9 @@ function PlatformIntegrationCard({
 
       <div className="flex-1" aria-hidden />
 
-      <div className="mt-auto flex w-full flex-col gap-4">
+      <div className="mt-auto flex w-full flex-col gap-4 mobile:gap-3">
         {status === "disconnected" ? (
-          <p className="font-body2 text-text-muted/80">
+          <p className="font-body2 leading-relaxed text-text-muted/80 mobile:leading-snug">
             {platformAccountId != null ? (
               <>
                 기존 계정을 다시 연동하면 대시보드와 캠페인에서 데이터를 확인할
