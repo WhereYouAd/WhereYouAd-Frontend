@@ -46,6 +46,7 @@ export interface IModalProps {
   hideCloseButton?: boolean;
   disableOverlayClick?: boolean;
   title?: string;
+  onExitComplete?: () => void;
 }
 
 const easeOut = [0, 0, 0.2, 1] as const;
@@ -61,6 +62,7 @@ function Modal({
   hideCloseButton = false,
   disableOverlayClick = false,
   title,
+  onExitComplete,
 }: IModalProps) {
   const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -87,7 +89,8 @@ function Modal({
   const handleExitComplete = useCallback(() => {
     setScrollLocked(false);
     previousActiveElement.current?.focus();
-  }, []);
+    onExitComplete?.();
+  }, [onExitComplete]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -125,7 +128,9 @@ function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  const handleOverlayClick = useCallback(
+  // mousedown으로 닫아야 드롭다운 축소 후 따라오는 click이 오버레이에
+  // 떨어져 모달이 같이 닫히는 문제를 막을 수 있음
+  const handleOverlayMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (disableOverlayClick) return;
       if (e.target === e.currentTarget) {
@@ -135,7 +140,7 @@ function Modal({
     [disableOverlayClick, onClose],
   );
 
-  const handleContentClick = useCallback(
+  const handleContentMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
     },
@@ -182,7 +187,7 @@ function Modal({
               transition: { duration: closeMs, ease: easeIn },
             }}
             transition={{ duration: openMs, ease: easeOut }}
-            onClick={handleOverlayClick}
+            onMouseDown={handleOverlayMouseDown}
           >
             <motion.div
               ref={modalRef}
@@ -200,7 +205,7 @@ function Modal({
                 transition: { duration: closeMs, ease: easeIn },
               }}
               transition={{ duration: openMs, ease: easeOut }}
-              onClick={handleContentClick}
+              onMouseDown={handleContentMouseDown}
               onKeyDown={handleKeyDown}
               tabIndex={-1}
             >

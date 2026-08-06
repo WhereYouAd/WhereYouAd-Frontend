@@ -1,21 +1,24 @@
 import type { ICommonResponse } from "@/types/common/common";
-import {
-  type TAcceptInvitationResponse,
-  type TCreateOrgRequest,
-  type TCreateOrgResponse,
-  type TDeleteWorkspaceMemberResponse,
-  type TGetOrgResponse,
-  type TGetWorkspaceMembersData,
-  type TInviteMemberRequest,
-  type TInviteMemberResponse,
-  type TMyOrgsData,
-  type TPendingMemberResponse,
-  type TUpdateMemberRoleRequest,
-  type TUpdateMemberRoleResponse,
-  type TUpdateWorkspaceRequest,
-  type TWorkspace,
-  type TWorkspaceDetail,
-  type TWorkspaceMemberCount,
+import type {
+  TAcceptInvitationResponse,
+  TChangeOwnerRequest,
+  TChangeOwnerResponse,
+  TCreateOrgRequest,
+  TCreateOrgResponse,
+  TDeleteWorkspaceMemberResponse,
+  TGetOrgResponse,
+  TGetWorkspaceMembersData,
+  TInviteMemberRequest,
+  TInviteMemberResponse,
+  TMyOrgsData,
+  TPendingMemberResponse,
+  TUpdateMemberRoleRequest,
+  TUpdateMemberRoleResponse,
+  TUpdateWorkspaceRequest,
+  TWorkspace,
+  TWorkspaceDetail,
+  TWorkspaceMember,
+  TWorkspaceMemberCount,
 } from "@/types/workspace/workspace";
 
 import { axiosInstance } from "@/lib/axiosInstance";
@@ -156,11 +159,43 @@ export const saveSelectedWorkspace = async (orgId: number): Promise<void> => {
   await axiosInstance.post(`/api/org/${orgId}/workspace`);
 };
 
-export const acceptInvitaton = async (
+export const acceptInvitation = async (
   token: string,
 ): Promise<TAcceptInvitationResponse> => {
   const { data } = await axiosInstance.post<
     ICommonResponse<TAcceptInvitationResponse>
-  >(`/api/org/invitations/${token}`);
+  >(`/api/org/invitations/${encodeURIComponent(token)}`);
   return data.data;
+};
+
+export const changeWorkspaceOwner = async (
+  orgId: number,
+  body: TChangeOwnerRequest,
+): Promise<TChangeOwnerResponse> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TChangeOwnerResponse>
+  >(`/api/org/${orgId}/changeOwner`, body);
+
+  return data.data;
+};
+
+// 양도 후보 등 전체 멤버가 필요할 때 cursor 끝까지 돌기
+export const getAllWorkspaceMembers = async (
+  orgId: number,
+  size = 100,
+): Promise<{ creatorId: number; members: TWorkspaceMember[] }> => {
+  const members: TWorkspaceMember[] = [];
+  let cursor: string | null = null;
+  let creatorId = 0;
+  let hasNext = true;
+
+  while (hasNext) {
+    const page = await getWorkspaceMembers(orgId, cursor, size);
+    creatorId = page.creatorId;
+    members.push(...page.members);
+    hasNext = page.hasNext;
+    cursor = page.nextCursor;
+  }
+
+  return { creatorId, members };
 };

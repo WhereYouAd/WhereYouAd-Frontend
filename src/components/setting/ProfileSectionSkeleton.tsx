@@ -8,7 +8,7 @@ export default function ProfileSectionSkeleton() {
         <Skeleton className="w-24 h-7" />
       </div>
 
-      <div className="flex tablet:flex-row gap-10">
+      <div className="flex flex-row tablet:flex-col gap-10 tablet:gap-8">
         <div className="flex flex-col items-center basis-1/4 shrink-0">
           <Skeleton className="w-24 h-5 mb-4" />
           <SkeletonCircle className="w-60 h-60" />

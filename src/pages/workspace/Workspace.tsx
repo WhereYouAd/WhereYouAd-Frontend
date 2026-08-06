@@ -222,11 +222,11 @@ export default function WorkspacePage() {
       </ErrorBoundary>
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="md" padding="lg">
-        <div className="flex flex-col items-start pr-10 px-2 tablet:px-0">
+        <div className="flex flex-col items-start pr-10 px-2 tablet:px-0 tablet:pr-0">
           <h2 className="mb-2 font-heading3 text-text-title">
             워크스페이스 생성
           </h2>
-          <p className="mb-10 text-start font-body2 text-text-muted">
+          <p className="mb-10 text-start font-body2 text-text-muted tablet:mb-8">
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.
             <br className="tablet:hidden" />
             로고 이미지와 기본 정보를 입력해 주세요.

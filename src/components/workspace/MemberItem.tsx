@@ -5,6 +5,8 @@ import type {
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
+import Badge from "@/components/common/badge/Badge";
+
 import MemberRoleSelect from "./MemberRoleSelect";
 
 import BellOffIcon from "@/assets/icon/common/bell-off.svg?react";
@@ -15,6 +17,7 @@ import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TProps = {
   member: TWorkspaceMember;
+  isCreator?: boolean;
   isReceive?: boolean;
   isNotificationLoading: boolean;
   isReceiveUpdating?: boolean;
@@ -25,6 +28,7 @@ type TProps = {
 
 export default function MemberItem({
   member,
+  isCreator = false,
   isReceive,
   isNotificationLoading,
   isReceiveUpdating = false,
@@ -38,7 +42,7 @@ export default function MemberItem({
     !isReceiveUpdating &&
     !!onReceiveToggle;
   return (
-    <li className="flex items-center justify-between py-5 gap-4 tablet:items-start">
+    <li className="flex items-center justify-between py-5 gap-4 tablet:items-stretch">
       <div className="flex items-center gap-4 w-full min-w-0">
         <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
           {member.profileImageUrl ? (
@@ -51,15 +55,27 @@ export default function MemberItem({
             <UserIcon className="text-text-auth-sub h-6 w-6" />
           )}
         </div>
+
         <div className="min-w-0 flex-1">
-          <p className="truncate font-body1 text-text-title">{member.name}</p>
+          <div className="flex items-center gap-2 min-w-0 mb-1">
+            <p className="truncate font-body1 text-text-title">{member.name}</p>
+            {isCreator ? (
+              <Badge
+                variant="infoBlue"
+                className="h-5! shrink-0 px-2! font-caption"
+              >
+                소유자
+              </Badge>
+            ) : null}
+          </div>
+
           <div className="flex text-text-auth-sub items-center gap-2 min-w-0">
             <MailIcon className="w-4 h-4" />
             <p className="truncate">{member.email}</p>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 shrink-0 tablet:justify-end">
         <button
           type="button"
           disabled={!canToggleReceive}

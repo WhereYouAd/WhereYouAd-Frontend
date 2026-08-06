@@ -149,7 +149,7 @@ export default function TimelineCreateModal({
       title={isEditMode ? "타임라인 수정" : "타임라인 생성"}
       disableOverlayClick={isPending}
     >
-      <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-10">
+      <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-0 tablet:px-0">
         <h2 className="mb-2 font-heading3 text-text-title">
           {isEditMode ? "타임라인 수정" : "타임라인 생성"}
         </h2>
@@ -161,7 +161,7 @@ export default function TimelineCreateModal({
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-10"
+          className="flex w-full flex-col gap-10 tablet:gap-8"
           noValidate
         >
           <div className="w-full space-y-7">
@@ -174,7 +174,7 @@ export default function TimelineCreateModal({
               {...register("name")}
             />
 
-            <div className="grid grid-cols-1 gap-7 tablet:grid-cols-2">
+            <div className="grid grid-cols-2 gap-7 tablet:grid-mobile-1">
               <div
                 role="presentation"
                 className={!isPending ? "cursor-pointer" : undefined}

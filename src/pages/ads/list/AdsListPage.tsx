@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useUpdateCampaignStatus } from "@/hooks/ads/useUpdateCampaignStatus";
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
@@ -14,17 +14,15 @@ import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { updateAllCampaignStatus, updateCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
-import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const { data: campaigns = [], isLoading } = useOverviewCampaignList();
+  const { mutateAsync: mutateCampaignStatus } = useUpdateCampaignStatus(orgId);
 
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<number>>(
     () => new Set(),
@@ -32,12 +30,6 @@ export default function AdsListPage() {
 
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
-
-  const invalidateCampaigns = useCallback(() => {
-    void queryClient.invalidateQueries({
-      queryKey: QUERY_KEYS.campaign.list(orgId),
-    });
-  }, [queryClient, orgId]);
 
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set());
@@ -103,19 +95,13 @@ export default function AdsListPage() {
   const bulkStop = useControlModal({
     successMessage: "캠페인 운영 상태가 반영되었습니다.",
     errorMessage: "중단 처리에 실패하였습니다.",
-    onSuccess: () => {
-      invalidateCampaigns();
-      clearSelection();
-    },
+    onSuccess: clearSelection,
   });
 
   const bulkResume = useControlModal({
     successMessage: "캠페인 운영 상태가 반영되었습니다.",
     errorMessage: "재개 처리에 실패하였습니다.",
-    onSuccess: () => {
-      invalidateCampaigns();
-      clearSelection();
-    },
+    onSuccess: clearSelection,
   });
 
   const openPauseModal = () => {
@@ -251,18 +237,14 @@ export default function AdsListPage() {
           detailListTitle="중단 대상 캠페인"
           buttonText="중단하기"
           onConfirm={() =>
-            bulkStop.handleConfirm(async () => {
-              if (!orgId) return;
-              if (pauseScope === "all") {
-                await updateAllCampaignStatus(orgId, "PAUSED");
-              } else {
-                await Promise.all(
-                  selectedOngoingIds.map((projectId) =>
-                    updateCampaignStatus(orgId, projectId, "PAUSED"),
-                  ),
-                );
-              }
-            })
+            bulkStop.handleConfirm(() =>
+              mutateCampaignStatus({
+                scope: pauseScope,
+                status: "PAUSED",
+                projectIds:
+                  pauseScope === "selection" ? selectedOngoingIds : undefined,
+              }),
+            )
           }
           isLoading={bulkStop.isLoading}
           variant="danger"
@@ -290,18 +272,14 @@ export default function AdsListPage() {
           detailListTitle="재개 대상 캠페인"
           buttonText="재개하기"
           onConfirm={() =>
-            bulkResume.handleConfirm(async () => {
-              if (!orgId) return;
-              if (resumeScope === "all") {
-                await updateAllCampaignStatus(orgId, "ON_GOING");
-              } else {
-                await Promise.all(
-                  selectedPausedIds.map((projectId) =>
-                    updateCampaignStatus(orgId, projectId, "ON_GOING"),
-                  ),
-                );
-              }
-            })
+            bulkResume.handleConfirm(() =>
+              mutateCampaignStatus({
+                scope: resumeScope,
+                status: "ON_GOING",
+                projectIds:
+                  resumeScope === "selection" ? selectedPausedIds : undefined,
+              }),
+            )
           }
           isLoading={bulkResume.isLoading}
           variant="primary"

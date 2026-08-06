@@ -1,34 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 import type { IAd } from "@/types/ads/campaign";
-import type { IApiErrorResponse } from "@/types/common/common";
+
+import { useCoreQuery } from "@/hooks/customQuery";
 
 import { getAdList } from "@/api/ads/ads";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 
 export const useAdList = (orgId: number | null, projectId: number | null) => {
-  const [ads, setAds] = useState<IAd[]>([]);
-  const [isAdLoading, setIsAdLoading] = useState(false);
+  const isValid =
+    orgId != null &&
+    projectId != null &&
+    Number.isFinite(orgId) &&
+    orgId > 0 &&
+    Number.isFinite(projectId) &&
+    projectId > 0;
 
-  const fetchAds = async () => {
-    if (!orgId || !projectId) return;
-    try {
-      setIsAdLoading(true);
-      const result = await getAdList(orgId, projectId);
-      setAds(result);
-    } catch (e) {
-      toast.error(
-        (e as IApiErrorResponse).message ??
-          "연결된 광고를 불러오지 못했습니다.",
-      );
-    } finally {
-      setIsAdLoading(false);
-    }
-  };
+  const { data, isLoading, error, isError } = useCoreQuery<IAd[]>(
+    QUERY_KEYS.campaign.ads(orgId!, projectId!),
+    () => getAdList(orgId!, projectId!),
+    { enabled: isValid },
+  );
 
   useEffect(() => {
-    fetchAds();
-  }, [orgId, projectId]);
+    if (!isError) return;
+    toast.error(error.message ?? "연결된 광고를 불러오지 못했습니다.");
+  }, [isError, error]);
 
-  return { ads, isAdLoading, refetchAds: fetchAds };
+  return {
+    ads: data ?? [],
+    isAdLoading: isLoading,
+  };
 };

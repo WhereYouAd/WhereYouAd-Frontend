@@ -7,8 +7,11 @@ import type {
 } from "@/types/dashboard/budget";
 
 import {
+  getBudgetStatus,
   getRemainingPercentage,
   getSpentPercentage,
+  statusPointClasses,
+  type TBudgetStatus,
 } from "@/utils/dashboard/budget";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
@@ -18,28 +21,14 @@ import Badge, { type TBadgeVariant } from "@/components/common/badge/Badge";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-export type TBudgetStatus = "안정" | "주의" | "위험";
+export type { TBudgetStatus };
 
-export function getBudgetStatus(
-  percentage: number,
-  warningThreshold: number,
-  dangerThreshold: number,
-): TBudgetStatus {
-  if (percentage >= dangerThreshold) return "위험";
-  if (percentage >= warningThreshold) return "주의";
-  return "안정";
-}
+export { getBudgetStatus };
 
 export const statusBadgeVariant: Record<TBudgetStatus, TBadgeVariant> = {
   안정: "infoBlue",
   주의: "infoYellow",
   위험: "infoRed",
-};
-
-const statusPointClasses: Record<TBudgetStatus, string> = {
-  안정: "bg-info-blue",
-  주의: "bg-info-yellow",
-  위험: "bg-info-red",
 };
 
 function splitInsightHeadTail(text: string): { head: string; tail?: string } {
@@ -63,6 +52,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
   warningThreshold,
   dangerThreshold,
   compact = false,
+  tightHeader = false,
   showInsight = false,
 }: IBudgetGaugeProps) {
   const mounted = useIsMounted();
@@ -93,7 +83,8 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
     splitInsightHeadTail(insightDesc);
 
   const showBudgetAmountOnLabelRow = isBudgetTypeLabel(label);
-  const headerRowGap = compact ? "mb-2" : "mb-3";
+  const headerRowGap = tightHeader ? "mb-1" : compact ? "mb-2" : "mb-3";
+  const remainingRowGap = tightHeader ? "mt-1" : compact ? "mt-2" : "mt-3";
 
   return (
     <div
@@ -130,12 +121,7 @@ const BudgetGaugeChart = memo(function BudgetGaugeChart({
             </span>
           </div>
         )}
-        <div
-          className={twMerge(
-            "flex items-baseline gap-2",
-            compact ? "mt-2" : "mt-3",
-          )}
-        >
+        <div className={twMerge("flex items-baseline gap-2", remainingRowGap)}>
           <span className="font-heading1 text-text-title tabular-nums leading-none">
             {remainingPct}%
           </span>

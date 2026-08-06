@@ -19,7 +19,7 @@ export default function TimelineStatusLegend({
   return (
     <div
       className={twMerge(
-        "flex min-w-0 w-full items-center gap-4 rounded-2xl bg-surface-200 px-5 py-3",
+        "flex min-w-0 w-full items-center gap-4 rounded-2xl bg-surface-200 px-5 py-3 tablet:px-4 tablet:py-2.5 tablet:gap-3",
         className,
       )}
     >

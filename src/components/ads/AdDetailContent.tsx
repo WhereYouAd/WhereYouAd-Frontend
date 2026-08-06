@@ -4,32 +4,33 @@ import { toast } from "sonner";
 import type { IAd } from "@/types/ads/campaign";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useCreateTrackingUrl } from "@/hooks/ads/useCreateTrackingUrl";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import { createTrackingUrl } from "@/api/ads/ads";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-export default function AdDetailContent({
-  ad,
-  refetchAds,
-}: {
-  ad: IAd;
-  refetchAds: () => void;
-}) {
-  const { orgId } = useParams<{
+export default function AdDetailContent({ ad }: { ad: IAd }) {
+  const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
 
+  const orgIdNum = orgId ? Number(orgId) : null;
+  const projectIdNum = projectId ? Number(projectId) : null;
+
+  const { mutateAsync: mutateCreateTrackingUrl } = useCreateTrackingUrl(
+    orgIdNum,
+    projectIdNum,
+  );
+
   const trackControl = useControlModal({
     successMessage: "트래킹 링크가 발급되었습니다.",
     errorMessage: "트래킹 링크 발급에 실패했습니다.",
-    onSuccess: refetchAds,
   });
 
   const isTrackingActive = !!ad.trackingUrl && ad.trackingUrl.length > 0;
@@ -179,7 +180,10 @@ export default function AdDetailContent({
                 );
                 throw new Error("랜딩 URL이 없습니다.");
               }
-              await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
+              await mutateCreateTrackingUrl({
+                adContentId: ad.id,
+                landingUrl: ad.landingUrl,
+              });
             })
           }
           isLoading={trackControl.isLoading}

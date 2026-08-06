@@ -131,6 +131,9 @@ export default function Setting() {
     getMyWorkspaces,
   );
 
+  const myRole = useWorkspaceStore((s) => s.myRole);
+  const isAdmin = myRole === "ADMIN";
+
   const {
     data: notificationSettings,
     isLoading: isNotificationLoading,
@@ -419,7 +422,10 @@ export default function Setting() {
       const shouldSaveMaster =
         canSaveNotification && hasMasterChanges && selectedOrgId != null;
       const shouldSaveOrg =
-        canSaveNotification && hasOrgToggleChanges && selectedOrgId != null;
+        canSaveNotification &&
+        hasOrgToggleChanges &&
+        selectedOrgId != null &&
+        isAdmin;
 
       if (
         shouldSaveChannel ||
@@ -648,6 +654,7 @@ export default function Setting() {
           >
             <NotificationSection
               email={draftProfile.email}
+              isAdmin={isAdmin}
               masterEnabled={draftOrgNotif.masterEnabled}
               onMasterEnabledChange={(value) => {
                 if (!value) {
@@ -731,10 +738,10 @@ export default function Setting() {
         )}
       </div>
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4 tablet:flex-col tablet:items-stretch">
         <button
           type="button"
-          className="ml-3 font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title"
+          className="ml-3 font-caption text-text-muted underline decoration-surface-400 underline-offset-2 transition-colors hover:text-text-title tablet:ml-0 tablet:self-start"
           onClick={() => setIsWithdrawModalOpen(true)}
           aria-label="회원 탈퇴"
         >
@@ -749,6 +756,7 @@ export default function Setting() {
           disabled={
             !hasChanges || isLoading || isNotificationSectionLoading || isSaving
           }
+          className="tablet:w-full"
         >
           변경사항 저장하기
         </Button>

@@ -12,10 +12,14 @@ import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 import TextareaField from "@/components/common/textarea/TextareaField";
+import TransferOwnerModal from "@/components/workspace/TransferOwnerModal";
 import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
+import { getMyInfo } from "@/api/auth/auth";
 import {
+  changeWorkspaceOwner,
   deleteWorkspace,
+  getAllWorkspaceMembers,
   getMyWorkspaces,
   getWorkspace,
   updateWorkspace,
@@ -50,6 +54,7 @@ export default function WorkspaceSetting() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
   const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
+  const [transferOpen, setTransferOpen] = useState(false);
 
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -70,6 +75,47 @@ export default function WorkspaceSetting() {
     { enabled: orgId !== null },
   );
   const errorMsg = isError ? (error.message ?? "불러오기 실패") : null;
+
+  const membersQuery = useCoreQuery(
+    QUERY_KEYS.workspace.members(orgId ?? 0),
+    () => getAllWorkspaceMembers(orgId!),
+    { enabled: orgId !== null },
+  );
+
+  // getMyInfo는 ICommonResponse를 그대로 반환 → userId는 data 안에 있음
+  const { data: myInfoResponse } = useCoreQuery(
+    QUERY_KEYS.auth.myInfo(),
+    getMyInfo,
+  );
+  const myUserId = myInfoResponse?.data?.userId;
+  const myName = myInfoResponse?.data?.name;
+
+  const members = membersQuery.data?.members ?? [];
+  const creatorId = membersQuery.data?.creatorId ?? null;
+
+  const amICreator =
+    creatorId !== null && myUserId !== undefined
+      ? myUserId === creatorId
+      : false;
+
+  const currentOwner = useMemo(
+    () =>
+      creatorId !== null
+        ? (members.find((m) => m.memberId === creatorId) ?? null)
+        : null,
+    [members, creatorId],
+  );
+
+  const adminCandidates = useMemo(
+    () =>
+      members.filter(
+        (m) =>
+          m.role === "ADMIN" &&
+          (creatorId === null || m.memberId !== creatorId) &&
+          (myUserId === undefined || m.memberId !== myUserId),
+      ),
+    [members, creatorId, myUserId],
+  );
 
   useEffect(() => {
     if (!detail) return;
@@ -123,6 +169,27 @@ export default function WorkspaceSetting() {
   });
 
   const deleting = deleteMutation.isPending;
+
+  const changeOwnerMutation = useCoreMutation(
+    (newOwnerUserId: number) =>
+      changeWorkspaceOwner(orgId!, { newOwnerUserId }),
+    {
+      invalidateKeys:
+        orgId !== null
+          ? [
+              QUERY_KEYS.workspace.list(),
+              QUERY_KEYS.workspace.members(orgId),
+              QUERY_KEYS.workspace.detail(orgId),
+            ]
+          : [QUERY_KEYS.workspace.list()],
+      userOnSuccess: () => {
+        toast.success("조직 소유권이 양도되었습니다");
+        setTransferOpen(false);
+      },
+      userOnError: (err) =>
+        toast.error(err.message ?? "소유권 양도에 실패했습니다"),
+    },
+  );
 
   const onDelete = () => {
     if (orgId === null) return;
@@ -210,8 +277,9 @@ export default function WorkspaceSetting() {
           resetKeys={[detail]}
         >
           <>
-            <Card className="p-8">
-              <div className="mt-9 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
+            <Card className="p-8 tablet:p-6">
+              <h2 className="font-heading3 text-text-title">조직 기본 정보</h2>
+              <div className="mt-6 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
                 <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
                   <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
                     로고 이미지
@@ -322,6 +390,42 @@ export default function WorkspaceSetting() {
               )}
             </Card>
 
+            {amICreator && (
+              <Card className="p-8">
+                <div className="flex items-center justify-between gap-6 tablet:flex-col tablet:items-stretch">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="font-heading3 text-text-title">
+                      조직 소유권 양도
+                    </h2>
+                    <p className="mt-2 font-body1 text-text-auth-sub">
+                      현재 소유자: {currentOwner?.name ?? myName ?? "-"}
+                    </p>
+                    <p className="mt-1 font-body2 text-text-muted break-keep">
+                      소유권은 같은 조직의 관리자(ADMIN)에게만 양도할 수
+                      있습니다.
+                    </p>
+                    <p className="mt-1 font-body2 text-text-muted break-keep">
+                      양도 후에야 멤버가 있는 조직의 소유자가 회원 탈퇴를 진행할
+                      수 있습니다.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="big"
+                    onClick={() => setTransferOpen(true)}
+                    disabled={
+                      adminCandidates.length === 0 ||
+                      changeOwnerMutation.isPending
+                    }
+                    className="w-auto shrink-0 self-center tablet:w-full"
+                  >
+                    소유권 양도
+                  </Button>
+                </div>
+              </Card>
+            )}
+
             <Modal
               isOpen={deleteOpen}
               onClose={() => {
@@ -367,6 +471,19 @@ export default function WorkspaceSetting() {
                 variant="danger"
               />
             </Modal>
+
+            <TransferOwnerModal
+              isOpen={transferOpen}
+              onClose={() => {
+                if (!changeOwnerMutation.isPending) setTransferOpen(false);
+              }}
+              currentOwnerName={currentOwner?.name ?? myName ?? "-"}
+              candidates={adminCandidates}
+              onConfirm={(newOwnerUserId) => {
+                changeOwnerMutation.mutate(newOwnerUserId);
+              }}
+              isLoading={changeOwnerMutation.isPending}
+            />
           </>
         </ErrorBoundary>
       )}

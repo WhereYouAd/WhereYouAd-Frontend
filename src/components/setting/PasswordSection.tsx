@@ -36,7 +36,7 @@ export default function PasswordSection({
   const [showConfirm, setShowConfirm] = useState(false);
 
   return (
-    <Card className="p-8 tablet:p-10">
+    <Card className="p-8">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div>
           <div className="flex gap-4 items-center">
@@ -51,7 +51,7 @@ export default function PasswordSection({
           </p>
         </div>
       </header>
-      <div className="grid grid-cols-1 tablet:grid-cols-1 gap-x-8 gap-y-6 tablet:max-w-4xl">
+      <div className="grid grid-cols-1 gap-x-8 gap-y-6 tablet:max-w-4xl">
         <div className="tablet:col-span-1">
           <Input
             type={showCurrent ? "text" : "password"}
