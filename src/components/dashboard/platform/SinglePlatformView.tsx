@@ -92,8 +92,8 @@ export default function SinglePlatformView({
 
   return (
     <div className="flex flex-col gap-8">
-      {/* platform header */}
-      <div className="flex items-center justify-between">
+      {/* platform header — mobile에서는 dropdown으로 플랫폼명 표시 */}
+      <div className="flex items-center justify-between mobile:hidden">
         <div className="h-10 flex items-center">
           {logoInfo ? (
             <logoInfo.component
