@@ -115,6 +115,19 @@
     }
   }
 
+  .font-body1-rsp {
+    font-size: var(--type-body1-size);
+    font-weight: var(--type-body1-weight);
+    line-height: var(--type-body1-leading);
+  }
+  @media (max-width: 639px) {
+    .font-body1-rsp {
+      font-size: var(--type-body2-size);
+      font-weight: var(--type-body2-weight);
+      line-height: var(--type-body2-leading);
+    }
+  }
+
   /* 모바일(< 640px)에서 그리드를 1열로 강제 — tablet: 커스텀 변형 우선순위 우회 */
   .grid-mobile-1 {}
   @media (max-width: 639px) {

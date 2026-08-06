@@ -17,20 +17,20 @@ const PLATFORM_DROPDOWN_COUNT = 3;
 function CampaignTableRowSkeleton() {
   return (
     <li
-      className="flex list-none items-center border-b border-surface-400/50 px-6 py-5 last:border-b-0 tablet:px-5 tablet:py-4"
+      className="flex list-none items-center border-b border-surface-400/50 px-6 py-5 last:border-b-0 tablet:px-5 tablet:py-4 mobile:px-3 mobile:py-3"
       aria-hidden
     >
-      <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10">
+      <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10 mobile:w-8">
         <Skeleton className="h-4 w-4 rounded" />
       </div>
-      <div className="min-w-0 flex-1 pr-5 tablet:pr-4">
+      <div className="min-w-0 flex-1 pr-5 tablet:pr-4 mobile:pr-2">
         <Skeleton className="h-4 w-full max-w-48" />
       </div>
-      <div className="mr-24 flex w-28 shrink-0 items-center gap-1 tablet:mr-20 tablet:w-24">
-        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6" />
-        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6" />
+      <div className="mr-24 flex w-28 shrink-0 items-center gap-1 tablet:mr-20 tablet:w-24 mobile:mr-2 mobile:w-auto mobile:gap-0.5">
+        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
+        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
       </div>
-      <div className="w-[28%] shrink-0 tablet:w-[26%]">
+      <div className="w-[28%] shrink-0 tablet:w-[26%] mobile:w-[30%] mobile:max-w-28">
         <Skeleton className="h-2 w-full rounded-full" />
       </div>
     </li>
@@ -43,14 +43,14 @@ export function CampaignTableSkeleton() {
       className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-surface-100"
       aria-hidden
     >
-      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5">
-        <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10">
+      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-3 mobile:py-3">
+        <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10 mobile:w-8">
           <Skeleton className="h-4 w-4 rounded" />
         </div>
         <Skeleton className="h-4 w-16" />
         <div className="flex-1" aria-hidden />
-        <Skeleton className="mr-24 h-4 w-12 tablet:mr-20" />
-        <Skeleton className="h-4 w-24" />
+        <Skeleton className="mr-24 h-4 w-12 tablet:mr-20 mobile:mr-2 mobile:hidden" />
+        <Skeleton className="h-4 w-24 mobile:w-16" />
       </div>
 
       <ul className="m-0 list-none p-0">
@@ -70,15 +70,17 @@ export function AdsListPageSkeleton() {
       aria-label="캠페인 목록 로딩 중"
     >
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:flex-col tablet:items-stretch tablet:px-5 tablet:py-3.5 mobile:px-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 tablet:flex-none">
             <Skeleton className="h-3 w-8" />
             <Skeleton className="h-6 w-28" />
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-            <Skeleton className="h-9 w-14 rounded-xl" />
-            <Skeleton className="h-9 w-14 rounded-xl" />
-            <Skeleton className="h-9 w-32 rounded-xl" />
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 tablet:w-full tablet:flex-col tablet:items-stretch">
+            <div className="flex items-center gap-2 tablet:w-full">
+              <Skeleton className="h-9 w-14 rounded-xl tablet:min-w-0 tablet:flex-1" />
+              <Skeleton className="h-9 w-14 rounded-xl tablet:min-w-0 tablet:flex-1" />
+            </div>
+            <Skeleton className="h-9 w-32 rounded-xl tablet:w-full" />
           </div>
         </div>
 
