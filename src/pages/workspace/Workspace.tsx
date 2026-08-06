@@ -156,7 +156,7 @@ export default function WorkspacePage() {
 
   const renderWorkspaceContent = () => {
     if (isListLoading) {
-      return <WorkspaceListLoading />;
+      return <WorkspaceListLoading listOnly />;
     }
     if (listErrorMsg) {
       return (
@@ -168,13 +168,15 @@ export default function WorkspacePage() {
     }
     if (sortedWorkspaces.length === 0) {
       return (
-        <ul className="space-y-5">
-          <WorkspaceEmptyState message="워크스페이스가 없습니다" />
+        <ul className="grid grid-cols-2 gap-5 rounded-2xl bg-surface-200/80 p-4 tablet:grid-cols-1">
+          <li className="col-span-full">
+            <WorkspaceEmptyState message="워크스페이스가 없습니다" />
+          </li>
         </ul>
       );
     }
     return (
-      <ul className="space-y-5">
+      <ul className="grid grid-cols-2 gap-5 tablet:grid-cols-1">
         {sortedWorkspaces.map((w) => (
           <WorkspaceCard
             key={String(w.orgId)}
