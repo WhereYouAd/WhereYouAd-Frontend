@@ -250,7 +250,7 @@ function PlatformIntegrationCard({
       : STATUS_LABEL[status];
 
   return (
-    <div className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft">
+    <div className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft mobile:p-6">
       <div className="flex min-w-0 items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>

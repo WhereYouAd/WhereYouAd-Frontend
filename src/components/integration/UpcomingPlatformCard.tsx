@@ -6,7 +6,7 @@ import Button from "@/components/common/button/Button";
 import KakaoLogo from "@/assets/logo/social-logo/circle/kakao-circle.svg?react";
 
 const UPCOMING_CARD_SHELL_CLASS =
-  "flex h-full min-h-70 w-full rounded-3xl bg-surface-100 p-8 shadow-Soft tablet:p-8";
+  "flex h-full min-h-70 w-full rounded-3xl bg-surface-100 p-8 shadow-Soft mobile:p-6";
 const UPCOMING_CARD_DISABLED_CLASS =
   "pointer-events-none select-none opacity-70 grayscale";
 
