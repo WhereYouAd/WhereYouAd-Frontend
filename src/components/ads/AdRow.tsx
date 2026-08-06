@@ -12,18 +12,18 @@ import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
 
 /** 체크박스 | 광고 명 | 상태 | (플랫폼) | 펼침 — AdListTable과 동일 그리드 */
 const adListTableGridColsWithPlatform =
-  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.75rem_2.5rem] items-center gap-x-3";
+  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.75rem_2.5rem] items-center gap-x-3 mobile:grid-cols-[2rem_minmax(0,1fr)_auto_2rem_1.75rem] mobile:gap-x-1.5";
 
 const adListTableGridColsWithoutPlatform =
-  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.5rem] items-center gap-x-3";
+  "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.5rem] items-center gap-x-3 mobile:grid-cols-[2rem_minmax(0,1fr)_auto_1.75rem] mobile:gap-x-1.5";
 
 const adListTableGridPadding = {
-  header: "px-6 py-4 tablet:px-5 tablet:py-3.5",
-  row: "px-6 py-5 tablet:px-5 tablet:py-4",
+  header: "px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-3 mobile:py-3",
+  row: "px-6 py-5 tablet:px-5 tablet:py-4 mobile:px-3 mobile:py-3",
 } as const;
 
 export function getAdListTableStatusCellClass() {
-  return "flex min-w-0 items-center justify-center justify-self-center self-center";
+  return "flex min-w-0 items-center justify-center justify-self-center self-center mobile:justify-self-end";
 }
 
 export function getAdListTableHeaderGridClass(hidePlatformColumn = false) {
@@ -117,7 +117,7 @@ export default function AdRow({
           onClick={onToggle}
           aria-expanded={isOpen}
           className={twMerge(
-            "min-w-0 cursor-pointer truncate text-left font-body1 outline-none transition-colors hover:text-primary-500",
+            "min-w-0 cursor-pointer truncate text-left font-body1-rsp outline-none transition-colors hover:text-primary-500",
             isPaused ? "text-text-muted" : "text-text-title",
             isOpen && "text-primary-500",
           )}
@@ -126,13 +126,16 @@ export default function AdRow({
         </button>
 
         <div className={getAdListTableStatusCellClass()}>
-          <Badge variant={runStatus === "running" ? "infoBlue" : "surface"}>
+          <Badge
+            variant={runStatus === "running" ? "infoBlue" : "surface"}
+            className="mobile:h-6 mobile:px-2"
+          >
             {runStatusText}
           </Badge>
         </div>
 
         {!hidePlatformColumn ? (
-          <div className="flex min-w-11 items-center justify-start justify-self-start">
+          <div className="flex min-w-11 items-center justify-start justify-self-start mobile:min-w-0">
             <span className="flex shrink-0" title={platform}>
               {LogoMap[platform] ?? (
                 <span className="font-caption text-text-muted">?</span>
@@ -146,7 +149,7 @@ export default function AdRow({
             type="button"
             onClick={onToggle}
             aria-label={isOpen ? `${name} 상세 접기` : `${name} 상세 펼치기`}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-auth-sub transition-colors hover:bg-surface-200/80 hover:text-text-title"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-text-auth-sub transition-colors hover:bg-surface-200/80 hover:text-text-title mobile:h-8 mobile:w-8"
           >
             <ChevronIcon
               className={twMerge(

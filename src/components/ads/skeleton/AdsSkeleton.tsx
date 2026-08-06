@@ -70,17 +70,17 @@ export function AdsListPageSkeleton() {
       aria-label="캠페인 목록 로딩 중"
     >
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:flex-col tablet:items-stretch tablet:px-5 tablet:py-3.5 mobile:px-3">
-          <div className="flex min-w-0 flex-1 flex-col gap-2 tablet:flex-none">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 mobile:flex-none">
             <Skeleton className="h-3 w-8" />
             <Skeleton className="h-6 w-28" />
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 tablet:w-full tablet:flex-col tablet:items-stretch">
-            <div className="flex items-center gap-2 tablet:w-full">
-              <Skeleton className="h-9 w-14 rounded-xl tablet:min-w-0 tablet:flex-1" />
-              <Skeleton className="h-9 w-14 rounded-xl tablet:min-w-0 tablet:flex-1" />
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full mobile:flex-col mobile:items-stretch">
+            <div className="flex items-center gap-2 mobile:w-full">
+              <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
+              <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
             </div>
-            <Skeleton className="h-9 w-32 rounded-xl tablet:w-full" />
+            <Skeleton className="h-9 w-32 rounded-xl mobile:w-full" />
           </div>
         </div>
 
@@ -94,8 +94,11 @@ export function AdsListPageSkeleton() {
 
 export function CampaignDetailHeaderSkeleton() {
   return (
-    <Card className="px-6 py-8 tablet:px-5 tablet:py-7" aria-hidden>
-      <header className="flex w-full flex-col gap-6">
+    <Card
+      className="px-6 py-8 tablet:px-5 tablet:py-7 mobile:px-4 mobile:py-6"
+      aria-hidden
+    >
+      <header className="flex w-full flex-col gap-6 mobile:gap-7">
         <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Skeleton className="h-8 w-48 max-w-full" />
@@ -190,18 +193,18 @@ export function AdListTableSkeleton({
 export function CampaignDetailAdsSectionSkeleton() {
   return (
     <Card className="flex flex-col overflow-hidden p-0">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 mobile:flex-none">
           <Skeleton className="h-3 w-20" />
           <Skeleton className="h-6 w-28" />
         </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-          <Skeleton className="h-9 w-14 rounded-xl" />
-          <Skeleton className="h-9 w-14 rounded-xl" />
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full">
+          <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
+          <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5">
+      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-3 mobile:py-4">
         <div className="flex items-stretch gap-3">
           <span
             className="w-1 shrink-0 self-stretch rounded-r-md bg-surface-400"

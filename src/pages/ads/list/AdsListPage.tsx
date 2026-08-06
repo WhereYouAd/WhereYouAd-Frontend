@@ -147,8 +147,8 @@ export default function AdsListPage() {
   return (
     <section className="flex w-full flex-col">
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:flex-col tablet:items-stretch tablet:px-5 tablet:py-3.5 mobile:px-3">
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5 tablet:flex-none">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5 mobile:flex-none">
             <p className="font-caption text-text-placeholder">광고</p>
             <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
               <h2 className="font-heading3 text-text-title">캠페인 목록</h2>
@@ -168,13 +168,13 @@ export default function AdsListPage() {
               ) : null}
             </div>
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 tablet:w-full tablet:flex-col tablet:items-stretch">
-            <div className="flex items-center gap-2 tablet:w-full">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full mobile:flex-col mobile:items-stretch">
+            <div className="flex items-center gap-2 mobile:w-full">
               <Button
                 type="button"
                 size="small"
                 variant="dangerSoft"
-                className="tablet:min-w-0 tablet:flex-1"
+                className="mobile:min-w-0 mobile:flex-1"
                 onClick={openPauseModal}
                 disabled={!canPause || bulkStop.isLoading}
               >
@@ -184,7 +184,7 @@ export default function AdsListPage() {
                 type="button"
                 size="small"
                 variant="outline"
-                className="border-info-blue text-info-blue hover:bg-info-blue/5 tablet:min-w-0 tablet:flex-1"
+                className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
                 onClick={openResumeModal}
                 disabled={!canResume || bulkResume.isLoading}
               >
@@ -195,7 +195,7 @@ export default function AdsListPage() {
               type="button"
               size="small"
               variant="gradient"
-              className="tablet:w-full"
+              className="mobile:w-full"
               onClick={handleCampaignGroupClick}
             >
               통합 캠페인 등록

@@ -39,7 +39,7 @@ const PLATFORM_WORDMARK: Record<TPlatform, string> = {
 };
 
 const platformSectionBlockClass =
-  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-6";
+  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-3 mobile:py-4";
 
 const platformSectionDividerClass = "border-t border-surface-400/75";
 
@@ -249,11 +249,11 @@ export default function CampaignDetail() {
 
   return (
     <section className="flex w-full flex-col gap-8">
-      <Card className="px-6 py-8 tablet:px-5 tablet:py-7">
-        <header className="flex w-full flex-col gap-6">
+      <Card className="px-6 py-8 tablet:px-5 tablet:py-7 mobile:px-4 mobile:py-6">
+        <header className="flex w-full flex-col gap-6 mobile:gap-7">
           <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
-              <h1 className="min-w-0 wrap-break-word font-heading2 text-text-title">
+              <h1 className="min-w-0 wrap-break-word font-heading2-rsp text-text-title">
                 {data.name}
               </h1>
               <Badge
@@ -307,8 +307,8 @@ export default function CampaignDetail() {
         <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5 mobile:flex-none">
               <p className="font-caption text-text-placeholder">광고</p>
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
                 <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
@@ -328,11 +328,12 @@ export default function CampaignDetail() {
                 ) : null}
               </div>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full">
               <Button
                 type="button"
                 size="small"
                 variant="dangerSoft"
+                className="mobile:min-w-0 mobile:flex-1"
                 onClick={openAdPauseModal}
                 disabled={!canPauseAds || bulkAdPause.isLoading}
               >
@@ -342,7 +343,7 @@ export default function CampaignDetail() {
                 type="button"
                 size="small"
                 variant="outline"
-                className="border-info-blue text-info-blue hover:bg-info-blue/5"
+                className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
                 onClick={openAdResumeModal}
                 disabled={!canResumeAds || bulkAdResume.isLoading}
               >

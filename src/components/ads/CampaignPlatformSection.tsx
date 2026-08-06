@@ -92,8 +92,13 @@ export default function CampaignPlatformSection({
           <div className="flex min-w-0 flex-1 items-center gap-3">
             {PLATFORM_LOGO[platform]}
             <div className="flex min-w-0 flex-col gap-1">
-              <h2 className="font-heading3 text-text-title">
-                {PLATFORM_LABEL[platform]}
+              <h2 className="text-text-title">
+                <span className="font-heading3 mobile:hidden">
+                  {PLATFORM_LABEL[platform]}
+                </span>
+                <span className="hidden font-heading4 mobile:inline">
+                  {PLATFORM_LABEL[platform]}
+                </span>
               </h2>
               {platformBudget?.adCampaignName ? (
                 <p className="truncate font-body2 text-text-muted">
