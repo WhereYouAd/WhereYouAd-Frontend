@@ -325,14 +325,14 @@ export default function TimelinePerformancePanel({
               key={metric.metric}
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "flex min-w-0 flex-1 flex-col gap-1 px-4 py-3.5 tablet:min-w-[calc(50%-0.25rem)]",
+                "flex min-w-0 flex-1 flex-col gap-1 border border-primary-200/40 px-4 py-3.5 tablet:min-w-[calc(50%-0.25rem)]",
               )}
             >
               <span className="ml-1 flex flex-col">
                 <span className="truncate font-body2 text-text-muted">
                   {metric.label}
                 </span>
-                <span className="truncate  text-text-title tracking-tight font-heading4">
+                <span className="truncate text-primary-400 tracking-tight font-heading4">
                   {formatMetricValue(metric.value, metric.unit)}
                 </span>
                 {metric.changeRate !== undefined && (
