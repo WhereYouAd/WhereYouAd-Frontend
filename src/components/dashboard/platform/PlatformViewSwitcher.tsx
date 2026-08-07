@@ -44,7 +44,7 @@ export default function PlatformViewSwitcher({
         variant={isAllView ? "primary" : "custom"}
         onClick={onSelectAll}
         className={twMerge(
-          "rounded-2xl py-5 font-body1",
+          "h-12 rounded-2xl font-body1",
           isMobileLayout ? "w-full min-w-0" : "w-28 shrink-0",
           !isAllView &&
             "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
@@ -62,7 +62,7 @@ export default function PlatformViewSwitcher({
               size="small"
               variant={!isAllView ? "primary" : "custom"}
               className={twMerge(
-                "flex items-center rounded-2xl py-5",
+                "flex h-12 items-center rounded-2xl",
                 isMobileLayout ? "w-full min-w-0" : "w-34 shrink-0",
                 isAllView &&
                   "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
