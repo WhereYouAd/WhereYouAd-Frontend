@@ -260,6 +260,7 @@ export default function TimelineCreateModal({
                 render={() => (
                   <DropdownMenu
                     fullWidth
+                    inFlow
                     aria-label="비교 기간 선택"
                     items={comparisonMenuItems}
                     trigger={(open) => (
