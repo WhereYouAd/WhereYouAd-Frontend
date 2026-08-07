@@ -208,7 +208,9 @@ export function DropdownMenu({
             <div
               className={twMerge(
                 "space-y-1",
-                fullWidth && "max-h-60 overflow-y-auto overscroll-contain",
+                fullWidth &&
+                  !inFlow &&
+                  "max-h-60 overflow-y-auto overscroll-contain",
               )}
             >
               {items.map((it, idx) => (
