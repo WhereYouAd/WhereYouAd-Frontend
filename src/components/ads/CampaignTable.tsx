@@ -3,7 +3,10 @@ import { twMerge } from "tailwind-merge";
 
 import type { ICampaign } from "@/types/ads/campaign";
 
-import CampaignRow from "./CampaignRow";
+import CampaignRow, {
+  CAMPAIGN_BUDGET_COL_CLASS,
+  CAMPAIGN_PLATFORM_COL_CLASS,
+} from "./CampaignRow";
 
 interface ICampaignTableProps {
   campaigns: ICampaign[];
@@ -71,10 +74,20 @@ export default function CampaignTable({
         <div className="min-w-0 flex-1 font-label text-text-muted">
           캠페인 명
         </div>
-        <div className="mr-24 w-28 shrink-0 whitespace-nowrap text-left font-label text-text-muted tablet:mr-20 tablet:w-24 mobile:mr-2 mobile:w-auto">
+        <div
+          className={twMerge(
+            CAMPAIGN_PLATFORM_COL_CLASS,
+            "whitespace-nowrap text-left font-label text-text-muted",
+          )}
+        >
           <span className="mobile:hidden">플랫폼</span>
         </div>
-        <div className="w-[28%] shrink-0 text-left font-label text-text-muted tablet:w-[26%] mobile:w-[30%] mobile:max-w-28">
+        <div
+          className={twMerge(
+            CAMPAIGN_BUDGET_COL_CLASS,
+            "text-left font-label text-text-muted",
+          )}
+        >
           <span className="tablet:hidden">예산 소진 현황</span>
           <span className="hidden tablet:inline">예산</span>
         </div>
