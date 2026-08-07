@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/provider";
@@ -8,6 +8,7 @@ import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import { getTimelineMetricLabel } from "@/utils/timeline/buildTimelineChartSeries";
+import { getPeriodIndexContainingDate } from "@/utils/timeline/period";
 import {
   canGoToPrevChartPeriod,
   sliceDailyTrendByPeriod,
@@ -149,6 +150,12 @@ export default function TimelinePerformancePanel({
 
   const chartMetric = data.metrics[0]?.metric ?? "CLICK";
   const chartMetricLabel = getTimelineMetricLabel(chartMetric);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    setViewUnit("WEEK");
+    setChartPeriodIndex(getPeriodIndexContainingDate("WEEK", data.startDate));
+  }, [isOpen, data.startDate]);
 
   const {
     periodLabel: chartPeriodLabel,
