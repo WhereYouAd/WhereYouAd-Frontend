@@ -39,7 +39,7 @@ const PLATFORM_WORDMARK: Record<TPlatform, string> = {
 };
 
 const platformSectionBlockClass =
-  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-3 mobile:py-4";
+  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-4 mobile:py-4";
 
 const platformSectionDividerClass = "border-t border-surface-400/75";
 
@@ -307,7 +307,7 @@ export default function CampaignDetail() {
         <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-4">
             <div className="flex min-w-0 flex-1 flex-col gap-0.5 mobile:flex-none">
               <p className="font-caption text-text-placeholder">광고</p>
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -397,7 +397,7 @@ export default function CampaignDetail() {
               ))}
             </div>
           ) : (
-            <p className="px-6 py-16 text-center font-body1 text-text-placeholder tablet:px-5">
+            <p className="px-6 py-16 text-center font-body1 text-text-placeholder tablet:px-5 mobile:px-4">
               연결된 광고 소재가 없습니다.
             </p>
           )}

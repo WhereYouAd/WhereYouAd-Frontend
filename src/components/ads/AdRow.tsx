@@ -18,8 +18,8 @@ const adListTableGridColsWithoutPlatform =
   "grid w-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_5.5rem_2.5rem] items-center gap-x-3 mobile:grid-cols-[2rem_minmax(0,1fr)_auto_1.75rem] mobile:gap-x-1.5";
 
 const adListTableGridPadding = {
-  header: "px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-3 mobile:py-3",
-  row: "px-6 py-5 tablet:px-5 tablet:py-4 mobile:px-3 mobile:py-3",
+  header: "px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-4 mobile:py-3",
+  row: "px-6 py-5 tablet:px-5 tablet:py-4 mobile:px-4 mobile:py-3",
 } as const;
 
 export function getAdListTableStatusCellClass() {

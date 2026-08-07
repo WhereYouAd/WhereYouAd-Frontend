@@ -205,7 +205,7 @@ export function AdListTableSkeleton({
 export function CampaignDetailAdsSectionSkeleton() {
   return (
     <Card className="flex flex-col overflow-hidden p-0">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-4">
         <div className="flex min-w-0 flex-1 flex-col gap-2 mobile:flex-none">
           <Skeleton className="h-3 w-20" />
           <Skeleton className="h-6 w-28" />
@@ -216,7 +216,7 @@ export function CampaignDetailAdsSectionSkeleton() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-3 mobile:py-4">
+      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-4 mobile:py-4">
         <div className="flex items-stretch gap-3">
           <span
             className="w-1 shrink-0 self-stretch rounded-r-md bg-surface-400"
