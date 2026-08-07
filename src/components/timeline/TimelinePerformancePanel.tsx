@@ -319,13 +319,13 @@ export default function TimelinePerformancePanel({
         </section>
 
         {/* KPI — 선택한 지표 수만큼 가로 균등 분할 */}
-        <section className="flex w-full gap-2 tablet:flex-wrap">
+        <section className="flex w-full justify-start gap-3 tablet:gap-5">
           {data.metrics.map((metric) => (
             <div
               key={metric.metric}
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "flex min-w-0 flex-1 flex-col gap-1 border border-primary-200/40 px-4 py-3.5 tablet:min-w-[calc(50%-0.25rem)]",
+                "flex min-w-0 flex-1 flex-col gap-1 border border-primary-200/40 px-4 py-3.5",
               )}
             >
               <span className="ml-1 flex flex-col">
