@@ -69,15 +69,16 @@ const StatCard = memo(function StatCard({
   return (
     <div
       className={twMerge(
-        "bg-surface-100/80 backdrop-blur-sm rounded-3xl shadow-Soft p-7 flex flex-col gap-4 border border-surface-100/40",
+        "flex flex-col gap-4 rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm",
         className,
       )}
       {...rest}
     >
       <p className="font-body2 text-text-muted">{title}</p>
       <p
+        title={String(value)}
         className={twMerge(
-          "text-text-title tracking-tight",
+          "tracking-tight text-text-title",
           compact ? "font-heading2" : "font-heading1",
           valueClassName,
         )}

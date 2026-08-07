@@ -24,10 +24,10 @@ export const PlatformDetailCard = memo(
     const kpis = useMemo(() => metricsToKpis(data), [data]);
 
     const innerCardClass =
-      "shadow-none! hover:shadow-none! !rounded-2xl p-2! gap-2!";
+      "min-w-0 shadow-none! hover:shadow-none! !rounded-2xl p-2! gap-2!";
 
     return (
-      <Card className="flex-1 p-7">
+      <Card className="min-w-0 flex-1 p-7">
         <div className="mb-8 flex items-center gap-2">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
           <h3 className="truncate font-heading4 text-text-title">
@@ -35,7 +35,7 @@ export const PlatformDetailCard = memo(
           </h3>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid min-w-0 grid-cols-2 gap-2">
           {kpis.map((kpi) => (
             <StatCard
               key={kpi.title}
@@ -43,7 +43,7 @@ export const PlatformDetailCard = memo(
               value={kpi.value}
               trend={kpi.trend}
               className={innerCardClass}
-              valueClassName="font-heading2"
+              valueClassName="min-w-0 truncate font-heading2-rsp tabular-nums"
             />
           ))}
         </div>
