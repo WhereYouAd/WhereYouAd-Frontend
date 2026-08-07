@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { TProviderType } from "@/types/dashboard/provider";
@@ -8,6 +8,7 @@ import type { TTimelineViewUnit } from "@/types/timeline/ui";
 import { resolveTimelinePerformanceStatusStyle } from "@/constants/timeline/statusStyle";
 
 import { getTimelineMetricLabel } from "@/utils/timeline/buildTimelineChartSeries";
+import { getPeriodIndexContainingDate } from "@/utils/timeline/period";
 import {
   canGoToPrevChartPeriod,
   sliceDailyTrendByPeriod,
@@ -150,6 +151,12 @@ export default function TimelinePerformancePanel({
   const chartMetric = data.metrics[0]?.metric ?? "CLICK";
   const chartMetricLabel = getTimelineMetricLabel(chartMetric);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setViewUnit("WEEK");
+    setChartPeriodIndex(getPeriodIndexContainingDate("WEEK", data.startDate));
+  }, [isOpen, data.startDate]);
+
   const {
     periodLabel: chartPeriodLabel,
     slicedTrend,
@@ -265,7 +272,7 @@ export default function TimelinePerformancePanel({
               <span className="font-body2 text-text-muted">성과 지표</span>
               <div className="flex flex-wrap gap-2">
                 {data.metrics.map((metric) => (
-                  <Badge key={metric.metric} variant="surface">
+                  <Badge key={metric.metric} variant="infoBlue">
                     {metric.label}
                   </Badge>
                 ))}
@@ -275,56 +282,88 @@ export default function TimelinePerformancePanel({
         </header>
 
         {/* AI 요약 */}
-        <section className="flex flex-col gap-4 py-3">
+        <section className="flex flex-col">
           {aiState === "idle" && (
-            <Button
-              type="button"
-              variant="gradient"
-              size="big"
-              fullWidth
-              onClick={() => onRequestSummary?.()}
-              disabled={isSummaryPending}
-              className="rounded-2xl px-6 py-4 shadow-Soft"
+            <div
+              className={twMerge(
+                SOFT_CARD_CLASS,
+                "flex flex-col gap-3 px-5 py-4",
+              )}
             >
-              요약하기 생성
-            </Button>
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <Button
+                type="button"
+                variant="gradient"
+                size="big"
+                fullWidth
+                onClick={() => onRequestSummary?.()}
+                disabled={isSummaryPending}
+                className="rounded-2xl px-6 py-4 shadow-Soft"
+              >
+                AI 요약 생성하기
+              </Button>
+            </div>
           )}
 
           {aiState === "loading" && (
-            <div aria-busy="true" className="flex flex-col gap-2 px-1">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-4 w-4/6" />
+            <div
+              aria-busy="true"
+              className={twMerge(
+                SOFT_CARD_CLASS,
+                "flex flex-col gap-3 px-5 py-4",
+              )}
+            >
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-4/6" />
+              </div>
             </div>
           )}
 
           {aiState === "done" && hasSummary && (
-            <p
+            <div
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "px-5 py-4 font-body1 text-text-body break-keep leading-relaxed",
+                "flex flex-col gap-2 px-5 py-4",
               )}
             >
-              {data.aiSummary}
-            </p>
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <p className="font-body1 text-text-body break-keep leading-relaxed">
+                {data.aiSummary}
+              </p>
+            </div>
           )}
         </section>
 
         {/* KPI — 선택한 지표 수만큼 가로 균등 분할 */}
-        <section className="flex w-full gap-2 tablet:flex-wrap">
+        <section className="grid w-full grid-cols-4 gap-3 tablet:grid-cols-4 tablet:gap-5">
           {data.metrics.map((metric) => (
             <div
               key={metric.metric}
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "flex min-w-0 flex-1 flex-col gap-1 px-4 py-3.5 tablet:min-w-[calc(50%-0.25rem)]",
+                "flex min-w-0 flex-col gap-1 border border-primary-200/40 px-4 py-3.5",
               )}
             >
               <span className="ml-1 flex flex-col">
                 <span className="truncate font-body2 text-text-muted">
                   {metric.label}
                 </span>
-                <span className="truncate  text-text-title tracking-tight font-heading4">
+                <span className="truncate text-primary-400 tracking-tight font-heading4">
                   {formatMetricValue(metric.value, metric.unit)}
                 </span>
                 {metric.changeRate !== undefined && (

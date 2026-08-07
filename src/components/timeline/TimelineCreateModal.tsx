@@ -229,7 +229,7 @@ export default function TimelineCreateModal({
                           aria-pressed={isSelected}
                           onClick={() => toggleMetric(option.value)}
                           className={twMerge(
-                            "inline-flex h-8 items-center rounded-full border px-4 font-body2 transition-colors",
+                            "inline-flex h-8 items-center rounded-full border px-4 font-body2 transition-all duration-300 ease-out active:scale-95",
                             isSelected
                               ? "border-info-blue/40 bg-info-blue/15 text-info-blue"
                               : "border-text-placeholder/40 bg-surface-200 text-text-muted hover:bg-surface-300",
@@ -260,6 +260,7 @@ export default function TimelineCreateModal({
                 render={() => (
                   <DropdownMenu
                     fullWidth
+                    inFlow
                     aria-label="비교 기간 선택"
                     items={comparisonMenuItems}
                     trigger={(open) => (
