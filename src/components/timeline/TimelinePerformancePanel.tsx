@@ -283,6 +283,7 @@ export default function TimelinePerformancePanel({
 
         {/* AI 요약 */}
         <section className="flex flex-col gap-4 py-3">
+          <h3 className={SECTION_TITLE_CLASS}>AI 요약</h3>
           {aiState === "idle" && (
             <Button
               type="button"
