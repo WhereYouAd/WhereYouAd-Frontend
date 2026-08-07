@@ -305,7 +305,7 @@ export default function TimelinePerformancePanel({
                 disabled={isSummaryPending}
                 className="rounded-2xl px-6 py-4 shadow-Soft"
               >
-                요약하기 생성
+                AI 요약 생성하기
               </Button>
             </div>
           )}
