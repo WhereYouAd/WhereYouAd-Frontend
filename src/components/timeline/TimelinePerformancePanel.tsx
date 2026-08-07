@@ -282,39 +282,71 @@ export default function TimelinePerformancePanel({
         </header>
 
         {/* AI 요약 */}
-        <section className="flex flex-col gap-4 py-3">
-          <h3 className={SECTION_TITLE_CLASS}>AI 요약</h3>
+        {/* AI 요약 */}
+        <section className="flex flex-col">
           {aiState === "idle" && (
-            <Button
-              type="button"
-              variant="gradient"
-              size="big"
-              fullWidth
-              onClick={() => onRequestSummary?.()}
-              disabled={isSummaryPending}
-              className="rounded-2xl px-6 py-4 shadow-Soft"
+            <div
+              className={twMerge(
+                SOFT_CARD_CLASS,
+                "flex flex-col gap-3 px-5 py-4",
+              )}
             >
-              요약하기 생성
-            </Button>
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <Button
+                type="button"
+                variant="gradient"
+                size="big"
+                fullWidth
+                onClick={() => onRequestSummary?.()}
+                disabled={isSummaryPending}
+                className="rounded-2xl px-6 py-4 shadow-Soft"
+              >
+                요약하기 생성
+              </Button>
+            </div>
           )}
 
           {aiState === "loading" && (
-            <div aria-busy="true" className="flex flex-col gap-2 px-1">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-4 w-4/6" />
+            <div
+              aria-busy="true"
+              className={twMerge(
+                SOFT_CARD_CLASS,
+                "flex flex-col gap-3 px-5 py-4",
+              )}
+            >
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <div className="flex flex-col gap-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-4/6" />
+              </div>
             </div>
           )}
 
           {aiState === "done" && hasSummary && (
-            <p
+            <div
               className={twMerge(
                 SOFT_CARD_CLASS,
-                "px-5 py-4 font-body1 text-text-body break-keep leading-relaxed",
+                "flex flex-col gap-2 px-5 py-4",
               )}
             >
-              {data.aiSummary}
-            </p>
+              <h3
+                className={twMerge(SECTION_TITLE_CLASS, "text-text-auth-sub")}
+              >
+                AI 요약
+              </h3>
+              <p className="font-body1 text-text-body break-keep leading-relaxed">
+                {data.aiSummary}
+              </p>
+            </div>
           )}
         </section>
 
