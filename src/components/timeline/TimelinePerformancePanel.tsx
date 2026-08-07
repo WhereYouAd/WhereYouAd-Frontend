@@ -272,7 +272,7 @@ export default function TimelinePerformancePanel({
               <span className="font-body2 text-text-muted">성과 지표</span>
               <div className="flex flex-wrap gap-2">
                 {data.metrics.map((metric) => (
-                  <Badge key={metric.metric} variant="surface">
+                  <Badge key={metric.metric} variant="infoBlue">
                     {metric.label}
                   </Badge>
                 ))}
