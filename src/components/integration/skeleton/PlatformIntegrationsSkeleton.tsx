@@ -8,7 +8,7 @@ const SKELETON_COUNT = 3;
 export function PlatformIntegrationCardSkeleton() {
   return (
     <div
-      className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft"
+      className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft mobile:p-6"
       aria-hidden
     >
       <div className="flex min-w-0 items-center justify-between gap-3">

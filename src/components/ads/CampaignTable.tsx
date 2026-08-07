@@ -3,7 +3,10 @@ import { twMerge } from "tailwind-merge";
 
 import type { ICampaign } from "@/types/ads/campaign";
 
-import CampaignRow from "./CampaignRow";
+import CampaignRow, {
+  CAMPAIGN_BUDGET_COL_CLASS,
+  CAMPAIGN_PLATFORM_COL_CLASS,
+} from "./CampaignRow";
 
 interface ICampaignTableProps {
   campaigns: ICampaign[];
@@ -53,9 +56,9 @@ export default function CampaignTable({
           : "rounded-xl border border-surface-400/40",
       )}
     >
-      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5">
+      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-3 mobile:py-3">
         <div
-          className="flex w-11 shrink-0 items-center justify-center tablet:w-10"
+          className="flex w-11 shrink-0 items-center justify-center tablet:w-10 mobile:w-8"
           role="presentation"
           onClick={(e) => e.stopPropagation()}
         >
@@ -71,10 +74,20 @@ export default function CampaignTable({
         <div className="min-w-0 flex-1 font-label text-text-muted">
           캠페인 명
         </div>
-        <div className="w-28 shrink-0 text-left font-label text-text-muted whitespace-nowrap mr-24 tablet:w-24 tablet:mr-20">
-          플랫폼
+        <div
+          className={twMerge(
+            CAMPAIGN_PLATFORM_COL_CLASS,
+            "whitespace-nowrap text-left font-label text-text-muted",
+          )}
+        >
+          <span className="mobile:hidden">플랫폼</span>
         </div>
-        <div className="w-[28%] shrink-0 text-left font-label text-text-muted tablet:w-[26%]">
+        <div
+          className={twMerge(
+            CAMPAIGN_BUDGET_COL_CLASS,
+            "text-left font-label text-text-muted",
+          )}
+        >
           <span className="tablet:hidden">예산 소진 현황</span>
           <span className="hidden tablet:inline">예산</span>
         </div>

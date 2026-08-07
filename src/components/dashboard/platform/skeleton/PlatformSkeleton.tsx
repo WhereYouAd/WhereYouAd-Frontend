@@ -13,7 +13,7 @@ export function TopPerformanceListSkeleton() {
         <div key={i} className="flex items-center gap-4 w-full">
           <Skeleton className="h-4 w-4 shrink-0" /> {/* 순위 숫자 */}
           <SkeletonCircle className="h-8 w-8 shrink-0" /> {/* 로고 */}
-          <Skeleton className="h-4 flex-1" /> {/* 이름 */}
+          <Skeleton className="h-4 flex-1 mobile:hidden" /> {/* 이름 */}
           <Skeleton className="h-6 w-20" /> {/* 수치 */}
         </div>
       ))}
@@ -33,10 +33,11 @@ export function PlatformDetailCardSkeleton() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="flex flex-col gap-3 rounded-2xl bg-surface-100/40 p-5"
+            className="flex flex-col gap-2 rounded-2xl bg-surface-100/40 p-2"
           >
             <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-15 w-30" />
+            <Skeleton className="h-7 w-24" />
+            <Skeleton className="h-5 w-14 rounded-full" />
           </div>
         ))}
       </div>
@@ -56,8 +57,8 @@ export function AdStatusChartSkeleton() {
 //플랫폼별 성과 효율
 export function PerformanceEfficiencyChartSkeleton() {
   return (
-    <div className="flex-1 flex items-center justify-center w-full px-5">
-      <Skeleton className="w-full h-35 rounded-2xl mb-2" />
+    <div className="flex w-full flex-1 items-center justify-center px-5">
+      <Skeleton className="mb-2 h-35 w-full rounded-2xl" />
     </div>
   );
 }

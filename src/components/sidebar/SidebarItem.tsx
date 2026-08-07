@@ -10,6 +10,7 @@ interface ISidebarItemProps {
   isOpen?: boolean;
   className: string;
   onClick: (id: string, hasChildren: boolean) => void;
+  onNavigate?: () => void;
   trailing?: ReactNode;
 }
 
@@ -19,6 +20,7 @@ export const SidebarItem = memo(function SidebarItem({
   isOpen,
   className,
   onClick,
+  onNavigate,
   trailing,
 }: ISidebarItemProps) {
   const hasChildren = !!item.children?.length;
@@ -52,6 +54,7 @@ export const SidebarItem = memo(function SidebarItem({
         onClick={(e) => {
           if (e.defaultPrevented) return;
           onClick(item.id, hasChildren);
+          onNavigate?.();
         }}
       >
         {content}

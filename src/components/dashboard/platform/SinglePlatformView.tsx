@@ -92,8 +92,8 @@ export default function SinglePlatformView({
 
   return (
     <div className="flex flex-col gap-8">
-      {/* platform header */}
-      <div className="flex items-center justify-between">
+      {/* platform header — mobile에서는 dropdown으로 플랫폼명 표시 */}
+      <div className="flex items-center justify-between mobile:hidden">
         <div className="h-10 flex items-center">
           {logoInfo ? (
             <logoInfo.component
@@ -110,16 +110,16 @@ export default function SinglePlatformView({
         FallbackComponent={MetricErrorFallback}
         resetKeys={[platformData]}
       >
-        <div className="grid grid-cols-4 tablet:grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4 tablet:grid-cols-2 grid-mobile-1">
           {isMetricsLoading ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-3xl border border-surface-100/40 bg-surface-100/80 p-7 shadow-Soft backdrop-blur-sm flex flex-col gap-4"
+                className="flex flex-col gap-3 rounded-3xl border border-surface-100/40 bg-surface-100/80 px-7 py-5 shadow-Soft backdrop-blur-sm"
               >
                 <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-8 w-24" />
-                <Skeleton className="h-6 w-14 rounded-full" />
+                <Skeleton className="h-7 w-24" />
+                <Skeleton className="h-5 w-14 rounded-full" />
               </div>
             ))
           ) : isMetricsError ? (
@@ -137,6 +137,8 @@ export default function SinglePlatformView({
                 title={kpi.title}
                 value={kpi.value}
                 trend={kpi.trend}
+                className="gap-3 py-5"
+                compact
               />
             ))
           )}

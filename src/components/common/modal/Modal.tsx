@@ -192,9 +192,11 @@ function Modal({
             <motion.div
               ref={modalRef}
               className={twMerge(
-                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Soft",
+                "relative mx-4 w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Soft",
                 sizeClasses[size],
                 paddingClasses[padding],
+                // absolute 닫기 버튼(top-4 right-4)과 본문 겹침 방지
+                !hideCloseButton && "pr-12",
                 className,
               )}
               initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.95 }}

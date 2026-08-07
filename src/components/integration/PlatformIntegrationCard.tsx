@@ -250,7 +250,7 @@ function PlatformIntegrationCard({
       : STATUS_LABEL[status];
 
   return (
-    <div className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft">
+    <div className="flex h-full min-h-70 w-full flex-col gap-5 rounded-3xl bg-surface-100 p-8 shadow-Soft mobile:p-6">
       <div className="flex min-w-0 items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
@@ -284,9 +284,9 @@ function PlatformIntegrationCard({
 
       <div className="flex-1" aria-hidden />
 
-      <div className="mt-auto flex w-full flex-col gap-4">
+      <div className="mt-auto flex w-full flex-col gap-4 mobile:gap-3">
         {status === "disconnected" ? (
-          <p className="font-body2 text-text-muted/80">
+          <p className="font-body2 leading-relaxed text-text-muted/80 mobile:leading-snug">
             {platformAccountId != null ? (
               <>
                 기존 계정을 다시 연동하면 대시보드와 캠페인에서 데이터를 확인할
