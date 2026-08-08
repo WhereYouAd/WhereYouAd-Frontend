@@ -282,7 +282,12 @@ export function WorkspaceSwitcher({
               ))}
             </div>
 
-            <div className="mt-1 pt-1 border-t border-surface-300">
+            <div
+              className={twMerge(
+                "mt-1 pt-1",
+                otherWorkspaces.length > 0 && "border-t border-surface-300",
+              )}
+            >
               <button
                 type="button"
                 onClick={() => {
