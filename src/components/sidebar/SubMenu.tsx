@@ -8,9 +8,15 @@ interface ISubMenuProps {
   items: INavItem[];
   isCollapsed: boolean;
   parentLabel?: string;
+  onNavigate?: () => void;
 }
 
-export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
+export function SubMenu({
+  items,
+  isCollapsed,
+  parentLabel,
+  onNavigate,
+}: ISubMenuProps) {
   const getSubItemClass = (isActive: boolean) =>
     twMerge(
       "flex items-center rounded-xl px-3 font-body2 transition-all duration-200 whitespace-nowrap",
@@ -60,6 +66,7 @@ export function SubMenu({ items, isCollapsed, parentLabel }: ISubMenuProps) {
           to={child.path ?? "#"}
           end
           className={({ isActive }) => getSubItemClass(isActive)}
+          onClick={() => onNavigate?.()}
         >
           {isCollapsed && parentLabel ? (
             <div className="flex min-w-0 flex-col items-start">

@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 import { footerNav, mainNav } from "@/constants/sidebarNav";
 
@@ -23,7 +24,9 @@ import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces, getSavedWorkspace } from "@/api/workspace/org";
+import MenuIcon from "@/assets/icon/sidebar/menu.svg?react";
 import { QUERY_KEYS } from "@/lib/queryKeys";
+import useSidebarStore from "@/store/useSidebarStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export type TMainLayoutOutletContext = {
@@ -53,6 +56,9 @@ export default function MainLayout() {
     getMyWorkspaces,
   );
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const isMobileOpen = useSidebarStore((s) => s.isMobileOpen);
+  const setIsMobileOpen = useSidebarStore((s) => s.setIsMobileOpen);
+  const closeMobile = useSidebarStore((s) => s.closeMobile);
 
   const navForHeader = useMemo(
     () => [...applyWorkspacePathsToNav(mainNav, selectedOrgId), ...footerNav],
@@ -110,6 +116,27 @@ export default function MainLayout() {
     }
   }, [isAdsCampaignDetailPath]);
 
+  useEffect(() => {
+    closeMobile();
+  }, [location.pathname, closeMobile]);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMobile();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isMobileOpen, closeMobile]);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
+
   const { parentLabel, currentLabel, parentTo, currentTo } = useMemo(() => {
     const path = pathname;
     if (/^\/ads\/[^/]+\/[^/]+$/.test(path)) {
@@ -164,13 +191,37 @@ export default function MainLayout() {
           autoStart={!localStorage.getItem("hasSeenOnboarding")}
         />
       )}
-      <div className="flex h-full shrink-0">
+      <div
+        className={twMerge(
+          "flex h-full shrink-0",
+          "tablet:fixed tablet:inset-y-0 tablet:left-0 tablet:z-50",
+          "tablet:transition-transform tablet:duration-300 tablet:ease-out",
+          isMobileOpen ? "tablet:translate-x-0" : "tablet:-translate-x-full",
+        )}
+      >
         <Sidebar />
       </div>
+      {isMobileOpen ? (
+        <button
+          type="button"
+          aria-label="메뉴 닫기"
+          className="fixed inset-0 z-40 hidden bg-text-title/40 tablet:block"
+          onClick={closeMobile}
+        />
+      ) : null}
       <main className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-y-auto scroll-pt-14">
         <header className="sticky top-0 z-30 shrink-0 border-b border-surface-300 bg-surface-100">
-          <div className="flex h-14 items-center justify-between px-6 tablet:px-4">
+          <div className="flex h-14 items-center justify-between gap-2 px-6 tablet:px-4">
             <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
+              <button
+                type="button"
+                aria-label="메뉴 열기"
+                aria-expanded={isMobileOpen}
+                className="hidden shrink-0 rounded-xl p-2 text-text-body hover:bg-surface-200 tablet:flex"
+                onClick={() => setIsMobileOpen(true)}
+              >
+                <MenuIcon className="h-6 w-6" />
+              </button>
               {isAdsCampaignDetailPath ? (
                 <>
                   <Link to="/ads" className={`shrink-0 ${crumbLinkBody}`}>
@@ -223,7 +274,9 @@ export default function MainLayout() {
               )}
             </div>
 
-            <div className="flex items-center gap-2">{headerRight}</div>
+            <div className="flex shrink-0 items-center gap-2">
+              {headerRight}
+            </div>
           </div>
         </header>
         <div className="w-full min-w-0 px-8 py-6 tablet:px-6">

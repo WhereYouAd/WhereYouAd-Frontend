@@ -87,12 +87,15 @@ function collapsedSubmenuInteractionProps(
 export default function Sidebar() {
   const {
     isCollapsed,
+    isCollapsedStore,
+    isMobileOpen,
     openId,
     setOpenId,
     handleItemClick,
     pathname,
     toggleSidebar,
     toggleOpenId,
+    closeMobileDrawer,
   } = useSidebar();
 
   const { showComingSoon } = useComingSoon();
@@ -201,7 +204,7 @@ export default function Sidebar() {
                 key={item.id}
                 className="relative flex flex-col"
                 {...collapsedSubmenuInteractionProps(
-                  isCollapsed && !!item.children?.length,
+                  isCollapsedStore && !isMobileOpen && !!item.children?.length,
                   item.id,
                   setOpenId,
                 )}
@@ -216,6 +219,7 @@ export default function Sidebar() {
                     isOpen={isOpen}
                     className="flex-1 h-full"
                     onClick={handleItemClick}
+                    onNavigate={closeMobileDrawer}
                   />
                   {showChevron && (
                     <button
@@ -248,8 +252,9 @@ export default function Sidebar() {
                     <SubMenu
                       key={item.id}
                       items={item.children}
-                      isCollapsed={isCollapsed}
+                      isCollapsed={isCollapsedStore && !isMobileOpen}
                       parentLabel={item.label}
+                      onNavigate={closeMobileDrawer}
                     />
                   ) : null}
                 </AnimatePresence>
@@ -276,6 +281,7 @@ export default function Sidebar() {
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
                   onClick={handleFooterItemClick}
+                  onNavigate={closeMobileDrawer}
                   trailing={
                     item.id === "integrations" &&
                     showIntegrationsAttention &&
@@ -288,7 +294,7 @@ export default function Sidebar() {
             );
           })}
 
-          <div className="mt-2 pt-2 border-t border-surface-300">
+          <div className="mt-2 border-t border-surface-300 pt-2 tablet:hidden">
             <button
               type="button"
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}

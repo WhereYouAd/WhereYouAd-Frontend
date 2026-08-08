@@ -4,6 +4,10 @@ import {
   getAdListTableHeaderGridClass,
   getAdListTableRowGridClass,
 } from "@/components/ads/AdRow";
+import {
+  CAMPAIGN_BUDGET_COL_CLASS,
+  CAMPAIGN_PLATFORM_COL_CLASS,
+} from "@/components/ads/CampaignRow";
 import Card from "@/components/common/card/Card";
 import {
   Skeleton,
@@ -17,20 +21,25 @@ const PLATFORM_DROPDOWN_COUNT = 3;
 function CampaignTableRowSkeleton() {
   return (
     <li
-      className="flex list-none items-center border-b border-surface-400/50 px-6 py-5 last:border-b-0 tablet:px-5 tablet:py-4"
+      className="flex list-none items-center border-b border-surface-400/50 px-6 py-5 last:border-b-0 tablet:px-5 tablet:py-4 mobile:px-3 mobile:py-3"
       aria-hidden
     >
-      <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10">
+      <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10 mobile:w-8">
         <Skeleton className="h-4 w-4 rounded" />
       </div>
-      <div className="min-w-0 flex-1 pr-5 tablet:pr-4">
+      <div className="min-w-0 flex-1 pr-5 tablet:pr-4 mobile:pr-2">
         <Skeleton className="h-4 w-full max-w-48" />
       </div>
-      <div className="mr-24 flex w-28 shrink-0 items-center gap-1 tablet:mr-20 tablet:w-24">
-        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6" />
-        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6" />
+      <div
+        className={twMerge(
+          CAMPAIGN_PLATFORM_COL_CLASS,
+          "flex items-center gap-1 mobile:gap-0.5",
+        )}
+      >
+        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
+        <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
       </div>
-      <div className="w-[28%] shrink-0 tablet:w-[26%]">
+      <div className={CAMPAIGN_BUDGET_COL_CLASS}>
         <Skeleton className="h-2 w-full rounded-full" />
       </div>
     </li>
@@ -43,14 +52,17 @@ export function CampaignTableSkeleton() {
       className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-surface-100"
       aria-hidden
     >
-      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5">
-        <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10">
+      <div className="flex shrink-0 items-center border-b border-surface-400/50 bg-surface-200/60 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:px-3 mobile:py-3">
+        <div className="flex w-11 shrink-0 items-center justify-center tablet:w-10 mobile:w-8">
           <Skeleton className="h-4 w-4 rounded" />
         </div>
-        <Skeleton className="h-4 w-16" />
-        <div className="flex-1" aria-hidden />
-        <Skeleton className="mr-24 h-4 w-12 tablet:mr-20" />
-        <Skeleton className="h-4 w-24" />
+        <div className="min-w-0 flex-1">
+          <Skeleton className="h-4 w-16" />
+        </div>
+        <div className={CAMPAIGN_PLATFORM_COL_CLASS} aria-hidden />
+        <div className={CAMPAIGN_BUDGET_COL_CLASS}>
+          <Skeleton className="h-4 w-24 mobile:w-16" />
+        </div>
       </div>
 
       <ul className="m-0 list-none p-0">
@@ -70,15 +82,17 @@ export function AdsListPageSkeleton() {
       aria-label="캠페인 목록 로딩 중"
     >
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 mobile:flex-none">
             <Skeleton className="h-3 w-8" />
             <Skeleton className="h-6 w-28" />
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-            <Skeleton className="h-9 w-14 rounded-xl" />
-            <Skeleton className="h-9 w-14 rounded-xl" />
-            <Skeleton className="h-9 w-32 rounded-xl" />
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full mobile:flex-col mobile:items-stretch">
+            <div className="flex items-center gap-2 mobile:w-full">
+              <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
+              <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
+            </div>
+            <Skeleton className="h-9 w-32 rounded-xl mobile:w-full" />
           </div>
         </div>
 
@@ -92,8 +106,11 @@ export function AdsListPageSkeleton() {
 
 export function CampaignDetailHeaderSkeleton() {
   return (
-    <Card className="px-6 py-8 tablet:px-5 tablet:py-7" aria-hidden>
-      <header className="flex w-full flex-col gap-6">
+    <Card
+      className="px-6 py-8 tablet:px-5 tablet:py-7 mobile:px-4 mobile:py-6"
+      aria-hidden
+    >
+      <header className="flex w-full flex-col gap-6 mobile:gap-7">
         <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Skeleton className="h-8 w-48 max-w-full" />
@@ -188,18 +205,18 @@ export function AdListTableSkeleton({
 export function CampaignDetailAdsSectionSkeleton() {
   return (
     <Card className="flex flex-col overflow-hidden p-0">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-        <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-4">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 mobile:flex-none">
           <Skeleton className="h-3 w-20" />
           <Skeleton className="h-6 w-28" />
         </div>
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-          <Skeleton className="h-9 w-14 rounded-xl" />
-          <Skeleton className="h-9 w-14 rounded-xl" />
+        <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full">
+          <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
+          <Skeleton className="h-9 w-14 rounded-xl mobile:min-w-0 mobile:flex-1" />
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5">
+      <div className="flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-4 mobile:py-4">
         <div className="flex items-stretch gap-3">
           <span
             className="w-1 shrink-0 self-stretch rounded-r-md bg-surface-400"

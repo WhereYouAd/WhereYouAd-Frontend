@@ -35,9 +35,9 @@ export const TopPerformanceList = memo(function TopPerformanceList({
                 {item.rank}
               </span>
               <div className="shrink-0" aria-hidden="true">
-                {Logo && <Logo className="w-8 h-8" />}
+                {Logo && <Logo className="h-8 w-8" />}
               </div>
-              <span className="font-body1 text-text-title truncate">
+              <span className="truncate font-body1 text-text-title mobile:sr-only">
                 {name}
               </span>
             </div>

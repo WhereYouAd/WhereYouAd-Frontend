@@ -2,7 +2,7 @@
 
 // 열 최소 너비. 컨테이너가 더 넓으면 균등 분배로 커짐
 export const TIMELINE_COL_WIDTH = 92;
-export const TIMELINE_ROW_HEIGHT = 104;
+export const TIMELINE_ROW_HEIGHT = 92;
 export const TIMELINE_ROW_OFFSET = 24;
 export const TIMELINE_AXIS_HEIGHT = 56;
 export const TIMELINE_BAR_HEIGHT = 80;

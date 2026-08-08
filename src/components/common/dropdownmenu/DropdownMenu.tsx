@@ -77,6 +77,7 @@ export function DropdownMenu({
   menuClassName,
   fullWidth = false,
   placement = "bottom",
+  inFlow = false,
   "aria-label": ariaLabel,
   onOpenChange,
 }: {
@@ -88,6 +89,7 @@ export function DropdownMenu({
   fullWidth?: boolean;
   /** bottom: 아래 / top: 위 / auto: 공간에 따라 자동 */
   placement?: TDropdownPlacement;
+  inFlow?: boolean;
   "aria-label"?: string;
   onOpenChange?: (open: boolean) => void;
 }) {
@@ -114,7 +116,10 @@ export function DropdownMenu({
   }, []);
 
   useLayoutEffect(() => {
-    if (!open) return;
+    if (!open || inFlow) {
+      setResolvedPlacement("bottom");
+      return;
+    }
 
     if (placement === "bottom") {
       setResolvedPlacement("bottom");
@@ -130,13 +135,13 @@ export function DropdownMenu({
     if (!el) return;
 
     setResolvedPlacement(resolveAutoPlacement(el, items.length));
-  }, [open, placement, items.length]);
+  }, [open, placement, items.length, inFlow]);
 
   useEffect(() => {
     onOpenChange?.(open);
   }, [open, onOpenChange]);
 
-  const isTopPlacement = resolvedPlacement === "top";
+  const isTopPlacement = !inFlow && resolvedPlacement === "top";
 
   return (
     <div
@@ -180,10 +185,15 @@ export function DropdownMenu({
             }}
             className={twMerge(
               "absolute z-50 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Soft",
+              inFlow
+                ? "relative mt-2"
+                : twMerge(
+                    "absolute",
+                    isTopPlacement ? "bottom-full mb-2" : "top-full mt-2",
+                  ),
               fullWidth
                 ? "left-0 right-0 w-full"
                 : "right-0 w-56 max-w-[calc(100vw-40px)]",
-              isTopPlacement ? "bottom-full mb-2" : "top-full mt-2",
               menuClassName,
             )}
             initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
@@ -198,7 +208,9 @@ export function DropdownMenu({
             <div
               className={twMerge(
                 "space-y-1",
-                fullWidth && "max-h-60 overflow-y-auto overscroll-contain",
+                fullWidth &&
+                  !inFlow &&
+                  "max-h-60 overflow-y-auto overscroll-contain",
               )}
             >
               {items.map((it, idx) => (

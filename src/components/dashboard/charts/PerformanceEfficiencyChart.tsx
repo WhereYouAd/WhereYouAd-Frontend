@@ -1,4 +1,4 @@
-import { lazy, memo, Suspense, useMemo } from "react";
+import { lazy, memo, Suspense, useMemo, useSyncExternalStore } from "react";
 
 import type { IPlatformPerformance } from "@/types/dashboard/platform";
 import { PLATFORM_MAP } from "@/types/dashboard/provider";
@@ -9,15 +9,37 @@ import { getMixedChartOptions } from "./performanceEfficiencyChart.config";
 
 const Chart = lazy(() => import("react-apexcharts"));
 
+const MOBILE_MQ = "(max-width: 639px)";
+
+function subscribeMobile(onStoreChange: () => void) {
+  const mq = window.matchMedia(MOBILE_MQ);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getMobileSnapshot() {
+  return window.matchMedia(MOBILE_MQ).matches;
+}
+
+function getServerMobileSnapshot() {
+  return false;
+}
+
 export const PerformanceEfficiencyChart = memo(
   ({ data }: { data: IPlatformPerformance[] }) => {
+    const isMobile = useSyncExternalStore(
+      subscribeMobile,
+      getMobileSnapshot,
+      getServerMobileSnapshot,
+    );
+
     const categories = useMemo(
       () => data.map((d) => PLATFORM_MAP[d.provider] || d.provider),
       [data],
     );
     const options = useMemo(
-      () => getMixedChartOptions(categories),
-      [categories],
+      () => getMixedChartOptions(categories, { compact: isMobile }),
+      [categories, isMobile],
     );
 
     const series = [
@@ -40,9 +62,11 @@ export const PerformanceEfficiencyChart = memo(
       },
     ];
 
+    const chartHeight = isMobile ? 175 : 150;
+
     return (
-      <Suspense fallback={<div className="h-40" />}>
-        <Chart options={options} series={series} height={150} />
+      <Suspense fallback={<div className={isMobile ? "h-44" : "h-40"} />}>
+        <Chart options={options} series={series} height={chartHeight} />
       </Suspense>
     );
   },

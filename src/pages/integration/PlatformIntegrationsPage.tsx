@@ -7,19 +7,14 @@ import type {
   IPlatformConnectionItem,
   TIntegrationProvider,
 } from "@/types/integration/platformConnection";
-import type {
-  IGoogleSyncData,
-  IMetaSyncData,
-  INaverSyncData,
-} from "@/types/integration/platformSync";
 
 import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
-import { getPlatformSyncToast } from "@/utils/integration/platformSync";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
+import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
@@ -33,9 +28,6 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
-import { syncGoogleAdData } from "@/api/integration/google";
-import { syncMetaAdData } from "@/api/integration/meta";
-import { syncNaverAdData } from "@/api/integration/naver";
 import {
   disconnectPlatformAccount,
   reconnectPlatformAccount,
@@ -111,70 +103,22 @@ export default function PlatformIntegrationsPage() {
     },
   );
 
-  const invalidateConnections = async (requestOrgId: number) => {
-    await queryClient.invalidateQueries({
-      queryKey: QUERY_KEYS.platform.connections(requestOrgId),
+  const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
+    usePlatformSyncMutations({
+      onSyncSettled: () => setSyncingProvider(null),
+      onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
     });
-  };
 
-  const metaSyncMutation = useCoreMutation<IMetaSyncData, number>(
-    (requestOrgId) => syncMetaAdData(requestOrgId),
-    {
-      userOnSuccess: async (data, requestOrgId) => {
-        await invalidateConnections(requestOrgId);
-        const { type, message } = getPlatformSyncToast("META", data);
-        if (type === "success") toast.success(message);
-        else toast.warning(message);
-        setSyncingProvider(null);
-      },
-      userOnError: (apiError) => {
-        toast.error(apiError.message ?? "Meta 동기화에 실패했습니다.");
-        setSyncingProvider(null);
-      },
-    },
-  );
-
-  const googleSyncMutation = useCoreMutation<IGoogleSyncData, number>(
-    () => syncGoogleAdData(),
-    {
-      userOnSuccess: async (data, requestOrgId) => {
-        await invalidateConnections(requestOrgId);
-        const { type, message } = getPlatformSyncToast("GOOGLE", data);
-        if (type === "success") toast.success(message);
-        else toast.warning(message);
-        setSyncingProvider(null);
-      },
-      userOnError: (apiError) => {
-        toast.error(apiError.message ?? "Google 동기화에 실패했습니다.");
-        setSyncingProvider(null);
-      },
-    },
-  );
-
-  const naverSyncMutation = useCoreMutation<
-    INaverSyncData,
-    { requestOrgId: number; body: TNaverSyncFormValues }
-  >(({ requestOrgId, body }) => syncNaverAdData(requestOrgId, body), {
-    userOnSuccess: async (data, { requestOrgId }) => {
-      await invalidateConnections(requestOrgId);
-      const { type, message } = getPlatformSyncToast("NAVER", data);
-      if (type === "success") toast.success(message);
-      else toast.warning(message);
-      setSyncingProvider(null);
-      setIsNaverSyncModalOpen(false);
-    },
-    userOnError: (apiError) => {
-      toast.error(apiError.message ?? "네이버 동기화에 실패했습니다.");
-      setSyncingProvider(null);
+  useIntegrationOAuthReturn(orgId, {
+    onGoogleConnectSuccess: (requestOrgId) => {
+      setSyncingProvider("GOOGLE");
+      syncGoogle(requestOrgId);
     },
   });
 
-  const isSyncPending =
-    metaSyncMutation.isPending ||
-    googleSyncMutation.isPending ||
-    naverSyncMutation.isPending;
-
-  useIntegrationOAuthReturn(orgId);
+  const handleNaverConnectSuccess = () => {
+    setIsNaverSyncModalOpen(true);
+  };
 
   const startNewConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
@@ -276,20 +220,20 @@ export default function PlatformIntegrationsPage() {
     setSyncingProvider(provider);
 
     if (provider === "META") {
-      metaSyncMutation.mutate(orgId);
+      syncMeta(orgId);
       return;
     }
 
     if (provider === "GOOGLE") {
-      googleSyncMutation.mutate(orgId);
+      syncGoogle(orgId);
     }
   };
 
   const handleNaverSyncSubmit = (values: TNaverSyncFormValues) => {
-    if (orgId == null || naverSyncMutation.isPending) return;
+    if (orgId == null || isNaverSyncPending) return;
 
     setSyncingProvider("NAVER");
-    naverSyncMutation.mutate({ requestOrgId: orgId, body: values });
+    syncNaver(orgId, values);
   };
 
   return (
@@ -336,8 +280,8 @@ export default function PlatformIntegrationsPage() {
             </ul>
           </ErrorBoundary>
 
-          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15">
-            <p className="w-full text-center font-body1 text-text-muted/70">
+          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15 mobile:gap-6 mobile:pt-10">
+            <p className="w-full text-center font-body1-rsp text-text-muted/70">
               더 많은 플랫폼 연동을 준비하고 있어요. 지원 범위는 변경될 수
               있습니다.
             </p>
@@ -360,17 +304,18 @@ export default function PlatformIntegrationsPage() {
           orgId={orgId}
           mode={naverModalMode}
           initialCustomerId={naverCustomerId}
+          onConnectSuccess={handleNaverConnectSuccess}
         />
       ) : null}
       {orgId != null ? (
         <NaverSyncModal
           isOpen={isNaverSyncModalOpen}
           onClose={() => {
-            if (naverSyncMutation.isPending) return;
+            if (isNaverSyncPending) return;
             setIsNaverSyncModalOpen(false);
           }}
           onSubmit={handleNaverSyncSubmit}
-          isLoading={naverSyncMutation.isPending}
+          isLoading={isNaverSyncPending}
         />
       ) : null}
       <PlatformDisconnectModal

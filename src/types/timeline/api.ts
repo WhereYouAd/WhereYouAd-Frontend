@@ -23,6 +23,9 @@ export const TIMELINE_PERFORMANCE_STATUS = [
 export type TTimelinePerformanceStatus =
   (typeof TIMELINE_PERFORMANCE_STATUS)[number];
 
+export const TIMELINE_SORTS = ["DISPLAY_ORDER", "LATEST", "OLDEST"] as const;
+export type TTimelineSort = (typeof TIMELINE_SORTS)[number];
+
 /** API 3종 + UI 전용 미정(PENDING). null/미지 값은 UI에서 PENDING으로 정규화 */
 export type TTimelinePerformanceStatusUi =
   | TTimelinePerformanceStatus
@@ -44,6 +47,7 @@ export interface ITimelineListItem {
   endDate: string;
   /** 성과 미산출 시 null일 수 있음 */
   performanceStatus: TTimelinePerformanceStatus | null;
+  displayOrder: number;
 }
 
 export interface ITimelineDailyTrend {
@@ -101,4 +105,14 @@ export type TTimelineEmptyResponse = Record<string, never>;
 export interface IUpdateTimelineVariables {
   timelineId: number;
   body: ITimelineUpsertRequest;
+}
+
+/*목록 조회 쿼리. status가 생략되면 전체보이도록*/
+export interface ITimelineListParams {
+  status?: TTimelinePerformanceStatus;
+  sort?: TTimelineSort;
+}
+
+export interface IUpdateTimelineDisplayOrderRequest {
+  timelineIds: number[];
 }

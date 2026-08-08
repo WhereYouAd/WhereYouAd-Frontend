@@ -2,7 +2,10 @@ import type { ApexOptions } from "apexcharts";
 
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
-export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
+export const getMixedChartOptions = (
+  categories: string[],
+  { compact = false }: { compact?: boolean } = {},
+): ApexOptions => ({
   chart: {
     type: "line",
     toolbar: { show: false },
@@ -35,6 +38,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   xaxis: {
     categories: categories,
     labels: {
+      hideOverlappingLabels: !compact,
       style: {
         fontSize: "14px",
         fontWeight: 500,
@@ -47,6 +51,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   yaxis: [
     {
       seriesName: M.ctr.label,
+      show: !compact,
       labels: {
         formatter: (val) => M.ctr.format(val),
         style: {
@@ -62,6 +67,7 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
     {
       opposite: true,
       seriesName: M.impressions.label,
+      show: !compact,
       labels: {
         offsetX: -10,
         formatter: (val) => M.impressions.format(val),
@@ -90,10 +96,9 @@ export const getMixedChartOptions = (categories: string[]): ApexOptions => ({
   grid: {
     borderColor: "var(--color-surface-200)",
     yaxis: { lines: { show: true } },
-    padding: {
-      bottom: -15,
-      top: -15,
-    },
+    padding: compact
+      ? { bottom: 4, top: 0, left: 4, right: 4 }
+      : { bottom: -15, top: -15 },
   },
   legend: { show: false },
 });

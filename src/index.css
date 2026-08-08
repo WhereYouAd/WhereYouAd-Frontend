@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant tablet (@media (max-width: 1280px));
+@custom-variant mobile (@media (max-width: 639px));
 
 @import "./styles/tokens.css";
 @import "./styles/base.css";

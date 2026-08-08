@@ -113,3 +113,35 @@ export function resolveVisiblePeriod(
       periodIndex === 0 ? formatMonthLabel(start) : formatMonthLabel(start),
   };
 }
+
+export function getPeriodIndexContainingDate(
+  viewUnit: TTimelineViewUnit,
+  targetIso: string,
+  today = new Date(),
+): number {
+  const target = startOfDay(parseIsoDate(targetIso));
+  const normalizedToday = startOfDay(today);
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  if (viewUnit === "DAY") {
+    return Math.max(
+      0,
+      Math.round((normalizedToday.getTime() - target.getTime()) / dayMs),
+    );
+  }
+  if (viewUnit === "WEEK") {
+    const todayWeekStart = getWeekStart(normalizedToday);
+    const targetWeekStart = getWeekStart(target);
+    return Math.max(
+      0,
+      Math.round(
+        (todayWeekStart.getTime() - targetWeekStart.getTime()) / (7 * dayMs),
+      ),
+    );
+  }
+
+  const monthDiff =
+    (normalizedToday.getFullYear() - target.getFullYear()) * 12 +
+    (normalizedToday.getMonth() - target.getMonth());
+  return Math.max(0, monthDiff);
+}
