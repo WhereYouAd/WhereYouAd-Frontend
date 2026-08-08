@@ -19,6 +19,7 @@ import AdStatusChart from "@/components/dashboard/charts/AdStatusChart";
 import PerformanceEfficiencyChart from "@/components/dashboard/charts/PerformanceEfficiencyChart";
 import AllPlatformTrafficChart from "@/components/dashboard/platform/AllPlatformTrafficChart";
 import PlatformDetailCard from "@/components/dashboard/platform/PlatformDetailCard";
+import PlatformTrafficChartDownload from "@/components/dashboard/platform/PlatformTrafficChartDownload";
 import {
   AdStatusChartSkeleton,
   BadgeSkeleton,
@@ -165,6 +166,7 @@ export default function AllPlatformView() {
         title="플랫폼별 실시간 클릭수 비교"
         className="h-120 flex flex-col"
         description={<ChartLegend items={platformChartLegendItems} />}
+        RightElement={<PlatformTrafficChartDownload />}
       >
         <div className="flex-1 min-h-0">
           <ErrorBoundary FallbackComponent={ChartErrorFallback}>
