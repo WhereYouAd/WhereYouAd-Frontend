@@ -1,8 +1,12 @@
+import { useRef } from "react";
+
 import {
   LANDING_TIMELINE_BARS,
   LANDING_TIMELINE_COLUMNS,
 } from "@/constants/landing/timeline";
 import { TIMELINE_COL_WIDTH } from "@/constants/timeline/layout";
+
+import { useContainerWidth } from "@/hooks/timeline/useContainerWidth";
 
 import TimelineAxis from "@/components/timeline/TimelineAxis";
 import TimelineBar from "@/components/timeline/TimelineBar";
@@ -13,12 +17,19 @@ import SortIcon from "@/assets/icon/timeline/sort.svg?react";
 
 export default function GuideTimeline() {
   //랜딩 가이드 column 폭이 좁아서 실제 타임라인보다는 작게
-  const colWidth = Math.min(TIMELINE_COL_WIDTH, 72);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerWidth = useContainerWidth(scrollRef);
+
+  const columnCount = LANDING_TIMELINE_COLUMNS.length;
+  const colWidth =
+    columnCount > 0 && containerWidth > 0
+      ? Math.max(TIMELINE_COL_WIDTH, containerWidth / columnCount)
+      : TIMELINE_COL_WIDTH;
   const totalWidth = LANDING_TIMELINE_COLUMNS.length * colWidth;
   const rowCount = Math.max(...LANDING_TIMELINE_BARS.map((bar) => bar.row), 1);
 
   return (
-    <div className="landing-guide-timeline flex h-75 w-full flex-col overflow-hidden rounded-2xl border border-surface-400/70 bg-surface-100 md:h-85">
+    <div className="landing-guide-timeline flex h-75 w-full flex-col rounded-2xl bg-surface-100 md:h-85">
       <style>
         {`
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
@@ -64,7 +75,10 @@ export default function GuideTimeline() {
         </div>
       </div>
 
-      <div className="custom-scrollbar relative flex-1 overflow-x-auto overflow-y-hidden bg-surface-100">
+      <div
+        ref={scrollRef}
+        className="custom-scrollbar relative flex-1 overflow-x-auto overflow-y-hidden bg-surface-100"
+      >
         <div className="flex h-full flex-col" style={{ width: totalWidth }}>
           <TimelineAxis
             columns={LANDING_TIMELINE_COLUMNS}
