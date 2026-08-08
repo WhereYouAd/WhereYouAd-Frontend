@@ -29,7 +29,7 @@ export default function GuideTimeline() {
   const rowCount = Math.max(...LANDING_TIMELINE_BARS.map((bar) => bar.row), 1);
 
   return (
-    <div className="landing-guide-timeline flex h-75 w-full flex-col overflow-hidden rounded-2xl border border-surface-400/70 bg-surface-100 md:h-85">
+    <div className="landing-guide-timeline flex h-75 w-full flex-col rounded-2xl bg-surface-100 md:h-85">
       <style>
         {`
         .landing-guide-timeline .custom-scrollbar::-webkit-scrollbar {
