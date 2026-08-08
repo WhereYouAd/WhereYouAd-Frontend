@@ -4,6 +4,8 @@ import { useOutletContext } from "react-router-dom";
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_MAP, PROVIDER_TYPES } from "@/types/dashboard/provider";
 
+import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
+
 import AllPlatformView from "@/components/dashboard/platform/AllPlatformView";
 import PlatformViewSwitcher from "@/components/dashboard/platform/PlatformViewSwitcher";
 import SinglePlatformView from "@/components/dashboard/platform/SinglePlatformView";
@@ -21,14 +23,33 @@ export default function PlatformDashboard() {
 
   const isAllView = selectedPlatform === "전체";
 
+  const { data: connections } = usePlatformConnections();
+  const connectedProviders = useMemo(() => {
+    const connected = new Set(
+      (connections ?? [])
+        .filter((c) => c.status === "connected")
+        .map((c) => c.provider),
+    );
+    return PROVIDER_TYPES.filter((provider) => connected.has(provider));
+  }, [connections]);
+
+  const isPlatformSelectDisabled = connectedProviders.length === 0;
+
   const platformItems = useMemo(
     () =>
-      PROVIDER_TYPES.map((value) => ({
+      connectedProviders.map((value) => ({
         label: PLATFORM_MAP[value],
         onClick: () => setSelectedPlatform(value),
       })),
-    [],
+    [connectedProviders],
   );
+
+  useEffect(() => {
+    if (selectedPlatform === "전체") return;
+    if (!connectedProviders.includes(selectedPlatform)) {
+      setSelectedPlatform("전체");
+    }
+  }, [connectedProviders, selectedPlatform]);
 
   const selectedPlatformLabel =
     selectedPlatform === "전체"
@@ -44,12 +65,19 @@ export default function PlatformDashboard() {
         selectedPlatformLabel={selectedPlatformLabel}
         platformItems={platformItems}
         onSelectAll={() => setSelectedPlatform("전체")}
+        isPlatformSelectDisabled={isPlatformSelectDisabled}
         className="mobile:hidden"
       />,
     );
 
     return () => setHeaderRight(null);
-  }, [isAllView, platformItems, selectedPlatformLabel, setHeaderRight]);
+  }, [
+    isAllView,
+    platformItems,
+    selectedPlatformLabel,
+    setHeaderRight,
+    isPlatformSelectDisabled,
+  ]);
 
   return (
     <section className="flex w-full min-w-0 flex-col gap-8">
@@ -58,6 +86,7 @@ export default function PlatformDashboard() {
         selectedPlatformLabel={selectedPlatformLabel}
         platformItems={platformItems}
         onSelectAll={() => setSelectedPlatform("전체")}
+        isPlatformSelectDisabled={isPlatformSelectDisabled}
         layout="mobile"
       />
       {isAllView ? (
