@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 
 import type {
   IPlatformRankingItem,
@@ -10,6 +10,8 @@ import { PLATFORM_CIRCLE_LOGO_MAP } from "@/constants/dashboard/platformLogos";
 import { METRIC_REGISTRY as M } from "@/utils/dashboard/metricRegistry";
 
 import { TrendBadge } from "@/components/common/card/StatCard";
+
+import ChevronDownIcon from "@/assets/icon/chevron/chevron-down.svg?react";
 
 function toProviderType(provider: string): TProviderType | null {
   const key = provider.toUpperCase();
@@ -50,11 +52,156 @@ const Delta = memo(function Delta({ value }: { value: number }) {
 });
 
 export const PLATFORM_ROAS_TABLE_COL =
-  "grid-cols-[36px_minmax(0,1.45fr)_minmax(5.5rem,7.25rem)_minmax(0,1.25fr)] @2xl:grid-cols-[36px_minmax(0,1.15fr)_minmax(5.5rem,7.25rem)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.28fr)]";
+  "mobile:grid-cols-[28px_minmax(0,1fr)_minmax(4.5rem,5.5rem)_20px] grid-cols-[36px_minmax(0,1.45fr)_minmax(5.5rem,7.25rem)_minmax(0,1.28fr)] @2xl:grid-cols-[36px_minmax(0,1.15fr)_minmax(5.5rem,7.25rem)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.28fr)]";
 
 interface IPlatformRoasTableProps {
   rankings: IPlatformRankingItem[];
 }
+
+const PlatformRoasRow = memo(function PlatformRoasRow({
+  item,
+}: {
+  item: IPlatformRankingItem;
+}) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <>
+      <div
+        className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 mobile:gap-x-3 px-4 mobile:px-3 py-4 mobile:py-3 min-h-20 mobile:min-h-16 cursor-default rounded-lg transition-colors duration-300 hover:bg-surface-200`}
+      >
+        {/* 순위 */}
+        <div className="flex min-h-0 min-w-0 items-center justify-center">
+          <span className="text-center font-caption tabular-nums text-text-disabled transition-colors group-hover:text-text-muted">
+            {item.rank}
+          </span>
+        </div>
+
+        {/* 플랫폼 이름 */}
+        <div className="flex min-h-0 min-w-0 items-center gap-3 mobile:gap-2">
+          <div className="shrink-0 p-1.5 mobile:p-1 hover:will-change-transform group-hover:scale-105">
+            {getPlatformLogo(item.provider)}
+          </div>
+          <span className="font-body1 text-text-title">
+            {getDisplayName(item.provider)}
+          </span>
+        </div>
+
+        {/* ROAS */}
+        <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
+          <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
+            {M.roas.format(item.roas)}
+          </span>
+        </div>
+
+        {/* 클릭수 */}
+        <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
+          {item.clicks !== undefined ? (
+            <>
+              <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
+                {M.clicks.format(item.clicks)}
+              </span>
+              {item.clickDelta !== undefined && (
+                <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                  <Delta value={item.clickDelta} />
+                </div>
+              )}
+            </>
+          ) : (
+            <span className="font-body1 text-text-disabled">-</span>
+          )}
+        </div>
+
+        {/* CVR */}
+        <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 text-center @2xl:flex">
+          {item.conversionRate !== undefined ? (
+            <>
+              <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
+                {M.conversion.format(item.conversionRate)}
+              </span>
+              {item.conversionDelta !== undefined && (
+                <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                  <Delta value={item.conversionDelta} />
+                </div>
+              )}
+            </>
+          ) : (
+            <span className="font-body1 text-text-disabled">-</span>
+          )}
+        </div>
+
+        {/* 매출/광고비 - 모바일에서 숨김 */}
+        <div className="mobile:hidden flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
+          <span className="font-heading4 w-full truncate text-right tabular-nums text-text-title">
+            {M.revenue.format(item.revenue)}
+          </span>
+          <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
+            <span className="whitespace-nowrap">{M.adSpend.label}</span>
+            <span className="tabular-nums truncate">
+              {M.adSpend.format(item.adSpend)}
+            </span>
+          </div>
+        </div>
+
+        {/* 펼치기/접기 버튼 - 모바일 전용 */}
+        <button
+          className="mobile:flex hidden items-center justify-center text-text-muted transition-colors hover:text-text-body"
+          onClick={() => setIsExpanded((v) => !v)}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "접기" : "상세 보기"}
+        >
+          <ChevronDownIcon
+            className={`h-4 w-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+          />
+        </button>
+      </div>
+
+      {/* 펼쳐진 상세 정보 - 모바일 전용 */}
+      {isExpanded && (
+        <div className="mobile:block hidden px-3 pb-2 -mt-1">
+          <div className="rounded-xl bg-surface-100 px-4 py-3 flex flex-col gap-2">
+            <div className="flex justify-between items-baseline gap-4">
+              <span className="font-caption text-text-muted shrink-0">
+                {M.revenue.label}
+              </span>
+              <span className="font-body1 tabular-nums text-text-title truncate text-right">
+                {M.revenue.format(item.revenue)}
+              </span>
+            </div>
+            <div className="flex justify-between items-baseline gap-4">
+              <span className="font-caption text-text-muted shrink-0">
+                {M.adSpend.label}
+              </span>
+              <span className="font-body1 tabular-nums text-text-title truncate text-right">
+                {M.adSpend.format(item.adSpend)}
+              </span>
+            </div>
+            {item.clicks !== undefined && (
+              <div className="flex justify-between items-baseline gap-4">
+                <span className="font-caption text-text-muted shrink-0">
+                  {M.clicks.label}
+                </span>
+                <span className="font-body1 tabular-nums text-text-title truncate text-right">
+                  {M.clicks.format(item.clicks)}
+                </span>
+              </div>
+            )}
+            {item.conversionRate !== undefined && (
+              <div className="flex justify-between items-baseline gap-4">
+                <span className="font-caption text-text-muted shrink-0">
+                  {M.conversion.label}
+                </span>
+                <span className="font-body1 tabular-nums text-text-title truncate text-right">
+                  {M.conversion.format(item.conversionRate)}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+});
 
 const PlatformRoasTable = memo(function PlatformRoasTable({
   rankings,
@@ -62,8 +209,9 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
   return (
     <div className="@container flex h-full w-full flex-col">
       <div className="flex flex-col flex-1 min-w-0">
+        {/* 헤더 */}
         <div
-          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 border-b border-surface-200 px-4 pb-4 pt-2 font-caption uppercase tracking-wider text-text-muted @2xl:gap-x-6`}
+          className={`grid ${PLATFORM_ROAS_TABLE_COL} items-center gap-x-4 border-b border-surface-200 px-4 mobile:px-3 pb-4 pt-2 font-caption uppercase tracking-wider text-text-muted @2xl:gap-x-6 mobile:gap-x-3`}
         >
           <span className="flex min-h-5 items-center justify-center text-center font-caption tabular-nums">
             순위
@@ -78,9 +226,12 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
           <span className="hidden min-w-0 text-center font-caption @2xl:block">
             {M.conversion.label}
           </span>
-          <span className="min-w-0 whitespace-nowrap text-right font-caption">
+          {/* 매출/광고비 헤더 - 모바일에서 숨김 */}
+          <span className="mobile:hidden min-w-0 whitespace-nowrap text-right font-caption">
             {M.revenue.label} / {M.adSpend.label}
           </span>
+          {/* 펼치기 헤더 placeholder - 모바일 전용 */}
+          <span className="mobile:block hidden" aria-hidden="true" />
         </div>
 
         {rankings.length === 0 && (
@@ -90,83 +241,7 @@ const PlatformRoasTable = memo(function PlatformRoasTable({
         )}
         <div className="flex flex-col pb-2 divide-y divide-surface-200">
           {rankings.map((item) => (
-            <div
-              key={item.provider}
-              className={`group grid ${PLATFORM_ROAS_TABLE_COL} items-stretch gap-x-4 @2xl:gap-x-6 px-4 py-4 min-h-20 cursor-default rounded-lg transition-colors duration-300 hover:bg-surface-200`}
-            >
-              {/* 순위 */}
-              <div className="flex min-h-0 min-w-0 items-center justify-center">
-                <span className="text-center font-caption tabular-nums text-text-disabled transition-colors group-hover:text-text-muted">
-                  {item.rank}
-                </span>
-              </div>
-
-              {/* 플랫폼 이름 */}
-              <div className="flex min-h-0 min-w-0 items-center gap-3">
-                <div className="shrink-0 p-1.5 hover:will-change-transform group-hover:scale-105">
-                  {getPlatformLogo(item.provider)}
-                </div>
-                <span className="font-body1 text-text-title">
-                  {getDisplayName(item.provider)}
-                </span>
-              </div>
-
-              {/* ROAS */}
-              <div className="flex h-full min-h-0 w-full min-w-0 items-center justify-center px-2 @2xl:px-3">
-                <span className="font-body1 leading-none text-text-title tabular-nums tracking-tight">
-                  {M.roas.format(item.roas)}
-                </span>
-              </div>
-
-              {/* 클릭수 */}
-              <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 pl-1 text-center @2xl:flex @2xl:pl-0">
-                {item.clicks !== undefined ? (
-                  <>
-                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {M.clicks.format(item.clicks)}
-                    </span>
-                    {item.clickDelta !== undefined && (
-                      <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                        <Delta value={item.clickDelta} />
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <span className="font-body1 text-text-disabled">-</span>
-                )}
-              </div>
-
-              {/* CVR */}
-              <div className="hidden min-w-0 flex-col items-center justify-start gap-1.5 text-center @2xl:flex">
-                {item.conversionRate !== undefined ? (
-                  <>
-                    <span className="w-full font-body1 text-text-title tracking-tight leading-none tabular-nums text-center">
-                      {M.conversion.format(item.conversionRate)}
-                    </span>
-                    {item.conversionDelta !== undefined && (
-                      <div className="flex w-full justify-center scale-[0.85] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                        <Delta value={item.conversionDelta} />
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <span className="font-body1 text-text-disabled">-</span>
-                )}
-              </div>
-
-              {/* 매출/광고비 */}
-              <div className="flex w-full min-w-0 flex-col items-end justify-start gap-2 text-right">
-                <span className="font-heading4 w-full truncate text-right tabular-nums text-text-title">
-                  {M.revenue.format(item.revenue)}
-                </span>
-                <div className="flex items-center justify-end gap-1.5 text-text-muted font-caption w-full transition-colors group-hover:text-text-body">
-                  <span className="whitespace-nowrap">{M.adSpend.label}</span>
-                  <span className="tabular-nums truncate">
-                    {M.adSpend.format(item.adSpend)}
-                  </span>
-                </div>
-              </div>
-            </div>
+            <PlatformRoasRow key={item.provider} item={item} />
           ))}
         </div>
       </div>
