@@ -1,8 +1,16 @@
-import { type ReactNode, useEffect, useMemo, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { type ReactNode, useCallback, useEffect, useMemo } from "react";
+import {
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "react-router-dom";
 
 import type { TProviderType } from "@/types/dashboard/overview";
 import { PLATFORM_MAP, PROVIDER_TYPES } from "@/types/dashboard/provider";
+import type { IPlatformConnectionItem } from "@/types/integration/platformConnection";
+
+import { isTokenExpired } from "@/utils/integration/mapPlatformAccounts";
 
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 
@@ -16,22 +24,85 @@ type TDashboardHeaderContext = {
   setHeaderRight?: (node: ReactNode | null) => void;
 };
 
+function parseProviderParam(value: string | null): TPlatformView {
+  if (value != null && (PROVIDER_TYPES as readonly string[]).includes(value)) {
+    return value as TProviderType;
+  }
+  return "전체";
+}
+
+/** 드롭다운·개별 뷰: connected 이고 토큰 미만료일 때만 */
+function isUsableConnectedPlatform(connection: IPlatformConnectionItem) {
+  if (connection.status !== "connected") return false;
+  if (isTokenExpired(connection.tokenExpireAt)) return false;
+  return true;
+}
+
 export default function PlatformDashboard() {
-  const [selectedPlatform, setSelectedPlatform] =
-    useState<TPlatformView>("전체");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { setHeaderRight } = useOutletContext<TDashboardHeaderContext>();
 
-  const isAllView = selectedPlatform === "전체";
+  const providerFromUrl = parseProviderParam(searchParams.get("provider"));
 
-  const { data: connections } = usePlatformConnections();
+  const { data: connections, isFetched } = usePlatformConnections();
+
   const connectedProviders = useMemo(() => {
     const connected = new Set(
       (connections ?? [])
-        .filter((c) => c.status === "connected")
+        .filter(isUsableConnectedPlatform)
         .map((c) => c.provider),
     );
     return PROVIDER_TYPES.filter((provider) => connected.has(provider));
   }, [connections]);
+
+  /**
+   * 목록 로드 후 URL provider가 사용 불가면 화면은 전체보기.
+   * (주소 정리는 navigate로 별도 처리 — setSearchParams delete만으로는 안 지워지는 경우 대비)
+   */
+  const selectedPlatform: TPlatformView = !isFetched
+    ? providerFromUrl
+    : providerFromUrl !== "전체" && connectedProviders.includes(providerFromUrl)
+      ? providerFromUrl
+      : "전체";
+
+  const isAllView = selectedPlatform === "전체";
+
+  const clearProviderQuery = useCallback(() => {
+    if (!searchParams.has("provider")) return;
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("provider");
+    const search = nextParams.toString();
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: search ? `?${search}` : "",
+      },
+      { replace: true },
+    );
+  }, [searchParams, navigate, location.pathname]);
+
+  const setSelectedPlatform = useCallback(
+    (next: TPlatformView) => {
+      if (next === "전체") {
+        clearProviderQuery();
+        return;
+      }
+
+      setSearchParams(
+        (prev) => {
+          const nextParams = new URLSearchParams(prev);
+          nextParams.set("provider", next);
+          return nextParams;
+        },
+        { replace: true },
+      );
+    },
+    [clearProviderQuery, setSearchParams],
+  );
 
   const isPlatformSelectDisabled = connectedProviders.length === 0;
 
@@ -41,15 +112,18 @@ export default function PlatformDashboard() {
         label: PLATFORM_MAP[value],
         onClick: () => setSelectedPlatform(value),
       })),
-    [connectedProviders],
+    [connectedProviders, setSelectedPlatform],
   );
 
   useEffect(() => {
-    if (selectedPlatform === "전체") return;
-    if (!connectedProviders.includes(selectedPlatform)) {
-      setSelectedPlatform("전체");
-    }
-  }, [connectedProviders, selectedPlatform]);
+    if (!isFetched) return;
+    if (!searchParams.has("provider")) return;
+
+    const parsed = parseProviderParam(searchParams.get("provider"));
+    if (parsed !== "전체" && connectedProviders.includes(parsed)) return;
+
+    clearProviderQuery();
+  }, [isFetched, searchParams, connectedProviders, clearProviderQuery]);
 
   const selectedPlatformLabel =
     selectedPlatform === "전체"
@@ -77,6 +151,7 @@ export default function PlatformDashboard() {
     selectedPlatformLabel,
     setHeaderRight,
     isPlatformSelectDisabled,
+    setSelectedPlatform,
   ]);
 
   return (
