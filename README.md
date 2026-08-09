@@ -195,11 +195,11 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 ## ⚙️ CI/CD
 
-| 워크플로        | 트리거              | 내용                                              |
-| --------------- | ------------------- | ------------------------------------------------- |
-| `ci.yaml`       | PR → develop / main | ESLint lint → Vitest test → TypeScript build 검증 |
-| `main.yaml`     | push → main         | S3 업로드 → CloudFront 캐시 무효화 → Discord 알림 |
-| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)            |
+| 워크플로        | 트리거              | 내용                                                                                  |
+| --------------- | ------------------- | ------------------------------------------------------------------------------------- |
+| `ci.yaml`       | PR → develop / main | ESLint → Vitest → TypeScript build → Lighthouse CI (LCP / CLS / TBT 자동 검증)       |
+| `main.yaml`     | push → main         | S3 업로드 → CloudFront Functions (CSP 헤더) 자동 배포 → CloudFront 캐시 무효화 → Discord 알림 |
+| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)                                                |
 
 <br>
 
