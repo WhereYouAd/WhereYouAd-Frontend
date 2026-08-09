@@ -7,6 +7,7 @@ import SignupEmailStepSkeleton from "@/components/auth/skeleton/SignupEmailStepS
 import SignupPageSkeleton from "@/components/auth/skeleton/SignupPageSkeleton";
 
 import { loadable } from "@/lib/loadable";
+import GoogleOAuthResultPage from "@/pages/integration/GoogleOAuthResultPage";
 import MetaOAuthResultPage from "@/pages/integration/MetaOAuthResultPage";
 
 const FindEmail = loadable(
@@ -73,6 +74,10 @@ const AuthRoutes: RouteObject[] = [
   {
     path: "oauth2/meta/result",
     element: <MetaOAuthResultPage />,
+  },
+  {
+    path: "oauth2/google/result",
+    element: <GoogleOAuthResultPage />,
   },
   {
     path: "invite/:token",
