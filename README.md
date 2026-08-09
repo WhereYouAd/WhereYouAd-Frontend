@@ -84,24 +84,27 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 ```bash
 node -v
 # v20.x.x
+
+pnpm -v
+# v10.x.x
 ```
 
 ### Installation
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Run Dev Server
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ### Build
 
 ```bash
-npm run build
+pnpm build
 ```
 
 <br>
@@ -110,13 +113,13 @@ npm run build
 
 | Command              | Description                                         |
 | -------------------- | --------------------------------------------------- |
-| `npm run dev`        | Vite 개발 서버를 실행합니다.                        |
-| `npm run build`      | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
-| `npm run lint`       | ESLint로 전체 코드를 검사합니다.                    |
-| `npm run preview`    | 빌드 결과를 로컬에서 미리 확인합니다.               |
-| `npm run prepare`    | Husky Git hook을 설치합니다.                        |
-| `npm run test`       | Vitest로 단위 테스트를 실행합니다.                  |
-| `npm run test:watch` | Vitest watch 모드로 실행합니다.                     |
+| `pnpm dev`           | Vite 개발 서버를 실행합니다.                        |
+| `pnpm build`         | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
+| `pnpm lint`          | ESLint로 전체 코드를 검사합니다.                    |
+| `pnpm preview`       | 빌드 결과를 로컬에서 미리 확인합니다.               |
+| `pnpm prepare`       | Husky Git hook을 설치합니다.                        |
+| `pnpm test`          | Vitest로 단위 테스트를 실행합니다.                  |
+| `pnpm test:watch`    | Vitest watch 모드로 실행합니다.                     |
 
 <br>
 
