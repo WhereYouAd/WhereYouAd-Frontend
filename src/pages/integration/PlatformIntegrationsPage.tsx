@@ -12,7 +12,6 @@ import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { useCoreMutation } from "@/hooks/customQuery";
-import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 
@@ -108,13 +107,6 @@ export default function PlatformIntegrationsPage() {
       onSyncSettled: () => setSyncingProvider(null),
       onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
     });
-
-  useIntegrationOAuthReturn(orgId, {
-    onGoogleConnectSuccess: (requestOrgId) => {
-      setSyncingProvider("GOOGLE");
-      syncGoogle(requestOrgId);
-    },
-  });
 
   const handleNaverConnectSuccess = () => {
     setIsNaverSyncModalOpen(true);
