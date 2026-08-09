@@ -46,7 +46,9 @@ export default function PlatformDashboard() {
 
   const providerFromUrl = parseProviderParam(searchParams.get("provider"));
 
-  const { data: connections, isFetched } = usePlatformConnections();
+  const { data: connections } = usePlatformConnections();
+  /** 성공으로 목록이 온 뒤에만 URL provider 검증 (isFetched는 실패도 true) */
+  const hasConnectionData = connections !== undefined;
 
   const connectedProviders = useMemo(() => {
     const connected = new Set(
@@ -58,10 +60,10 @@ export default function PlatformDashboard() {
   }, [connections]);
 
   /**
-   * 목록 로드 후 URL provider가 사용 불가면 화면은 전체보기.
+   * 연결 목록 성공 후 URL provider가 사용 불가면 화면은 전체보기.
    * (주소 정리는 navigate로 별도 처리 — setSearchParams delete만으로는 안 지워지는 경우 대비)
    */
-  const selectedPlatform: TPlatformView = !isFetched
+  const selectedPlatform: TPlatformView = !hasConnectionData
     ? providerFromUrl
     : providerFromUrl !== "전체" && connectedProviders.includes(providerFromUrl)
       ? providerFromUrl
@@ -116,14 +118,14 @@ export default function PlatformDashboard() {
   );
 
   useEffect(() => {
-    if (!isFetched) return;
+    if (!hasConnectionData) return;
     if (!searchParams.has("provider")) return;
 
     const parsed = parseProviderParam(searchParams.get("provider"));
     if (parsed !== "전체" && connectedProviders.includes(parsed)) return;
 
     clearProviderQuery();
-  }, [isFetched, searchParams, connectedProviders, clearProviderQuery]);
+  }, [hasConnectionData, searchParams, connectedProviders, clearProviderQuery]);
 
   const selectedPlatformLabel =
     selectedPlatform === "전체"
