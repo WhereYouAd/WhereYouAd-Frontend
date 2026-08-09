@@ -125,6 +125,21 @@ pnpm build
 
 <br>
 
+## 🔑 Environment Variables
+
+`.env` 파일을 프로젝트 루트에 생성하고 아래 변수를 설정합니다.
+
+| 변수                   | 설명                                              |
+| ---------------------- | ------------------------------------------------- |
+| `VITE_API_BASE_URL`    | 백엔드 API 베이스 URL                             |
+| `VITE_NAVER_AES_SECRET`| Naver 광고 OAuth AES 암호화 키                    |
+| `VITE_NAVER_AES_IV`    | Naver 광고 OAuth AES 초기화 벡터                  |
+| `VITE_SENTRY_DSN`      | Sentry 프로젝트 DSN (미설정 시 Sentry 비활성화)   |
+
+> CI/CD 환경에서는 GitHub Secrets로 관리됩니다.
+
+<br>
+
 ## 📁 Project Structure
 
 ```
