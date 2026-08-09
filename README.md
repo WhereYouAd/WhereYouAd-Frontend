@@ -121,6 +121,7 @@ pnpm build
 | `pnpm prepare`       | Husky Git hook을 설치합니다.                        |
 | `pnpm test`          | Vitest로 단위 테스트를 실행합니다.                  |
 | `pnpm test:watch`    | Vitest watch 모드로 실행합니다.                     |
+| `pnpm test:e2e`      | Playwright로 E2E 테스트를 실행합니다.               |
 
 <br>
 
