@@ -48,7 +48,7 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 - [Scripts](#-scripts)
 - [Environment Variables](#-environment-variables)
 - [Project Structure](#-project-structure)
-- [CI/CD](#-cicd)
+- [CI/CD](#cicd)
 - [Conventions](#-conventions)
 - [Contributors](#-contributors)
 
@@ -72,6 +72,7 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 | Markdown          | react-markdown (AI 리포트 렌더링)                                            |
 | Test              | Vitest (단위), Playwright (E2E)                                              |
 | Docs              | Storybook 8 + Chromatic (시각 회귀)                                          |
+| Monitoring        | Sentry (프로덕션 에러 수집)                                                  |
 | Deploy            | AWS S3 + CloudFront                                                          |
 | Quality           | ESLint v9 (flat config 4파일 분리), Prettier, Husky, lint-staged, Commitlint |
 
@@ -84,24 +85,27 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 ```bash
 node -v
 # v20.x.x
+
+pnpm -v
+# v10.x.x
 ```
 
 ### Installation
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Run Dev Server
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ### Build
 
 ```bash
-npm run build
+pnpm build
 ```
 
 <br>
@@ -110,13 +114,30 @@ npm run build
 
 | Command              | Description                                         |
 | -------------------- | --------------------------------------------------- |
-| `npm run dev`        | Vite 개발 서버를 실행합니다.                        |
-| `npm run build`      | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
-| `npm run lint`       | ESLint로 전체 코드를 검사합니다.                    |
-| `npm run preview`    | 빌드 결과를 로컬에서 미리 확인합니다.               |
-| `npm run prepare`    | Husky Git hook을 설치합니다.                        |
-| `npm run test`       | Vitest로 단위 테스트를 실행합니다.                  |
-| `npm run test:watch` | Vitest watch 모드로 실행합니다.                     |
+| `pnpm dev`           | Vite 개발 서버를 실행합니다.                        |
+| `pnpm build`         | TypeScript 빌드 후 Vite 프로덕션 빌드를 생성합니다. |
+| `pnpm lint`          | ESLint로 전체 코드를 검사합니다.                    |
+| `pnpm preview`       | 빌드 결과를 로컬에서 미리 확인합니다.               |
+| `pnpm prepare`       | Husky Git hook을 설치합니다.                        |
+| `pnpm test`          | Vitest로 단위 테스트를 실행합니다.                  |
+| `pnpm test:watch`    | Vitest watch 모드로 실행합니다.                     |
+| `pnpm test:e2e`      | Playwright로 E2E 테스트를 실행합니다.               |
+| `pnpm storybook`     | Storybook 개발 서버를 실행합니다. (port 6006)       |
+
+<br>
+
+## 🔑 Environment Variables
+
+`.env` 파일을 프로젝트 루트에 생성하고 아래 변수를 설정합니다.
+
+| 변수                   | 설명                                              |
+| ---------------------- | ------------------------------------------------- |
+| `VITE_API_BASE_URL`    | 백엔드 API 베이스 URL                             |
+| `VITE_NAVER_AES_SECRET`| Naver 광고 OAuth AES 암호화 키                    |
+| `VITE_NAVER_AES_IV`    | Naver 광고 OAuth AES 초기화 벡터                  |
+| `VITE_SENTRY_DSN`      | Sentry 프로젝트 DSN (미설정 시 Sentry 비활성화)   |
+
+> CI/CD 환경에서는 GitHub Secrets로 관리됩니다.
 
 <br>
 
@@ -190,13 +211,15 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 <br>
 
+<a id="cicd"></a>
+
 ## ⚙️ CI/CD
 
-| 워크플로        | 트리거              | 내용                                              |
-| --------------- | ------------------- | ------------------------------------------------- |
-| `ci.yaml`       | PR → develop / main | ESLint lint → Vitest test → TypeScript build 검증 |
-| `main.yaml`     | push → main         | S3 업로드 → CloudFront 캐시 무효화 → Discord 알림 |
-| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)            |
+| 워크플로        | 트리거              | 내용                                                                                  |
+| --------------- | ------------------- | ------------------------------------------------------------------------------------- |
+| `ci.yaml`       | PR → develop / main | ESLint → Vitest → TypeScript build → Lighthouse CI (LCP / CLS / TBT 자동 검증)       |
+| `main.yaml`     | push → main         | S3 업로드 → CloudFront Functions (CSP 헤더) 자동 배포 → CloudFront 캐시 무효화 → Discord 알림 |
+| `chromatic.yml` | push → develop      | Storybook 시각 회귀 테스트 (Chromatic)                                                |
 
 <br>
 
@@ -204,25 +227,25 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 ### Branch
 
-- `feature/#1-description`
-- `fix/#1-description`
-- `style/#1-description`
-- `docs/#1-description`
-- `setting/#1-description`
-- `refactor/#1-description`
+- `feature/#이슈번호`
+- `fix/#이슈번호`
+- `style/#이슈번호`
+- `docs/#이슈번호`
+- `setting/#이슈번호`
+- `refactor/#이슈번호`
 
 ### Commit
 
 Conventional Commits 규칙을 따릅니다. commitlint로 자동 검증됩니다.
 
-- `feat: add AI analysis report streaming`
-- `fix: prevent duplicate token reissue on parallel 401`
-- `refactor: consolidate metric format logic into METRIC_REGISTRY`
-- `docs: update README`
+- `feat: AI 분석 리포트 스트리밍 추가`
+- `fix: 병렬 401 상황에서 토큰 재발급 중복 호출 방지`
+- `refactor: 지표 포맷 로직을 METRIC_REGISTRY로 통합`
+- `docs: README 업데이트`
 
 ### Pull Request
 
-- PR 제목은 `[Feature/#1] 작업 내용` 형식을 권장합니다.
+- PR 제목은 `[feat/#이슈번호] 작업 내용` 형식을 권장합니다.
 - GitHub Issue를 먼저 등록하고 PR 본문에 `closes #이슈번호`를 포함합니다.
 - 리뷰 기준은 `.cursor/rules/always.mdc`를 따릅니다.
 
