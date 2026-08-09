@@ -1,3 +1,6 @@
+import type { ReactNode } from "react";
+
+import type { TProviderType } from "@/types/dashboard/provider";
 import {
   PLATFORM_CHART_COLORS,
   PLATFORM_MAP,
@@ -29,10 +32,36 @@ import {
 } from "@/components/dashboard/platform/skeleton/PlatformSkeleton";
 import TopPerformanceList from "@/components/dashboard/platform/TopPerformanceList";
 
+import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
+import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
+import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
+
 const platformChartLegendItems = PROVIDER_TYPES.map((provider) => ({
   label: PLATFORM_MAP[provider],
   color: PLATFORM_CHART_COLORS[provider],
 }));
+
+const PLATFORM_LOGOS: Record<TProviderType, ReactNode> = {
+  GOOGLE: <GoogleLogo className="w-10 h-8" />,
+  NAVER: <NaverLogo className="w-10 h-8" />,
+  META: <MetaLogo className="w-10 h-8" />,
+};
+
+function PlatformDetailErrorCard({ provider }: { provider: TProviderType }) {
+  return (
+    <Card className="min-w-0 flex-1 p-7">
+      <div className="mb-8 flex items-center gap-2">
+        <div className="shrink-0">{PLATFORM_LOGOS[provider]}</div>
+        <h3 className="truncate font-heading4 text-text-title">
+          {PLATFORM_MAP[provider]}
+        </h3>
+      </div>
+      <div className="flex min-h-40 items-center justify-center font-body2 text-text-sub">
+        데이터를 불러오지 못했습니다.
+      </div>
+    </Card>
+  );
+}
 
 export default function AllPlatformView() {
   const {
@@ -48,10 +77,14 @@ export default function AllPlatformView() {
   } = usePlatformAdCount();
 
   const {
-    data: platformPerformance,
+    data: performanceData,
     isLoading: isPerformanceLoading,
     isError: isPerformanceError,
   } = usePlatformPerformance();
+
+  const platformPerformance = performanceData?.platforms;
+  const failedProviders = performanceData?.failedProviders ?? [];
+  const hasPartialFailure = failedProviders.length > 0;
 
   return (
     <div className="flex flex-col gap-8">
@@ -155,7 +188,14 @@ export default function AllPlatformView() {
                 표시할 성과 데이터가 없습니다.
               </div>
             ) : (
-              <PerformanceEfficiencyChart data={platformPerformance} />
+              <div className="flex min-h-0 flex-1 flex-col">
+                {hasPartialFailure ? (
+                  <p className="mb-2 font-caption text-text-muted">
+                    일부 플랫폼 성과를 불러오지 못했습니다.
+                  </p>
+                ) : null}
+                <PerformanceEfficiencyChart data={platformPerformance} />
+              </div>
             )}
           </ErrorBoundary>
         </Card>
@@ -178,7 +218,7 @@ export default function AllPlatformView() {
       {/* 개별 플랫폼 상세 */}
       <ErrorBoundary
         FallbackComponent={ChartErrorFallback}
-        resetKeys={[platformPerformance]}
+        resetKeys={[platformPerformance, failedProviders]}
       >
         <div className="grid grid-cols-3 tablet:grid-cols-1 gap-6">
           {isPerformanceLoading ? (
@@ -189,14 +229,21 @@ export default function AllPlatformView() {
             <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
               데이터를 불러오지 못했습니다.
             </div>
-          ) : platformPerformance.length === 0 ? (
-            <div className="col-span-3 tablet:col-span-1 flex items-center justify-center font-body2 text-text-sub py-16">
-              표시할 플랫폼 데이터가 없습니다.
-            </div>
           ) : (
-            platformPerformance.map((platform) => (
-              <PlatformDetailCard key={platform.provider} data={platform} />
-            ))
+            PROVIDER_TYPES.map((provider) => {
+              const data = platformPerformance.find(
+                (platform) => platform.provider === provider,
+              );
+              if (data) {
+                return <PlatformDetailCard key={provider} data={data} />;
+              }
+              if (failedProviders.includes(provider)) {
+                return (
+                  <PlatformDetailErrorCard key={provider} provider={provider} />
+                );
+              }
+              return null;
+            })
           )}
         </div>
       </ErrorBoundary>
