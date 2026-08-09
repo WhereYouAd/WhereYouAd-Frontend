@@ -218,10 +218,10 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 Conventional Commits 규칙을 따릅니다. commitlint로 자동 검증됩니다.
 
-- `feat: add AI analysis report streaming`
-- `fix: prevent duplicate token reissue on parallel 401`
-- `refactor: consolidate metric format logic into METRIC_REGISTRY`
-- `docs: update README`
+- `feat: AI 분석 리포트 스트리밍 추가`
+- `fix: 병렬 401 상황에서 토큰 재발급 중복 호출 방지`
+- `refactor: 지표 포맷 로직을 METRIC_REGISTRY로 통합`
+- `docs: README 업데이트`
 
 ### Pull Request
 
