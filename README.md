@@ -72,6 +72,7 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 | Markdown          | react-markdown (AI 리포트 렌더링)                                            |
 | Test              | Vitest (단위), Playwright (E2E)                                              |
 | Docs              | Storybook 8 + Chromatic (시각 회귀)                                          |
+| Monitoring        | Sentry (프로덕션 에러 수집)                                                  |
 | Deploy            | AWS S3 + CloudFront                                                          |
 | Quality           | ESLint v9 (flat config 4파일 분리), Prettier, Husky, lint-staged, Commitlint |
 
