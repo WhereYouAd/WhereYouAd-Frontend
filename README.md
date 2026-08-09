@@ -48,7 +48,7 @@ WhereYouAd Frontend는 Vite + React 기반의 2026 캡스톤 졸업 프로젝트
 - [Scripts](#-scripts)
 - [Environment Variables](#-environment-variables)
 - [Project Structure](#-project-structure)
-- [CI/CD](#-cicd)
+- [CI/CD](#cicd)
 - [Conventions](#-conventions)
 - [Contributors](#-contributors)
 
@@ -209,6 +209,8 @@ import { useCoreQuery } from "@/hooks/customQuery";
 ```
 
 <br>
+
+<a id="cicd"></a>
 
 ## ⚙️ CI/CD
 
