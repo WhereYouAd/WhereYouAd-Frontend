@@ -42,9 +42,19 @@ function startOfDay(date: Date): Date {
 
 export function isTokenExpired(tokenExpireAt?: string): boolean {
   if (!tokenExpireAt) return false;
-  const expire = parseDate(tokenExpireAt);
+  const trimmed = tokenExpireAt.trim();
+  const expire = parseDate(trimmed);
   if (!expire) return false;
-  return startOfDay(expire).getTime() < startOfDay(new Date()).getTime();
+
+  // date-only(YYYY-MM-DD): 로컬 달력 기준 — 만료일 당일부터 만료로 봄
+  // (ex. tokenExpireAt "2026-08-08", 오늘이 8일 -> 재연동 필요)
+  if (DATE_ONLY_PATTERN.test(trimmed)) {
+    return startOfDay(expire).getTime() <= startOfDay(new Date()).getTime();
+  }
+
+  // datetime(ISO 등): UTC 날짜 문자열만 보면 전날처럼 보여도 KST로는 오늘 0시인 경우가 있음
+  // → 달력이 아니라 실제 만료 시각과 현재 시각을 비교
+  return expire.getTime() < Date.now();
 }
 
 export function isTokenExpiringSoon(tokenExpireAt?: string): boolean {
