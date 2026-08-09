@@ -207,12 +207,12 @@ import { useCoreQuery } from "@/hooks/customQuery";
 
 ### Branch
 
-- `feature/#1-description`
-- `fix/#1-description`
-- `style/#1-description`
-- `docs/#1-description`
-- `setting/#1-description`
-- `refactor/#1-description`
+- `feature/#이슈번호`
+- `fix/#이슈번호`
+- `style/#이슈번호`
+- `docs/#이슈번호`
+- `setting/#이슈번호`
+- `refactor/#이슈번호`
 
 ### Commit
 
