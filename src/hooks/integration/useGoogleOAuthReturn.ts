@@ -39,7 +39,8 @@ export function useGoogleOAuthReturn(options?: IUseGoogleOAuthReturnOptions) {
   onConnectSuccessRef.current = options?.onConnectSuccess;
 
   useLayoutEffect(() => {
-    if (processedRef.current) return;
+    // toast/sync/navigate는 인증 준비 후에만 실행 (이전엔 sync가 토큰 전에 호출될 수 있었음)
+    if (processedRef.current || !isTokenInitialized) return;
 
     const finish = (type: TGoogleOAuthToastType, message: string) => {
       if (!toastShownRef.current) {
@@ -56,9 +57,6 @@ export function useGoogleOAuthReturn(options?: IUseGoogleOAuthReturnOptions) {
           onConnectSuccessRef.current?.(orgId);
         }
       }
-
-      // 토큰 하이드레이션 전에는 navigate 보류 (Meta와 동일)
-      if (!isTokenInitialized) return;
 
       processedRef.current = true;
       navigate("/integrations", { replace: true });
