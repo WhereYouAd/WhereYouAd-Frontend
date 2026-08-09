@@ -109,7 +109,7 @@ export default function Login() {
             type="button"
             className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-surface-300 bg-surface-100 shadow-Soft transition-transform duration-200 hover:scale-110"
             aria-label="구글로 로그인"
-            onClick={() => toast.error("준비중입니다.")}
+            onClick={() => handleSocialLogin("google")}
           >
             <GoogleIcon className="w-6 h-auto" />
           </button>
