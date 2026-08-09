@@ -244,7 +244,7 @@ Conventional Commits 규칙을 따릅니다. commitlint로 자동 검증됩니�
 
 ### Pull Request
 
-- PR 제목은 `[Feature/#1] 작업 내용` 형식을 권장합니다.
+- PR 제목은 `[feat/#이슈번호] 작업 내용` 형식을 권장합니다.
 - GitHub Issue를 먼저 등록하고 PR 본문에 `closes #이슈번호`를 포함합니다.
 - 리뷰 기준은 `.cursor/rules/always.mdc`를 따릅니다.
 
