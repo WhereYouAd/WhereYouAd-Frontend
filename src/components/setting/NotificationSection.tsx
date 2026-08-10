@@ -266,7 +266,7 @@ export default function NotificationSection({
                     error={!!discordWebhookError}
                     helperText={discordWebhookError}
                     disabled={channelDisabled || isAnyOrgPending}
-                    wrapperClassName="w-1/4 shrink-0 tablet:w-fill"
+                    wrapperClassName="w-1/4 shrink-0 tablet:w-full"
                     containerClassName="h-10 rounded-lg"
                     inputClassName="px-3 font-body2"
                   />
