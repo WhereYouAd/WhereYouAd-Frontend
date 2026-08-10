@@ -59,7 +59,8 @@ const permissionRows: TPermissionRow[] = [
 
 function PermissionAllowedBadge() {
   return (
-    <div
+    <span
+      role="img"
       className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-primary-100/80"
       aria-label="가능"
     >
@@ -67,12 +68,13 @@ function PermissionAllowedBadge() {
         className="h-5 w-5 stroke-2 text-primary-500"
         aria-hidden="true"
       />
-    </div>
+    </span>
   );
 }
 function PermissionDeniedBadge() {
   return (
-    <div
+    <span
+      role="img"
       className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-surface-300/80"
       aria-label="불가능"
     >
@@ -80,7 +82,7 @@ function PermissionDeniedBadge() {
         className="h-4.5 w-4.5 [&_path]:stroke-[2.5] text-info-red"
         aria-hidden="true"
       />
-    </div>
+    </span>
   );
 }
 
