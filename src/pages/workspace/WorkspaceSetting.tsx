@@ -449,11 +449,11 @@ export default function WorkspaceSetting() {
                 title="워크스페이스를 삭제할게요"
                 description={
                   <>
-                    <p>
+                    <p className="break-keep">
                       삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
                       없어요.
                     </p>
-                    <p className="mt-2.5">
+                    <p className="mt-1 break-keep">
                       아래 워크스페이스 이름을 그대로 입력해 주세요.
                     </p>
                   </>
