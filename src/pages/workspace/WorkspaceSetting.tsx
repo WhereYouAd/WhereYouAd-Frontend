@@ -152,8 +152,19 @@ export default function WorkspaceSetting() {
 
   const saving = updateMutation.isPending;
 
+  const hasChanges = useMemo(() => {
+    if (!detail) return false;
+
+    const nameChanged = name.trim() !== detail.name;
+    const descChanged = desc.trim() !== (detail.description ?? "").trim();
+    const logoChanged =
+      logoFile !== null || (isImageDeleted && Boolean(detail.logoUrl));
+
+    return nameChanged || descChanged || logoChanged;
+  }, [detail, name, desc, logoFile, isImageDeleted]);
+
   const onSave = () => {
-    if (orgId === null || !name.trim()) return;
+    if (orgId === null || !name.trim() || !hasChanges) return;
     updateMutation.mutate(orgId);
   };
 
@@ -376,15 +387,21 @@ export default function WorkspaceSetting() {
                     워크스페이스 삭제
                   </Button>
                   <Button
-                    size="big"
+                    size="small"
                     variant="primary"
                     type="button"
                     onClick={onSave}
-                    disabled={!name.trim() || saving || deleting}
+                    disabled={
+                      !isAdmin ||
+                      !name.trim() ||
+                      saving ||
+                      deleting ||
+                      !hasChanges
+                    }
                     aria-label="변경사항 저장하기"
                     className="w-auto tablet:w-full"
                   >
-                    {saving ? "저장 중.." : "변경사항 저장하기"}
+                    {saving ? "저장 중.." : "저장"}
                   </Button>
                 </div>
               )}
