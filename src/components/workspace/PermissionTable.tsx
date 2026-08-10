@@ -110,25 +110,27 @@ export default function PermissionTable() {
   };
 
   return (
-    <Card className="p-8">
+    <Card className="p-8 tablet:p-6">
       <header className="mb-7">
         <h2 className="font-heading4 text-text-title">권한 설정</h2>
-        <p className="mt-2 font-body2 text-text-muted">
+        <p className="mt-2 font-body2 text-text-muted break-keep">
           역할별 권한을 확인하고 설정할 수 있습니다
         </p>
       </header>
 
-      <div className="w-full overflow-hidden">
-        <table className="w-full table-fixed">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full table-fixed min-w-130 tablet:min-w-0">
           <thead>
             <tr className="border-b border-surface-400">
               <th className="text-text-auth-sub py-2 text-left">
                 기능 및 작업
               </th>
-              <th className="text-text-auth-sub w-32 py-2 text-center">
+              <th className="text-text-auth-sub w-32 py-2 text-center tablet:w-20">
                 관리자
               </th>
-              <th className="text-text-auth-sub w-32 py-2 text-center">멤버</th>
+              <th className="text-text-auth-sub w-32 py-2 text-center tablet:w-20">
+                멤버
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -139,18 +141,20 @@ export default function PermissionTable() {
               >
                 <td className="py-5">
                   <div className="flex flex-col">
-                    <p className="font-label text-text-title">{row.label}</p>
-                    <p className="text-text-auth-sub font-body2">
+                    <p className="font-label text-text-title break-keep">
+                      {row.label}
+                    </p>
+                    <p className="text-text-auth-sub font-body2 break-keep">
                       {row.description}
                     </p>
                   </div>
                 </td>
-                <td className="px-6 py-5 text-center">
+                <td className="px-6 py-5 text-center tablet:px-2">
                   <div className="flex justify-center">
                     <AdminCheckBadge />
                   </div>
                 </td>
-                <td className="px-6 py-5 text-center">
+                <td className="px-6 py-5 text-center tablet:px-2">
                   <div className="flex justify-center">
                     <Toggle
                       checked={draftPermissionState[row.key]}

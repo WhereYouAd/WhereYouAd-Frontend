@@ -42,7 +42,7 @@ export default function MemberItem({
     !isReceiveUpdating &&
     !!onReceiveToggle;
   return (
-    <li className="flex items-center justify-between py-5 gap-4 tablet:items-stretch">
+    <li className="flex items-center justify-between py-5 gap-4 tablet:items-stretch tablet:flex-col">
       <div className="flex items-center gap-4 w-full min-w-0">
         <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
           {member.profileImageUrl ? (

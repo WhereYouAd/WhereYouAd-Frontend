@@ -14,7 +14,6 @@ import Button from "@/components/common/button/Button";
 
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 import NaverWordmarkIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 import useAuthStore from "@/store/useAuthStore";
 
@@ -77,17 +76,6 @@ export default function Signup() {
           className="bg-surface-100 border border-surface-300 text-text-title font-heading4 shadow-Soft hover:bg-surface-200"
         >
           구글 로그인
-        </Button>
-
-        <Button
-          fullWidth
-          size="big"
-          variant="custom"
-          leftIcon={<KakaoIcon className="w-6 h-6 shrink-0" aria-hidden />}
-          onClick={() => handleSocialLogin("kakao")}
-          className="bg-oauth-kakao font-heading4 text-text-title shadow-Soft transition-opacity hover:opacity-90"
-        >
-          카카오 로그인
         </Button>
 
         <Button

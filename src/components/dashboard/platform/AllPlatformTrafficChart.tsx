@@ -19,6 +19,10 @@ import { useClickStream } from "@/hooks/dashboard/useClickStream";
 
 import Button from "@/components/common/button/Button";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
+import {
+  PLATFORM_ALL_TRAFFIC_CHART_ID,
+  PLATFORM_ALL_TRAFFIC_CONTAINER_ID,
+} from "@/components/dashboard/platform/platformTrafficChartDownload.config";
 
 const STREAM_MODE = "dummy" as const;
 
@@ -93,6 +97,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
 
   const chartOptions: ApexOptions = {
     chart: {
+      id: PLATFORM_ALL_TRAFFIC_CHART_ID,
       type: "area",
       toolbar: { show: false },
       zoom: { enabled: false },
@@ -211,7 +216,7 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
           </Button>
         </div>
       )}
-      <div className="min-h-0 flex-1">
+      <div id={PLATFORM_ALL_TRAFFIC_CONTAINER_ID} className="min-h-0 flex-1">
         <ReactApexChart
           options={chartOptions}
           series={seriesData}

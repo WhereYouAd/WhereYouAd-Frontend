@@ -31,6 +31,10 @@ import { parseMinuteToTimestamp } from "@/utils/dashboard/parseMinuteToTimestamp
 import Button from "@/components/common/button/Button";
 import { Skeleton } from "@/components/common/skeleton/Skeleton";
 import { useAnomalyMarkerPos } from "@/components/dashboard/charts/useAnomalyMarkerPos";
+import {
+  PLATFORM_TRAFFIC_CHART_ID,
+  PLATFORM_TRAFFIC_CONTAINER_ID,
+} from "@/components/dashboard/platform/platformTrafficChartDownload.config";
 
 interface IPlatformTrafficChartProps {
   data: IClickStreamItem | null;
@@ -175,6 +179,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
 
   const chartOptions: ApexOptions = {
     chart: {
+      id: PLATFORM_TRAFFIC_CHART_ID,
       type: "area",
       toolbar: { show: false },
       zoom: { enabled: false },
@@ -428,6 +433,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
           ) : (
             <div
               ref={containerRef}
+              id={PLATFORM_TRAFFIC_CONTAINER_ID}
               role="group"
               aria-label={CHART_ARIA_LABEL}
               data-hide-tooltip={showBubble || undefined}
@@ -446,6 +452,7 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
       ) : (
         <div
           ref={containerRef}
+          id={PLATFORM_TRAFFIC_CONTAINER_ID}
           role="group"
           aria-label={CHART_ARIA_LABEL}
           data-hide-tooltip={showBubble || undefined}

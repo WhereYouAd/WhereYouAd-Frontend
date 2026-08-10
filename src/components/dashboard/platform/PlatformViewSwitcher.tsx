@@ -17,6 +17,7 @@ interface IPlatformViewSwitcherProps {
   onSelectAll: () => void;
   layout?: "header" | "mobile";
   className?: string;
+  isPlatformSelectDisabled?: boolean;
 }
 
 export default function PlatformViewSwitcher({
@@ -26,8 +27,18 @@ export default function PlatformViewSwitcher({
   onSelectAll,
   layout = "header",
   className,
+  isPlatformSelectDisabled = false,
 }: IPlatformViewSwitcherProps) {
   const isMobileLayout = layout === "mobile";
+
+  const platformTriggerClassName = twMerge(
+    "flex h-12 items-center rounded-2xl",
+    isMobileLayout ? "w-full min-w-0" : "w-34 shrink-0",
+    isAllView &&
+      "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
+    isPlatformSelectDisabled &&
+      "cursor-not-allowed border border-surface-400 bg-surface-200 text-text-muted hover:bg-surface-200",
+  );
 
   return (
     <div
@@ -53,39 +64,51 @@ export default function PlatformViewSwitcher({
         전체보기
       </Button>
       <div className={isMobileLayout ? "min-w-0" : undefined}>
-        <DropdownMenu
-          fullWidth={isMobileLayout}
-          menuClassName={twMerge("w-34", isMobileLayout && "w-full")}
-          trigger={
-            <Button
-              type="button"
-              size="small"
-              variant={!isAllView ? "primary" : "custom"}
-              className={twMerge(
-                "flex h-12 items-center rounded-2xl",
-                isMobileLayout ? "w-full min-w-0" : "w-34 shrink-0",
-                isAllView &&
-                  "border border-surface-400 bg-surface-100 text-text-muted hover:bg-surface-200",
-              )}
-            >
-              <span
-                className={twMerge(
-                  "truncate font-body1",
-                  isAllView ? "text-text-muted" : "text-surface-100",
-                )}
+        {isPlatformSelectDisabled ? (
+          <Button
+            type="button"
+            size="small"
+            variant="custom"
+            disabled
+            aria-disabled="true"
+            className={platformTriggerClassName}
+          >
+            <span className="truncate font-body1 text-text-muted">
+              {selectedPlatformLabel}
+            </span>
+            <ChevronDownIcon className="ml-2 h-3 w-3 shrink-0 rotate-180 text-text-muted" />
+          </Button>
+        ) : (
+          <DropdownMenu
+            fullWidth={isMobileLayout}
+            menuClassName={twMerge("w-34", isMobileLayout && "w-full")}
+            aria-label="플랫폼 선택"
+            trigger={
+              <Button
+                type="button"
+                size="small"
+                variant={!isAllView ? "primary" : "custom"}
+                className={platformTriggerClassName}
               >
-                {selectedPlatformLabel}
-              </span>
-              <ChevronDownIcon
-                className={twMerge(
-                  "ml-2 h-3 w-3 shrink-0 rotate-180 transition-transform",
-                  isAllView ? "text-text-muted" : "text-surface-100",
-                )}
-              />
-            </Button>
-          }
-          items={platformItems}
-        />
+                <span
+                  className={twMerge(
+                    "truncate font-body1",
+                    isAllView ? "text-text-muted" : "text-surface-100",
+                  )}
+                >
+                  {selectedPlatformLabel}
+                </span>
+                <ChevronDownIcon
+                  className={twMerge(
+                    "ml-2 h-3 w-3 shrink-0 rotate-180 transition-transform",
+                    isAllView ? "text-text-muted" : "text-surface-100",
+                  )}
+                />
+              </Button>
+            }
+            items={platformItems}
+          />
+        )}
       </div>
     </div>
   );

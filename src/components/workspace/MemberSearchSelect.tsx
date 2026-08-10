@@ -11,6 +11,7 @@ type TMemberSearchSelectProps = {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   placeholder?: string;
+  className?: string;
 };
 
 export default function MemberSearchSelect({
@@ -20,6 +21,7 @@ export default function MemberSearchSelect({
   isOpen,
   onOpenChange,
   placeholder = "소유권을 양도할 멤버를 검색하세요",
+  className,
 }: TMemberSearchSelectProps) {
   return (
     <SearchSelect
@@ -55,6 +57,7 @@ export default function MemberSearchSelect({
         </div>
       )}
       emptyMessage="검색 결과가 없습니다"
+      className={className}
     />
   );
 }

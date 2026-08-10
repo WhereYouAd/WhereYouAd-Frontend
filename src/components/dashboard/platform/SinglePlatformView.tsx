@@ -25,6 +25,7 @@ import DashboardAiSummarySection from "@/components/dashboard/ai-report/componen
 import BudgetGaugeChart from "@/components/dashboard/charts/BudgetGaugeChart";
 import PlatformDetailTable from "@/components/dashboard/platform/PlatformDetailTable";
 import PlatformTrafficChart from "@/components/dashboard/platform/PlatformTrafficChart";
+import PlatformTrafficChartDownload from "@/components/dashboard/platform/PlatformTrafficChartDownload";
 import {
   PlatformDualBudgetGaugeSkeleton,
   PlatformSingleBudgetGaugeSkeleton,
@@ -163,6 +164,7 @@ export default function SinglePlatformView({
               ]}
             />
           }
+          RightElement={<PlatformTrafficChartDownload platform={platform} />}
         >
           <div
             className={twMerge(

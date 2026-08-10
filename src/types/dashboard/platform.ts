@@ -29,6 +29,12 @@ export interface IPlatformPerformance extends IMetricsResponse {
   provider: TProviderType;
 }
 
+/** 전체보기 성과 조회 — 부분 실패 시 성공분만 platforms에 포함 */
+export interface IPlatformPerformanceQueryData {
+  platforms: IPlatformPerformance[];
+  failedProviders: TProviderType[];
+}
+
 // 플랫폼별 성과 효율 비교
 export interface IPlatformEfficiencyData {
   status: string;
