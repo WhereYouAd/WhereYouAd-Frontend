@@ -380,6 +380,7 @@ export default function Timeline() {
                         key={`${viewUnit}-${bar.id}`}
                         bar={bar}
                         colWidth={colWidth}
+                        menuPlacement={bar.row === maxRow ? "top" : "auto"}
                         isSelected={selectedBarId === bar.id && isPanelOpen}
                         onBarClick={handleBarClick}
                         onEdit={() => handleEditTimeline(bar.id)}

@@ -28,6 +28,7 @@ interface ITimelineBarProps {
   onBarClick?: (bar: ITimelineCampaignBar) => void;
   onEdit?: (bar: ITimelineCampaignBar) => void;
   onDelete?: (bar: ITimelineCampaignBar) => void;
+  menuPlacement?: "bottom" | "top" | "auto";
 }
 
 export default function TimelineBar({
@@ -40,6 +41,7 @@ export default function TimelineBar({
   onBarClick,
   onEdit,
   onDelete,
+  menuPlacement = "auto",
 }: ITimelineBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const status = resolveTimelinePerformanceStatusStyle(bar.performanceStatus);
@@ -127,7 +129,7 @@ export default function TimelineBar({
       {showActions ? (
         <div
           className={twMerge(
-            "ml-auto flex shrink-0 self-center items-center opacity-0 transition-opacity",
+            "absolute right-1 ml-auto flex shrink-0 self-center items-center opacity-0 transition-opacity",
             "group-hover/bar:opacity-100 group-focus-within/bar:opacity-100",
             isSelected && "opacity-100",
           )}
@@ -135,7 +137,7 @@ export default function TimelineBar({
         >
           <DropdownMenu
             aria-label="캠페인 메뉴"
-            placement="auto"
+            placement={menuPlacement}
             onOpenChange={setIsMenuOpen}
             menuClassName="w-40 py-2 [&_[role=menuitem]]:px-4 [&_[role=menuitem]]:py-3"
             trigger={
