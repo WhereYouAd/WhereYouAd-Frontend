@@ -8,14 +8,14 @@ import CloseIcon from "@/assets/icon/common/close.svg?react";
 const permissionRows: TPermissionRow[] = [
   {
     key: "campaignView",
-    label: "광고/캠페인 조회",
+    label: "광고•캠페인 조회",
     description: "광고 및 캠페인을 조회할 수 있습니다",
     memberAllowed: true,
   },
   {
     key: "timelineManage",
-    label: "타임라인 조회/관리",
-    description: "성과 타임라인을 조회하고 생성•수정•삭제할 수 있습니다",
+    label: "타임라인 조회•관리",
+    description: "성과 타임라인을 조회하고 생성/수정/삭제할 수 있습니다",
     memberAllowed: true,
   },
   {
@@ -46,7 +46,7 @@ const permissionRows: TPermissionRow[] = [
   {
     key: "workspaceEdit",
     label: "워크스페이스 설정 수정",
-    description: "워크스페이스 이름•로고 등 기본 정보를 수정합니다",
+    description: "워크스페이스 이름/로고 등 기본 정보를 수정합니다",
     memberAllowed: false,
   },
   {
