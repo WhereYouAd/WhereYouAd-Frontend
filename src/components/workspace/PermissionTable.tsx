@@ -14,44 +14,44 @@ const permissionRows: TPermissionRow[] = [
     key: "campaignView",
     label: "광고/캠페인 조회",
     description: "광고 및 캠페인을 조회할 수 있습니다",
-    defaultMemberEnabled: true,
+    memberAllowed: true,
   },
   {
     key: "billingManage",
     label: "결제 관리",
     description: "구독 플랜 변경 및 결제 수단을 관리합니다",
-    defaultMemberEnabled: false,
+    memberAllowed: false,
   },
   {
     key: "workspaceView",
     label: "워크스페이스 조회",
     description: "워크스페이스에 대한 정보를 조회할 수 있습니다",
-    defaultMemberEnabled: true,
+    memberAllowed: true,
   },
   {
     key: "memberInvite",
     label: "멤버 초대",
     description: "새로운 팀원을 워크스페이스에 초대할 수 있습니다",
-    defaultMemberEnabled: true,
+    memberAllowed: true,
   },
   {
     key: "memberRoleEdit",
     label: "멤버 역할 변경",
     description:
       "워크스페이스에 소속되어있는 멤버들의 역할을 변경할 수 있습니다",
-    defaultMemberEnabled: false,
+    memberAllowed: false,
   },
   {
     key: "workspaceEdit",
     label: "워크스페이스 설정 수정",
     description: "워크스페이스 이름, 로고 등 기본 정보를 수정합니다",
-    defaultMemberEnabled: false,
+    memberAllowed: false,
   },
   {
     key: "projectDelete",
     label: "프로젝트 삭제",
     description: "생성된 프로젝트를 영구적으로 삭제합니다",
-    defaultMemberEnabled: false,
+    memberAllowed: false,
   },
 ];
 
@@ -59,7 +59,7 @@ type TMemberPermissionState = Record<TPermissionRow["key"], boolean>;
 
 const initialMemberPermissionState: TMemberPermissionState =
   permissionRows.reduce((acc, row) => {
-    acc[row.key] = row.defaultMemberEnabled;
+    acc[row.key] = row.memberAllowed;
     return acc;
   }, {} as TMemberPermissionState);
 

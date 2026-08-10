@@ -90,7 +90,7 @@ export type TPermissionRow = {
   key: TPermissionKey;
   label: string;
   description: string;
-  defaultMemberEnabled: boolean;
+  memberAllowed: boolean;
 };
 
 export type TInviteMemberRequest = {
