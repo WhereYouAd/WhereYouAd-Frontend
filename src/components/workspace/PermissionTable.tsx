@@ -8,6 +8,7 @@ import Card from "../common/card/Card";
 import Toggle from "../common/toggle/Toggle";
 
 import CheckIcon from "@/assets/icon/common/check.svg?react";
+import CloseIcon from "@/assets/icon/common/close.svg?react";
 
 const permissionRows: TPermissionRow[] = [
   {
@@ -32,7 +33,7 @@ const permissionRows: TPermissionRow[] = [
     key: "memberInvite",
     label: "멤버 초대",
     description: "새로운 팀원을 워크스페이스에 초대할 수 있습니다",
-    memberAllowed: true,
+    memberAllowed: false,
   },
   {
     key: "memberRoleEdit",
@@ -55,66 +56,40 @@ const permissionRows: TPermissionRow[] = [
   },
 ];
 
-type TMemberPermissionState = Record<TPermissionRow["key"], boolean>;
-
-const initialMemberPermissionState: TMemberPermissionState =
-  permissionRows.reduce((acc, row) => {
-    acc[row.key] = row.memberAllowed;
-    return acc;
-  }, {} as TMemberPermissionState);
-
-function AdminCheckBadge() {
+function PermissionAllowedBadge() {
   return (
-    <div className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-primary-100/80">
-      <CheckIcon className="h-5 w-5 stroke-2 text-primary-500" />
-      <span className="sr-only">가능</span>
+    <div
+      className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-primary-100/80"
+      aria-label="가능"
+    >
+      <CheckIcon
+        className="h-5 w-5 stroke-2 text-primary-500"
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
+function PermissionDeniedBadge() {
+  return (
+    <div
+      className="inline-flex h-8 w-8 items-center justify-center rounded-3xl bg-surface-300/80"
+      aria-label="불가능"
+    >
+      <CloseIcon
+        className="h-4.5 w-4.5 [&_path]:stroke-[2.5] text-info-red"
+        aria-hidden="true"
+      />
     </div>
   );
 }
 
 export default function PermissionTable() {
-  const [savedPermissionState, setSavedPermissionState] = useState(
-    initialMemberPermissionState,
-  );
-  const [draftPermissionState, setDraftPermissionState] = useState(
-    initialMemberPermissionState,
-  );
-  const [isSaving, setIsSaving] = useState(false);
-  const hasChanges = useMemo(() => {
-    return permissionRows.some(
-      (row) => savedPermissionState[row.key] !== draftPermissionState[row.key],
-    );
-  }, [savedPermissionState, draftPermissionState]);
-  const handleToggleMemberPermission = (key: TPermissionRow["key"]) => {
-    setDraftPermissionState((prev) => ({
-      ...prev,
-      [key]: !prev[key],
-    }));
-  };
-  const handleResetChange = () => {
-    setDraftPermissionState(savedPermissionState);
-  };
-  const handleSaveChanges = async () => {
-    if (!hasChanges || isSaving) return;
-    setIsSaving(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setSavedPermissionState(draftPermissionState);
-      toast.success("권한 설정이 저장되었습니다");
-    } catch (error) {
-      toast.error("권한 설정 저장에 실패했습니다. 다시 시도해주세요");
-      console.error("권한 설정 저장 실패", error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
     <Card className="p-8 tablet:p-6">
       <header className="mb-7">
         <h2 className="font-heading4 text-text-title">권한 설정</h2>
         <p className="mt-2 font-body2 text-text-muted break-keep">
-          역할별 권한을 확인하고 설정할 수 있습니다
+          역할(관리자/멤버)에 따른 권한을 확인할 수 있습니다
         </p>
       </header>
 
@@ -151,16 +126,16 @@ export default function PermissionTable() {
                 </td>
                 <td className="px-6 py-5 text-center tablet:px-2">
                   <div className="flex justify-center">
-                    <AdminCheckBadge />
+                    <PermissionAllowedBadge />
                   </div>
                 </td>
                 <td className="px-6 py-5 text-center tablet:px-2">
                   <div className="flex justify-center">
-                    <Toggle
-                      checked={draftPermissionState[row.key]}
-                      onToggle={() => handleToggleMemberPermission(row.key)}
-                      ariaLabel={`${row.label} 권한 토글`}
-                    />
+                    {row.memberAllowed ? (
+                      <PermissionAllowedBadge />
+                    ) : (
+                      <PermissionDeniedBadge />
+                    )}
                   </div>
                 </td>
               </tr>
@@ -170,44 +145,10 @@ export default function PermissionTable() {
       </div>
 
       <div className="mt-8 rounded-2xl bg-surface-200/60 px-5 py-5 tablet:px-4 tablet:py-4">
-        {hasChanges ? (
-          <p
-            role="status"
-            className="mb-4 rounded-xl bg-primary-100/50 px-4 py-3 font-body2 text-text-title break-keep text-pretty"
-          >
-            <span className="font-label text-primary-500">저장 필요</span>
-            <span className="text-text-muted"> · </span>
-            멤버 권한이 변경되었습니다. 반영하려면 저장을 눌러주세요. 취소하면
-            이전 설정으로 돌아갑니다.
-          </p>
-        ) : (
-          <p className="mb-4 font-body2 text-text-muted break-keep text-pretty">
-            멤버 열의 토글을 바꾼 뒤, 아래에서 저장하거나 변경을 취소할 수
-            있습니다.
-          </p>
-        )}
-        <div className="flex flex-wrap items-center justify-end gap-3 tablet:flex-col tablet:items-stretch">
-          <Button
-            type="button"
-            variant="outline"
-            size="big"
-            onClick={handleResetChange}
-            disabled={!hasChanges || isSaving}
-            className="rounded-2xl tablet:w-full"
-          >
-            변경 취소
-          </Button>
-          <Button
-            type="button"
-            variant="primary"
-            size="big"
-            onClick={handleSaveChanges}
-            disabled={!hasChanges || isSaving}
-            className="rounded-2xl tablet:w-full"
-          >
-            {isSaving ? "저장 중..." : "변경사항 저장하기"}
-          </Button>
-        </div>
+        <p className="font-body2 text-text-muted break-keep text-pretty">
+          권한은 역할에 따라 고정됩니다. 멤버의 접근 범위를 바꾸려면 위 멤버
+          목록에서 역할을 변경하세요.
+        </p>
       </div>
     </Card>
   );
