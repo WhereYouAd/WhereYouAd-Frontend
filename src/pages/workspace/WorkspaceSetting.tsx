@@ -155,7 +155,7 @@ export default function WorkspaceSetting() {
   const hasChanges = useMemo(() => {
     if (!detail) return false;
 
-    const nameChanged = name.trim() !== detail.name;
+    const nameChanged = name.trim() !== detail.name.trim();
     const descChanged = desc.trim() !== (detail.description ?? "").trim();
     const logoChanged =
       logoFile !== null || (isImageDeleted && Boolean(detail.logoUrl));
