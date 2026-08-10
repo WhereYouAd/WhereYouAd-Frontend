@@ -159,19 +159,36 @@ export function DropdownMenu({
     const el = ref.current;
     if (!el) return;
 
-    if (placement === "bottom") {
-      setResolvedPlacement("bottom");
-    } else if (placement === "top") {
-      setResolvedPlacement("top");
-    } else {
-      setResolvedPlacement(resolveAutoPlacement(el, items.length));
-    }
+    const updatePosition = () => {
+      if (placement === "bottom") {
+        setResolvedPlacement("bottom");
+      } else if (placement === "top") {
+        setResolvedPlacement("top");
+      } else {
+        setResolvedPlacement(resolveAutoPlacement(el, items.length));
+      }
 
-    if (!fullWidth) {
-      setHorizontalAlign(resolveHorizontalAlign(el));
-    } else {
-      setHorizontalAlign("right");
-    }
+      if (!fullWidth) {
+        setHorizontalAlign(resolveHorizontalAlign(el));
+      } else {
+        setHorizontalAlign("right");
+      }
+    };
+
+    updatePosition();
+
+    window.addEventListener("resize", updatePosition);
+
+    window.addEventListener("scroll", updatePosition, true);
+
+    const resizeObserver = new ResizeObserver(updatePosition);
+    resizeObserver.observe(el);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+      resizeObserver.disconnect();
+    };
   }, [open, placement, items.length, inFlow, fullWidth]);
 
   useEffect(() => {
