@@ -12,6 +12,8 @@ interface ISidebarItemProps {
   onClick: (id: string, hasChildren: boolean) => void;
   onNavigate?: () => void;
   trailing?: ReactNode;
+  /** 연동 주의 상태 — 접힘 시 아이콘 `!` */
+  showAttention?: boolean;
 }
 
 export const SidebarItem = memo(function SidebarItem({
@@ -22,10 +24,14 @@ export const SidebarItem = memo(function SidebarItem({
   onClick,
   onNavigate,
   trailing,
+  showAttention = false,
 }: ISidebarItemProps) {
   const hasChildren = !!item.children?.length;
   const Icon = item.icon;
 
+  const accessibilityLabel = showAttention
+    ? `${item.label}, 연동 필요`
+    : item.label;
   const itemClassName = twMerge(
     className,
     "flex items-center",
@@ -34,7 +40,17 @@ export const SidebarItem = memo(function SidebarItem({
 
   const content = isCollapsed ? (
     Icon ? (
-      <Icon className="h-6 w-6 shrink-0" aria-hidden />
+      <span className="relative inline-flex">
+        <Icon className="h-6 w-6 shrink-0" aria-hidden />
+        {showAttention ? (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -right-1 -top-1.5 font-body2 font-bold leading-none text-info-red"
+          >
+            !
+          </span>
+        ) : null}
+      </span>
     ) : null
   ) : (
     <div className="flex min-w-0 w-full items-center gap-2">
@@ -51,6 +67,10 @@ export const SidebarItem = memo(function SidebarItem({
       <NavLink
         to={item.path}
         className={itemClassName}
+        // 접힘: 보이는 텍스트 없음 → 항상 label. attention이면 "연동 필요" 포함
+        aria-label={
+          isCollapsed || showAttention ? accessibilityLabel : undefined
+        }
         onClick={(e) => {
           if (e.defaultPrevented) return;
           onClick(item.id, hasChildren);
@@ -65,7 +85,7 @@ export const SidebarItem = memo(function SidebarItem({
   return (
     <button
       type="button"
-      aria-label={item.label}
+      aria-label={accessibilityLabel}
       aria-haspopup={hasChildren ? "menu" : undefined}
       aria-expanded={hasChildren ? isOpen : undefined}
       className={twMerge(itemClassName, "text-left")}
