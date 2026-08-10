@@ -291,7 +291,7 @@ export default function WorkspaceSetting() {
             <Card className="p-8 tablet:p-6">
               <h2 className="font-heading3 text-text-title">조직 기본 정보</h2>
               <div className="mt-6 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
-                <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
+                <div className="flex w-52 shrink-0 flex-col items-center tablet:w-full">
                   <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
                     로고 이미지
                   </div>
@@ -307,7 +307,7 @@ export default function WorkspaceSetting() {
                     onClick={openFilePicker}
                     disabled={!isAdmin || saving || deleting}
                     aria-label="로고 이미지 업로드 또는 변경"
-                    className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
+                    className="flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40"
                   >
                     {logoPreview ? (
                       <img
@@ -368,8 +368,8 @@ export default function WorkspaceSetting() {
                     placeholder="워크스페이스에 대한 설명을 입력해주세요"
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
-                    minRows={4}
-                    className="min-h-90"
+                    minRows={3}
+                    className="min-h-44"
                     disabled={!isAdmin || saving || deleting}
                   />
                 </div>
