@@ -112,9 +112,12 @@ export default function SearchSelect<T>({
           aria-controls={listboxId}
           aria-haspopup="listbox"
           aria-autocomplete="list"
-          className="h-13 w-full rounded-2xl border border-info-blue px-4 pl-5 font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-info-blue"
+          containerClassName="h-13 w-full rounded-2xl border border-info-blue font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-info-blue"
+          inputClassName="truncate"
+          rightElement={
+            <SearchIcon className="h-5 w-5 text-info-blue" aria-hidden />
+          }
         />
-        <SearchIcon className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-info-blue" />
       </div>
 
       {isOpen && (

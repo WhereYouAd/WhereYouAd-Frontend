@@ -57,14 +57,14 @@ export default function TransferOwnerModal({
           <WarnIcon className="h-12 w-12 text-info-yellow" aria-hidden="true" />
         </div>
 
-        <h3 className="mb-2 text-center font-heading2 text-text-title">
+        <h3 className="mb-2 text-center font-heading2 text-text-title break-keep">
           조직 소유권을 양도할까요?
         </h3>
-        <p className="mb-1 text-center font-body1 text-text-auth-sub">
+        <p className="mb-2 text-center font-body1 text-text-auth-sub">
           현재 소유자: {currentOwnerName}
         </p>
-        <p className="mb-6 text-center font-body2 text-text-muted break-keep text-pretty">
-          양도 대상은 같은 조직의 관리자(ADMIN)만 선택할 수 있습니다.
+        <p className="mb-6 text-center font-body2 text-text-muted break-keep">
+          양도 대상은 같은 조직의 관리자만 선택할 수 있습니다.
           <br />
           양도 후에는 되돌릴 수 없으며, 새 소유자만 다시 양도 가능합니다.
         </p>

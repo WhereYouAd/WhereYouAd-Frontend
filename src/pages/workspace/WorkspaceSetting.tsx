@@ -9,9 +9,8 @@ import Card from "@/components/common/card/Card";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
-import Modal from "@/components/common/modal/Modal";
-import ModalContent from "@/components/common/modal/ModalContent";
 import TextareaField from "@/components/common/textarea/TextareaField";
+import DeleteWorkspaceModal from "@/components/workspace/DeleteWorkspaceModal";
 import TransferOwnerModal from "@/components/workspace/TransferOwnerModal";
 import WorkspaceSettingLoading from "@/components/workspace/WorkspaceSettingLoading";
 
@@ -25,7 +24,6 @@ import {
   updateWorkspace,
 } from "@/api/workspace/org";
 import BuildingIcon from "@/assets/icon/common/building.svg?react";
-import WarnIcon from "@/assets/icon/common/warn-circle.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
@@ -426,51 +424,18 @@ export default function WorkspaceSetting() {
               </Card>
             )}
 
-            <Modal
+            <DeleteWorkspaceModal
               isOpen={deleteOpen}
               onClose={() => {
                 if (!deleting) {
                   setDeleteOpen(false);
                   setDeleteNameSnapshot("");
-                  setDeleteConfirmInput("");
                 }
               }}
-              title="워크스페이스를 삭제할게요"
-              size="lg"
-              disableOverlayClick={deleting}
-            >
-              <ModalContent
-                icon={
-                  <WarnIcon
-                    className="h-7 w-7 text-info-red"
-                    aria-hidden="true"
-                  />
-                }
-                title="워크스페이스를 삭제할게요"
-                description={
-                  <>
-                    <p>
-                      삭제하면 연결된 모든 데이터가 사라지고, 다시 되돌릴 수
-                      없어요.
-                    </p>
-                    <p className="mt-2.5">
-                      아래 워크스페이스 이름을 그대로 입력해 주세요.
-                    </p>
-                  </>
-                }
-                confirmMatchSubheading={false}
-                confirmMatchText={deleteNameSnapshot}
-                confirmInput={deleteConfirmInput}
-                onConfirmInputChange={setDeleteConfirmInput}
-                confirmMatchInputPlaceholder="워크스페이스 이름"
-                buttonText="영구 삭제"
-                onConfirm={() => {
-                  void onDelete();
-                }}
-                isLoading={deleting}
-                variant="danger"
-              />
-            </Modal>
+              workspaceName={deleteNameSnapshot}
+              onConfirm={onDelete}
+              isLoading={deleting}
+            />
 
             <TransferOwnerModal
               isOpen={transferOpen}

@@ -1,4 +1,3 @@
-import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import Input from "@/components/common/input/Input";
@@ -87,23 +86,20 @@ export default function NotificationSection({
   const isDiscordPending = pendingOrgAction === "discord";
   const isAnyOrgPending = pendingOrgAction != null;
   return (
-    <Card className="p-8">
+    <Card className="p-8 tablet:p-6">
       <header className="mb-7 flex items-center gap-4">
         <BellIcon />
         <h2 className="font-heading4 text-text-title">알림 설정</h2>
       </header>
 
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <p className="font-body1 text-text-title">마스터 알림</p>
-          <p className="font-body2 text-text-muted">
+      <div className="mb-8 flex items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="font-body1 text-text-title break-keep">마스터 알림</p>
+          <p className="font-body2 text-text-muted break-keep">
             끄면 모든 알림이 비활성화 됩니다
           </p>
         </div>
-        <div className="flex items-center gap-4 ">
-          {masterEnabled && !workspaceNotifiDisabled && (
-            <Badge variant="infoBlue">켜짐</Badge>
-          )}
+        <div className="shrink-0">
           <Toggle
             checked={masterEnabled}
             disabled={workspaceNotifiDisabled}
@@ -122,15 +118,14 @@ export default function NotificationSection({
         </h3>
 
         <div className="flex flex-col divide-y divide-surface-300">
-          <div className="flex items-center justify-between py-5 first:pt-0">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between gap-4 py-5 first:pt-0">
+            <div className="flex items-center gap-4 min-w-0 flex-1">
               <BellIcon className={rowIconClass} />
-              <p className="font-body1 text-text-title">브라우저 푸시 알림</p>
+              <p className="font-body1 text-text-title break-keep">
+                브라우저 푸시 알림
+              </p>
             </div>
-            <div className="flex items-center gap-4">
-              {browserPush && !channelDisabled && (
-                <Badge variant="infoBlue">켜짐</Badge>
-              )}
+            <div className="shrink-0">
               <Toggle
                 checked={browserPush}
                 disabled={channelDisabled}
@@ -140,18 +135,17 @@ export default function NotificationSection({
             </div>
           </div>
 
-          <div className="flex items-center justify-between py-5">
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between py-5 gap-4">
+            <div className="flex items-center gap-4 min-w-0 flex-1">
               <MailIcon className={rowIconClass} />
-              <div>
-                <p className="font-body1 text-text-title">이메일 알림 설정</p>
-                <p className="font-body2 text-text-muted">{email}</p>
+              <div className="min-w-0">
+                <p className="font-body1 text-text-title break-keep">
+                  이메일 알림 설정
+                </p>
+                <p className="font-body2 text-text-muted truncate">{email}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              {emailNotif && !channelDisabled && (
-                <Badge variant="infoBlue">켜짐</Badge>
-              )}
+            <div className="shrink-0">
               <Toggle
                 checked={emailNotif}
                 disabled={channelDisabled}
@@ -161,12 +155,14 @@ export default function NotificationSection({
             </div>
           </div>
           {isAdmin && (
-            <div className="flex items-center gap-4 py-5">
+            <div className="flex items-center gap-4 py-5 tablet:flex-col tablet:items-stretch">
               <div className="flex min-w-0 flex-1 items-center gap-4">
                 <SlackIcon className={rowIconClass} />
                 <div className="min-w-0">
-                  <p className="font-body1 text-text-title">슬랙 연동하기</p>
-                  <p className="font-body2 text-text-muted">
+                  <p className="font-body1 text-text-title break-keep">
+                    슬랙 연동하기
+                  </p>
+                  <p className="font-body2 text-text-muted break-keep">
                     {slackConnected
                       ? "연동됨 • 알림 on/off는 저장 시 반영"
                       : "Webhook URL로 연동"}
@@ -174,10 +170,7 @@ export default function NotificationSection({
                 </div>
               </div>
               {slackConnected ? (
-                <div className="flex shrink-0 items-center gap-3">
-                  {slackEnabled && !channelDisabled && (
-                    <Badge variant="infoBlue">켜짐</Badge>
-                  )}
+                <div className="flex shrink-0 items-center gap-3 tablet:w-full tablet:justify-end">
                   <Toggle
                     checked={slackEnabled}
                     disabled={channelDisabled || isAnyOrgPending}
@@ -196,7 +189,7 @@ export default function NotificationSection({
                   </Button>
                 </div>
               ) : (
-                <>
+                <div className="flex items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
                   <Input
                     aria-label="슬랙 Webhook URL"
                     placeholder="https://hooks.slack.com/..."
@@ -205,7 +198,7 @@ export default function NotificationSection({
                     error={!!slackWebhookError}
                     helperText={slackWebhookError}
                     disabled={channelDisabled || isAnyOrgPending}
-                    wrapperClassName="w-1/4 shrink-0"
+                    wrapperClassName="w-1/4 shrink-0 tablet:w-full"
                     containerClassName="h-10 rounded-lg"
                     inputClassName="px-3 font-body2"
                   />
@@ -213,7 +206,7 @@ export default function NotificationSection({
                     variant="outline"
                     size="small"
                     type="button"
-                    className="shrink-0"
+                    className="shrink-0 tablet:w-full"
                     disabled={
                       channelDisabled ||
                       isAnyOrgPending ||
@@ -224,20 +217,20 @@ export default function NotificationSection({
                   >
                     연동
                   </Button>
-                </>
+                </div>
               )}
             </div>
           )}
 
           {isAdmin && (
-            <div className="flex items-center gap-4 py-5 last:pb-0">
+            <div className="flex items-center gap-4 py-5 last:pb-0 tablet:flex-col tablet:items-stretch">
               <div className="flex min-w-0 flex-1 items-center gap-4">
                 <DiscordIcon className={rowIconClass} />
                 <div className="min-w-0">
-                  <p className="font-body1 text-text-title">
+                  <p className="font-body1 text-text-title break-keep">
                     디스코드 연동하기
                   </p>
-                  <p className="font-body2 text-text-muted">
+                  <p className="font-body2 text-text-muted break-keep">
                     {discordConnected
                       ? "연동됨 • 알림 on/off는 저장 시 반영"
                       : "Webhook URL로 연동"}
@@ -245,10 +238,7 @@ export default function NotificationSection({
                 </div>
               </div>
               {discordConnected ? (
-                <div className="flex shrink-0 items-center gap-3">
-                  {discordEnabled && !channelDisabled && (
-                    <Badge variant="infoBlue">켜짐</Badge>
-                  )}
+                <div className="flex shrink-0 items-center gap-3 tablet:w-full tablet:justify-end">
                   <Toggle
                     checked={discordEnabled}
                     disabled={channelDisabled || isAnyOrgPending}
@@ -267,7 +257,7 @@ export default function NotificationSection({
                   </Button>
                 </div>
               ) : (
-                <>
+                <div className="flex items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
                   <Input
                     aria-label="디스코드 Webhook URL"
                     placeholder="https://discord.com/api/webhooks/..."
@@ -276,7 +266,7 @@ export default function NotificationSection({
                     error={!!discordWebhookError}
                     helperText={discordWebhookError}
                     disabled={channelDisabled || isAnyOrgPending}
-                    wrapperClassName="w-1/4 shrink-0"
+                    wrapperClassName="w-1/4 shrink-0 tablet:w-fill"
                     containerClassName="h-10 rounded-lg"
                     inputClassName="px-3 font-body2"
                   />
@@ -284,7 +274,7 @@ export default function NotificationSection({
                     variant="outline"
                     size="small"
                     type="button"
-                    className="shrink-0"
+                    className="shrink-0 tablet:w-full"
                     disabled={
                       channelDisabled ||
                       isAnyOrgPending ||
@@ -295,7 +285,7 @@ export default function NotificationSection({
                   >
                     연동
                   </Button>
-                </>
+                </div>
               )}
             </div>
           )}
@@ -324,16 +314,15 @@ export default function NotificationSection({
             <div className="flex min-w-0 items-center gap-4">
               <WarnCircleIcon className={rowIconClass} />
               <div className="min-w-0">
-                <p className="font-body1 text-text-title">클릭수 알림</p>
-                <p className="font-body2 text-text-muted">
+                <p className="font-body1 text-text-title break-keep">
+                  클릭수 알림
+                </p>
+                <p className="font-body2 text-text-muted break-keep">
                   이상 징후가 있을 때 알림
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-4">
-              {clickAlarm && !channelDisabled && (
-                <Badge variant="infoBlue">켜짐</Badge>
-              )}
+            <div className="shrink-0">
               <Toggle
                 ariaLabel="클릭수 알람 켜기/끄기"
                 checked={clickAlarm}
@@ -347,16 +336,15 @@ export default function NotificationSection({
             <div className="flex min-w-0 items-center gap-4">
               <DownloadIcon className={rowIconClass} />
               <div className="min-w-0">
-                <p className="font-body1 text-text-title">주간 리포트</p>
-                <p className="font-body2 text-text-muted">
+                <p className="font-body1 text-text-title break-keep">
+                  주간 리포트
+                </p>
+                <p className="font-body2 text-text-muted break-keep">
                   매주 월요일 오전 8시 리포트 이메일 발송
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-4">
-              {weeklyReport && !channelDisabled && (
-                <Badge variant="infoBlue">켜짐</Badge>
-              )}
+            <div className="shrink-0">
               <Toggle
                 ariaLabel="주간리포트 받기/안받기"
                 checked={weeklyReport}

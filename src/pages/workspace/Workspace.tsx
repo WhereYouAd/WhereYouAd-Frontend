@@ -228,9 +228,9 @@ export default function WorkspacePage() {
           <h2 className="mb-2 font-heading3 text-text-title">
             워크스페이스 생성
           </h2>
-          <p className="mb-10 text-start font-body2 text-text-muted tablet:mb-8">
+          <p className="mb-10 text-start font-body2 text-text-muted tablet:mb-8 break-keep">
             워크스페이스를 생성한 사용자는 자동으로 관리자 권한을 갖습니다.
-            <br className="tablet:hidden" />
+            <br />
             로고 이미지와 기본 정보를 입력해 주세요.
           </p>
 
@@ -294,13 +294,14 @@ export default function WorkspacePage() {
                 value={newDesc}
                 onChange={(e) => setNewDesc(e.target.value)}
                 disabled={isCreating}
+                className="break-keep"
               />
               {createErrorMsg && (
                 <p className="font-body2 text-info-red">{createErrorMsg}</p>
               )}
             </div>
 
-            <div className="w-full mt-8">
+            <div className="w-full">
               <Button
                 size="big"
                 variant="primary"
