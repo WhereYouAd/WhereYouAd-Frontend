@@ -32,7 +32,7 @@ export default function ProfileSection({
   resetImage,
 }: TProfileSectionProps) {
   return (
-    <Card className="p-8">
+    <Card className="p-8 tablet:p-6">
       <header className="mb-7 flex items-start justify-between gap-4">
         <div className="flex gap-4 items-center">
           <UserProfileCircleIcon />
