@@ -379,7 +379,7 @@ export default function WorkspaceSetting() {
                   <Button
                     type="button"
                     variant="dangerSoft"
-                    size="big"
+                    size="small"
                     onClick={openDeleteModal}
                     disabled={saving || deleting}
                     className="w-auto tablet:w-full"
