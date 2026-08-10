@@ -13,6 +13,12 @@ const permissionRows: TPermissionRow[] = [
     memberAllowed: true,
   },
   {
+    key: "timelineManage",
+    label: "타임라인 조회/관리",
+    description: "성과 타임라인을 조회하고 생성•수정•삭제할 수 있습니다",
+    memberAllowed: true,
+  },
+  {
     key: "billingManage",
     label: "결제 관리",
     description: "구독 플랜 변경 및 결제 수단을 관리합니다",
@@ -40,7 +46,7 @@ const permissionRows: TPermissionRow[] = [
   {
     key: "workspaceEdit",
     label: "워크스페이스 설정 수정",
-    description: "워크스페이스 이름, 로고 등 기본 정보를 수정합니다",
+    description: "워크스페이스 이름•로고 등 기본 정보를 수정합니다",
     memberAllowed: false,
   },
   {
@@ -84,7 +90,7 @@ export default function PermissionTable() {
       <header className="mb-7">
         <h2 className="font-heading4 text-text-title">권한 설정</h2>
         <p className="mt-2 font-body2 text-text-muted break-keep">
-          역할(관리자/멤버)에 따른 권한을 확인할 수 있습니다
+          역할(관리자•멤버)에 따른 권한을 확인할 수 있습니다
         </p>
       </header>
 
