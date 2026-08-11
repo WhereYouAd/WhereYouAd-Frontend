@@ -189,7 +189,7 @@ export default function NotificationSection({
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
+                <>
                   <Input
                     aria-label="슬랙 Webhook URL"
                     placeholder="https://hooks.slack.com/..."
@@ -217,7 +217,7 @@ export default function NotificationSection({
                   >
                     연동
                   </Button>
-                </div>
+                </>
               )}
             </div>
           )}
@@ -257,7 +257,7 @@ export default function NotificationSection({
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-3 tablet:w-full tablet:flex-col tablet:items-stretch">
+                <>
                   <Input
                     aria-label="디스코드 Webhook URL"
                     placeholder="https://discord.com/api/webhooks/..."
@@ -266,7 +266,7 @@ export default function NotificationSection({
                     error={!!discordWebhookError}
                     helperText={discordWebhookError}
                     disabled={channelDisabled || isAnyOrgPending}
-                    wrapperClassName="w-1/4 shrink-0 tablet:w-fill"
+                    wrapperClassName="w-1/4 shrink-0 tablet:w-full"
                     containerClassName="h-10 rounded-lg"
                     inputClassName="px-3 font-body2"
                   />
@@ -285,7 +285,7 @@ export default function NotificationSection({
                   >
                     연동
                   </Button>
-                </div>
+                </>
               )}
             </div>
           )}
