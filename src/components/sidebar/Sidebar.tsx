@@ -269,6 +269,8 @@ export default function Sidebar() {
           {footerNavByRole.map((item) => {
             const isActive =
               item.path != null ? isPathMatch(pathname, item.path) : false;
+            const isIntegrationsAttention =
+              item.id === "integrations" && showIntegrationsAttention;
 
             return (
               <div
@@ -282,10 +284,9 @@ export default function Sidebar() {
                   className="w-full h-full"
                   onClick={handleFooterItemClick}
                   onNavigate={closeMobileDrawer}
+                  showAttention={isIntegrationsAttention}
                   trailing={
-                    item.id === "integrations" &&
-                    showIntegrationsAttention &&
-                    !isCollapsed ? (
+                    isIntegrationsAttention && !isCollapsed ? (
                       <Badge variant="infoRed">연동 필요</Badge>
                     ) : undefined
                   }

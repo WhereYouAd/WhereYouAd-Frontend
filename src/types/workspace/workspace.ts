@@ -79,6 +79,7 @@ export type TDeleteWorkspaceMemberResponse = string;
 
 export type TPermissionKey =
   | "campaignView"
+  | "timelineManage"
   | "billingManage"
   | "workspaceView"
   | "memberInvite"
@@ -90,7 +91,7 @@ export type TPermissionRow = {
   key: TPermissionKey;
   label: string;
   description: string;
-  defaultMemberEnabled: boolean;
+  memberAllowed: boolean;
 };
 
 export type TInviteMemberRequest = {

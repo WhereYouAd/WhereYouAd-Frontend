@@ -1,5 +1,6 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import DOMPurify from "dompurify";
 
 import AiSummaryPrintReport from "./AiSummaryPrintReport";
 import { buildPrintThemeStyleBlock } from "./printAssets";
@@ -47,7 +48,7 @@ export function downloadAiSummaryPdf(document: TAiReportPrintDocument) {
 <title></title>
 <style>${FONT_FACE_STYLE}${tokenStyles}${printThemeStyles}${printStyles}</style>
 </head>
-<body>${reportMarkup}</body>
+<body>${DOMPurify.sanitize(reportMarkup)}</body>
 </html>`);
   printDoc.close();
 
