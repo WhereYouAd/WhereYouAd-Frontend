@@ -21,11 +21,9 @@ import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 import TimelineSkeleton from "@/components/timeline/skeleton/TimelineSkeleton";
-import TimelineAxis from "@/components/timeline/TimelineAxis";
-import TimelineBar from "@/components/timeline/TimelineBar";
+import TimelineCanvas from "@/components/timeline/TimelineCanvas";
 import TimelineCreateModal from "@/components/timeline/TimelineCreateModal";
 import TimelineEmptyState from "@/components/timeline/TimelineEmptyState";
-import TimelineGrid from "@/components/timeline/TimelineGrid";
 import TimelinePerformancePanel from "@/components/timeline/TimelinePerformancePanel";
 import TimelineToolbar from "@/components/timeline/TimelineToolbar";
 
@@ -205,56 +203,24 @@ export default function Timeline() {
           {hasNoTimelines ? (
             <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
           ) : (
-            <div
-              ref={scrollRef}
-              className="flex min-h-0 w-full flex-1 flex-col overflow-auto"
-            >
-              <div
-                style={{ width: totalWidth, minHeight: "100%" }}
-                className="flex min-h-full flex-1 flex-col"
-              >
-                <TimelineAxis
-                  columns={columns}
-                  colWidth={colWidth}
-                  className="sticky top-0"
-                />
-                {hasNoVisibleBars ? (
-                  <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
-                    <p className="font-heading4 text-text-title">
-                      이 기간에 표시할 타임라인이 없어요
-                    </p>
-                    <p className="max-w-sm font-body2 text-text-muted">
-                      다른 기간으로 이동하거나 보기 단위를 변경해 보세요
-                    </p>
-                  </div>
-                ) : (
-                  <TimelineGrid
-                    columns={columns}
-                    rowCount={maxRow}
-                    colWidth={colWidth}
-                  >
-                    {bars.map((bar) => (
-                      <TimelineBar
-                        key={`${viewUnit}-${bar.id}`}
-                        bar={bar}
-                        colWidth={colWidth}
-                        menuPlacement={bar.row === maxRow ? "top" : "auto"}
-                        isSelected={selectedBarId === bar.id && isPanelOpen}
-                        onBarClick={handleBarClick}
-                        onEdit={() => handleEditTimeline(bar.id)}
-                        onDelete={() =>
-                          handleDeleteTimeline({ id: bar.id, name: bar.title })
-                        }
-                      />
-                    ))}
-                  </TimelineGrid>
-                )}
-              </div>
-            </div>
+            <TimelineCanvas
+              scrollRef={scrollRef}
+              totalWidth={totalWidth}
+              columns={columns}
+              colWidth={colWidth}
+              bars={bars}
+              maxRow={maxRow}
+              viewUnit={viewUnit}
+              hasNoVisibleBars={hasNoVisibleBars}
+              selectedBarId={selectedBarId}
+              isPanelOpen={isPanelOpen}
+              onBarClick={handleBarClick}
+              onEdit={handleEditTimeline}
+              onDelete={handleDeleteTimeline}
+            />
           )}
         </div>
       </ErrorBoundary>
-
       {/* 생성 */}
       <TimelineCreateModal
         isOpen={isCreateOpen}
