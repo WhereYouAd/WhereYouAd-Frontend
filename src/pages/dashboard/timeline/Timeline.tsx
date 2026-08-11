@@ -1,25 +1,21 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { ITimelineSummaryPanelData } from "@/types/timeline/summary";
-import type {
-  ITimelineCampaignBar,
-  TTimelineViewUnit,
-} from "@/types/timeline/ui";
+import type { ITimelineCampaignBar } from "@/types/timeline/ui";
 import {
   TIMELINE_COL_WIDTH,
   TIMELINE_PAGE_HEIGHT,
 } from "@/constants/timeline/layout";
 
 import { buildTimelineGrid } from "@/utils/timeline/buildTimelineGrid";
-import { buildTimelineSummaryPanel } from "@/utils/timeline/buildTimelineSummaryPanel";
 
 import { useContainerWidth } from "@/hooks/timeline/useContainerWidth";
 import { useDeleteTimeline } from "@/hooks/timeline/useDeleteTimeline";
-import { useRequestTimelineSummary } from "@/hooks/timeline/useRequestTimelineSummary";
-import { useTimelineDetail } from "@/hooks/timeline/useTimelineDetail";
+import { useTimelineEditModal } from "@/hooks/timeline/useTimelineEditModal";
 import { useTimelineList } from "@/hooks/timeline/useTimelineList";
+import useTimelinePanel from "@/hooks/timeline/useTimelinePanel";
+import { useTimelinePeriod } from "@/hooks/timeline/useTimelinePeriod";
+import { useTimelineSummaryPolling } from "@/hooks/timeline/useTimelineSummaryPolling";
 
 import Button from "@/components/common/button/Button";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
@@ -44,29 +40,14 @@ import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import useTimelineStore from "@/store/useTimelineStore";
 
-const SUMMARY_POLL_INTERVAL_MS = 1500;
-const SUMMARY_POLL_TIMEOUT_MS = 90000;
-
 export default function Timeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [viewUnit, setViewUnit] = useState<TTimelineViewUnit>("WEEK");
-  const [periodIndex, setPeriodIndex] = useState(0);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [selectedBarId, setSelectedBarId] = useState<number | null>(null);
-  const [panelData, setPanelData] = useState<ITimelineSummaryPanelData | null>(
-    null,
-  );
-  const [editTimelineId, setEditTimelineId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     id: number;
     name: string;
   } | null>(null);
-  const [isAwaitingSummary, setIsAwaitingSummary] = useState(false);
-  const [summaryPollStartedAt, setSummaryPollStartedAt] = useState<
-    number | null
-  >(null);
 
   const statusFilter = useTimelineStore((s) => s.statusFilter);
   const sort = useTimelineStore((s) => s.sort);
@@ -74,29 +55,6 @@ export default function Timeline() {
   const setSort = useTimelineStore((s) => s.setSort);
 
   const { mutate: deleteTimeline, isPending: isDeleting } = useDeleteTimeline();
-  const { mutate: requestSummary, isPending: isSummaryPending } =
-    useRequestTimelineSummary();
-  const {
-    data: editDetail,
-    isLoading: isEditDetailLoading,
-    isError: isEditDetailError,
-    error: editDetailError,
-  } = useTimelineDetail(editTimelineId);
-
-  const { data: detail } = useTimelineDetail(selectedBarId, {
-    refetchInterval: isAwaitingSummary ? SUMMARY_POLL_INTERVAL_MS : false,
-  });
-
-  const editInitialValues = useMemo(() => {
-    if (!editDetail) return undefined;
-    return {
-      name: editDetail.name,
-      startDate: editDetail.startDate,
-      endDate: editDetail.endDate,
-      metrics: editDetail.metrics,
-      comparisonPeriodType: editDetail.comparisonPeriodType,
-    };
-  }, [editDetail]);
 
   const listParams = useMemo(
     () => ({
@@ -113,14 +71,29 @@ export default function Timeline() {
     error,
   } = useTimelineList(listParams);
 
+  const hasNoTimelines = timelineList.length === 0;
+
+  const {
+    viewUnit,
+    periodIndex,
+    handleViewUnitChange,
+    handlePrevPeriod,
+    handleNextPeriod,
+    handleGoToToday,
+  } = useTimelinePeriod({ scrollRef, hasNoTimelines });
+
   const gridData = useMemo(
-    () => buildTimelineGrid({ items: timelineList, viewUnit, periodIndex }),
+    () =>
+      buildTimelineGrid({
+        items: timelineList,
+        viewUnit: viewUnit,
+        periodIndex: periodIndex,
+      }),
     [timelineList, viewUnit, periodIndex],
   );
-  const { columns, bars } = gridData;
-  const hasNoTimelines = timelineList.length === 0;
+
+  const { columns, bars, periodLabel } = gridData;
   const hasNoVisibleBars = !hasNoTimelines && bars.length === 0;
-  const periodLabel = gridData.periodLabel;
 
   const maxRow = useMemo(
     () => (bars.length > 0 ? Math.max(...bars.map((bar) => bar.row)) : 0),
@@ -135,93 +108,33 @@ export default function Timeline() {
       : TIMELINE_COL_WIDTH;
   const totalWidth = columnCount * colWidth;
 
-  useEffect(() => {
-    if (!isAwaitingSummary) return;
-    if (!detail?.summary?.trim()) return;
+  const {
+    isPanelOpen,
+    selectedBarId,
+    panelData,
+    handleBarClick: selectBar,
+    handlePanelClose,
+  } = useTimelinePanel({ bars });
 
-    setIsAwaitingSummary(false);
-    setSummaryPollStartedAt(null);
-  }, [isAwaitingSummary, detail?.summary]);
-
-  useEffect(() => {
-    if (!isAwaitingSummary || summaryPollStartedAt == null) return;
-
-    const timer = window.setTimeout(() => {
-      setIsAwaitingSummary(false);
-      setSummaryPollStartedAt(null);
-      toast.error(
-        "더 상세한 요약을 위해 시간이 걸리고 있습니다. 잠시 후 다시 시도해주세요",
-      );
-    }, SUMMARY_POLL_TIMEOUT_MS);
-    return () => window.clearTimeout(timer);
-  }, [isAwaitingSummary, summaryPollStartedAt]);
-
-  useEffect(() => {
-    if (editTimelineId == null || !isEditDetailError) return;
-    toast.error(
-      editDetailError?.message ??
-        "타임라인 정보를 불러오지 못했습니다. 다시 시도해주세요",
-    );
-    setEditTimelineId(null);
-  }, [editTimelineId, isEditDetailError, editDetailError]);
-
-  useEffect(() => {
-    if (editTimelineId == null || !isEditDetailLoading) return;
-    toast.info("타임라인 정보를 불러오는 중...");
-  }, [editTimelineId, isEditDetailLoading]);
-
-  useEffect(() => {
-    if (!detail) return;
-    setPanelData(buildTimelineSummaryPanel(detail));
-  }, [detail]);
-
-  useEffect(() => {
-    if (hasNoTimelines) return;
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollLeft = viewUnit === "MONTH" ? 0 : el.scrollWidth - el.clientWidth;
-  }, [columns, hasNoTimelines, viewUnit]);
-
-  useEffect(() => {
-    if (selectedBarId === null) return;
-    if (!bars.some((bar) => bar.id === selectedBarId)) {
-      setIsPanelOpen(false);
-      setSelectedBarId(null);
-    }
-  }, [bars, selectedBarId]);
-
-  const handleViewUnitChange = (unit: TTimelineViewUnit) => {
-    setViewUnit(unit);
-    setPeriodIndex(0);
-  };
-
-  const handlePrevPeriod = () => {
-    setPeriodIndex((prev) => prev + 1); //더 과거
-  };
-
-  const handleNextPeriod = () => {
-    setPeriodIndex((prev) => Math.max(0, prev - 1));
-  };
-
-  const handleGoToToday = () => {
-    setPeriodIndex(0);
-  };
+  const {
+    isAwaitingSummary,
+    isSummaryPending,
+    handleRequestSummary,
+    resetSummaryPolling,
+  } = useTimelineSummaryPolling(selectedBarId);
 
   const handleBarClick = (bar: ITimelineCampaignBar) => {
-    setSelectedBarId(bar.id);
-    setPanelData(null);
-    setIsPanelOpen(true);
-    setIsAwaitingSummary(false);
-    setSummaryPollStartedAt(null);
+    resetSummaryPolling();
+    selectBar(bar);
   };
 
-  const handlePanelClose = () => {
-    setIsPanelOpen(false);
-    setSelectedBarId(null);
-  };
-
-  const openEditModal = (id: number) => setEditTimelineId(id);
-  const closeEditModal = () => setEditTimelineId(null);
+  const {
+    editTimelineId,
+    editInitialValues,
+    isEditOpen,
+    openEditModal,
+    closeEditModal,
+  } = useTimelineEditModal();
 
   const openDeleteModal = (target: { id: number; name: string }) => {
     setDeleteTarget(target);
@@ -246,18 +159,6 @@ export default function Timeline() {
       onSuccess: () => {
         if (selectedBarId === deleteTarget.id) handlePanelClose();
         setDeleteTarget(null);
-      },
-    });
-  };
-
-  const handleRequestSummary = () => {
-    if (selectedBarId == null) return;
-    setIsAwaitingSummary(true);
-    setSummaryPollStartedAt(Date.now());
-    requestSummary(selectedBarId, {
-      onError: () => {
-        setIsAwaitingSummary(false);
-        setSummaryPollStartedAt(null);
       },
     });
   };
@@ -404,7 +305,7 @@ export default function Timeline() {
       />
       {/* 수정 */}
       <TimelineCreateModal
-        isOpen={editTimelineId != null && editInitialValues != null}
+        isOpen={isEditOpen}
         onClose={closeEditModal}
         timelineId={editTimelineId}
         initialValues={editInitialValues}
