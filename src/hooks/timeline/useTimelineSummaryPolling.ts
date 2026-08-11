@@ -21,6 +21,11 @@ export function useTimelineSummaryPolling(selectedBarId: number | null) {
   });
 
   useEffect(() => {
+    setIsAwaitingSummary(false);
+    setSummaryPollStartedAt(null);
+  }, [selectedBarId]);
+
+  useEffect(() => {
     if (!isAwaitingSummary) return;
     if (!detail?.summary?.trim()) return;
     setIsAwaitingSummary(false);
