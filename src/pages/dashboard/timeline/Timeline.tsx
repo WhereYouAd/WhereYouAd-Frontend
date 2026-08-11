@@ -1,5 +1,4 @@
 import { useMemo, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
 import type { ITimelineCampaignBar } from "@/types/timeline/ui";
 import {
@@ -17,7 +16,6 @@ import useTimelinePanel from "@/hooks/timeline/useTimelinePanel";
 import { useTimelinePeriod } from "@/hooks/timeline/useTimelinePeriod";
 import { useTimelineSummaryPolling } from "@/hooks/timeline/useTimelineSummaryPolling";
 
-import Button from "@/components/common/button/Button";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
@@ -27,16 +25,10 @@ import TimelineAxis from "@/components/timeline/TimelineAxis";
 import TimelineBar from "@/components/timeline/TimelineBar";
 import TimelineCreateModal from "@/components/timeline/TimelineCreateModal";
 import TimelineEmptyState from "@/components/timeline/TimelineEmptyState";
-import TimelineFilterSortMenus from "@/components/timeline/TimelineFilterSortMenus";
 import TimelineGrid from "@/components/timeline/TimelineGrid";
 import TimelinePerformancePanel from "@/components/timeline/TimelinePerformancePanel";
-import {
-  TimelinePeriodNav,
-  TimelineViewUnitSegment,
-} from "@/components/timeline/TimelinePeriodSelector";
-import TimelineStatusLegend from "@/components/timeline/TimelineStatusLegend";
+import TimelineToolbar from "@/components/timeline/TimelineToolbar";
 
-import PlusIcon from "@/assets/icon/common/plus.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import useTimelineStore from "@/store/useTimelineStore";
 
@@ -197,54 +189,19 @@ export default function Timeline() {
         resetKeys={[timelineList, viewUnit, periodIndex]}
       >
         <div className="flex min-h-full flex-1 w-full min-w-0 flex-col rounded-2xl border border-surface-400/70 bg-surface-100">
-          <div className="flex shrink-0 flex-col gap-4 border-b border-surface-400/80 px-5 py-5 tablet:px-4 tablet:py-4 tablet:gap-3">
-            <div className="flex items-center justify-between gap-8 tablet:flex-col tablet:items-stretch tablet:gap-3">
-              <TimelineStatusLegend className="min-w-0 flex-1" />
-              <Button
-                type="button"
-                size="small"
-                variant="custom"
-                onClick={() => setIsCreateOpen(true)}
-                leftIcon={
-                  <PlusIcon
-                    className="h-4 w-4 shrink-0 text-primary-500"
-                    aria-hidden
-                  />
-                }
-                className={twMerge(
-                  "h-10 shrink-0 rounded-2xl px-4",
-                  "bg-primary-400/20 text-primary-500",
-                  "font-body2 shadow-Soft",
-                  "transition-ui-smooth hover:bg-primary-500/30",
-                  "tablet:w-full tablet:justify-center",
-                )}
-              >
-                타임라인 생성
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 tablet:grid-cols-1 tablet:gap-3">
-              <TimelineViewUnitSegment
-                viewUnit={viewUnit}
-                onViewUnitChange={handleViewUnitChange}
-                className="justify-self-start tablet:justify-self-stretch tablet:w-full"
-              />
-              <TimelinePeriodNav
-                periodLabel={periodLabel}
-                onPrevPeriod={handlePrevPeriod}
-                onNextPeriod={handleNextPeriod}
-                onGoToToday={handleGoToToday}
-                className="justify-self-center"
-              />
-              <TimelineFilterSortMenus
-                statusFilter={statusFilter}
-                sort={sort}
-                onStatusFilterChange={setStatusFilter}
-                onSortChange={setSort}
-                className="justify-self-end"
-              />
-            </div>
-          </div>
+          <TimelineToolbar
+            viewUnit={viewUnit}
+            periodLabel={periodLabel}
+            onViewUnitChange={handleViewUnitChange}
+            onPrevPeriod={handlePrevPeriod}
+            onNextPeriod={handleNextPeriod}
+            onGoToToday={handleGoToToday}
+            statusFilter={statusFilter}
+            sort={sort}
+            onStatusFilterChange={setStatusFilter}
+            onSortChange={setSort}
+            onCreate={() => setIsCreateOpen(true)}
+          />
           {hasNoTimelines ? (
             <TimelineEmptyState onCreate={() => setIsCreateOpen(true)} />
           ) : (
