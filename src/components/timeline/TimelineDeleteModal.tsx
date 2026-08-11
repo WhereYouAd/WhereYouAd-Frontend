@@ -10,7 +10,7 @@ interface ITimelineDeleteModalProps {
   onConfirm: () => void;
 }
 
-export default function ({
+export default function TimelineDeleteModal({
   target,
   isDeleting,
   onClose,
