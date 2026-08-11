@@ -39,7 +39,7 @@ export default function ProfileSection({
           <h2 className="font-heading4 text-text-title">프로필</h2>
         </div>
       </header>
-      <div className="flex flex-row gap-10 tablet:flex-col tablet:gap-8">
+      <div className="flex flex-row items-center gap-8 tablet:flex-col tablet:gap-8">
         <div className="flex flex-col items-center basis-1/4 shrink-0 tablet:w-full">
           <div className="mb-4 w-full select-none text-text-title tablet:text-center">
             프로필 이미지
@@ -55,7 +55,7 @@ export default function ProfileSection({
             type="button"
             onClick={openFilePicker}
             aria-label="프로필 이미지 업로드 또는 변경"
-            className="relative flex h-45 w-45 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
+            className="relative flex h-36 w-36 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40"
           >
             {preview ? (
               <img
@@ -85,14 +85,14 @@ export default function ProfileSection({
               type="button"
               onClick={resetImage}
               className="h-7! rounded-3xl border border-surface-400 bg-surface-100 px-4 font-body2 text-text-auth-sub transition-colors duration-200 ease-in-out hover:bg-surface-200 disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="프로필 이미지 초기화 버튼"
+              aria-label="프로필 이미지 삭제 버튼"
               disabled={!preview}
             >
-              초기화
+              삭제
             </Button>
           </div>
         </div>
-        <div className="grid w-full basis-3/4 grid-cols-2 gap-x-6 gap-y-4 tablet:grid-cols-1 tablet:gap-y-5">
+        <div className="grid w-full basis-3/4 grid-cols-2 gap-x-6 gap-y-3 tablet:grid-cols-1 tablet:gap-y-5">
           <div className="col-span-2 tablet:col-span-1">
             <Input
               label="이름"

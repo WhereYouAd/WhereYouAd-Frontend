@@ -750,15 +750,13 @@ export default function Setting() {
         <Button
           variant="primary"
           type="button"
-          size="big"
+          size="small"
           aria-label="개인 설정 변경사항 저장 버튼"
           onClick={handleSave}
-          disabled={
-            !hasChanges || isLoading || isNotificationSectionLoading || isSaving
-          }
+          disabled={!hasChanges || isLoading || isNotificationSectionLoading}
           className="tablet:w-full"
         >
-          변경사항 저장하기
+          {isSaving ? "저장 중..." : "저장"}
         </Button>
       </div>
       <WithdrawConfirmModal
