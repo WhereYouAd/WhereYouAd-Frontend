@@ -18,16 +18,14 @@ import { useTimelineSummaryPolling } from "@/hooks/timeline/useTimelineSummaryPo
 
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
-import Modal from "@/components/common/modal/Modal";
-import ModalContent from "@/components/common/modal/ModalContent";
 import TimelineSkeleton from "@/components/timeline/skeleton/TimelineSkeleton";
 import TimelineCanvas from "@/components/timeline/TimelineCanvas";
 import TimelineCreateModal from "@/components/timeline/TimelineCreateModal";
+import TimelineDeleteModal from "@/components/timeline/TimelineDeleteModal";
 import TimelineEmptyState from "@/components/timeline/TimelineEmptyState";
 import TimelinePerformancePanel from "@/components/timeline/TimelinePerformancePanel";
 import TimelineToolbar from "@/components/timeline/TimelineToolbar";
 
-import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import useTimelineStore from "@/store/useTimelineStore";
 
 export default function Timeline() {
@@ -254,26 +252,12 @@ export default function Timeline() {
           isSummaryPending={isSummaryPending}
         />
       ) : null}
-      <Modal
-        isOpen={deleteTarget != null}
+      <TimelineDeleteModal
+        target={deleteTarget}
+        isDeleting={isDeleting}
         onClose={closeDeleteModal}
-        title="타임라인 삭제"
-        disableOverlayClick={isDeleting}
-      >
-        <ModalContent
-          icon={<TrashIcon className="h-7 w-7 text-info-red" />}
-          title="해당 타임라인을 삭제할까요?"
-          description={
-            deleteTarget
-              ? `"${deleteTarget.name}" 타임라인을 삭제하면 복구할 수 없습니다`
-              : ""
-          }
-          buttonText="삭제하기"
-          onConfirm={handleConfirmDelete}
-          isLoading={isDeleting}
-          variant="danger"
-        />
-      </Modal>
+        onConfirm={handleConfirmDelete}
+      />
     </section>
   );
 }
