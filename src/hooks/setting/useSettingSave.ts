@@ -42,7 +42,7 @@ export default function useSettingSave({
     if (password.hasPasswordChanges) {
       if (!password.validatePassword()) return;
     } else {
-      password.clearPasswordErrors;
+      password.clearPasswordErrors();
     }
 
     isSavingRef.current = true;
