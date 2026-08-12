@@ -163,11 +163,21 @@ export default function useSettingNotifications() {
       setDiscordWebhookError("Webhook URL을 입력해주세요");
       return;
     }
-    if (!url.startsWith("https://")) {
+    let parsed: URL;
+    try {
+      parsed = new URL(url);
+    } catch {
       setDiscordWebhookError("올바른 URL 형식으로 입력해주세요");
       return;
     }
-
+    const DISCORD_HOSTS = ["discord.com", "discordapp.com"];
+    if (
+      parsed.protocol !== "https:" ||
+      !DISCORD_HOSTS.includes(parsed.hostname)
+    ) {
+      setDiscordWebhookError("디스코드 Webhook URL을 입력해주세요");
+      return;
+    }
     setPendingOrgAction("discord");
     try {
       await updateOrg.mutateAsync(
