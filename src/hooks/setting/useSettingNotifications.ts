@@ -87,14 +87,14 @@ export default function useSettingNotifications() {
   const buildOrgBody = (
     overrides: Partial<IUpdateOrgNotificationSettingsRequest> = {},
   ): IUpdateOrgNotificationSettingsRequest => ({
-    isSlackEnabled: draftOrgNotif.slackEnabled,
+    isSlackEnabled: savedOrgNotif.slackEnabled,
     slackWebhookUrl: "",
     disconnectSlack: false,
-    isDiscordEnabled: draftOrgNotif.discordEnabled,
+    isDiscordEnabled: savedOrgNotif.discordEnabled,
     discordWebhookUrl: "",
     disconnectDiscord: false,
-    alertClicks: draftWorkspaceNotif.clickAlarm ?? false,
-    alertReport: draftWorkspaceNotif.weeklyReport ?? false,
+    alertClicks: savedWorkspaceNotif.clickAlarm ?? false,
+    alertReport: savedWorkspaceNotif.weeklyReport ?? false,
     ...overrides,
   });
 
