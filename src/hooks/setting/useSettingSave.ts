@@ -153,10 +153,11 @@ export default function useSettingSave({
           if (savedAccount) {
             toast.success("회원정보가 수정되었습니다");
           }
+          const reason = error.message ?? "알림 저장에 실패했습니다.";
           toast.error(
             savedSteps.length > 0
-              ? `${savedSteps.join(", ")}은(는) 저장됐지만, 이후 단계에서 실패했습니다`
-              : (error.message ?? "알림 설정 저장에 실패했습니다"),
+              ? `${savedSteps.join(", ")}은(는) 저장됐지만, 이후 단계에서 실패했습니다: ${reason}`
+              : reason,
           );
           return;
         }
