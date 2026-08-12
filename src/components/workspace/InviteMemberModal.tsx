@@ -10,10 +10,10 @@ import { emailSchema } from "@/utils/auth/validation";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 
-import Badge from "../common/badge/Badge";
-import Button from "../common/button/Button";
-import Input from "../common/input/Input";
-import Modal from "../common/modal/Modal";
+import Badge from "@/components/common/badge/Badge";
+import Button from "@/components/common/button/Button";
+import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
 
 import { postInviteEmail } from "@/api/workspace/org";
 import MailIcon from "@/assets/icon/common/mail.svg?react";
