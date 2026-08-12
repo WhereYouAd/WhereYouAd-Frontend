@@ -12,12 +12,12 @@ import {
   type IWorkspaceNotificationSettings,
 } from "@/types/setting/settingPage";
 
-import { useMyNotificationSettings } from "./useMyNotificationSettings";
-import { useUpdateAlertsNotificationSettings } from "./useUpdateAlertsNotificationSettings";
-import { useUpdateChannelNotificationSettings } from "./useUpdateChannelNotificationSettings";
-import { useUpdateMasterNotificationSettings } from "./useUpdateMasterNotificationSetting";
-import { useUpdateOrgNotificationSettings } from "./useUpdateOrgNotificationSettings";
-import { useCoreQuery } from "../customQuery";
+import { useCoreQuery } from "@/hooks/customQuery";
+import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
+import { useUpdateAlertsNotificationSettings } from "@/hooks/setting/useUpdateAlertsNotificationSettings";
+import { useUpdateChannelNotificationSettings } from "@/hooks/setting/useUpdateChannelNotificationSettings";
+import { useUpdateMasterNotificationSettings } from "@/hooks/setting/useUpdateMasterNotificationSetting";
+import { useUpdateOrgNotificationSettings } from "@/hooks/setting/useUpdateOrgNotificationSettings";
 
 import { getMyWorkspaces } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";

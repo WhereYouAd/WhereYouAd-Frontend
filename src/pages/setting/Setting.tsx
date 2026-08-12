@@ -4,7 +4,7 @@ import { useDeleteMyAccount } from "@/hooks/auth/useDeleteMyAccount";
 import useSettingNotification from "@/hooks/setting/useSettingNotifications";
 import useSettingPassword from "@/hooks/setting/useSettingPassWord";
 import useSettingProfile from "@/hooks/setting/useSettingProfile";
-import useSettingSave from "@/hooks/setting/useSettingsave";
+import useSettingSave from "@/hooks/setting/useSettingSave";
 
 import Button from "@/components/common/button/Button";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
