@@ -1,9 +1,5 @@
-/** 게이지 라벨 */
-export type TBudgetGaugeLabel =
-  | "전체 예산"
-  | "일일 예산"
-  | "Google·Meta"
-  | "NAVER";
+/** 게이지 라벨 — groups.budgetType(TOTAL/DAILY) 매핑 */
+export type TBudgetGaugeLabel = "전체 예산" | "일일 예산";
 
 /** 게이지 1개 분량 */
 export interface IBudgetSlice {
