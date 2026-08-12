@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { useDeleteMyAccount } from "@/hooks/auth/useDeleteMyAccount";
-import useSettingNotification from "@/hooks/setting/useSettingNotification";
-import useSettingPassWord from "@/hooks/setting/useSettingPassWord";
+import useSettingNotification from "@/hooks/setting/useSettingNotifications";
+import useSettingPassword from "@/hooks/setting/useSettingPassWord";
 import useSettingProfile from "@/hooks/setting/useSettingProfile";
 import useSettingSave from "@/hooks/setting/useSettingsave";
 
@@ -20,7 +20,7 @@ export default function Setting() {
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
   const profile = useSettingProfile();
-  const password = useSettingPassWord();
+  const password = useSettingPassword();
   const notifications = useSettingNotification();
   const { isSaving, hasChanges, handleSave } = useSettingSave({
     profile,

@@ -3,15 +3,15 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import type useSettingNotification from "@/hooks/setting/useSettingNotification";
-import type useSettingPassWord from "@/hooks/setting/useSettingPassWord";
+import type useSettingNotifications from "@/hooks/setting/useSettingNotifications";
+import type useSettingPassword from "@/hooks/setting/useSettingPassWord";
 import type useSettingProfile from "@/hooks/setting/useSettingProfile";
 
 import { updateMyInfo } from "@/api/auth/auth";
 
 type TProfile = ReturnType<typeof useSettingProfile>;
-type TPassword = ReturnType<typeof useSettingPassWord>;
-type TNotifications = ReturnType<typeof useSettingNotification>;
+type TPassword = ReturnType<typeof useSettingPassword>;
+type TNotifications = ReturnType<typeof useSettingNotifications>;
 
 interface IUseSettingSaveParams {
   profile: TProfile;

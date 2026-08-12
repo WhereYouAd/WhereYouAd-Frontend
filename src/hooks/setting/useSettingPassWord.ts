@@ -5,7 +5,7 @@ const EMPTY_ERRORS = {
   newPassword: "",
   confirmNewPassword: "",
 };
-export default function useSettingPassWord() {
+export default function useSettingPassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");

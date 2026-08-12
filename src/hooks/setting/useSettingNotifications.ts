@@ -23,7 +23,7 @@ import { getMyWorkspaces } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-export default function useSettingNotification() {
+export default function useSettingNotifications() {
   const [savedChannel, setSavedChannel] =
     useState<IChannelNotificationSettings>(DEFAULT_CHANNEL);
   const [draftChannel, setDraftChannel] =
