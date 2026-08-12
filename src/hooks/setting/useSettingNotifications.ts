@@ -66,6 +66,7 @@ export default function useSettingNotifications() {
   } = useMyNotificationSettings();
 
   const lastNotifiedNotificationErrorAtRef = useRef(0);
+  const prevOrgIdRef = useRef<number | null>(selectedOrgId);
 
   const updateChannels = useUpdateChannelNotificationSettings();
   const updateAlerts = useUpdateAlertsNotificationSettings();
@@ -271,6 +272,7 @@ export default function useSettingNotifications() {
       setSlackWebhookError("");
       setDiscordWebhookUrl("");
       setDiscordWebhookError("");
+      prevOrgIdRef.current = null;
       return;
     }
 
@@ -294,12 +296,18 @@ export default function useSettingNotifications() {
     };
 
     setSavedChannel(nextChannel);
-    setDraftChannel(nextChannel);
     setSavedWorkspaceNotif(nextWorkspace);
-    setDraftWorkspaceNotif(nextWorkspace);
     setSavedOrgNotif(nextOrg);
-    setDraftOrgNotif(nextOrg);
-  }, [selectedOrgId, notificationSettings]);
+
+    const orgChanged = prevOrgIdRef.current !== selectedOrgId;
+    if (orgChanged || !hasNotificationChanges) {
+      setDraftChannel(nextChannel);
+      setDraftWorkspaceNotif(nextWorkspace);
+      setDraftOrgNotif(nextOrg);
+    }
+
+    prevOrgIdRef.current = selectedOrgId;
+  }, [selectedOrgId, notificationSettings, hasNotificationChanges]);
 
   useEffect(() => {
     if (!isNotificationError || notificationErrorUpdatedAt === 0) return;
