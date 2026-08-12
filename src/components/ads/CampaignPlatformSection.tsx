@@ -3,10 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
 
-import {
-  BUDGET_EDIT_BLOCK_MESSAGES,
-  canSubmitPlatformBudgetEdit,
-} from "@/utils/ads/budgetEdit";
+import { canSubmitPlatformBudgetEdit } from "@/utils/ads/budgetEdit";
 import {
   mapPlatformBudgetSummariesToGauges,
   pickEditablePlatformBudget,
@@ -47,49 +44,28 @@ export default function CampaignPlatformSection({
 
   const editCheck = canSubmitPlatformBudgetEdit(editTarget ?? undefined);
   const isBudgetEditDisabled = !onEditBudget || !editTarget || !editCheck.ok;
-  const budgetEditDisabledReason = !onEditBudget
-    ? undefined
-    : !editTarget
-      ? BUDGET_EDIT_BLOCK_MESSAGES.MISSING_PLATFORM_BUDGET
-      : editCheck.ok
-        ? undefined
-        : BUDGET_EDIT_BLOCK_MESSAGES[editCheck.reason];
-  const budgetEditHintId = `budget-edit-hint-${platform}`;
 
   const campaignName = platformBudgets.find(
     (row) => row.adCampaignName,
   )?.adCampaignName;
 
   const budgetEditAction = (
-    <div className="flex flex-col items-end gap-1">
-      <Button
-        type="button"
-        size="small"
-        variant="outline"
-        className={twMerge(
-          "h-9 shrink-0 px-3.5",
-          isBudgetEditDisabled && "opacity-60",
-        )}
-        onClick={() => {
-          if (!editTarget || !onEditBudget) return;
-          onEditBudget(editTarget);
-        }}
-        disabled={isBudgetEditDisabled}
-        aria-describedby={
-          budgetEditDisabledReason ? budgetEditHintId : undefined
-        }
-      >
-        예산 수정
-      </Button>
-      {budgetEditDisabledReason ? (
-        <p
-          id={budgetEditHintId}
-          className="max-w-48 text-right font-caption text-text-muted"
-        >
-          {budgetEditDisabledReason}
-        </p>
-      ) : null}
-    </div>
+    <Button
+      type="button"
+      size="small"
+      variant="outline"
+      className={twMerge(
+        "h-9 shrink-0 px-3.5",
+        isBudgetEditDisabled && "opacity-60",
+      )}
+      onClick={() => {
+        if (!editTarget || !onEditBudget) return;
+        onEditBudget(editTarget);
+      }}
+      disabled={isBudgetEditDisabled}
+    >
+      예산 수정
+    </Button>
   );
 
   return (
