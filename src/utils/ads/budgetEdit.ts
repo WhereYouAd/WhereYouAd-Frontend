@@ -135,11 +135,13 @@ export function canSubmitPlatformBudgetEdit(
       }
       return { ok: true };
 
-    case "NAVER":
-      if (!budget.naverConnectionId || !budget.naverCampaignId) {
+    case "NAVER": {
+      const target = budget.naverBudgetTarget;
+      if (!target?.connectionId || !target.campaignId) {
         return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
       }
       return { ok: true };
+    }
 
     default:
       return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
@@ -221,13 +223,14 @@ export function buildUpdatePlatformBudgetVariables(
   lifetimeBudget?: number;
 } {
   const { activeBudgetType } = resolveEffectivePlatformBudget(budget);
+  const naverTarget = budget.naverBudgetTarget;
 
   const base = {
     providerType: budget.provider,
-    adCampaignId: budget.adCampaignId,
+    adCampaignId: budget.adCampaignId ?? undefined,
     activeBudgetType,
-    naverConnectionId: budget.naverConnectionId,
-    naverCampaignId: budget.naverCampaignId,
+    naverConnectionId: naverTarget?.connectionId,
+    naverCampaignId: naverTarget?.campaignId,
   };
 
   if (values.lifetimeBudget !== undefined) {

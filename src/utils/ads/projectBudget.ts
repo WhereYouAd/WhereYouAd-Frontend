@@ -113,7 +113,14 @@ export function buildPlaceholderPlatformBudgets(
         totalBudget > 0
           ? Math.round(((totalBudget - totalSpend) / totalBudget) * 100)
           : 100,
-      adCampaignId: 1000 + index,
+      ...(provider === "NAVER"
+        ? {
+            naverBudgetTarget: {
+              connectionId: 1,
+              campaignId: `mock-campaign-${index}`,
+            },
+          }
+        : { adCampaignId: 1000 + index }),
       adCampaignName: `${provider} 매체 캠페인 (mock)`,
       canEditBudget: false,
     });

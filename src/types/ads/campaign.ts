@@ -8,6 +8,11 @@ export type TStatus = "ON_GOING" | "PAUSED" | "OVER";
  * GET /api/project/{orgId}/{projectId} — platformBudgets[] 항목
  * OpenAPI: PlatformBudgetSummary
  */
+export interface INaverBudgetTarget {
+  connectionId: number;
+  campaignId: string;
+}
+
 export interface IPlatformBudgetSummary {
   provider: TProvider;
   budgetType: TPlatformBudgetType;
@@ -15,11 +20,11 @@ export interface IPlatformBudgetSummary {
   spend: number;
   remainingBudget: number;
   remainingPercentage: number;
-  /** 예산 수정용 — 현재 OpenAPI 미포함, 내려오면 수정 활성화 */
-  adCampaignId?: number;
+  /** Meta / Google 예산 수정 path */
+  adCampaignId?: number | null;
   adCampaignName?: string;
-  naverConnectionId?: number;
-  naverCampaignId?: string;
+  /** Naver 예산 수정 path */
+  naverBudgetTarget?: INaverBudgetTarget | null;
   canEditBudget?: boolean;
 }
 
