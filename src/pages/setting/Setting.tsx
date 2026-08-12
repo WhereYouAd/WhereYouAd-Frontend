@@ -3,6 +3,16 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 import type { IUpdateOrgNotificationSettingsRequest } from "@/types/setting/notification";
+import {
+  DEFAULT_CHANNEL,
+  DEFAULT_ORG_NOTIF,
+  DEFAULT_WORKSPACE_NOTIF,
+  type IChannelNotificationSettings,
+  type IDraftProfile,
+  type IOrgNotificationSettings,
+  type ISavedProfile,
+  type IWorkspaceNotificationSettings,
+} from "@/types/setting/settingPage";
 
 import { useDeleteMyAccount } from "@/hooks/auth/useDeleteMyAccount";
 import { useImageUploader } from "@/hooks/common/useImageUploader";
@@ -27,53 +37,6 @@ import { getMyInfo, updateMyInfo } from "@/api/auth/auth";
 import { getMyWorkspaces } from "@/api/workspace/org";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
-
-interface IChannelNotificationSettings {
-  browserPush: boolean;
-  emailNotif: boolean;
-}
-
-interface IWorkspaceNotificationSettings {
-  clickAlarm: boolean;
-  weeklyReport: boolean;
-}
-
-interface IOrgNotificationSettings {
-  masterEnabled: boolean;
-  slackEnabled: boolean;
-  slackConnected: boolean;
-  discordEnabled: boolean;
-  discordConnected: boolean;
-}
-
-const DEFAULT_CHANNEL: IChannelNotificationSettings = {
-  browserPush: false,
-  emailNotif: false,
-};
-
-const DEFAULT_WORKSPACE_NOTIF: IWorkspaceNotificationSettings = {
-  clickAlarm: false,
-  weeklyReport: false,
-};
-
-const DEFAULT_ORG_NOTIF: IOrgNotificationSettings = {
-  masterEnabled: true,
-  slackEnabled: false,
-  slackConnected: false,
-  discordEnabled: false,
-  discordConnected: false,
-};
-
-interface IDraftProfile {
-  name: string;
-  email: string;
-  phoneNumber: string;
-}
-
-interface ISavedProfile {
-  name: string;
-  profileImageUrl: string | null;
-}
 
 export default function Setting() {
   const [savedProfile, setSavedProfile] = useState<ISavedProfile>({
