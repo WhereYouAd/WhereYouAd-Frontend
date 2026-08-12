@@ -104,8 +104,16 @@ export default function useSettingNotifications() {
       setSlackWebhookError("Webhook URL을 입력해주세요");
       return;
     }
-    if (!url.startsWith("https://")) {
+
+    let parsed: URL;
+    try {
+      parsed = new URL(url);
+    } catch {
       setSlackWebhookError("올바른 URL 형식으로 입력해주세요");
+      return;
+    }
+    if (parsed.protocol !== "https:" || parsed.hostname !== "hooks.slack.com") {
+      setSlackWebhookError("슬랙 Webhook URL을 입력해주세요");
       return;
     }
 
