@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import type { IApiErrorResponse } from "@/types/common/common";
 
 import type useSettingNotifications from "@/hooks/setting/useSettingNotifications";
-import type useSettingPassword from "@/hooks/setting/useSettingPassWord";
+import type useSettingPassword from "@/hooks/setting/useSettingPassword";
 import type useSettingProfile from "@/hooks/setting/useSettingProfile";
 
 import { updateMyInfo } from "@/api/auth/auth";

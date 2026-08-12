@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useDeleteMyAccount } from "@/hooks/auth/useDeleteMyAccount";
 import useSettingNotification from "@/hooks/setting/useSettingNotifications";
-import useSettingPassword from "@/hooks/setting/useSettingPassWord";
+import useSettingPassword from "@/hooks/setting/useSettingPassword";
 import useSettingProfile from "@/hooks/setting/useSettingProfile";
 import useSettingSave from "@/hooks/setting/useSettingSave";
 
