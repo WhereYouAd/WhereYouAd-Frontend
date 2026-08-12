@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import type {
@@ -10,13 +10,13 @@ import { emailSchema } from "@/utils/auth/validation";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 
-import Badge from "../common/badge/Badge";
-import Button from "../common/button/Button";
-import Input from "../common/input/Input";
-import Modal from "../common/modal/Modal";
+import Badge from "@/components/common/badge/Badge";
+import Button from "@/components/common/button/Button";
+import Input from "@/components/common/input/Input";
+import Modal from "@/components/common/modal/Modal";
 
 import { postInviteEmail } from "@/api/workspace/org";
-import CopyIcon from "@/assets/icon/common/link.svg?react";
+import MailIcon from "@/assets/icon/common/mail.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
@@ -58,18 +58,6 @@ export default function InviteMemberModal({
 
   const isInviteDisabled = !isValidEmail || inviteMutation.isPending;
 
-  const inviteLink = useMemo(() => {
-    return `${window.location.origin}/workspace/${orgId}/invite`;
-  }, [orgId]);
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(inviteLink);
-      toast.success("초대 링크가 복사되었습니다");
-    } catch (error) {
-      toast.error("초대 링크 복사에 실패했습니다. 다시 시도해주세요");
-      console.log("초대 링크 복사 실패:", error);
-    }
-  };
   const handleChangeEmail = (value: string) => {
     setForm({ email: value });
   };
@@ -99,18 +87,10 @@ export default function InviteMemberModal({
       title="팀원 초대하기"
       className="w-full max-w-190 overflow-hidden"
     >
-      <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6 tablet:px-0 tablet:py-4">
-        <div className="flex justify-between items-center px-8 py-6 pb-3 shrink-0 tablet:px-5 tablet:flex-col tablet:items-stretch tablet:gap-3">
+      <div className="flex flex-col h-full max-h-[80vh] text-center px-2 py-6 tablet:py-4">
+        <div className="flex justify-center items-center py-6 pb-3 gap-3">
+          <MailIcon className="h-6 w-6 text-primary-400" />
           <p className="font-heading4 text-text-title">팀원 초대하기</p>
-          <button
-            type="button"
-            aria-label="팀원 초대 링크 복사 버튼"
-            onClick={handleCopyLink}
-            className="flex items-center gap-2 rounded-lg px-2 py-1 text-primary-500 transition-opacity hover:opacity-80 tablet:self-end"
-          >
-            <CopyIcon />
-            <span className="font-body1">링크 복사</span>
-          </button>
         </div>
         <div className="px-8 py-4 shrink-0 tablet:px-5">
           <div className="flex items-center gap-7 tablet:flex-col tablet:items-stretch tablet:gap-3">
