@@ -16,14 +16,15 @@ export function useLogout() {
 
   return useCoreMutation(postLogout, {
     userOnSuccess: () => {
-      queryClient.removeQueries({ queryKey: ["my-workspaces"] });
+      toast.success("로그아웃이 완료되었습니다");
+      queryClient.clear();
       logout();
       nav("/", { replace: true });
     },
     userOnError: (error) => {
+      const apiError = error as IApiErrorResponse;
       const message =
-        (error as IApiErrorResponse).message ??
-        "로그아웃에 실패했습니다. 다시 시도해주세요";
+        apiError.message ?? "로그아웃에 실패했습니다. 다시 시도해주세요";
       toast.error(message);
     },
   });
