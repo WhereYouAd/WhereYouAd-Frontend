@@ -41,7 +41,7 @@ export function useUpdatePlatformBudget(orgId: number, projectId: number) {
             throw new Error("일일 예산을 입력해 주세요.");
           }
           if (
-            vars.activeBudgetType === "LIFETIME" &&
+            vars.activeBudgetType === "TOTAL" &&
             vars.lifetimeBudget === undefined
           ) {
             throw new Error("전체 예산을 입력해 주세요.");
@@ -63,7 +63,7 @@ export function useUpdatePlatformBudget(orgId: number, projectId: number) {
             throw new Error("일일 예산을 입력해 주세요.");
           }
           if (
-            vars.activeBudgetType === "LIFETIME" &&
+            vars.activeBudgetType === "TOTAL" &&
             vars.lifetimeBudget === undefined
           ) {
             throw new Error("전체 예산을 입력해 주세요.");

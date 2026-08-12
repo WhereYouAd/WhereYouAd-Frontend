@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 
-import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
+import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
 
 import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
 import {
+  groupPlatformBudgetsByPlatform,
   providerTypeToPlatform,
   resolvePlatformBudgets,
 } from "@/utils/ads/projectBudget";
@@ -79,7 +80,7 @@ export default function CampaignDetail() {
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
 
   const [budgetEditTarget, setBudgetEditTarget] =
-    useState<IPlatformProjectBudget | null>(null);
+    useState<IPlatformBudgetSummary | null>(null);
   const [isBudgetEditOpen, setIsBudgetEditOpen] = useState(false);
 
   const clearAdSelection = useCallback(() => {
@@ -193,13 +194,10 @@ export default function CampaignDetail() {
     [data?.providers, data?.platformBudgets],
   );
 
-  const budgetByPlatform = useMemo(() => {
-    const map = new Map<TPlatform, (typeof platformBudgets)[number]>();
-    for (const budget of platformBudgets) {
-      map.set(providerTypeToPlatform(budget.providerType), budget);
-    }
-    return map;
-  }, [platformBudgets]);
+  const budgetsByPlatform = useMemo(
+    () => groupPlatformBudgetsByPlatform(platformBudgets),
+    [platformBudgets],
+  );
 
   const platformSections = useMemo(() => {
     if (!data) return [];
@@ -207,9 +205,9 @@ export default function CampaignDetail() {
     const fromAds = groupAdsByPlatform(adsList, data.providers);
     const seen = new Set(fromAds.map((section) => section.platform));
 
-    // 광고 0개여도 예산 mock/API 있으면 섹션 표시
+    // 광고 0개여도 예산 API 있으면 섹션 표시
     for (const budget of platformBudgets) {
-      const platform = providerTypeToPlatform(budget.providerType);
+      const platform = providerTypeToPlatform(budget.provider);
       if (!seen.has(platform)) {
         fromAds.push({ platform, ads: [] });
         seen.add(platform);
@@ -365,13 +363,10 @@ export default function CampaignDetail() {
                 >
                   <CampaignPlatformSection
                     platform={platform}
-                    platformBudget={budgetByPlatform.get(platform)}
-                    onEditBudget={() => {
-                      const budget = budgetByPlatform.get(platform);
-                      if (budget) {
-                        setBudgetEditTarget(budget);
-                        setIsBudgetEditOpen(true);
-                      }
+                    platformBudgets={budgetsByPlatform.get(platform)}
+                    onEditBudget={(budget) => {
+                      setBudgetEditTarget(budget);
+                      setIsBudgetEditOpen(true);
                     }}
                   />
                   {platformAds.length > 0 ? (

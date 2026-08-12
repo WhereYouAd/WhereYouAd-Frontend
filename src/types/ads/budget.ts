@@ -19,10 +19,10 @@ export interface INaverBudgetUpdateRequest {
   dailyBudget: number;
 }
 
-/** 일일 / 총 예산 구분 — 상세 API·수정 응답 공통 */
-export type TPlatformBudgetType = "DAILY" | "LIFETIME";
+/** 일일 / 총 예산 구분 — 상세·대시보드·수정 응답 공통 (OpenAPI: DAILY | TOTAL) */
+export type TPlatformBudgetType = "DAILY" | "TOTAL";
 
-/** Meta 상세 platformBudgets.activeBudgetType */
+/** @deprecated TPlatformBudgetType 사용 */
 export type TMetaActiveBudgetType = TPlatformBudgetType;
 
 /**
