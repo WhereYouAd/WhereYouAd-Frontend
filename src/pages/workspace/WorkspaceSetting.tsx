@@ -150,8 +150,19 @@ export default function WorkspaceSetting() {
 
   const saving = updateMutation.isPending;
 
+  const hasChanges = useMemo(() => {
+    if (!detail) return false;
+
+    const nameChanged = name.trim() !== detail.name.trim();
+    const descChanged = desc.trim() !== (detail.description ?? "").trim();
+    const logoChanged =
+      logoFile !== null || (isImageDeleted && Boolean(detail.logoUrl));
+
+    return nameChanged || descChanged || logoChanged;
+  }, [detail, name, desc, logoFile, isImageDeleted]);
+
   const onSave = () => {
-    if (orgId === null || !name.trim()) return;
+    if (orgId === null || !name.trim() || !hasChanges) return;
     updateMutation.mutate(orgId);
   };
 
@@ -278,7 +289,7 @@ export default function WorkspaceSetting() {
             <Card className="p-8 tablet:p-6">
               <h2 className="font-heading3 text-text-title">조직 기본 정보</h2>
               <div className="mt-6 flex flex-row gap-12 items-start tablet:flex-col tablet:gap-8">
-                <div className="flex w-60 shrink-0 flex-col items-center tablet:w-full">
+                <div className="flex w-52 shrink-0 flex-col items-center tablet:w-full">
                   <div className="mb-3 ml-1 w-full select-none font-body1 text-text-title tablet:text-center">
                     로고 이미지
                   </div>
@@ -294,7 +305,7 @@ export default function WorkspaceSetting() {
                     onClick={openFilePicker}
                     disabled={!isAdmin || saving || deleting}
                     aria-label="로고 이미지 업로드 또는 변경"
-                    className="flex h-60 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-46 tablet:w-46"
+                    className="flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40"
                   >
                     {logoPreview ? (
                       <img
@@ -355,8 +366,8 @@ export default function WorkspaceSetting() {
                     placeholder="워크스페이스에 대한 설명을 입력해주세요"
                     value={desc}
                     onChange={(e) => setDesc(e.target.value)}
-                    minRows={4}
-                    className="min-h-90"
+                    minRows={3}
+                    className="min-h-44"
                     disabled={!isAdmin || saving || deleting}
                   />
                 </div>
@@ -366,7 +377,7 @@ export default function WorkspaceSetting() {
                   <Button
                     type="button"
                     variant="dangerSoft"
-                    size="big"
+                    size="small"
                     onClick={openDeleteModal}
                     disabled={saving || deleting}
                     className="w-auto tablet:w-full"
@@ -374,15 +385,21 @@ export default function WorkspaceSetting() {
                     워크스페이스 삭제
                   </Button>
                   <Button
-                    size="big"
+                    size="small"
                     variant="primary"
                     type="button"
                     onClick={onSave}
-                    disabled={!name.trim() || saving || deleting}
+                    disabled={
+                      !isAdmin ||
+                      !name.trim() ||
+                      saving ||
+                      deleting ||
+                      !hasChanges
+                    }
                     aria-label="변경사항 저장하기"
                     className="w-auto tablet:w-full"
                   >
-                    {saving ? "저장 중.." : "변경사항 저장하기"}
+                    {saving ? "저장 중.." : "저장"}
                   </Button>
                 </div>
               )}
@@ -398,7 +415,7 @@ export default function WorkspaceSetting() {
                     <p className="mt-2 font-body1 text-text-auth-sub">
                       현재 소유자: {currentOwner?.name ?? myName ?? "-"}
                     </p>
-                    <p className="mt-1 font-body2 text-text-muted break-keep">
+                    <p className="mt-2 font-body2 text-text-muted break-keep">
                       소유권은 같은 조직의 관리자(ADMIN)에게만 양도할 수
                       있습니다.
                     </p>

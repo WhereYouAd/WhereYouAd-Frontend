@@ -95,7 +95,12 @@ export default function TimelineBar({
           status.accent,
         )}
       />
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div
+        className={twMerge(
+          "flex min-w-0 flex-1 flex-col gap-0.5",
+          showActions && "pr-3",
+        )}
+      >
         <div className="flex min-w-0 items-center gap-1.5">
           {providers.length > 0 ? (
             <div
