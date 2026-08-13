@@ -131,14 +131,20 @@ export default function useSettingSave({
           }
           if (shouldSaveOrg) {
             await notifications.updateOrg.mutateAsync(
-              notifications.buildOrgBody({
-                isSlackEnabled: notifications.draftOrgNotif.slackEnabled,
-                slackWebhookUrl: "",
-                disconnectSlack: false,
-                isDiscordEnabled: notifications.draftOrgNotif.discordEnabled,
-                discordWebhookUrl: "",
-                disconnectDiscord: false,
-              }),
+              notifications.buildOrgBody(
+                {
+                  alertClicks: notifications.draftWorkspaceNotif.clickAlarm,
+                  alertReport: notifications.draftWorkspaceNotif.weeklyReport,
+                },
+                {
+                  isSlackEnabled: notifications.draftOrgNotif.slackEnabled,
+                  slackWebhookUrl: "",
+                  disconnectSlack: false,
+                  isDiscordEnabled: notifications.draftOrgNotif.discordEnabled,
+                  discordWebhookUrl: "",
+                  disconnectDiscord: false,
+                },
+              ),
             );
             notifications.setSavedOrgNotif((prev) => ({
               ...prev,

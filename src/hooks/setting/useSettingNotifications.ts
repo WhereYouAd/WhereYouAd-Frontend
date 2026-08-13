@@ -86,6 +86,7 @@ export default function useSettingNotifications() {
     (isNotificationLoading || isNotificationRefetching);
 
   const buildOrgBody = (
+    alerts: { alertClicks: boolean; alertReport: boolean },
     overrides: Partial<IUpdateOrgNotificationSettingsRequest> = {},
   ): IUpdateOrgNotificationSettingsRequest => ({
     isSlackEnabled: savedOrgNotif.slackEnabled,
@@ -94,8 +95,8 @@ export default function useSettingNotifications() {
     isDiscordEnabled: savedOrgNotif.discordEnabled,
     discordWebhookUrl: "",
     disconnectDiscord: false,
-    alertClicks: savedWorkspaceNotif.clickAlarm ?? false,
-    alertReport: savedWorkspaceNotif.weeklyReport ?? false,
+    alertClicks: alerts.alertClicks,
+    alertReport: alerts.alertReport,
     ...overrides,
   });
 
@@ -121,11 +122,17 @@ export default function useSettingNotifications() {
     setPendingOrgAction("slack");
     try {
       await updateOrg.mutateAsync(
-        buildOrgBody({
-          isSlackEnabled: true,
-          slackWebhookUrl: url,
-          disconnectSlack: false,
-        }),
+        buildOrgBody(
+          {
+            alertClicks: draftWorkspaceNotif.clickAlarm,
+            alertReport: draftWorkspaceNotif.weeklyReport,
+          },
+          {
+            isSlackEnabled: true,
+            slackWebhookUrl: url,
+            disconnectSlack: false,
+          },
+        ),
       );
       toast.success("슬랙이 연동되었습니다");
       setSlackWebhookUrl("");
@@ -142,11 +149,17 @@ export default function useSettingNotifications() {
     setPendingOrgAction("slack");
     try {
       await updateOrg.mutateAsync(
-        buildOrgBody({
-          isSlackEnabled: false,
-          slackWebhookUrl: "",
-          disconnectSlack: true,
-        }),
+        buildOrgBody(
+          {
+            alertClicks: draftWorkspaceNotif.clickAlarm,
+            alertReport: draftWorkspaceNotif.weeklyReport,
+          },
+          {
+            isSlackEnabled: false,
+            slackWebhookUrl: "",
+            disconnectSlack: true,
+          },
+        ),
       );
       toast.success("슬랙 연동이 해제되었습니다");
     } catch (e) {
@@ -181,11 +194,17 @@ export default function useSettingNotifications() {
     setPendingOrgAction("discord");
     try {
       await updateOrg.mutateAsync(
-        buildOrgBody({
-          isDiscordEnabled: true,
-          discordWebhookUrl: url,
-          disconnectDiscord: false,
-        }),
+        buildOrgBody(
+          {
+            alertClicks: draftWorkspaceNotif.clickAlarm,
+            alertReport: draftWorkspaceNotif.weeklyReport,
+          },
+          {
+            isDiscordEnabled: true,
+            discordWebhookUrl: url,
+            disconnectDiscord: false,
+          },
+        ),
       );
       toast.success("디스코드가 연동되었습니다");
       setDiscordWebhookUrl("");
@@ -202,11 +221,17 @@ export default function useSettingNotifications() {
     setPendingOrgAction("discord");
     try {
       await updateOrg.mutateAsync(
-        buildOrgBody({
-          isDiscordEnabled: false,
-          discordWebhookUrl: "",
-          disconnectDiscord: true,
-        }),
+        buildOrgBody(
+          {
+            alertClicks: draftWorkspaceNotif.clickAlarm,
+            alertReport: draftWorkspaceNotif.weeklyReport,
+          },
+          {
+            isDiscordEnabled: false,
+            discordWebhookUrl: "",
+            disconnectDiscord: true,
+          },
+        ),
       );
       toast.success("디스코드 연동이 해제되었습니다");
     } catch (e) {
