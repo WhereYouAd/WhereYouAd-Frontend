@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useCoreMutation } from "@/hooks/customQuery";
 
 import {
@@ -11,15 +13,20 @@ import {
   verifySMS,
 } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export const useAuth = () => {
   const { login: loginAction } = useAuthStore();
+  const queryClient = useQueryClient();
 
   const useLogin = useCoreMutation(login, {
     userOnSuccess: (response, vars) => {
+      queryClient.clear();
+      useWorkspaceStore.getState().reset();
       loginAction(vars.email, response.data.accessToken);
     },
   });
+
   const useSignUp = useCoreMutation(signUp);
   const useSendCode = useCoreMutation(sendEmail);
   const useCheckCode = useCoreMutation(verifyEmail);
