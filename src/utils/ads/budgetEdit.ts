@@ -5,7 +5,7 @@ import type {
   TMetaGoogleBudgetUpdateRequest,
   TPlatformBudgetType,
 } from "@/types/ads/budget";
-import type { IPlatformProjectBudget } from "@/types/ads/campaign";
+import type { IPlatformBudgetSummary } from "@/types/ads/campaign";
 
 /** 예산 수정 불가 사유 — canSubmitPlatformBudgetEdit 반환값 */
 export type TBudgetEditBlockReason =
@@ -36,7 +36,7 @@ export const dailyBudgetFormSchema = z.object({
   dailyBudget: positiveBudget,
 });
 
-/** Meta / Google LIFETIME */
+/** Meta / Google TOTAL — 요청 body 필드명은 lifetimeBudget */
 export const lifetimeBudgetFormSchema = z.object({
   lifetimeBudget: positiveBudget,
 });
@@ -72,51 +72,47 @@ export interface IEffectivePlatformBudget {
 }
 
 /**
- * activeBudgetType + daily/lifetime 데이터 존재 여부로 실제 활성 예산 결정
- * — DAILY인데 daily 없으면 LIFETIME fallback
+ * PlatformBudgetSummary row → 수정/표시용 effective 예산
+ * — TOTAL 요청 body는 Meta/Google lifetimeBudget 필드 유지
  */
 export function resolveEffectivePlatformBudget(
-  budget: IPlatformProjectBudget,
+  budget: IPlatformBudgetSummary,
 ): IEffectivePlatformBudget {
-  if (budget.providerType === "NAVER") {
-    const daily = budget.daily ?? { totalBudget: 0, totalSpend: 0 };
+  if (budget.provider === "NAVER") {
     return {
-      activeBudgetType: "DAILY",
+      activeBudgetType: budget.budgetType,
       fieldName: "dailyBudget",
-      label: "일일 예산",
-      totalBudget: daily.totalBudget,
-      totalSpend: daily.totalSpend,
+      label: budget.budgetType === "TOTAL" ? "전체 예산" : "일일 예산",
+      totalBudget: budget.budget,
+      totalSpend: budget.spend,
     };
   }
 
-  const declaredType =
-    budget.activeBudgetType ?? (budget.daily ? "DAILY" : "LIFETIME");
-
-  if (declaredType === "DAILY" && budget.daily) {
+  if (budget.budgetType === "DAILY") {
     return {
       activeBudgetType: "DAILY",
       fieldName: "dailyBudget",
       label: "일일 예산",
-      totalBudget: budget.daily.totalBudget,
-      totalSpend: budget.daily.totalSpend,
+      totalBudget: budget.budget,
+      totalSpend: budget.spend,
     };
   }
 
   return {
-    activeBudgetType: "LIFETIME",
+    activeBudgetType: "TOTAL",
     fieldName: "lifetimeBudget",
     label: "전체 예산",
-    totalBudget: budget.lifetime.totalBudget,
-    totalSpend: budget.lifetime.totalSpend,
+    totalBudget: budget.budget,
+    totalSpend: budget.spend,
   };
 }
 
 /**
  * platformBudget → API 호출 가능 여부
- * BE 필드 없거나 mock이면 ok: false → 수정 버튼 disabled
+ * OpenAPI PlatformBudgetSummary에 수정용 ID가 없으면 disabled
  */
 export function canSubmitPlatformBudgetEdit(
-  budget: IPlatformProjectBudget | undefined,
+  budget: IPlatformBudgetSummary | undefined,
 ): { ok: true } | { ok: false; reason: TBudgetEditBlockReason } {
   if (!budget) {
     return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
@@ -126,34 +122,33 @@ export function canSubmitPlatformBudgetEdit(
     return { ok: false, reason: "NOT_EDITABLE" };
   }
 
-  switch (budget.providerType) {
+  switch (budget.provider) {
     case "META":
-      if (!budget.adCampaignId || !budget.activeBudgetType) {
+      if (!budget.adCampaignId) {
         return { ok: false, reason: "MISSING_META_CONTEXT" };
       }
       return { ok: true };
 
     case "GOOGLE":
-      if (!budget.adCampaignId || !budget.activeBudgetType) {
+      if (!budget.adCampaignId) {
         return { ok: false, reason: "MISSING_GOOGLE_CONTEXT" };
       }
       return { ok: true };
 
-    case "NAVER":
-      if (!budget.naverConnectionId || !budget.naverCampaignId) {
+    case "NAVER": {
+      const target = budget.naverBudgetTarget;
+      if (!target?.connectionId || !target.campaignId) {
         return { ok: false, reason: "MISSING_NAVER_CONTEXT" };
       }
-      if (!budget.daily) {
-        return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
-      }
       return { ok: true };
+    }
 
     default:
       return { ok: false, reason: "MISSING_PLATFORM_BUDGET" };
   }
 }
 
-/** Meta / Google — activeBudgetType에 맞는 필드 하나만 body에 */
+/** Meta / Google — budgetType에 맞는 필드 하나만 body에 */
 export function buildMetaGoogleBudgetPayload(
   activeBudgetType: TPlatformBudgetType,
   values: { dailyBudget?: number; lifetimeBudget?: number },
@@ -179,10 +174,10 @@ export function buildNaverBudgetPayload(
 }
 
 /**
- * 모달 — provider + activeBudgetType에 맞는 zod schema
+ * 모달 — provider + budgetType에 맞는 zod schema
  */
-export function resolveBudgetEditFormSchema(budget: IPlatformProjectBudget) {
-  if (budget.providerType === "NAVER") {
+export function resolveBudgetEditFormSchema(budget: IPlatformBudgetSummary) {
+  if (budget.provider === "NAVER") {
     return naverBudgetFormSchema;
   }
 
@@ -193,7 +188,7 @@ export function resolveBudgetEditFormSchema(budget: IPlatformProjectBudget) {
 }
 
 /** 모달 input — 필드명·라벨 (게이지 라벨과 동일) */
-export function resolveBudgetEditFieldMeta(budget: IPlatformProjectBudget): {
+export function resolveBudgetEditFieldMeta(budget: IPlatformBudgetSummary): {
   fieldName: "dailyBudget" | "lifetimeBudget";
   label: string;
 } {
@@ -203,7 +198,7 @@ export function resolveBudgetEditFieldMeta(budget: IPlatformProjectBudget): {
 
 /** platformBudget → 폼 defaultValues */
 export function resolveBudgetEditDefaultValues(
-  budget: IPlatformProjectBudget,
+  budget: IPlatformBudgetSummary,
 ): TBudgetEditModalFormValues {
   const { fieldName, totalBudget } = resolveEffectivePlatformBudget(budget);
 
@@ -216,10 +211,10 @@ export function resolveBudgetEditDefaultValues(
 
 /** budget + form values → mutation variables */
 export function buildUpdatePlatformBudgetVariables(
-  budget: IPlatformProjectBudget,
+  budget: IPlatformBudgetSummary,
   values: TBudgetEditModalFormValues,
 ): {
-  providerType: IPlatformProjectBudget["providerType"];
+  providerType: IPlatformBudgetSummary["provider"];
   adCampaignId?: number;
   activeBudgetType?: TPlatformBudgetType;
   naverConnectionId?: number;
@@ -228,13 +223,14 @@ export function buildUpdatePlatformBudgetVariables(
   lifetimeBudget?: number;
 } {
   const { activeBudgetType } = resolveEffectivePlatformBudget(budget);
+  const naverTarget = budget.naverBudgetTarget;
 
   const base = {
-    providerType: budget.providerType,
-    adCampaignId: budget.adCampaignId,
+    providerType: budget.provider,
+    adCampaignId: budget.adCampaignId ?? undefined,
     activeBudgetType,
-    naverConnectionId: budget.naverConnectionId,
-    naverCampaignId: budget.naverCampaignId,
+    naverConnectionId: naverTarget?.connectionId,
+    naverCampaignId: naverTarget?.campaignId,
   };
 
   if (values.lifetimeBudget !== undefined) {

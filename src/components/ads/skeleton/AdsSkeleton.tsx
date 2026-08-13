@@ -4,10 +4,7 @@ import {
   getAdListTableHeaderGridClass,
   getAdListTableRowGridClass,
 } from "@/components/ads/AdRow";
-import {
-  CAMPAIGN_BUDGET_COL_CLASS,
-  CAMPAIGN_PLATFORM_COL_CLASS,
-} from "@/components/ads/CampaignRow";
+import { CAMPAIGN_PLATFORM_COL_CLASS } from "@/components/ads/CampaignRow";
 import Card from "@/components/common/card/Card";
 import {
   Skeleton,
@@ -33,14 +30,11 @@ function CampaignTableRowSkeleton() {
       <div
         className={twMerge(
           CAMPAIGN_PLATFORM_COL_CLASS,
-          "flex items-center gap-1 mobile:gap-0.5",
+          "flex items-center justify-end gap-2 mobile:gap-1.5",
         )}
       >
         <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
         <SkeletonCircle className="h-7 w-7 tablet:h-6 tablet:w-6 mobile:h-5 mobile:w-5" />
-      </div>
-      <div className={CAMPAIGN_BUDGET_COL_CLASS}>
-        <Skeleton className="h-2 w-full rounded-full" />
       </div>
     </li>
   );
@@ -60,9 +54,6 @@ export function CampaignTableSkeleton() {
           <Skeleton className="h-4 w-16" />
         </div>
         <div className={CAMPAIGN_PLATFORM_COL_CLASS} aria-hidden />
-        <div className={CAMPAIGN_BUDGET_COL_CLASS}>
-          <Skeleton className="h-4 w-24 mobile:w-16" />
-        </div>
       </div>
 
       <ul className="m-0 list-none p-0">

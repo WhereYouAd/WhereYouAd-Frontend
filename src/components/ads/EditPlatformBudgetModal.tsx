@@ -8,7 +8,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import type { IPlatformProjectBudget } from "@/types/ads/campaign";
+import type { IPlatformBudgetSummary } from "@/types/ads/campaign";
 
 import {
   buildUpdatePlatformBudgetVariables,
@@ -89,7 +89,7 @@ const BudgetAmountInput = forwardRef<HTMLInputElement, IBudgetAmountInputProps>(
   },
 );
 
-const PROVIDER_LABEL: Record<IPlatformProjectBudget["providerType"], string> = {
+const PROVIDER_LABEL: Record<IPlatformBudgetSummary["provider"], string> = {
   META: "Meta",
   GOOGLE: "Google",
   NAVER: "NAVER",
@@ -99,7 +99,7 @@ interface IEditPlatformBudgetModalProps {
   isOpen: boolean;
   onClose: () => void;
   onClosed?: () => void;
-  budget: IPlatformProjectBudget | null;
+  budget: IPlatformBudgetSummary | null;
   orgId: number;
   projectId: number;
 }
@@ -112,7 +112,7 @@ export default function EditPlatformBudgetModal({
   orgId,
   projectId,
 }: IEditPlatformBudgetModalProps) {
-  const budgetRef = useRef<IPlatformProjectBudget | null>(null);
+  const budgetRef = useRef<IPlatformBudgetSummary | null>(null);
   if (budget) budgetRef.current = budget;
 
   const activeBudget = budget ?? budgetRef.current;
@@ -184,12 +184,12 @@ export default function EditPlatformBudgetModal({
       onExitComplete={onClosed}
       size="md"
       padding="lg"
-      title={`${PROVIDER_LABEL[activeBudget.providerType]} 예산 수정`}
+      title={`${PROVIDER_LABEL[activeBudget.provider]} 예산 수정`}
       disableOverlayClick={isPending}
     >
       <div className="flex w-full flex-col items-start">
         <p aria-hidden className="mb-2 font-heading3 text-text-title">
-          {PROVIDER_LABEL[activeBudget.providerType]} 예산 수정
+          {PROVIDER_LABEL[activeBudget.provider]} 예산 수정
         </p>
         {activeBudget.adCampaignName ? (
           <p className="mb-1 max-w-full truncate font-body2 text-text-muted">
@@ -201,7 +201,7 @@ export default function EditPlatformBudgetModal({
         </p>
 
         <form
-          key={`${activeBudget.providerType}-${effectiveBudget?.activeBudgetType ?? "daily"}`}
+          key={`${activeBudget.provider}-${effectiveBudget?.activeBudgetType ?? "daily"}`}
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-8"
           noValidate

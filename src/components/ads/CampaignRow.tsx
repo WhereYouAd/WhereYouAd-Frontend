@@ -3,8 +3,6 @@ import { twMerge } from "tailwind-merge";
 
 import type { TPlatform, TStatus } from "@/types/ads/campaign";
 
-import ProgressBar from "../common/progressbar/ProgressBar";
-
 import GoogleLogo from "@/assets/logo/social-logo/circle/google-circle.svg?react";
 import MetaLogo from "@/assets/logo/social-logo/circle/meta-circle.svg?react";
 import NaverLogo from "@/assets/logo/social-logo/circle/naver-circle.svg?react";
@@ -14,7 +12,6 @@ interface ICampaignRowProps {
   name: string;
   providers: TPlatform[];
   status: TStatus;
-  budgetUsageRate: number;
   isSelected: boolean;
   onToggleSelect: () => void;
   onClick?: () => void;
@@ -22,11 +19,7 @@ interface ICampaignRowProps {
 
 /** 헤더·행·스켈레톤 플랫폼 열 — 모바일에서 로고 최대 3개 폭 예약 */
 export const CAMPAIGN_PLATFORM_COL_CLASS =
-  "mr-24 w-28 shrink-0 tablet:mr-20 tablet:w-24 mobile:mr-2 mobile:w-16";
-
-/** 헤더·행·스켈레톤 예산 열 */
-export const CAMPAIGN_BUDGET_COL_CLASS =
-  "w-[28%] shrink-0 tablet:w-[26%] mobile:w-[30%] mobile:max-w-28";
+  "w-28 shrink-0 tablet:w-24 mobile:w-16";
 
 const LogoMap: Record<TPlatform, ReactNode> = {
   meta: (
@@ -44,7 +37,6 @@ export default function CampaignRow({
   name,
   providers,
   status,
-  budgetUsageRate,
   isSelected,
   onToggleSelect,
   onClick,
@@ -99,11 +91,12 @@ export default function CampaignRow({
       <div
         className={twMerge(
           CAMPAIGN_PLATFORM_COL_CLASS,
-          "flex items-center justify-start",
+          "flex items-center justify-end",
+          isPaused && "opacity-80",
         )}
       >
         {providers && providers.length > 0 ? (
-          <div className="flex items-center justify-start gap-1 mobile:gap-0.5">
+          <div className="flex items-center justify-end gap-2 mobile:gap-1.5">
             {providers.map((p, idx) => (
               <span key={idx} className="flex shrink-0">
                 {LogoMap[p.toLowerCase() as TPlatform] ?? (
@@ -115,12 +108,6 @@ export default function CampaignRow({
         ) : (
           <div className="font-caption text-text-placeholder">미연결</div>
         )}
-      </div>
-
-      <div
-        className={twMerge(CAMPAIGN_BUDGET_COL_CLASS, isPaused && "opacity-80")}
-      >
-        <ProgressBar value={budgetUsageRate} />
       </div>
     </li>
   );

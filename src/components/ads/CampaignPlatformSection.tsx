@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { IPlatformProjectBudget, TPlatform } from "@/types/ads/campaign";
+import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
 
+import { canSubmitPlatformBudgetEdit } from "@/utils/ads/budgetEdit";
 import {
-  BUDGET_EDIT_BLOCK_MESSAGES,
-  canSubmitPlatformBudgetEdit,
-} from "@/utils/ads/budgetEdit";
-import { mapPlatformProjectBudgetToGauges } from "@/utils/ads/projectBudget";
+  mapPlatformBudgetSummariesToGauges,
+  pickEditablePlatformBudget,
+} from "@/utils/ads/projectBudget";
 
 import PlatformBudgetItem from "@/components/ads/PlatformBudgetItem";
 import Button from "@/components/common/button/Button";
@@ -30,55 +30,42 @@ const PLATFORM_LABEL: Record<TPlatform, string> = {
 
 interface ICampaignPlatformSectionProps {
   platform: TPlatform;
-  platformBudget?: IPlatformProjectBudget;
-  onEditBudget?: () => void;
+  platformBudgets?: IPlatformBudgetSummary[];
+  onEditBudget?: (budget: IPlatformBudgetSummary) => void;
 }
 
 export default function CampaignPlatformSection({
   platform,
-  platformBudget,
+  platformBudgets = [],
   onEditBudget,
 }: ICampaignPlatformSectionProps) {
-  const gauges = platformBudget
-    ? mapPlatformProjectBudgetToGauges(platformBudget)
-    : [];
+  const gauges = mapPlatformBudgetSummariesToGauges(platformBudgets);
+  const editTarget = pickEditablePlatformBudget(platformBudgets);
 
-  const editCheck = canSubmitPlatformBudgetEdit(platformBudget);
-  const isBudgetEditDisabled = !onEditBudget || !editCheck.ok;
-  const budgetEditDisabledReason = !onEditBudget
-    ? undefined
-    : editCheck.ok
-      ? undefined
-      : BUDGET_EDIT_BLOCK_MESSAGES[editCheck.reason];
-  const budgetEditHintId = `budget-edit-hint-${platform}`;
+  const editCheck = canSubmitPlatformBudgetEdit(editTarget ?? undefined);
+  const isBudgetEditDisabled = !onEditBudget || !editTarget || !editCheck.ok;
+
+  const campaignName = platformBudgets.find(
+    (row) => row.adCampaignName,
+  )?.adCampaignName;
 
   const budgetEditAction = (
-    <div className="flex flex-col items-end gap-1">
-      <Button
-        type="button"
-        size="small"
-        variant="outline"
-        className={twMerge(
-          "h-9 shrink-0 px-3.5",
-          isBudgetEditDisabled && "opacity-60",
-        )}
-        onClick={onEditBudget}
-        disabled={isBudgetEditDisabled}
-        aria-describedby={
-          budgetEditDisabledReason ? budgetEditHintId : undefined
-        }
-      >
-        예산 수정
-      </Button>
-      {budgetEditDisabledReason ? (
-        <p
-          id={budgetEditHintId}
-          className="max-w-48 text-right font-caption text-text-muted"
-        >
-          {budgetEditDisabledReason}
-        </p>
-      ) : null}
-    </div>
+    <Button
+      type="button"
+      size="small"
+      variant="outline"
+      className={twMerge(
+        "h-9 shrink-0 px-3.5",
+        isBudgetEditDisabled && "opacity-60",
+      )}
+      onClick={() => {
+        if (!editTarget || !onEditBudget) return;
+        onEditBudget(editTarget);
+      }}
+      disabled={isBudgetEditDisabled}
+    >
+      예산 수정
+    </Button>
   );
 
   return (
@@ -100,9 +87,9 @@ export default function CampaignPlatformSection({
                   {PLATFORM_LABEL[platform]}
                 </span>
               </h2>
-              {platformBudget?.adCampaignName ? (
+              {campaignName ? (
                 <p className="truncate font-body2 text-text-muted">
-                  {platformBudget.adCampaignName}
+                  {campaignName}
                 </p>
               ) : null}
             </div>
@@ -115,12 +102,12 @@ export default function CampaignPlatformSection({
           예산 정보가 없습니다.
         </p>
       ) : (
-        <div className="w-full min-w-0">
-          {gauges.map((gauge) => (
+        <div className="flex w-full min-w-0 flex-col gap-5">
+          {gauges.map((gauge, index) => (
             <PlatformBudgetItem
               key={`${platform}-${gauge.label}`}
               {...gauge}
-              headerAction={budgetEditAction}
+              headerAction={index === 0 ? budgetEditAction : undefined}
             />
           ))}
         </div>
