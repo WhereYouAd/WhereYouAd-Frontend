@@ -68,19 +68,22 @@ export default function MainLayout() {
   useEffect(() => {
     if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
 
-    // orgId는 있는데 myRole만 null/불일치인 경우(새로고침 등) 역할 동기화
+    // 현재 유저 목록에 있는 orgId만 유지 (+ role 동기화)
+    // 목록에 없으면 return하지 않고 아래 saved/current 초기화로 계속
     if (selectedOrgId !== null) {
       const workspace = workspaces.find((w) => w.orgId === selectedOrgId);
-      if (workspace && myRole !== workspace.myRole) {
-        setMyRole(workspace.myRole);
+      if (workspace) {
+        if (myRole !== workspace.myRole) {
+          setMyRole(workspace.myRole);
+        }
+        return;
       }
-      return;
     }
 
     const savedId = savedData?.orgId;
     const isExist = workspaces.some((w) => w.orgId === savedId);
 
-    // 1. 현재 워크스페이스 조회 API 데이터 (저장된 워크스페이스가 있는 경우)
+    // 1. 저장된 워크스페이스가 현재 유저 목록에 있으면 선택
     if (savedId !== undefined && isExist) {
       const workspace = workspaces.find((w) => w.orgId === savedId);
       setSelectedOrgId(savedId);
