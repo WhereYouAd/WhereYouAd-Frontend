@@ -4,8 +4,9 @@ import type {
   IBudgetViewModel,
 } from "@/types/dashboard/budget";
 import type {
-  IBudgetAmountSlice,
+  IBudgetGroup,
   IBudgetResponse,
+  TDashboardBudgetType,
 } from "@/types/dashboard/common";
 import type { TProviderType } from "@/types/dashboard/provider";
 
@@ -15,7 +16,12 @@ const DANGER_THRESHOLD = 75;
 /** BudgetGaugeChart showInsight 기본값 */
 export const SHOW_BUDGET_GAUGE_INSIGHT = true;
 
-/** Google/Meta 플랫폼 — 일일 예산 게이지 */
+const BUDGET_TYPE_LABEL: Record<TDashboardBudgetType, IBudgetSlice["label"]> = {
+  TOTAL: "전체 예산",
+  DAILY: "일일 예산",
+};
+
+/** Google/Meta 플랫폼 — 일일 예산 게이지 (skeleton·ads용) */
 export function supportsDailyBudget(provider?: TProviderType): boolean {
   return provider === "GOOGLE" || provider === "META";
 }
@@ -54,26 +60,22 @@ export const statusPointClasses: Record<TBudgetStatus, string> = {
   위험: "bg-info-red",
 };
 
-function toAmountSlice(
-  data: IBudgetResponse,
-  slice?: IBudgetAmountSlice,
-): IBudgetAmountSlice {
-  return (
-    slice ?? {
-      totalBudget: data.totalBudget,
-      totalSpend: data.totalSpend,
-    }
-  );
+/** Naver 플랫폼만 DAILY 숨김 (통합 ALL은 TOTAL+DAILY 그대로) */
+function filterBudgetGroups(
+  groups: IBudgetGroup[],
+  provider?: TProviderType,
+): IBudgetGroup[] {
+  if (provider === "NAVER") {
+    return groups.filter((group) => group.budgetType === "TOTAL");
+  }
+  return groups;
 }
 
-function toBudgetSlice(
-  label: IBudgetSlice["label"],
-  amount: IBudgetAmountSlice,
-): IBudgetSlice {
+function toBudgetSliceFromGroup(group: IBudgetGroup): IBudgetSlice {
   return {
-    label,
-    totalBudget: amount.totalBudget,
-    spent: amount.totalSpend,
+    label: BUDGET_TYPE_LABEL[group.budgetType],
+    totalBudget: group.detail.budget,
+    spent: group.detail.spend,
   };
 }
 
@@ -90,53 +92,21 @@ function toGaugeProps(
   };
 }
 
-/** 통합: Google·Meta + Naver (전체 예산 각 1개) */
-function mapOverviewBudgetViewModel(data: IBudgetResponse): IBudgetViewModel {
-  const googleMeta = toAmountSlice(data, data.googleMeta);
-  const naver = data.naver ?? { totalBudget: 0, totalSpend: 0 };
-
-  return {
-    slices: [
-      toBudgetSlice("Google·Meta", googleMeta),
-      toBudgetSlice("NAVER", naver),
-    ],
-  };
-}
-
-/** 플랫폼: Google/Meta → 전체+일일, Naver → 전체만 */
-function mapPlatformBudgetViewModel(
-  data: IBudgetResponse,
-  provider: TProviderType,
-): IBudgetViewModel {
-  const lifetime = toBudgetSlice(
-    "전체 예산",
-    toAmountSlice(data, data.lifetime),
-  );
-
-  if (!supportsDailyBudget(provider)) {
-    return { slices: [lifetime] };
-  }
-
-  const daily = toBudgetSlice("일일 예산", toAmountSlice(data, data.daily));
-
-  return { slices: [lifetime, daily] };
-}
-
 /**
- * API → UI 변환 (API 스펙 변경 시 여기만 수정)
+ * API → UI 변환
  *
- * [통합] googleMeta + naver (legacy: googleMeta만 totalBudget/totalSpend fallback)
- * [Google/Meta] lifetime + daily
- * [Naver] lifetime만
+ * [통합] groups 그대로 (TOTAL + DAILY)
+ * [Google/Meta] groups 그대로
+ * [Naver] TOTAL만
  */
 export function mapBudgetResponseToViewModel(
   data: IBudgetResponse,
   provider?: TProviderType,
 ): IBudgetViewModel {
-  if (provider === undefined) {
-    return mapOverviewBudgetViewModel(data);
-  }
-  return mapPlatformBudgetViewModel(data, provider);
+  const groups = filterBudgetGroups(data.groups, provider);
+  return {
+    slices: groups.map(toBudgetSliceFromGroup),
+  };
 }
 
 /** useBudget select에서 쓸 최종 형태 */

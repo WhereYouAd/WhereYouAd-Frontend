@@ -1,3 +1,5 @@
+import type { TProviderType } from "./provider";
+
 // 공통 지표 응답 (overview/platform 공유)
 export interface IMetricsResponse {
   clicks: number;
@@ -10,25 +12,37 @@ export interface IMetricsResponse {
   ROASChangeRate: number;
 }
 
-// 예산 금액 단위 (API 분리 응답)
+// 예산 금액 단위
 export interface IBudgetAmountSlice {
   totalBudget: number;
   totalSpend: number;
 }
 
-// 예산 소진 현황
-export interface IBudgetResponse {
-  providerType: string;
-  usagePercentage: number;
-  totalBudget: number;
-  totalSpend: number;
+/** 대시보드 예산 group.budgetType */
+export type TDashboardBudgetType = "TOTAL" | "DAILY";
+
+/** 대시보드 예산 group.detail */
+export interface IBudgetGroupDetail {
+  budget: number;
+  spend: number;
   remainingBudget: number;
-  /** 통합 대시보드 — Google·Meta / Naver 분리 */
-  googleMeta?: IBudgetAmountSlice;
-  naver?: IBudgetAmountSlice;
-  /** 플랫폼 Google/Meta — 전체 / 일일 분리 */
-  lifetime?: IBudgetAmountSlice;
-  daily?: IBudgetAmountSlice;
+  /** 0~100 */
+  remainingPercentage: number;
+  estimated: boolean;
+}
+
+/** 대시보드 예산 groups[] 항목 */
+export interface IBudgetGroup {
+  budgetType: TDashboardBudgetType;
+  providers: TProviderType[];
+  detail: IBudgetGroupDetail;
+}
+
+/** GET /api/dashboard/budgets 응답 data */
+export interface IBudgetResponse {
+  /** 통합: "ALL", 플랫폼: GOOGLE | META | NAVER */
+  providerType: TProviderType | "ALL";
+  groups: IBudgetGroup[];
 }
 
 // ROAS 순위 항목
