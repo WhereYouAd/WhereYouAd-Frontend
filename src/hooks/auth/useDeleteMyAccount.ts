@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -8,9 +7,9 @@ import { useCoreMutation } from "@/hooks/customQuery";
 
 import { deleteMyAccount } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function useDeleteMyAccount() {
-  const nav = useNavigate();
   const queryClient = useQueryClient();
   const logout = useAuthStore((s) => s.logout);
 
@@ -20,8 +19,9 @@ export function useDeleteMyAccount() {
         "회원 탈퇴가 완료되었습니다. 30일 후 계정이 완전히 삭제됩니다",
       );
       queryClient.clear();
+      useWorkspaceStore.getState().reset();
       logout();
-      nav("/", { replace: true });
+      window.location.replace("/");
     },
     userOnError: (error) => {
       const apiError = error as IApiErrorResponse;
