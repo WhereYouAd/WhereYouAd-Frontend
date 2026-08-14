@@ -19,3 +19,20 @@ export interface INotificationMemberSetting {
   role: string;
   isReceive: boolean;
 }
+
+export type TNotificationType = "CLICKS";
+
+export interface INotificationHistoryItem {
+  userNotificationId: number;
+  title: string;
+  message: string;
+  createdAt: string;
+  type: TNotificationType;
+  isRead: boolean;
+}
+
+export interface INotificationHistoryData {
+  hasNext: boolean;
+  nextCursor: string | null;
+  notifications: INotificationHistoryItem[];
+}
