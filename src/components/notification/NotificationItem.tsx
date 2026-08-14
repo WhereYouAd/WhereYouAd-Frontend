@@ -26,6 +26,7 @@ function getClickTrend(item: INotificationHistoryItem): "up" | "down" | null {
 
   if (text.includes("급증") || text.includes("증가")) return "up";
   if (text.includes("급감") || text.includes("감소")) return "down";
+  if (item.type !== "CLICKS") return null;
 
   return null;
 }
