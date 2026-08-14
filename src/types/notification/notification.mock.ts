@@ -1,4 +1,4 @@
-import type { INotificationHistoryData } from "./notification";
+import type { INotificationHistoryData } from "@/types/notification/notification";
 
 export const MOCK_NOTIFICATION_HISTORY: INotificationHistoryData = {
   hasNext: false,
