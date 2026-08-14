@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 
 import Drawer from "@/components/common/drawer/Drawer";
 
+import BellIcon from "@/assets/icon/sidebar/notification.svg?react";
+
 interface INotificationPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,7 +19,11 @@ export default function NotificationPanel({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title="알림"
+      title={
+        <h2 className="flex items-center gap-2 pl-2 pt-2 font-heading4 text-text-title">
+          <BellIcon className="h-5 w-5 text-text-body" /> 알림
+        </h2>
+      }
       className="max-w-90 h-auto min-h-[min(72vh,560px)] my-4 rounded-l-3xl"
     >
       {children}

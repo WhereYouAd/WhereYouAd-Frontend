@@ -46,14 +46,14 @@ export default function NotificationItem({ item }: INotificationItemProps) {
   return (
     <li
       className={twMerge(
-        "flex gap-3 rounded-2xl px-3 py-3",
+        "flex gap-3 rounded-2xl px-4 py-3",
         !item.isRead && rowClass,
       )}
     >
       <span
         className={twMerge(
           "mt-2 h-2 w-2 shrink-0 rounded-full",
-          item.isRead ? "bg-transparent" : "bg-text-placeholder",
+          item.isRead ? "bg-transparent" : "bg-text-body",
         )}
         aria-hidden
       />
