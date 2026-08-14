@@ -34,11 +34,10 @@ export default function NotificationList({
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 px-6 py-16 text-center">
-        <p className="font-heading4 text-text-title">
-          알림을 모두 확인하였습니다
-        </p>
+        <p className="font-heading4 text-text-title">아직 알림이 없어요</p>
         <p className="font-body 2 text-text-muted">
-          클릭수 이상 징후가 생기면 여기에서 기록을 확인할 수 있습니다
+          클릭수 변화나 주간 리포트가 오면
+          <br /> 여기에 표시됩니다
         </p>
       </div>
     );
