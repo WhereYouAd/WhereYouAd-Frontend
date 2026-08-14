@@ -20,7 +20,7 @@ export default function NotificationList({
         <p className="font-heading4 text-text-title">
           워크스페이스를 선택해주세요
         </p>
-        <p className="font-body 2 text-text-muted">
+        <p className="font-body2 text-text-muted">
           현재 워크스페이스 기준으로 알림을 보여줍니다
         </p>
       </div>
