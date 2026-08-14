@@ -20,6 +20,7 @@ import {
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import OnboardingTour from "@/components/common/OnboardingTour";
+import NotificationBell from "@/components/notification/NotificationBell";
 import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
@@ -274,8 +275,9 @@ export default function MainLayout() {
               )}
             </div>
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex items-center gap-2">
               {headerRight}
+              <NotificationBell />
             </div>
           </div>
         </header>
