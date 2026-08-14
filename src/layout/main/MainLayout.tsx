@@ -44,6 +44,7 @@ export default function MainLayout() {
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
   const setMyRole = useWorkspaceStore((s) => s.setMyRole);
+  const resetWorkspace = useWorkspaceStore((s) => s.reset);
   const myRole = useWorkspaceStore((s) => s.myRole);
 
   const savedWorkspaceQuery = useCoreQuery(
@@ -66,7 +67,15 @@ export default function MainLayout() {
   );
 
   useEffect(() => {
-    if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
+    // undefined: 로딩 중 / []: 워크스페이스 없음(유효한 결과)
+    if (!workspaces || !savedWorkspaceQuery.isFetched) return;
+
+    if (workspaces.length === 0) {
+      if (selectedOrgId !== null || myRole !== null) {
+        resetWorkspace();
+      }
+      return;
+    }
 
     // 현재 유저 목록에 있는 orgId만 유지 (+ role 동기화)
     // 목록에 없으면 return하지 않고 아래 saved/current 초기화로 계속
@@ -102,6 +111,7 @@ export default function MainLayout() {
     savedData,
     setSelectedOrgId,
     setMyRole,
+    resetWorkspace,
     selectedOrgId,
     myRole,
   ]);
