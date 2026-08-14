@@ -14,6 +14,7 @@ import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
 import {
   getAiReportByAccessToken,
+  getOrgAiReports,
   requestAiAnalysis,
 } from "@/api/dashboard/aiAnalysis";
 import { QUERY_KEYS } from "@/lib/queryKeys";
@@ -38,25 +39,76 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [pollStartedAt, setPollStartedAt] = useState<number | null>(null);
   const [workspaceErrorShown, setWorkspaceErrorShown] = useState(false);
+  /** true면 조직 공유 리포트 조회를 건너뛰고 POST 플로우로 직행 (명시적 요청) */
+  const [skipSharedLookup, setSkipSharedLookup] = useState(false);
+  /** 공유 리포트 채택 시 해당 리포트의 생성일 (ISO 문자열) */
+  const [sharedReportCreatedAt, setSharedReportCreatedAt] = useState<
+    string | null
+  >(null);
 
   /** 재요청 전 상태 초기화 */
   const reset = useCallback(() => {
     setAccessToken(null);
     setPollStartedAt(null);
     setWorkspaceErrorShown(false);
+    setSkipSharedLookup(false);
+    setSharedReportCreatedAt(null);
   }, []);
 
   useEffect(() => {
     reset();
-  }, [provider, reset]);
+  }, [provider, orgId, reset]);
 
   useEffect(() => {
     return () => {
       void queryClient.removeQueries({
         queryKey: QUERY_KEYS.ai.report(provider, orgId),
       });
+      void queryClient.removeQueries({
+        queryKey: QUERY_KEYS.ai.reportList(provider, orgId),
+      });
     };
   }, [provider, orgId]);
+
+  /* 조직 공유 최신 리포트 우선 조회 */
+  const sharedReportListQuery = useCoreQuery(
+    QUERY_KEYS.ai.reportList(provider, orgId),
+    () =>
+      getOrgAiReports(orgId!, {
+        reportType: provider === "ALL" ? undefined : provider,
+        size: 1,
+      }),
+    {
+      enabled: !!orgId && !skipSharedLookup && !accessToken,
+      staleTime: 0,
+      gcTime: AI_REPORT_GC_TIME_MS,
+    },
+  );
+
+  /* 조회된 공유 리포트가 있으면 POST 없이 그 accessToken으로 바로 렌더링 */
+  useEffect(() => {
+    if (skipSharedLookup || accessToken) return;
+    if (!sharedReportListQuery.isSuccess) return;
+
+    const latest = sharedReportListQuery.data.reports[0];
+    /** 과거에 실패한 리포트는 채택하지 않고 미조회 상태로 둔다 (펼치면 새 POST로 폴백) */
+    if (!latest || latest.status === "FAILED") return;
+
+    setAccessToken(latest.reportAccessToken);
+    setSharedReportCreatedAt(latest.createdAt);
+    setPollStartedAt(Date.now());
+  }, [
+    accessToken,
+    skipSharedLookup,
+    sharedReportListQuery.isSuccess,
+    sharedReportListQuery.data,
+  ]);
+
+  /** 사용 가능한 공유 리포트가 있는지 여부 (query data 기반 — 렌더 시점에 즉시 반영) */
+  const hasUsableSharedReport =
+    sharedReportListQuery.isSuccess &&
+    !!sharedReportListQuery.data?.reports[0] &&
+    sharedReportListQuery.data.reports[0].status !== "FAILED";
 
   /** POST /analysis — accessToken 발급 */
   const requestMutation = useCoreMutation(
@@ -131,16 +183,19 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
         return;
       }
       reset();
+      /** 명시적 POST 요청은 조직 공유 리포트 조회 결과로 덮어써지지 않도록 건너뜀 */
+      setSkipSharedLookup(true);
       requestMutation.mutate(params ?? {});
     },
     [orgId, reset, requestMutation],
   );
 
   const isSubmitting = requestMutation.isPending;
+  const isCheckingSharedReport = sharedReportListQuery.isLoading;
   const isPolling =
     !!accessToken && reportStatus === "PENDING" && !pollTimedOut;
 
-  const isLoading = isSubmitting || isPolling;
+  const isLoading = isCheckingSharedReport || isSubmitting || isPolling;
 
   const queryError = reportQuery.error as IApiErrorResponse | null;
   const isWorkspaceMissing = !orgId && workspaceErrorShown;
@@ -156,11 +211,12 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     pollTimedOut;
 
   const loadingMessage = useMemo(() => {
+    if (isCheckingSharedReport) return "이전 분석 결과를 확인하고 있어요…";
     if (isSubmitting) return "분석을 요청하고 있어요…";
     if (isPolling)
       return "AI가 광고 성과를 분석 중이에요. 보통 10~30초 걸려요.";
     return null;
-  }, [isSubmitting, isPolling]);
+  }, [isCheckingSharedReport, isSubmitting, isPolling]);
 
   const errorMessage = useMemo(() => {
     if (isWorkspaceMissing) return WORKSPACE_REQUIRED_MESSAGE;
@@ -195,6 +251,9 @@ export function useAiAnalysisReport(provider: TAiAnalysisProvider = "ALL") {
     requestAnalysis,
     reset,
     isLoading,
+    isCheckingSharedReport,
+    hasUsableSharedReport,
+    sharedReportCreatedAt,
     loadingMessage,
     isError,
     errorMessage,

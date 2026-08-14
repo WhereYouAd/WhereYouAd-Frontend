@@ -16,7 +16,7 @@ export interface ITimelinePerformanceStatusStyle {
 
 export const TIMELINE_STATUS_LEGEND_ORDER = [
   "ON_TRACK",
-  "ABOVE_AVERAGE",
+  "ABOVE_AVG",
   "UNDERPERFORM",
   "PENDING",
 ] as const satisfies readonly TTimelinePerformanceStatusUi[];
@@ -37,7 +37,7 @@ export const TIMELINE_PERFORMANCE_STATUS_STYLE: Record<
     dot: "bg-primary-400",
     ring: "ring-primary-400",
   },
-  ABOVE_AVERAGE: {
+  ABOVE_AVG: {
     label: "Above Avg",
     description: "최근 평균 대비 눈에 띄게 좋은 성과를 보이고 있어요.",
     legendDescription: "최근 평균보다 눈에 띄게 좋은 성과",

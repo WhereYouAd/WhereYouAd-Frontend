@@ -1,27 +1,48 @@
+import { twMerge } from "tailwind-merge";
+
 import type {
   TMemberRole,
   TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
+import Badge from "@/components/common/badge/Badge";
+
 import MemberRoleSelect from "./MemberRoleSelect";
 
+import BellOffIcon from "@/assets/icon/common/bell-off.svg?react";
+import BellRingingIcon from "@/assets/icon/common/bell-ringing.svg?react";
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import TrashIcon from "@/assets/icon/common/trash.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 
 type TProps = {
   member: TWorkspaceMember;
+  isCreator?: boolean;
+  isReceive?: boolean;
+  isNotificationLoading: boolean;
+  isReceiveUpdating?: boolean;
   onRoleChange: (newRole: TMemberRole) => void;
   onDeleteClick: () => void;
+  onReceiveToggle?: () => void;
 };
 
 export default function MemberItem({
   member,
+  isCreator = false,
+  isReceive,
+  isNotificationLoading,
+  isReceiveUpdating = false,
   onRoleChange,
   onDeleteClick,
+  onReceiveToggle,
 }: TProps) {
+  const canToggleReceive =
+    isReceive !== undefined &&
+    !isNotificationLoading &&
+    !isReceiveUpdating &&
+    !!onReceiveToggle;
   return (
-    <li className="flex items-center justify-between py-5 gap-4 tablet:items-start">
+    <li className="flex items-center justify-between py-5 gap-4 tablet:items-stretch tablet:flex-col">
       <div className="flex items-center gap-4 w-full min-w-0">
         <div className="flex bg-text-placeholder/30 h-12 w-12 items-center justify-center shrink-0 rounded-3xl overflow-hidden">
           {member.profileImageUrl ? (
@@ -34,15 +55,64 @@ export default function MemberItem({
             <UserIcon className="text-text-auth-sub h-6 w-6" />
           )}
         </div>
+
         <div className="min-w-0 flex-1">
-          <p className="truncate font-body1 text-text-title">{member.name}</p>
+          <div className="flex items-center gap-2 min-w-0 mb-1">
+            <p className="truncate font-body1 text-text-title">{member.name}</p>
+            {isCreator ? (
+              <Badge
+                variant="infoBlue"
+                className="h-5! shrink-0 px-2! font-caption"
+              >
+                소유자
+              </Badge>
+            ) : null}
+          </div>
+
           <div className="flex text-text-auth-sub items-center gap-2 min-w-0">
             <MailIcon className="w-4 h-4" />
             <p className="truncate">{member.email}</p>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 shrink-0 tablet:justify-end">
+        <button
+          type="button"
+          disabled={!canToggleReceive}
+          onClick={onReceiveToggle}
+          aria-pressed={isReceive}
+          className={twMerge(
+            "inline-flex h-5 w-5 items-center justify-center",
+            (isNotificationLoading || isReceiveUpdating) && "animate-pulse",
+            isReceive === false && "text-text-muted opacity-70",
+            isReceive === true && "text-primary-400/90",
+            isReceive === undefined && "text-text-muted",
+            canToggleReceive && "cursor-pointer hover:opacity-80",
+            !canToggleReceive && "cursor-not-allowed",
+          )}
+          aria-label={
+            isReceive === true
+              ? "알림 수신 중"
+              : isReceive === false
+                ? "알림 수신 안 함"
+                : isNotificationLoading
+                  ? "알림 설정 확인 중"
+                  : "알림 설정 정보 없음"
+          }
+          title={
+            isReceive === true
+              ? "알림 수신 중"
+              : isReceive === false
+                ? "알림 수신 안함"
+                : undefined
+          }
+        >
+          {isReceive ? (
+            <BellRingingIcon className="h-5 w-5" />
+          ) : (
+            <BellOffIcon className="h-5 w-5" />
+          )}
+        </button>
         {member.isMe ? (
           <span
             className={`inline-flex h-10 min-w-24.5 items-center justify-center rounded-3xl px-4 font-body2 ${

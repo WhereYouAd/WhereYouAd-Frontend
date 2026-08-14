@@ -14,11 +14,12 @@ module.exports = {
     },
     assert: {
       assertions: {
-        // warn 수준 임계값 — #277에서 before/after 실측 후 error 수준으로 확정
-        // preset 없이 3개만 지정: preset이 error 레벨 assertion을 추가해 CI를 막았음
+        // LCP: CI는 /login을 lazy load 환경에서 측정해 ~15s가 나옴 — 로컬 /dashboard 실측값(1048ms)과
+        // 측정 대상이 달라 error 임계값 적용 불가. 회귀 추세 감지용 warn으로 유지.
         "largest-contentful-paint": ["warn", { maxNumericValue: 4000 }],
-        "cumulative-layout-shift": ["warn", { maxNumericValue: 0.1 }],
-        "total-blocking-time": ["warn", { maxNumericValue: 600 }],
+        // CLS, TBT: CI 환경 무관하게 안정적으로 낮은 값 → error 수준 적용
+        "cumulative-layout-shift": ["error", { maxNumericValue: 0.1 }],
+        "total-blocking-time": ["error", { maxNumericValue: 200 }],
       },
     },
     upload: {

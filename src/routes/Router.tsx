@@ -1,5 +1,7 @@
 import React from "react";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
+
+import { buildPathWithReturnUrl } from "@/utils/auth/returnUrl";
 
 import AuthRoutes from "./AuthRoutes";
 import MainRoutes from "./MainRoutes";
@@ -16,13 +18,17 @@ const LandingPage = React.lazy(() => import("@/pages/landing/LandingPage"));
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isTokenInitialized = useAuthStore((state) => state.isTokenInitialized);
+  const location = useLocation();
 
   if (!isTokenInitialized) {
     return null;
   }
 
   if (!isLoggedIn) {
-    return <Navigate to="/login" replace />;
+    const returnUrl = `${location.pathname}${location.search}`;
+    return (
+      <Navigate to={buildPathWithReturnUrl("/login", returnUrl)} replace />
+    );
   }
 
   return <>{children}</>;

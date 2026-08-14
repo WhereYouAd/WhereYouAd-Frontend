@@ -1,4 +1,4 @@
-import CopyIcon from "@/assets/icon/common/link.svg?react";
+import MailIcon from "@/assets/icon/common/mail.svg?react";
 import UserIcon from "@/assets/icon/common/user.svg?react";
 
 const MEMBERS = [
@@ -11,19 +11,16 @@ export default function GuideWorkspace() {
   return (
     <div className="h-75 w-full bg-transparent md:h-85" aria-hidden="true">
       <div className="h-full rounded-[28px] bg-surface-100 border border-surface-400/60 shadow-Soft overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between px-6 pt-5 pb-3 shrink-0">
+        <div className="flex justify-center items-center py-6 pb-3 gap-3">
+          <MailIcon className="h-6 w-6 text-primary-400" />
           <p className="font-heading4 text-text-title">팀원 초대하기</p>
-          <div className="flex items-center gap-1.5 text-primary-500">
-            <CopyIcon className="w-4 h-4" />
-            <span className="font-body2">링크 복사</span>
-          </div>
         </div>
 
         <div className="px-6 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex-1 h-10 rounded-xl border border-surface-400/70 px-4 flex items-center">
               <span className="font-body2 text-text-muted">
-                이메일을 입력해서 팀원을 초대하세요
+                whereyouad@email.com
               </span>
             </div>
             <div className="shrink-0 px-4 py-2 rounded-xl bg-primary-500 font-body2 text-surface-100">

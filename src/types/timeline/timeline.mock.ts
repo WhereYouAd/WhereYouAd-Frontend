@@ -43,6 +43,7 @@ export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
     startDate: "2026-06-01",
     endDate: "2026-06-30",
     performanceStatus: "ON_TRACK",
+    displayOrder: 1,
   },
   {
     timelineId: 2,
@@ -50,6 +51,7 @@ export const TIMELINE_LIST_MOCK: ITimelineListItem[] = [
     startDate: "2026-06-10",
     endDate: "2026-06-30",
     performanceStatus: "UNDERPERFORM",
+    displayOrder: 2,
   },
 ];
 
@@ -129,7 +131,7 @@ export const TIMELINE_GRID_MOCK_WEEK: ITimelineGridData = {
       colStart: 2,
       colEnd: 7,
       row: 1,
-      performanceStatus: "ABOVE_AVERAGE",
+      performanceStatus: "ABOVE_AVG",
     },
     {
       id: 2,
@@ -159,7 +161,7 @@ export const TIMELINE_GRID_MOCK_DAY: ITimelineGridData = {
       colStart: 1,
       colEnd: 2,
       row: 1,
-      performanceStatus: "ABOVE_AVERAGE",
+      performanceStatus: "ABOVE_AVG",
     },
     {
       id: 2,
@@ -187,7 +189,7 @@ export const TIMELINE_GRID_MOCK_MONTH: ITimelineGridData = {
       colStart: 1,
       colEnd: 16,
       row: 1,
-      performanceStatus: "ABOVE_AVERAGE",
+      performanceStatus: "ABOVE_AVG",
     },
     {
       id: 2,
@@ -220,7 +222,7 @@ export const TIMELINE_GRID_EMPTY_MOCK: ITimelineGridData = {
 export const TIMELINE_SUMMARY_PANEL_MOCK: ITimelineSummaryPanelData = {
   timelineName: TIMELINE_DETAIL_MOCK.name,
   periodLabel: "2026.06.01 ~ 2026.06.30",
-  performanceStatus: "ABOVE_AVERAGE",
+  performanceStatus: "ABOVE_AVG",
   aiSummary: TIMELINE_DETAIL_MOCK.summary,
   metrics: [
     { metric: "CLICK", label: "클릭", value: 3730, changeRate: 0.08 },

@@ -45,10 +45,10 @@ export interface ITokenRefreshResponse {
 }
 
 // 소셜 로그인 OAuth2 경로용
-export type TSocialLoginPlatform = "kakao" | "naver" | "google";
+export type TSocialLoginPlatform = "naver" | "google";
 
 // 서버 응답의 로그인 provider
-export type TLoginProvider = "EMAIL" | "KAKAO" | "NAVER" | "GOOGLE";
+export type TLoginProvider = "EMAIL" | "NAVER" | "GOOGLE";
 
 export interface ISmsSendRequest {
   phoneNumber: string;

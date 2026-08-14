@@ -67,7 +67,6 @@ export const useEmailVerification = ({
 
   const PROVIDER_NAME: Record<string, string> = {
     GOOGLE: "구글",
-    KAKAO: "카카오",
     NAVER: "네이버",
   };
 

@@ -31,6 +31,9 @@ export const QUERY_KEYS = {
     /** 캠페인 그룹 상세 */
     detail: (orgId: number, projectId: number) =>
       ["campaignDetail", orgId, projectId] as const,
+    /** 프로젝트별(캠페인) 광고 소재 목록 (CampaignDetail · useAdList) */
+    ads: (orgId: number, projectId: number) =>
+      ["adList", orgId, projectId] as const,
     /** 플랫폼별 연결 가능한 캠페인 목록 */
     platformList: (orgId: number | null, platform: string) =>
       ["platformCampaigns", orgId, platform] as const,
@@ -73,11 +76,33 @@ export const QUERY_KEYS = {
     /** AI 분석 리포트 폴링 쿼리 */
     report: (provider: string, orgId: number | null) =>
       ["ai", "report", provider, orgId] as const,
+    /** 조직 단위 최신 AI 분석 리포트 목록 조회 (공유 결과 확인용) */
+    reportList: (provider: string, orgId: number | null) =>
+      ["ai", "reportList", provider, orgId] as const,
   },
 
   timeline: {
+    /*invalidate용 prefix - status/sort 없이 */
     list: (orgId: number | null) => ["timeline", "list", orgId] as const,
+    /*실제 useQuery용*/
+    listWithParams: (
+      orgId: number | null,
+      params: { status?: string | null; sort?: string } = {},
+    ) =>
+      [
+        "timeline",
+        "list",
+        orgId,
+        params.status ?? null,
+        params.sort ?? "DISPLAY_ORDER",
+      ] as const,
     detail: (orgId: number | null, timelineId: number | null) =>
       ["timeline", "detail", orgId, timelineId] as const,
+  },
+
+  notification: {
+    settings: (orgId: number | null) =>
+      ["notification", "settings", orgId] as const,
+    members: (orgId: number) => ["notification", "members", orgId] as const,
   },
 } as const;

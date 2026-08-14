@@ -2,6 +2,7 @@ import type { ICommonResponse } from "@/types/common/common";
 import {
   type ITimelineDetail,
   type ITimelineListItem,
+  type ITimelineListParams,
   type ITimelineMutationResponse,
   type ITimelineUpsertRequest,
   type TTimelineEmptyResponse,
@@ -23,10 +24,16 @@ export const getTimelineDetail = async (
 //타임라인 목록 조회 API
 export const getTimelineList = async (
   orgId: number,
+  params: ITimelineListParams = {},
 ): Promise<ITimelineListItem[]> => {
   const { data } = await axiosInstance.get<
     ICommonResponse<ITimelineListItem[]>
-  >(`/api/org/${orgId}/timeline`);
+  >(`/api/org/${orgId}/timeline`, {
+    params: {
+      ...(params.status ? { status: params.status } : {}),
+      ...(params.sort ? { sort: params.sort } : {}),
+    },
+  });
   return data.data;
 };
 

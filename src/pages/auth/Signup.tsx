@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+
+import { buildPathWithReturnUrl } from "@/utils/auth/returnUrl";
 
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import { useStepNavigation } from "@/hooks/common/useStepNavigation";
@@ -12,12 +14,14 @@ import Button from "@/components/common/button/Button";
 
 import MailIcon from "@/assets/icon/common/mail.svg?react";
 import GoogleIcon from "@/assets/logo/social-logo/plain/google.svg?react";
-import KakaoIcon from "@/assets/logo/social-logo/plain/kakao.svg?react";
 import NaverWordmarkIcon from "@/assets/logo/social-logo/plain/naver.svg?react";
 import useAuthStore from "@/store/useAuthStore";
 
 export default function Signup() {
   const location = useLocation();
+
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl");
   const { resetAuth } = useAuthStore();
   const { step, setStep, handleNext } = useStepNavigation(
     location.state?.step || 0,
@@ -78,17 +82,6 @@ export default function Signup() {
           fullWidth
           size="big"
           variant="custom"
-          leftIcon={<KakaoIcon className="w-6 h-6 shrink-0" aria-hidden />}
-          onClick={() => handleSocialLogin("kakao")}
-          className="bg-oauth-kakao font-heading4 text-text-title shadow-Soft transition-opacity hover:opacity-90"
-        >
-          카카오 로그인
-        </Button>
-
-        <Button
-          fullWidth
-          size="big"
-          variant="custom"
           leftIcon={
             <NaverWordmarkIcon className="h-6 w-6 shrink-0" aria-hidden />
           }
@@ -102,7 +95,7 @@ export default function Signup() {
       <div className="font-body2 text-text-body mt-15 flex gap-2">
         <span>이미 사용자 계정이 있다면?</span>
         <Link
-          to="/login"
+          to={buildPathWithReturnUrl("/login", returnUrl)}
           className="text-text-body underline hover:text-text-auth-sub"
         >
           로그인하기

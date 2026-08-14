@@ -26,7 +26,7 @@ export default function ProgressBar({
         />
       </div>
       {/* 퍼센트 텍스트 */}
-      <span className="min-w-8 w-11 shrink-0 text-right font-body1 text-text-muted">
+      <span className="min-w-8 w-11 shrink-0 text-right font-body1-rsp text-text-muted">
         {progress}%
       </span>
     </div>

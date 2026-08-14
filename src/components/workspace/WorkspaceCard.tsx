@@ -4,7 +4,9 @@ import { twMerge } from "tailwind-merge";
 import type { TWorkspace } from "@/types/workspace/workspace";
 import { ROLE_LABEL_MAP } from "@/constants/workspaceRole";
 
-import BuildingIcon from "@/assets/icon/common/building.svg?react";
+import Badge from "@/components/common/badge/Badge";
+
+import ChevronRightIcon from "@/assets/icon/chevron/chevron-right.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 
 type TProps = {
@@ -22,62 +24,95 @@ function WorkspaceCard({ workspace: w, isSelected = false, onClick }: TProps) {
 
   const imageSrc = w.logoUrl ? getImageUrl(w.logoUrl) : null;
   const showPlaceholder = !imageSrc || imageError;
+  const initial = (w.name.trim()[0] ?? "?").toUpperCase();
 
   return (
-    <li className="block w-full">
+    <li className="block h-full">
       <button
         type="button"
         className={twMerge(
-          "flex w-full items-center justify-between rounded-2xl border bg-surface-100 px-6 py-5 text-left shadow-Soft tablet:px-4 tablet:py-4 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
+          "group relative flex h-full min-h-52 w-full flex-col rounded-2xl border-[1.5px] bg-surface-100 p-6 text-left shadow-Soft",
+          "focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:outline-none",
+          "tablet:min-h-48 tablet:p-5",
           onClick &&
-            "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary-400/30 hover:bg-primary-100/50 active:scale-[0.98]",
+            "cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:border-primary-400/30 hover:bg-primary-100/35 active:scale-[0.98]",
           isSelected
-            ? "border-primary-500/40 bg-primary-100/50"
-            : "border-surface-400 focus-within:border-primary-400/50",
+            ? "border-primary-400 bg-primary-100/55 ring-2 ring-primary-400/30"
+            : "border-surface-400",
         )}
         onClick={onClick}
       >
-        <div className="flex items-center gap-5 min-w-0 tablet:gap-3">
-          <div className="h-24 w-24 shrink-0 rounded-lg bg-surface-200 tablet:h-16 tablet:w-16">
-            {showPlaceholder ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <BuildingIcon className="w-8 h-8 text-text-placeholder" />
-              </div>
+        {isSelected && (
+          <span
+            role="status"
+            className="absolute top-5 right-5 shrink-0 rounded-full bg-primary-500/85 px-2.5 py-1 font-caption text-surface-100"
+          >
+            현재 기준
+          </span>
+        )}
+
+        <div
+          className={twMerge(
+            "mb-5 flex h-18 w-18 items-center justify-center overflow-hidden rounded-2xl",
+            "tablet:mb-4 tablet:h-14 tablet:w-14",
+            showPlaceholder
+              ? "bg-primary-100 text-primary-500"
+              : "bg-surface-200",
+          )}
+        >
+          {showPlaceholder ? (
+            <span className="font-heading3">{initial}</span>
+          ) : (
+            <img
+              src={imageSrc}
+              alt={`${w.name} 로고`}
+              className="h-full w-full object-cover pointer-events-none"
+              onError={() => setImageError(true)}
+            />
+          )}
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="pr-12">
+            <div
+              className={twMerge(
+                "truncate font-heading4",
+                isSelected ? "text-surface-500" : "text-text-title",
+              )}
+            >
+              {w.name}
+            </div>
+
+            {w.description ? (
+              <p className="mt-1.5 line-clamp-2 font-body2 text-text-muted">
+                {w.description}
+              </p>
             ) : (
-              <img
-                src={imageSrc}
-                alt={`${w.name} 로고`}
-                className="w-full h-full object-cover rounded-lg pointer-events-none"
-                onError={() => {
-                  setImageError(true);
-                }}
-              />
+              <p className="mt-1.5 font-body2 text-text-placeholder">
+                설명이 없습니다
+              </p>
             )}
           </div>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <div className="truncate font-heading4 text-text-title">
-                {w.name}
-              </div>
-              {isSelected && (
-                <span
-                  role="status"
-                  className="shrink-0 rounded-full bg-primary-500/12 px-2 py-1 font-caption text-primary-500"
-                >
-                  현재 대시보드 기준
-                </span>
-              )}
-            </div>
-
-            <div className="mt-1 truncate font-body2 text-text-title">
-              {w.description ?? ""}
-            </div>
-            <div className="mt-2 font-body1 text-text-muted">
+          <div className="mt-auto flex items-center pt-5 pr-8">
+            <Badge
+              variant={w.myRole === "ADMIN" ? "infoBlue" : "surface"}
+              className="h-6 px-2"
+            >
               {ROLE_LABEL_MAP[w.myRole]}
-            </div>
+            </Badge>
           </div>
         </div>
+
+        <ChevronRightIcon
+          aria-hidden
+          className={twMerge(
+            "pointer-events-none absolute right-5 bottom-6 h-5 w-5 transition-all duration-300 ease-out tablet:bottom-5 tablet:right-4",
+            isSelected
+              ? "text-primary-500"
+              : "text-text-muted group-hover:text-primary-500",
+          )}
+        />
       </button>
     </li>
   );

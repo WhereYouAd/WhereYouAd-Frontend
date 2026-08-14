@@ -4,32 +4,33 @@ import { toast } from "sonner";
 import type { IAd } from "@/types/ads/campaign";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useCreateTrackingUrl } from "@/hooks/ads/useCreateTrackingUrl";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import { createTrackingUrl } from "@/api/ads/ads";
 import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
-export default function AdDetailContent({
-  ad,
-  refetchAds,
-}: {
-  ad: IAd;
-  refetchAds: () => void;
-}) {
-  const { orgId } = useParams<{
+export default function AdDetailContent({ ad }: { ad: IAd }) {
+  const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
 
+  const orgIdNum = orgId ? Number(orgId) : null;
+  const projectIdNum = projectId ? Number(projectId) : null;
+
+  const { mutateAsync: mutateCreateTrackingUrl } = useCreateTrackingUrl(
+    orgIdNum,
+    projectIdNum,
+  );
+
   const trackControl = useControlModal({
     successMessage: "트래킹 링크가 발급되었습니다.",
     errorMessage: "트래킹 링크 발급에 실패했습니다.",
-    onSuccess: refetchAds,
   });
 
   const isTrackingActive = !!ad.trackingUrl && ad.trackingUrl.length > 0;
@@ -59,8 +60,8 @@ export default function AdDetailContent({
   return (
     <div className="animate-fade-in">
       <div className="border-t border-surface-400/60">
-        <div className="flex flex-col gap-4 px-4 pb-2 pt-4 tablet:px-5">
-          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3">
+        <div className="flex flex-col gap-4 px-4 pb-2 pt-4 tablet:px-5 mobile:gap-3 mobile:px-4 mobile:pt-3">
+          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3 mobile:px-3 mobile:py-2.5">
             <h3 className="mb-2 font-caption text-text-placeholder">
               광고 소재
             </h3>
@@ -69,7 +70,7 @@ export default function AdDetailContent({
             </p>
           </section>
 
-          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3">
+          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3 mobile:px-3 mobile:py-2.5">
             <h3 className="mb-2 font-caption text-text-placeholder">타겟</h3>
             <div className="flex flex-wrap gap-2">
               {tags.length > 0 ? (
@@ -90,7 +91,7 @@ export default function AdDetailContent({
             </div>
           </section>
 
-          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3">
+          <section className="rounded-lg border border-surface-400/40 bg-surface-100 px-4 py-3 mobile:px-3 mobile:py-2.5">
             <h3 className="mb-2 font-caption text-text-placeholder">
               랜딩 URL
             </h3>
@@ -115,8 +116,8 @@ export default function AdDetailContent({
           </section>
         </div>
 
-        <div className="mx-4 mb-4 mt-1 overflow-hidden rounded-lg border border-surface-400/40 bg-surface-100 tablet:mx-5">
-          <div className="flex flex-wrap items-start justify-between gap-3 gap-y-3 px-4 py-4">
+        <div className="mx-4 mb-4 mt-1 overflow-hidden rounded-lg border border-surface-400/40 bg-surface-100 tablet:mx-5 mobile:mx-4 mobile:mb-3">
+          <div className="flex flex-wrap items-start justify-between gap-3 gap-y-3 px-4 py-4 mobile:px-3 mobile:py-3">
             <div className="min-w-0 flex-1">
               <p className="font-caption text-text-placeholder">트래킹</p>
               <p className="mt-1 font-body1 text-text-title">
@@ -179,7 +180,10 @@ export default function AdDetailContent({
                 );
                 throw new Error("랜딩 URL이 없습니다.");
               }
-              await createTrackingUrl(Number(orgId), ad.id, ad.landingUrl);
+              await mutateCreateTrackingUrl({
+                adContentId: ad.id,
+                landingUrl: ad.landingUrl,
+              });
             })
           }
           isLoading={trackControl.isLoading}

@@ -24,10 +24,13 @@ const easeIn = [0.4, 0, 1, 1] as const;
 
 const MENU_ITEM_HEIGHT = 52;
 const MENU_VERTICAL_PADDING = 32;
+const DEFAULT_MENU_WIDTH = 224;
 
 function getClippingBounds(element: HTMLElement) {
   let bottom = window.innerHeight;
   let top = 0;
+  let left = 0;
+  let right = window.innerWidth;
   let parent = element.parentElement;
 
   while (parent) {
@@ -45,12 +48,14 @@ function getClippingBounds(element: HTMLElement) {
       const rect = parent.getBoundingClientRect();
       bottom = Math.min(bottom, rect.bottom);
       top = Math.max(top, rect.top);
+      left = Math.max(left, rect.left);
+      right = Math.min(right, rect.right);
     }
 
     parent = parent.parentElement;
   }
 
-  return { top, bottom };
+  return { top, bottom, left, right };
 }
 
 function resolveAutoPlacement(
@@ -65,9 +70,35 @@ function resolveAutoPlacement(
   const spaceBelow = containerBottom - triggerRect.bottom;
   const spaceAbove = triggerRect.top - containerTop;
 
-  return spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow
+  const visibleHeight = containerBottom - containerTop;
+
+  const inLowerArea =
+    visibleHeight > 0 &&
+    triggerRect.bottom > containerTop + visibleHeight * 0.65;
+
+  if (inLowerArea && spaceAbove >= estimatedMenuHeight) {
+    return "top";
+  }
+
+  return spaceBelow < estimatedMenuHeight && spaceAbove >= estimatedMenuHeight
     ? "top"
     : "bottom";
+}
+
+function resolveHorizontalAlign(
+  element: HTMLElement,
+  menuWidth = DEFAULT_MENU_WIDTH,
+): "left" | "right" {
+  const triggerRect = element.getBoundingClientRect();
+  const { left: containerLeft, right: containerRight } =
+    getClippingBounds(element);
+  const spaceLeft = triggerRect.right - containerLeft;
+  const spaceRight = containerRight - triggerRect.left;
+
+  if (spaceLeft < menuWidth && spaceRight > spaceLeft) {
+    return "left";
+  }
+  return "right";
 }
 
 export function DropdownMenu({
@@ -77,6 +108,7 @@ export function DropdownMenu({
   menuClassName,
   fullWidth = false,
   placement = "bottom",
+  inFlow = false,
   "aria-label": ariaLabel,
   onOpenChange,
 }: {
@@ -88,6 +120,7 @@ export function DropdownMenu({
   fullWidth?: boolean;
   /** bottom: 아래 / top: 위 / auto: 공간에 따라 자동 */
   placement?: TDropdownPlacement;
+  inFlow?: boolean;
   "aria-label"?: string;
   onOpenChange?: (open: boolean) => void;
 }) {
@@ -95,6 +128,9 @@ export function DropdownMenu({
   const [open, setOpen] = useState(false);
   const [resolvedPlacement, setResolvedPlacement] = useState<"bottom" | "top">(
     "bottom",
+  );
+  const [horizontalAlign, setHorizontalAlign] = useState<"left" | "right">(
+    "right",
   );
   const ref = useRef<HTMLDivElement | null>(null);
   const menuId = useId();
@@ -114,29 +150,53 @@ export function DropdownMenu({
   }, []);
 
   useLayoutEffect(() => {
-    if (!open) return;
-
-    if (placement === "bottom") {
+    if (!open || inFlow) {
       setResolvedPlacement("bottom");
-      return;
-    }
-
-    if (placement === "top") {
-      setResolvedPlacement("top");
+      setHorizontalAlign("right");
       return;
     }
 
     const el = ref.current;
     if (!el) return;
 
-    setResolvedPlacement(resolveAutoPlacement(el, items.length));
-  }, [open, placement, items.length]);
+    const updatePosition = () => {
+      if (placement === "bottom") {
+        setResolvedPlacement("bottom");
+      } else if (placement === "top") {
+        setResolvedPlacement("top");
+      } else {
+        setResolvedPlacement(resolveAutoPlacement(el, items.length));
+      }
+
+      if (!fullWidth) {
+        setHorizontalAlign(resolveHorizontalAlign(el));
+      } else {
+        setHorizontalAlign("right");
+      }
+    };
+
+    updatePosition();
+
+    window.addEventListener("resize", updatePosition);
+
+    window.addEventListener("scroll", updatePosition, true);
+
+    const resizeObserver = new ResizeObserver(updatePosition);
+    resizeObserver.observe(el);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+      resizeObserver.disconnect();
+    };
+  }, [open, placement, items.length, inFlow, fullWidth]);
 
   useEffect(() => {
     onOpenChange?.(open);
   }, [open, onOpenChange]);
 
-  const isTopPlacement = resolvedPlacement === "top";
+  const isTopPlacement = !inFlow && resolvedPlacement === "top";
+  const isLeftAlign = !inFlow && !fullWidth && horizontalAlign === "left";
 
   return (
     <div
@@ -175,15 +235,27 @@ export function DropdownMenu({
                   ? "bottom center"
                   : "top center"
                 : isTopPlacement
-                  ? "bottom right"
-                  : "top right",
+                  ? isLeftAlign
+                    ? "bottom left"
+                    : "bottom right"
+                  : isLeftAlign
+                    ? "top left"
+                    : "top right",
             }}
             className={twMerge(
               "absolute z-50 rounded-2xl border border-surface-300 bg-surface-100 py-3 px-1 shadow-Soft",
+              inFlow
+                ? "relative mt-2"
+                : twMerge(
+                    "absolute",
+                    isTopPlacement ? "bottom-full mb-2" : "top-full mt-2",
+                  ),
               fullWidth
                 ? "left-0 right-0 w-full"
-                : "right-0 w-56 max-w-[calc(100vw-40px)]",
-              isTopPlacement ? "bottom-full mb-2" : "top-full mt-2",
+                : twMerge(
+                    "w-56 max-w-[calc(100vw-40px)]",
+                    isLeftAlign ? "left-0 right-auto" : "right-0",
+                  ),
               menuClassName,
             )}
             initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
@@ -198,7 +270,9 @@ export function DropdownMenu({
             <div
               className={twMerge(
                 "space-y-1",
-                fullWidth && "max-h-60 overflow-y-auto overscroll-contain",
+                fullWidth &&
+                  !inFlow &&
+                  "max-h-60 overflow-y-auto overscroll-contain",
               )}
             >
               {items.map((it, idx) => (

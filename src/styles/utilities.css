@@ -61,11 +61,92 @@
     line-height: var(--type-label-leading);
   }
 
+  /* 반응형 히어로 폰트 — Tailwind 반응형 변형이 @layer utilities 커스텀 클래스를 덮어쓰지 못하는
+     캐스케이드 문제 우회: 동일 블록 내 @media로 처리 */
+  .font-hero-rsp {
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+  }
+  @media (max-width: 639px) {
+    .font-hero-rsp {
+      font-size: var(--type-heading2-size);
+      font-weight: var(--type-heading2-weight);
+      line-height: var(--type-heading2-leading);
+    }
+  }
+
+  .font-heading3-rsp {
+    font-size: var(--type-heading3-size);
+    font-weight: var(--type-heading3-weight);
+    line-height: var(--type-heading3-leading);
+  }
+  @media (max-width: 639px) {
+    .font-heading3-rsp {
+      font-size: var(--type-body1-size);
+      font-weight: var(--type-body1-weight);
+      line-height: var(--type-body1-leading);
+    }
+  }
+
+  .font-heading1-rsp {
+    font-size: var(--type-heading1-size);
+    font-weight: var(--type-heading1-weight);
+    line-height: var(--type-heading1-leading);
+  }
+  @media (max-width: 639px) {
+    .font-heading1-rsp {
+      font-size: var(--type-heading2-size);
+      font-weight: var(--type-heading2-weight);
+      line-height: var(--type-heading2-leading);
+    }
+  }
+
+  .font-heading2-rsp {
+    font-size: var(--type-heading2-size);
+    font-weight: var(--type-heading2-weight);
+    line-height: var(--type-heading2-leading);
+  }
+  @media (max-width: 639px) {
+    .font-heading2-rsp {
+      font-size: var(--type-heading3-size);
+      font-weight: var(--type-heading3-weight);
+      line-height: var(--type-heading3-leading);
+    }
+  }
+
+  .font-body1-rsp {
+    font-size: var(--type-body1-size);
+    font-weight: var(--type-body1-weight);
+    line-height: var(--type-body1-leading);
+  }
+  @media (max-width: 639px) {
+    .font-body1-rsp {
+      font-size: var(--type-body2-size);
+      font-weight: var(--type-body2-weight);
+      line-height: var(--type-body2-leading);
+    }
+  }
+
+  /* 모바일(< 640px)에서 그리드를 1열로 강제 — tablet: 커스텀 변형 우선순위 우회 */
+  .grid-mobile-1 {}
+  @media (max-width: 639px) {
+    .grid-mobile-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+
   /* 그림자 */
   .shadow-Soft {
     box-shadow:
       0 1px 2px color-mix(in srgb, var(--color-text-400) 4%, transparent),
       0 4px 20px color-mix(in srgb, var(--color-text-400) 6%, transparent);
+  }
+
+  .shadow-tooltip {
+    box-shadow:
+      0 4px 6px color-mix(in srgb, var(--color-text-400) 6%, transparent),
+      0 12px 32px color-mix(in srgb, var(--color-text-400) 14%, transparent);
   }
 
   /* UI 트랜지션  */
@@ -173,6 +254,28 @@
 
   @media (prefers-reduced-motion: reduce) {
     .animate-shimmer::after {
+      animation: none;
+    }
+  }
+
+  /* 온보딩 툴팁 등장 애니메이션 */
+  @keyframes tooltip-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-tooltip-enter {
+    animation: tooltip-enter 160ms var(--ease-out) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-tooltip-enter {
       animation: none;
     }
   }

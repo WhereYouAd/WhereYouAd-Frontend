@@ -58,10 +58,17 @@ export type TUpdateMemberRoleRequest = {
 
 export type TUpdateMemberRoleResponse = TWorkspaceMember;
 
+export type TChangeOwnerRequest = {
+  newOwnerUserId: number;
+};
+
+export type TChangeOwnerResponse = string;
+
 export type TGetWorkspaceMembersData = {
   hasNext: boolean;
   nextCursor: string | null;
   members: TWorkspaceMember[];
+  creatorId: number;
 };
 
 export type TWorkspaceMemberCount = {
@@ -72,6 +79,7 @@ export type TDeleteWorkspaceMemberResponse = string;
 
 export type TPermissionKey =
   | "campaignView"
+  | "timelineManage"
   | "billingManage"
   | "workspaceView"
   | "memberInvite"
@@ -83,7 +91,7 @@ export type TPermissionRow = {
   key: TPermissionKey;
   label: string;
   description: string;
-  defaultMemberEnabled: boolean;
+  memberAllowed: boolean;
 };
 
 export type TInviteMemberRequest = {
@@ -123,4 +131,10 @@ export type TPendingMemberData = {
 
 export type TPendingMemberResponse = {
   pendingMembers: TPendingMemberData[];
+};
+
+export type TAcceptInvitationResponse = {
+  orgId: number;
+  message: string;
+  email: string;
 };

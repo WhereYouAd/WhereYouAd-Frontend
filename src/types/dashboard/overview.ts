@@ -39,6 +39,6 @@ export interface IClickStreamItem {
     campaignName?: string;
     adName?: string;
     message: string;
-    timestamp: string;
+    timestamp?: string;
   } | null;
 }

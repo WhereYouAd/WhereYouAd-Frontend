@@ -1,20 +1,35 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 
-import type { TPlatform } from "@/types/ads/campaign";
+import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
+
+import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
+import {
+  groupPlatformBudgetsByPlatform,
+  providerTypeToPlatform,
+  resolvePlatformBudgets,
+} from "@/utils/ads/projectBudget";
 
 import { useAdList } from "@/hooks/ads/useAdList";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useUpdateAdStatus } from "@/hooks/ads/useUpdateAdStatus";
 
 import AdListTable from "@/components/ads/AdListTable";
+import CampaignPlatformSection from "@/components/ads/CampaignPlatformSection";
+import EditPlatformBudgetModal from "@/components/ads/EditPlatformBudgetModal";
+import {
+  CampaignDetailAdsSectionSkeleton,
+  CampaignDetailPageSkeleton,
+} from "@/components/ads/skeleton/AdsSkeleton";
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { updateAdStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 
@@ -23,6 +38,11 @@ const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   meta: "META",
   google: "GOOGLE",
 };
+
+const platformSectionBlockClass =
+  "flex flex-col gap-6 px-6 py-6 tablet:px-5 tablet:py-5 mobile:gap-4 mobile:px-4 mobile:py-4";
+
+const platformSectionDividerClass = "border-t border-surface-400/75";
 
 function providerWordmark(provider: string): string {
   const key = provider.toLowerCase() as TPlatform;
@@ -42,7 +62,11 @@ export default function CampaignDetail() {
 
   const { data, isLoading } = useCampaignDetail();
 
-  const { ads, isAdLoading, refetchAds } = useAdList(orgIdNum, projectIdNum);
+  const { ads, isAdLoading } = useAdList(orgIdNum, projectIdNum);
+  const { mutateAsync: mutateAdStatus } = useUpdateAdStatus(
+    orgIdNum,
+    projectIdNum,
+  );
 
   const { setCampaignDetailHeaderTitle } =
     useOutletContext<TMainLayoutOutletContext>();
@@ -54,6 +78,10 @@ export default function CampaignDetail() {
   );
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
+
+  const [budgetEditTarget, setBudgetEditTarget] =
+    useState<IPlatformBudgetSummary | null>(null);
+  const [isBudgetEditOpen, setIsBudgetEditOpen] = useState(false);
 
   const clearAdSelection = useCallback(() => {
     setSelectedAdIds(new Set());
@@ -68,23 +96,18 @@ export default function CampaignDetail() {
     });
   }, []);
 
-  const operableIds = useMemo(
-    () => adsList.filter((a) => a.status !== "OVER").map((a) => a.id),
-    [adsList],
-  );
-
-  const toggleSelectAllVisible = useCallback(() => {
+  const toggleSelectAllVisible = useCallback((targetIds: readonly number[]) => {
     setSelectedAdIds((prev) => {
       const allOn =
-        operableIds.length > 0 && operableIds.every((id) => prev.has(id));
+        targetIds.length > 0 && targetIds.every((id) => prev.has(id));
       if (allOn) {
         const next = new Set(prev);
-        operableIds.forEach((id) => next.delete(id));
+        targetIds.forEach((id) => next.delete(id));
         return next;
       }
-      return new Set([...prev, ...operableIds]);
+      return new Set([...prev, ...targetIds]);
     });
-  }, [operableIds]);
+  }, []);
 
   const selectedOngoingIds = useMemo(
     () =>
@@ -125,19 +148,13 @@ export default function CampaignDetail() {
   const bulkAdPause = useControlModal({
     successMessage: "광고 소재 운영 상태가 반영되었습니다.",
     errorMessage: "중단 처리에 실패했습니다.",
-    onSuccess: () => {
-      void refetchAds();
-      clearAdSelection();
-    },
+    onSuccess: clearAdSelection,
   });
 
   const bulkAdResume = useControlModal({
     successMessage: "광고 소재 운영 상태가 반영되었습니다.",
     errorMessage: "재개 처리에 실패했습니다.",
-    onSuccess: () => {
-      void refetchAds();
-      clearAdSelection();
-    },
+    onSuccess: clearAdSelection,
   });
 
   const openAdPauseModal = () => {
@@ -168,6 +185,42 @@ export default function CampaignDetail() {
     return rows.map((a) => ({ id: a.id, label: a.name }));
   }, [resumeScope, adsList, selectedPausedIds]);
 
+  const platformBudgets = useMemo(
+    () =>
+      resolvePlatformBudgets({
+        providers: data?.providers ?? [],
+        platformBudgets: data?.platformBudgets,
+      }),
+    [data?.providers, data?.platformBudgets],
+  );
+
+  const budgetsByPlatform = useMemo(
+    () => groupPlatformBudgetsByPlatform(platformBudgets),
+    [platformBudgets],
+  );
+
+  const platformSections = useMemo(() => {
+    if (!data) return [];
+
+    const fromAds = groupAdsByPlatform(adsList, data.providers);
+    const seen = new Set(fromAds.map((section) => section.platform));
+
+    // 광고 0개여도 예산 API 있으면 섹션 표시
+    for (const budget of platformBudgets) {
+      const platform = providerTypeToPlatform(budget.provider);
+      if (!seen.has(platform)) {
+        fromAds.push({ platform, ads: [] });
+        seen.add(platform);
+      }
+    }
+
+    return fromAds.sort(
+      (a, b) =>
+        AD_PLATFORM_ORDER.indexOf(a.platform) -
+        AD_PLATFORM_ORDER.indexOf(b.platform),
+    );
+  }, [adsList, data, platformBudgets]);
+
   useEffect(() => {
     if (!setCampaignDetailHeaderTitle) return;
     if (data?.name) {
@@ -181,13 +234,7 @@ export default function CampaignDetail() {
   }, [data?.name, setCampaignDetailHeaderTitle]);
 
   if (isLoading) {
-    return (
-      <div className="flex h-[90vh] items-center justify-center">
-        <p className="font-body1 text-text-placeholder">
-          데이터를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <CampaignDetailPageSkeleton />;
   }
 
   if (!data) {
@@ -200,11 +247,11 @@ export default function CampaignDetail() {
 
   return (
     <section className="flex w-full flex-col gap-8">
-      <Card className="px-6 py-8 tablet:px-5 tablet:py-7">
-        <header className="flex w-full flex-col gap-6">
+      <Card className="px-6 py-8 tablet:px-5 tablet:py-7 mobile:px-4 mobile:py-6">
+        <header className="flex w-full flex-col gap-6 mobile:gap-7">
           <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
-              <h1 className="min-w-0 wrap-break-word font-heading2 text-text-title">
+              <h1 className="min-w-0 wrap-break-word font-heading2-rsp text-text-title">
                 {data.name}
               </h1>
               <Badge
@@ -222,32 +269,22 @@ export default function CampaignDetail() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 tablet:grid-cols-2 tablet:gap-x-10 tablet:gap-y-4">
-            <div className="min-w-0">
-              <p className="mb-1 font-caption text-text-placeholder">
-                캠페인 예산
-              </p>
-              <p className="font-body1 tabular-nums leading-snug text-text-title">
-                {data.budget.toLocaleString()}원
-              </p>
-            </div>
-            <div className="min-w-0">
-              <p className="mb-2 font-caption text-text-placeholder">
-                연결 플랫폼
-              </p>
-              <div
-                className="flex flex-wrap items-center gap-2"
-                aria-label="연결된 광고 플랫폼"
-              >
-                {data.providers.map((provider) => (
-                  <span
-                    key={provider}
-                    className="inline-flex items-center rounded-lg border border-surface-400/60 bg-surface-200/70 px-2.5 py-1 font-body2 font-medium tracking-wide text-text-title"
-                  >
-                    {providerWordmark(provider)}
-                  </span>
-                ))}
-              </div>
+          <div className="min-w-0">
+            <p className="mb-2 font-caption text-text-placeholder">
+              연결 플랫폼
+            </p>
+            <div
+              className="flex flex-wrap items-center gap-2"
+              aria-label="연결된 광고 플랫폼"
+            >
+              {data.providers.map((provider) => (
+                <span
+                  key={provider}
+                  className="inline-flex items-center rounded-lg border border-surface-400/60 bg-surface-200/70 px-2.5 py-1 font-body2 font-medium tracking-wide text-text-title"
+                >
+                  {providerWordmark(provider)}
+                </span>
+              ))}
             </div>
           </div>
 
@@ -265,23 +302,11 @@ export default function CampaignDetail() {
       </Card>
 
       {isAdLoading ? (
-        <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <p className="font-caption text-text-placeholder">광고</p>
-              <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
-              </div>
-            </div>
-          </div>
-          <div className="py-20 text-center font-body2 text-text-placeholder">
-            연결된 광고를 불러오는 중입니다...
-          </div>
-        </Card>
+        <CampaignDetailAdsSectionSkeleton />
       ) : (
         <Card className="flex flex-col overflow-hidden p-0">
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/75 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-4">
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5 mobile:flex-none">
               <p className="font-caption text-text-placeholder">광고</p>
               <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
                 <h2 className="font-heading3 text-text-title">광고 모아보기</h2>
@@ -301,11 +326,12 @@ export default function CampaignDetail() {
                 ) : null}
               </div>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full">
               <Button
                 type="button"
                 size="small"
                 variant="dangerSoft"
+                className="mobile:min-w-0 mobile:flex-1"
                 onClick={openAdPauseModal}
                 disabled={!canPauseAds || bulkAdPause.isLoading}
               >
@@ -315,7 +341,7 @@ export default function CampaignDetail() {
                 type="button"
                 size="small"
                 variant="outline"
-                className="border-info-blue text-info-blue hover:bg-info-blue/5"
+                className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
                 onClick={openAdResumeModal}
                 disabled={!canResumeAds || bulkAdResume.isLoading}
               >
@@ -324,16 +350,52 @@ export default function CampaignDetail() {
             </div>
           </div>
 
-          <div className="min-h-0 min-w-0 flex-1">
-            <AdListTable
-              embedded
-              ads={adsList}
-              refetchAds={refetchAds}
-              selectedAdIds={selectedAdIds}
-              onToggleAd={toggleAd}
-              onToggleSelectAllVisible={toggleSelectAllVisible}
-            />
-          </div>
+          {platformSections.length > 0 ? (
+            <div className="flex flex-col">
+              {platformSections.map(({ platform, ads: platformAds }, index) => (
+                <div
+                  key={platform}
+                  className={
+                    index > 0
+                      ? `${platformSectionBlockClass} ${platformSectionDividerClass}`
+                      : platformSectionBlockClass
+                  }
+                >
+                  <CampaignPlatformSection
+                    platform={platform}
+                    platformBudgets={budgetsByPlatform.get(platform)}
+                    onEditBudget={(budget) => {
+                      setBudgetEditTarget(budget);
+                      setIsBudgetEditOpen(true);
+                    }}
+                  />
+                  {platformAds.length > 0 ? (
+                    <ErrorBoundary
+                      FallbackComponent={AreaErrorFallback}
+                      resetKeys={[platformAds]}
+                    >
+                      <AdListTable
+                        embedded
+                        hidePlatformColumn
+                        ads={platformAds}
+                        selectedAdIds={selectedAdIds}
+                        onToggleAd={toggleAd}
+                        onToggleSelectAllVisible={toggleSelectAllVisible}
+                      />
+                    </ErrorBoundary>
+                  ) : (
+                    <p className="py-8 text-center font-body2 text-text-placeholder">
+                      이 플랫폼에 연결된 광고 소재가 없습니다.
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="px-6 py-16 text-center font-body1 text-text-placeholder tablet:px-5 mobile:px-4">
+              연결된 광고 소재가 없습니다.
+            </p>
+          )}
         </Card>
       )}
 
@@ -358,20 +420,17 @@ export default function CampaignDetail() {
           detailListTitle="중단 대상 광고"
           buttonText="중단하기"
           onConfirm={() =>
-            bulkAdPause.handleConfirm(async () => {
-              if (orgIdNum == null || projectIdNum == null) return;
-              const ids =
-                pauseScope === "all"
-                  ? adsList
-                      .filter((a) => a.status === "ON_GOING")
-                      .map((a) => a.id)
-                  : selectedOngoingIds;
-              await Promise.all(
-                ids.map((adContentId) =>
-                  updateAdStatus(orgIdNum, projectIdNum, adContentId, "PAUSED"),
-                ),
-              );
-            })
+            bulkAdPause.handleConfirm(() =>
+              mutateAdStatus({
+                adContentIds:
+                  pauseScope === "all"
+                    ? adsList
+                        .filter((a) => a.status === "ON_GOING")
+                        .map((a) => a.id)
+                    : selectedOngoingIds,
+                status: "PAUSED",
+              }),
+            )
           }
           isLoading={bulkAdPause.isLoading}
           variant="danger"
@@ -399,30 +458,36 @@ export default function CampaignDetail() {
           detailListTitle="재개 대상 광고"
           buttonText="재개하기"
           onConfirm={() =>
-            bulkAdResume.handleConfirm(async () => {
-              if (orgIdNum == null || projectIdNum == null) return;
-              const ids =
-                resumeScope === "all"
-                  ? adsList
-                      .filter((a) => a.status === "PAUSED")
-                      .map((a) => a.id)
-                  : selectedPausedIds;
-              await Promise.all(
-                ids.map((adContentId) =>
-                  updateAdStatus(
-                    orgIdNum,
-                    projectIdNum,
-                    adContentId,
-                    "ON_GOING",
-                  ),
-                ),
-              );
-            })
+            bulkAdResume.handleConfirm(() =>
+              mutateAdStatus({
+                adContentIds:
+                  resumeScope === "all"
+                    ? adsList
+                        .filter((a) => a.status === "PAUSED")
+                        .map((a) => a.id)
+                    : selectedPausedIds,
+                status: "ON_GOING",
+              }),
+            )
           }
           isLoading={bulkAdResume.isLoading}
           variant="primary"
         />
       </Modal>
+      {orgIdNum != null && projectIdNum != null ? (
+        <EditPlatformBudgetModal
+          isOpen={isBudgetEditOpen}
+          onClose={() => {
+            setIsBudgetEditOpen(false);
+          }}
+          onClosed={() => {
+            setBudgetEditTarget(null);
+          }}
+          budget={budgetEditTarget}
+          orgId={orgIdNum}
+          projectId={projectIdNum}
+        />
+      ) : null}
     </section>
   );
 }

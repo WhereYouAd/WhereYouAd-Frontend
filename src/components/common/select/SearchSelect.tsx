@@ -17,6 +17,8 @@ type TSearchSelectProps<T> = {
   renderOption: (option: T) => React.ReactNode;
   emptyMessage?: string;
   className?: string;
+  /** absolute: 오버레이 / flow: 아래로 밀어내며 컨테이너 높이 증가 */
+  listPlacement?: "absolute" | "flow";
 };
 
 export default function SearchSelect<T>({
@@ -32,6 +34,7 @@ export default function SearchSelect<T>({
   renderOption,
   emptyMessage = "검색 결과가 없습니다.",
   className = "",
+  listPlacement = "absolute",
 }: TSearchSelectProps<T>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputId = useId();
@@ -52,18 +55,20 @@ export default function SearchSelect<T>({
   }, [selectedOption]);
 
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
+    if (!isOpen) return;
+
+    const handleOutsideMouseDown = (e: MouseEvent) => {
       if (!containerRef.current?.contains(e.target as Node)) {
         onOpenChange(false);
       }
     };
 
-    document.addEventListener("mousedown", handleOutsideClick);
-
+    // capture: 모달 content의 stopPropagation보다 먼저 바깥 클릭을 감지
+    document.addEventListener("mousedown", handleOutsideMouseDown, true);
     return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("mousedown", handleOutsideMouseDown, true);
     };
-  }, [onOpenChange]);
+  }, [isOpen, onOpenChange]);
 
   const filteredOptions = useMemo(() => {
     const trimmedKeyword = keyword.trim().toLowerCase();
@@ -107,13 +112,22 @@ export default function SearchSelect<T>({
           aria-controls={listboxId}
           aria-haspopup="listbox"
           aria-autocomplete="list"
-          className="h-13 w-full rounded-2xl border border-info-blue px-4 pl-5 font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-info-blue"
+          containerClassName="h-13 w-full rounded-2xl border border-info-blue font-body1 outline-none transition-colors placeholder:text-text-placeholder focus:border-info-blue"
+          inputClassName="truncate"
+          rightElement={
+            <SearchIcon className="h-5 w-5 text-info-blue" aria-hidden />
+          }
         />
-        <SearchIcon className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-info-blue" />
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-Soft">
+        <div
+          className={
+            listPlacement === "flow"
+              ? "mt-2 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-Soft"
+              : "absolute left-0 top-[calc(100%+8px)] z-20 w-full overflow-hidden rounded-2xl border border-surface-400 bg-surface-100 shadow-Soft"
+          }
+        >
           {filteredOptions.length > 0 ? (
             <ul
               id={listboxId}

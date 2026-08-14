@@ -8,13 +8,17 @@ import type {
   TIntegrationProvider,
 } from "@/types/integration/platformConnection";
 
+import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { useCoreMutation } from "@/hooks/customQuery";
-import { useIntegrationOAuthReturn } from "@/hooks/integration/useIntegrationOAuthReturn";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
+import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import NaverConnectModal from "@/components/integration/NaverConnectModal";
+import NaverSyncModal from "@/components/integration/NaverSyncModal";
 import PlatformDisconnectModal from "@/components/integration/PlatformDisconnectModal";
 import PlatformIntegrationCard from "@/components/integration/PlatformIntegrationCard";
 import PlatformIntegrationsPageSkeleton from "@/components/integration/skeleton/PlatformIntegrationsSkeleton";
@@ -45,6 +49,9 @@ export default function PlatformIntegrationsPage() {
     "connect",
   );
   const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
+  const [isNaverSyncModalOpen, setIsNaverSyncModalOpen] = useState(false);
+  const [syncingProvider, setSyncingProvider] =
+    useState<TIntegrationProvider | null>(null);
 
   const [disconnectTarget, setDisconnectTarget] =
     useState<TDisconnectTarget | null>(null);
@@ -95,7 +102,15 @@ export default function PlatformIntegrationsPage() {
     },
   );
 
-  useIntegrationOAuthReturn(orgId);
+  const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
+    usePlatformSyncMutations({
+      onSyncSettled: () => setSyncingProvider(null),
+      onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
+    });
+
+  const handleNaverConnectSuccess = () => {
+    setIsNaverSyncModalOpen(true);
+  };
 
   const startNewConnect = async (provider: TIntegrationProvider) => {
     if (orgId == null) {
@@ -178,6 +193,41 @@ export default function PlatformIntegrationsPage() {
     });
   };
 
+  const handleSync = (provider: TIntegrationProvider) => {
+    if (orgId == null) {
+      toast.error("워크스페이스를 선택해 주세요.");
+      return;
+    }
+
+    if (isSyncPending) return;
+
+    const item = platformConnections.find((p) => p.provider === provider);
+    if (item?.status !== "connected") return;
+
+    if (provider === "NAVER") {
+      setIsNaverSyncModalOpen(true);
+      return;
+    }
+
+    setSyncingProvider(provider);
+
+    if (provider === "META") {
+      syncMeta(orgId);
+      return;
+    }
+
+    if (provider === "GOOGLE") {
+      syncGoogle(orgId);
+    }
+  };
+
+  const handleNaverSyncSubmit = (values: TNaverSyncFormValues) => {
+    if (orgId == null || isNaverSyncPending) return;
+
+    setSyncingProvider("NAVER");
+    syncNaver(orgId, values);
+  };
+
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
       {isLoading ? (
@@ -191,29 +241,39 @@ export default function PlatformIntegrationsPage() {
         </div>
       ) : (
         <>
-          <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
-            {platformConnections.map((item) => (
-              <li
-                key={item.provider}
-                className="flex h-full min-h-0 w-full min-w-0"
-              >
-                <PlatformIntegrationCard
-                  {...item}
-                  onConnect={() => handleConnect(item.provider)}
-                  onReconnect={() => handleConnect(item.provider)}
-                  onDisconnect={() => handleDisconnect(item)}
-                  isConnectLoading={
-                    reconnectMutation.isPending &&
-                    reconnectMutation.variables?.accountId ===
-                      item.platformAccountId
-                  }
-                />
-              </li>
-            ))}
-          </ul>
+          <ErrorBoundary
+            FallbackComponent={AreaErrorFallback}
+            resetKeys={[platformConnections]}
+          >
+            <ul className="grid w-full min-w-0 list-none grid-cols-3 items-stretch gap-6 p-0 m-0 tablet:grid-cols-1">
+              {platformConnections.map((item) => (
+                <li
+                  key={item.provider}
+                  className="flex h-full min-h-0 w-full min-w-0"
+                  data-tour={`tour-platform-${item.provider.toLowerCase()}`}
+                >
+                  <PlatformIntegrationCard
+                    {...item}
+                    onConnect={() => handleConnect(item.provider)}
+                    onReconnect={() => handleConnect(item.provider)}
+                    onDisconnect={() => handleDisconnect(item)}
+                    onSync={() => handleSync(item.provider)}
+                    isConnectLoading={
+                      reconnectMutation.isPending &&
+                      reconnectMutation.variables?.accountId ===
+                        item.platformAccountId
+                    }
+                    isSyncLoading={
+                      syncingProvider === item.provider && isSyncPending
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+          </ErrorBoundary>
 
-          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15">
-            <p className="w-full text-center font-body1 text-text-muted/70">
+          <div className="flex w-full min-w-0 flex-col items-center gap-8 pt-15 mobile:gap-6 mobile:pt-10">
+            <p className="w-full text-center font-body1-rsp text-text-muted/70">
               더 많은 플랫폼 연동을 준비하고 있어요. 지원 범위는 변경될 수
               있습니다.
             </p>
@@ -236,6 +296,18 @@ export default function PlatformIntegrationsPage() {
           orgId={orgId}
           mode={naverModalMode}
           initialCustomerId={naverCustomerId}
+          onConnectSuccess={handleNaverConnectSuccess}
+        />
+      ) : null}
+      {orgId != null ? (
+        <NaverSyncModal
+          isOpen={isNaverSyncModalOpen}
+          onClose={() => {
+            if (isNaverSyncPending) return;
+            setIsNaverSyncModalOpen(false);
+          }}
+          onSubmit={handleNaverSyncSubmit}
+          isLoading={isNaverSyncPending}
         />
       ) : null}
       <PlatformDisconnectModal

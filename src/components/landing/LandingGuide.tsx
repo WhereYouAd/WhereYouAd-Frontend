@@ -48,7 +48,7 @@ export default function LandingGuide() {
       />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
-          className="mb-16 relative"
+          className="mb-10 md:mb-16 relative"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
@@ -60,21 +60,21 @@ export default function LandingGuide() {
           />
         </motion.div>
 
-        <div className="space-y-20 md:space-y-32 relative">
+        <div className="space-y-12 md:space-y-32 relative">
           {LANDING_GUIDE_PAGES.map((page, idx) => (
             <motion.div
               key={page.number}
               ref={(el) => {
                 stepRefs.current[idx] = el;
               }}
-              className={`flex flex-col ${page.reverse ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-12`}
+              className={`flex flex-col ${page.reverse ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-6 md:gap-12`}
               initial={{ opacity: 0, y: 26 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <motion.div
-                className={`w-full md:w-1/2 rounded-3xl overflow-hidden ${
+                className={`order-last md:order-none w-full max-w-80 mx-auto md:max-w-none md:w-1/2 rounded-3xl overflow-hidden ${
                   page.useTimeline ||
                   page.usePlatform ||
                   page.useOverview ||
@@ -107,7 +107,7 @@ export default function LandingGuide() {
               </motion.div>
 
               <motion.div
-                className="w-full md:w-1/2 md:max-w-120 flex flex-col gap-5"
+                className="order-first md:order-none w-full md:w-1/2 md:max-w-120 flex flex-col gap-5"
                 initial={{ opacity: 0, x: page.reverse ? -42 : 42 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
@@ -118,7 +118,7 @@ export default function LandingGuide() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="select-none font-heading1 leading-none text-primary-400">
+                  <span className="select-none font-heading2 leading-none text-primary-400 md:font-heading1">
                     {page.number}
                   </span>
                   <span className="inline-flex items-center rounded-full bg-primary-100 px-3 py-1 font-caption text-primary-500 tracking-wide">
@@ -126,7 +126,7 @@ export default function LandingGuide() {
                   </span>
                 </div>
 
-                <h3 className="break-keep text-balance font-heading2 text-text-title">
+                <h3 className="break-keep text-balance font-heading3 text-text-title md:font-heading2">
                   {page.title}
                 </h3>
 

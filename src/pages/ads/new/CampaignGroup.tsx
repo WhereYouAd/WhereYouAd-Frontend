@@ -1,8 +1,11 @@
 import { useCampaignGroup } from "@/hooks/ads/useCampaignGroup";
 
 import CampaignPlatformDropdown from "@/components/ads/CampaignPlatformDropdown";
+import { CampaignGroupDropdownSkeleton } from "@/components/ads/skeleton/AdsSkeleton";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Input from "@/components/common/input/Input";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
@@ -28,6 +31,7 @@ export default function CampaignGroup() {
     googleCampaigns,
     naverCampaigns,
     metaCampaigns,
+    isPlatformCampaignsLoading,
     isFormValid,
     isSuccessModalOpen,
     handleCloseSuccessModal,
@@ -36,16 +40,16 @@ export default function CampaignGroup() {
   } = useCampaignGroup();
 
   return (
-    <section className="flex w-full flex-col gap-8 pb-20">
+    <section className="flex w-full flex-col gap-8 pb-20 mobile:gap-6 mobile:pb-12">
       {/* 캠페인 기본 정보 */}
-      <Card className="flex flex-col gap-8 p-8 tablet:p-10">
+      <Card className="flex flex-col gap-8 p-8 mobile:gap-6 mobile:p-5">
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">캠페인 기본 정보</h3>
-          <p className="font-body1 leading-relaxed text-text-muted">
+          <p className="font-body1-rsp leading-relaxed text-text-muted">
             워크스페이스에서 묶어 관리할 통합 캠페인 그룹의 기본 정보입니다.
           </p>
         </div>
-        <div className="flex w-full flex-col gap-10">
+        <div className="flex w-full flex-col gap-10 mobile:gap-6">
           {/* 캠페인명 */}
           <div className="flex flex-col gap-2">
             <label
@@ -83,59 +87,68 @@ export default function CampaignGroup() {
       </Card>
 
       {/* 플랫폼별 캠페인 연결 */}
-      <Card className="flex flex-col gap-8 p-8 tablet:p-10">
+      <Card className="flex flex-col gap-8 p-8 mobile:gap-6 mobile:p-5">
         <div className="flex flex-col gap-2">
           <h3 className="font-heading3 text-text-title">
             플랫폼별 캠페인 연결
           </h3>
-          <p className="font-body1 leading-relaxed text-text-muted">
+          <p className="font-body1-rsp leading-relaxed text-text-muted">
             매체별 운영 중인 캠페인을 선택해 통합 그룹에 연결합니다. 최소 1개
             매체에서 캠페인을 선택해야 합니다.
           </p>
         </div>
-        <div className="flex flex-col gap-10">
-          {/* Google */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <GoogleIcon className="w-6 h-6" />
-              <span className="font-body1 text-text-title">Google</span>
-            </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={googleCampaigns}
-              selected={googleSelected}
-              onSelect={setGoogleSelected}
-            />
-          </div>
+        <ErrorBoundary
+          FallbackComponent={AreaErrorFallback}
+          resetKeys={[googleCampaigns, naverCampaigns, metaCampaigns]}
+        >
+          {isPlatformCampaignsLoading ? (
+            <CampaignGroupDropdownSkeleton />
+          ) : (
+            <div className="flex flex-col gap-10 mobile:gap-6">
+              {/* Google */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 px-1">
+                  <GoogleIcon className="w-6 h-6" />
+                  <span className="font-body1 text-text-title">Google</span>
+                </div>
+                <CampaignPlatformDropdown
+                  placeholder="캠페인 선택"
+                  options={googleCampaigns}
+                  selected={googleSelected}
+                  onSelect={setGoogleSelected}
+                />
+              </div>
 
-          {/* NAVER */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <NaverIcon className="w-6 h-6" />
-              <span className="font-body1 text-text-title">NAVER</span>
-            </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={naverCampaigns}
-              selected={naverSelected}
-              onSelect={setNaverSelected}
-            />
-          </div>
+              {/* NAVER */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 px-1">
+                  <NaverIcon className="w-6 h-6" />
+                  <span className="font-body1 text-text-title">NAVER</span>
+                </div>
+                <CampaignPlatformDropdown
+                  placeholder="캠페인 선택"
+                  options={naverCampaigns}
+                  selected={naverSelected}
+                  onSelect={setNaverSelected}
+                />
+              </div>
 
-          {/* Meta */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 px-1">
-              <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
-              <span className="font-body1 text-text-title">Meta</span>
+              {/* Meta */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 px-1">
+                  <MetaIcon className="h-6 w-6 shrink-0 text-text-title" />
+                  <span className="font-body1 text-text-title">Meta</span>
+                </div>
+                <CampaignPlatformDropdown
+                  placeholder="캠페인 선택"
+                  options={metaCampaigns}
+                  selected={metaSelected}
+                  onSelect={setMetaSelected}
+                />
+              </div>
             </div>
-            <CampaignPlatformDropdown
-              placeholder="캠페인 선택"
-              options={metaCampaigns}
-              selected={metaSelected}
-              onSelect={setMetaSelected}
-            />
-          </div>
-        </div>
+          )}
+        </ErrorBoundary>
       </Card>
 
       <div className="flex justify-end mb-5">

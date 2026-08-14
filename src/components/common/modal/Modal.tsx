@@ -14,6 +14,28 @@ import { twMerge } from "tailwind-merge";
 
 import CloseIcon from "@/assets/icon/common/close.svg?react";
 
+const FOCUSABLE_SELECTORS = [
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "a[href]",
+  '[tabindex]:not([tabindex="-1"])',
+].join(", ");
+
+function getFocusable(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
+  ).filter(
+    (el) =>
+      el.tabIndex >= 0 &&
+      el.getClientRects().length > 0 &&
+      getComputedStyle(el).visibility !== "hidden" &&
+      !el.closest('[aria-hidden="true"]') &&
+      !el.closest("[inert]"),
+  );
+}
+
 export interface IModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,6 +46,7 @@ export interface IModalProps {
   hideCloseButton?: boolean;
   disableOverlayClick?: boolean;
   title?: string;
+  onExitComplete?: () => void;
 }
 
 const easeOut = [0, 0, 0.2, 1] as const;
@@ -39,6 +62,7 @@ function Modal({
   hideCloseButton = false,
   disableOverlayClick = false,
   title,
+  onExitComplete,
 }: IModalProps) {
   const reduceMotion = useReducedMotion();
   const modalRef = useRef<HTMLDivElement>(null);
@@ -53,14 +77,45 @@ function Modal({
   useLayoutEffect(() => {
     if (!isOpen) return;
     previousActiveElement.current = document.activeElement as HTMLElement;
-    const id = requestAnimationFrame(() => modalRef.current?.focus());
+    const id = requestAnimationFrame(() => {
+      const first = modalRef.current
+        ? getFocusable(modalRef.current)[0]
+        : undefined;
+      (first ?? modalRef.current)?.focus();
+    });
     return () => cancelAnimationFrame(id);
   }, [isOpen]);
 
   const handleExitComplete = useCallback(() => {
     setScrollLocked(false);
     previousActiveElement.current?.focus();
-  }, []);
+    onExitComplete?.();
+  }, [onExitComplete]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key !== "Tab") return;
+      const focusable = modalRef.current ? getFocusable(modalRef.current) : [];
+      if (focusable.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -73,7 +128,9 @@ function Modal({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
-  const handleOverlayClick = useCallback(
+  // mousedown으로 닫아야 드롭다운 축소 후 따라오는 click이 오버레이에
+  // 떨어져 모달이 같이 닫히는 문제를 막을 수 있음
+  const handleOverlayMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (disableOverlayClick) return;
       if (e.target === e.currentTarget) {
@@ -83,7 +140,7 @@ function Modal({
     [disableOverlayClick, onClose],
   );
 
-  const handleContentClick = useCallback(
+  const handleContentMouseDown = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
     },
@@ -130,12 +187,12 @@ function Modal({
               transition: { duration: closeMs, ease: easeIn },
             }}
             transition={{ duration: openMs, ease: easeOut }}
-            onClick={handleOverlayClick}
+            onMouseDown={handleOverlayMouseDown}
           >
             <motion.div
               ref={modalRef}
               className={twMerge(
-                "relative w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Soft",
+                "relative mx-4 w-full max-h-[90vh] overflow-auto rounded-2xl bg-surface-100 shadow-Soft",
                 sizeClasses[size],
                 paddingClasses[padding],
                 className,
@@ -148,7 +205,8 @@ function Modal({
                 transition: { duration: closeMs, ease: easeIn },
               }}
               transition={{ duration: openMs, ease: easeOut }}
-              onClick={handleContentClick}
+              onMouseDown={handleContentMouseDown}
+              onKeyDown={handleKeyDown}
               tabIndex={-1}
             >
               {title ? (

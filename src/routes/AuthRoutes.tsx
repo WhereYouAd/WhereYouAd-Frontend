@@ -7,6 +7,7 @@ import SignupEmailStepSkeleton from "@/components/auth/skeleton/SignupEmailStepS
 import SignupPageSkeleton from "@/components/auth/skeleton/SignupPageSkeleton";
 
 import { loadable } from "@/lib/loadable";
+import GoogleOAuthResultPage from "@/pages/integration/GoogleOAuthResultPage";
 import MetaOAuthResultPage from "@/pages/integration/MetaOAuthResultPage";
 
 const FindEmail = loadable(
@@ -28,6 +29,11 @@ const RedirectPage = loadable(
 );
 
 const Signup = lazy(() => import("@/pages/auth/Signup"));
+
+const InviteAcceptPage = loadable(
+  lazy(() => import("@/pages/workspace/InviteAcceptPage")),
+  <AuthFormSkeleton />,
+);
 
 function SignupPage() {
   const location = useLocation();
@@ -68,6 +74,14 @@ const AuthRoutes: RouteObject[] = [
   {
     path: "oauth2/meta/result",
     element: <MetaOAuthResultPage />,
+  },
+  {
+    path: "oauth2/google/result",
+    element: <GoogleOAuthResultPage />,
+  },
+  {
+    path: "invite/:token",
+    element: <InviteAcceptPage />,
   },
 ];
 

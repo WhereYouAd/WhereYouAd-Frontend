@@ -149,7 +149,7 @@ export default function TimelineCreateModal({
       title={isEditMode ? "타임라인 수정" : "타임라인 생성"}
       disableOverlayClick={isPending}
     >
-      <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-10">
+      <div className="flex w-full flex-col items-start px-4 pr-8 tablet:pr-0 tablet:px-0">
         <h2 className="mb-2 font-heading3 text-text-title">
           {isEditMode ? "타임라인 수정" : "타임라인 생성"}
         </h2>
@@ -161,7 +161,7 @@ export default function TimelineCreateModal({
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-10"
+          className="flex w-full flex-col gap-10 tablet:gap-8"
           noValidate
         >
           <div className="w-full space-y-7">
@@ -174,7 +174,7 @@ export default function TimelineCreateModal({
               {...register("name")}
             />
 
-            <div className="grid grid-cols-1 gap-7 tablet:grid-cols-2">
+            <div className="grid grid-cols-2 gap-7 tablet:grid-mobile-1">
               <div
                 role="presentation"
                 className={!isPending ? "cursor-pointer" : undefined}
@@ -229,7 +229,7 @@ export default function TimelineCreateModal({
                           aria-pressed={isSelected}
                           onClick={() => toggleMetric(option.value)}
                           className={twMerge(
-                            "inline-flex h-8 items-center rounded-full border px-4 font-body2 transition-colors",
+                            "inline-flex h-8 items-center rounded-full border px-4 font-body2 transition-all duration-300 ease-out active:scale-95",
                             isSelected
                               ? "border-info-blue/40 bg-info-blue/15 text-info-blue"
                               : "border-text-placeholder/40 bg-surface-200 text-text-muted hover:bg-surface-300",
@@ -260,6 +260,7 @@ export default function TimelineCreateModal({
                 render={() => (
                   <DropdownMenu
                     fullWidth
+                    inFlow
                     aria-label="비교 기간 선택"
                     items={comparisonMenuItems}
                     trigger={(open) => (

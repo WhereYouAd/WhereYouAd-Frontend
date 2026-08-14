@@ -1,6 +1,32 @@
+import type { TPlatformBudgetType } from "@/types/ads/budget";
+
 export type TPlatform = "meta" | "google" | "naver"; //UI
 export type TProvider = "META" | "GOOGLE" | "NAVER"; //API
 export type TStatus = "ON_GOING" | "PAUSED" | "OVER";
+
+/**
+ * GET /api/project/{orgId}/{projectId} — platformBudgets[] 항목
+ * OpenAPI: PlatformBudgetSummary
+ */
+export interface INaverBudgetTarget {
+  connectionId: number;
+  campaignId: string;
+}
+
+export interface IPlatformBudgetSummary {
+  provider: TProvider;
+  budgetType: TPlatformBudgetType;
+  budget: number;
+  spend: number;
+  remainingBudget: number;
+  remainingPercentage: number;
+  /** Meta / Google 예산 수정 path */
+  adCampaignId?: number | null;
+  adCampaignName?: string;
+  /** Naver 예산 수정 path */
+  naverBudgetTarget?: INaverBudgetTarget | null;
+  canEditBudget?: boolean;
+}
 
 // Ad List
 export interface IAd {
@@ -34,9 +60,11 @@ export interface ICampaign {
 
 // Campaign Detail
 export interface ICampaignDetail extends ICampaign {
+  /** @deprecated BE platformBudgets 전환 후 제거 예정 */
   budget: number;
   createdAt: string;
   ads: IAd[];
+  platformBudgets?: IPlatformBudgetSummary[];
 }
 
 export interface IPlatformCampaign {

@@ -1,27 +1,28 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
+import { useUpdateCampaignStatus } from "@/hooks/ads/useUpdateCampaignStatus";
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
 import CampaignTable from "@/components/ads/CampaignTable";
+import AdsListPageSkeleton from "@/components/ads/skeleton/AdsSkeleton";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
+import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
+import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 import Modal from "@/components/common/modal/Modal";
 import ModalContent from "@/components/common/modal/ModalContent";
 
-import { updateAllCampaignStatus, updateCampaignStatus } from "@/api/ads/ads";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
-import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function AdsListPage() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
   const { data: campaigns = [], isLoading } = useOverviewCampaignList();
+  const { mutateAsync: mutateCampaignStatus } = useUpdateCampaignStatus(orgId);
 
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<number>>(
     () => new Set(),
@@ -29,12 +30,6 @@ export default function AdsListPage() {
 
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
-
-  const invalidateCampaigns = useCallback(() => {
-    void queryClient.invalidateQueries({
-      queryKey: QUERY_KEYS.campaign.list(orgId),
-    });
-  }, [queryClient, orgId]);
 
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set());
@@ -100,19 +95,13 @@ export default function AdsListPage() {
   const bulkStop = useControlModal({
     successMessage: "캠페인 운영 상태가 반영되었습니다.",
     errorMessage: "중단 처리에 실패하였습니다.",
-    onSuccess: () => {
-      invalidateCampaigns();
-      clearSelection();
-    },
+    onSuccess: clearSelection,
   });
 
   const bulkResume = useControlModal({
     successMessage: "캠페인 운영 상태가 반영되었습니다.",
     errorMessage: "재개 처리에 실패하였습니다.",
-    onSuccess: () => {
-      invalidateCampaigns();
-      clearSelection();
-    },
+    onSuccess: clearSelection,
   });
 
   const openPauseModal = () => {
@@ -152,20 +141,14 @@ export default function AdsListPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex h-[90vh] items-center justify-center">
-        <p className="font-body1 text-text-placeholder">
-          데이터를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <AdsListPageSkeleton />;
   }
 
   return (
     <section className="flex w-full flex-col">
       <Card className="flex flex-col overflow-hidden p-0">
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5">
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-surface-400/45 bg-surface-100 px-6 py-4 tablet:px-5 tablet:py-3.5 mobile:flex-col mobile:items-stretch mobile:px-3">
+          <div className="flex min-w-0 flex-1 flex-col gap-0.5 mobile:flex-none">
             <p className="font-caption text-text-placeholder">광고</p>
             <div className="flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1">
               <h2 className="font-heading3 text-text-title">캠페인 목록</h2>
@@ -185,30 +168,34 @@ export default function AdsListPage() {
               ) : null}
             </div>
           </div>
-          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-            <Button
-              type="button"
-              size="small"
-              variant="dangerSoft"
-              onClick={openPauseModal}
-              disabled={!canPause || bulkStop.isLoading}
-            >
-              중단
-            </Button>
-            <Button
-              type="button"
-              size="small"
-              variant="outline"
-              className="border-info-blue text-info-blue hover:bg-info-blue/5"
-              onClick={openResumeModal}
-              disabled={!canResume || bulkResume.isLoading}
-            >
-              재개
-            </Button>
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-2 mobile:w-full mobile:flex-col mobile:items-stretch">
+            <div className="flex items-center gap-2 mobile:w-full">
+              <Button
+                type="button"
+                size="small"
+                variant="dangerSoft"
+                className="mobile:min-w-0 mobile:flex-1"
+                onClick={openPauseModal}
+                disabled={!canPause || bulkStop.isLoading}
+              >
+                중단
+              </Button>
+              <Button
+                type="button"
+                size="small"
+                variant="outline"
+                className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
+                onClick={openResumeModal}
+                disabled={!canResume || bulkResume.isLoading}
+              >
+                재개
+              </Button>
+            </div>
             <Button
               type="button"
               size="small"
               variant="gradient"
+              className="mobile:w-full"
               onClick={handleCampaignGroupClick}
             >
               통합 캠페인 등록
@@ -217,14 +204,19 @@ export default function AdsListPage() {
         </div>
 
         <div className="min-w-0 flex-1">
-          <CampaignTable
-            embedded
-            campaigns={campaigns}
-            onRowClick={(id) => handleCampaignClick(id)}
-            selectedProjectIds={selectedIds}
-            onToggleProject={toggleProject}
-            onToggleSelectAllVisible={toggleSelectAllVisible}
-          />
+          <ErrorBoundary
+            FallbackComponent={AreaErrorFallback}
+            resetKeys={[campaigns]}
+          >
+            <CampaignTable
+              embedded
+              campaigns={campaigns}
+              onRowClick={(id) => handleCampaignClick(id)}
+              selectedProjectIds={selectedIds}
+              onToggleProject={toggleProject}
+              onToggleSelectAllVisible={toggleSelectAllVisible}
+            />
+          </ErrorBoundary>
         </div>
       </Card>
 
@@ -249,18 +241,14 @@ export default function AdsListPage() {
           detailListTitle="중단 대상 캠페인"
           buttonText="중단하기"
           onConfirm={() =>
-            bulkStop.handleConfirm(async () => {
-              if (!orgId) return;
-              if (pauseScope === "all") {
-                await updateAllCampaignStatus(orgId, "PAUSED");
-              } else {
-                await Promise.all(
-                  selectedOngoingIds.map((projectId) =>
-                    updateCampaignStatus(orgId, projectId, "PAUSED"),
-                  ),
-                );
-              }
-            })
+            bulkStop.handleConfirm(() =>
+              mutateCampaignStatus({
+                scope: pauseScope,
+                status: "PAUSED",
+                projectIds:
+                  pauseScope === "selection" ? selectedOngoingIds : undefined,
+              }),
+            )
           }
           isLoading={bulkStop.isLoading}
           variant="danger"
@@ -288,18 +276,14 @@ export default function AdsListPage() {
           detailListTitle="재개 대상 캠페인"
           buttonText="재개하기"
           onConfirm={() =>
-            bulkResume.handleConfirm(async () => {
-              if (!orgId) return;
-              if (resumeScope === "all") {
-                await updateAllCampaignStatus(orgId, "ON_GOING");
-              } else {
-                await Promise.all(
-                  selectedPausedIds.map((projectId) =>
-                    updateCampaignStatus(orgId, projectId, "ON_GOING"),
-                  ),
-                );
-              }
-            })
+            bulkResume.handleConfirm(() =>
+              mutateCampaignStatus({
+                scope: resumeScope,
+                status: "ON_GOING",
+                projectIds:
+                  resumeScope === "selection" ? selectedPausedIds : undefined,
+              }),
+            )
           }
           isLoading={bulkResume.isLoading}
           variant="primary"

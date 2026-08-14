@@ -37,7 +37,7 @@ export default function TimelineGrid({
       )}
     >
       <div
-        className="relative min-h-0 flex-1"
+        className="relative min-h-full flex-1 bg-surface-200"
         style={{ minHeight: `max(${bodyHeight}px, 100%)` }}
       >
         {columns.map((column, i) => (

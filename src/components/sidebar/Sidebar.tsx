@@ -1,5 +1,5 @@
 import type { Dispatch, FocusEvent, SetStateAction } from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
@@ -12,6 +12,7 @@ import { mainNavSidebar } from "@/utils/navigation/mainNavSidebar";
 import { isPathMatch } from "@/utils/navigation/pathMatch";
 import { applyWorkspacePathsToNav } from "@/utils/navigation/workspaceNavPaths";
 
+import { useLogout } from "@/hooks/auth/useLogout";
 import { useComingSoon } from "@/hooks/common/useComingSoon";
 import { useCoreQuery } from "@/hooks/customQuery";
 import {
@@ -22,6 +23,7 @@ import { useSidebar } from "@/hooks/sidebar/useSidebar";
 
 import Badge from "@/components/common/badge/Badge";
 
+import LogoutConfirmModal from "./LogoutConfirmModal";
 import { SidebarItem } from "./SidebarItem";
 import { SubMenu } from "./SubMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
@@ -50,7 +52,7 @@ function getMainItemClass(isActive: boolean, isCollapsed: boolean) {
     "flex cursor-pointer items-center rounded-2xl px-3 font-body2 transition-colors duration-200",
     isCollapsed
       ? "h-[55px] w-[55px] mx-auto flex justify-center"
-      : "h-[55px] gap-4 px-3",
+      : "h-[55px] w-full gap-4 px-3",
     isActive
       ? "bg-primary-400 text-surface-100"
       : "text-text-auth-sub hover:bg-surface-200",
@@ -85,12 +87,15 @@ function collapsedSubmenuInteractionProps(
 export default function Sidebar() {
   const {
     isCollapsed,
+    isCollapsedStore,
+    isMobileOpen,
     openId,
     setOpenId,
     handleItemClick,
     pathname,
     toggleSidebar,
     toggleOpenId,
+    closeMobileDrawer,
   } = useSidebar();
 
   const { showComingSoon } = useComingSoon();
@@ -126,6 +131,23 @@ export default function Sidebar() {
       filterNavByRole(applyWorkspacePathsToNav(mainNav, selectedOrgId), myRole),
     [selectedOrgId, myRole],
   );
+  const footerNavByRole = useMemo(
+    () => filterNavByRole(footerNav, myRole),
+    [myRole],
+  );
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const { mutate: logoutMutate, isPending: isLogoutPending } = useLogout();
+
+  const openLogoutModal = useCallback(() => setIsLogoutModalOpen(true), []);
+  const closeLogoutModal = useCallback(() => {
+    if (isLogoutPending) return;
+    setIsLogoutModalOpen(false);
+  }, [isLogoutPending]);
+
+  const handleLogoutConfirm = useCallback(() => {
+    logoutMutate(undefined);
+  }, [logoutMutate]);
 
   const handleFooterItemClick = useCallback(
     (id: string, hasChildren: boolean) => {
@@ -133,9 +155,13 @@ export default function Sidebar() {
         showComingSoon("알림 기능은 준비 중이에요. 나중에 다시 확인해 주세요.");
         return;
       }
+      if (id === "logout") {
+        openLogoutModal();
+        return;
+      }
       handleItemClick(id, hasChildren);
     },
-    [handleItemClick, showComingSoon],
+    [handleItemClick, openLogoutModal, showComingSoon],
   );
 
   return (
@@ -148,7 +174,7 @@ export default function Sidebar() {
       transition={{ type: "spring", stiffness: 320, damping: 34 }}
     >
       <div className="mx-auto mt-5 flex w-full max-w-58 flex-1 flex-col min-h-0">
-        <div className="px-2">
+        <div className="px-2" data-tour="tour-workspace-switcher">
           <WorkspaceSwitcher isCollapsed={isCollapsed} />
         </div>
 
@@ -178,18 +204,22 @@ export default function Sidebar() {
                 key={item.id}
                 className="relative flex flex-col"
                 {...collapsedSubmenuInteractionProps(
-                  isCollapsed && !!item.children?.length,
+                  isCollapsedStore && !isMobileOpen && !!item.children?.length,
                   item.id,
                   setOpenId,
                 )}
               >
-                <div className={getMainItemClass(isParentActive, isCollapsed)}>
+                <div
+                  className={getMainItemClass(isParentActive, isCollapsed)}
+                  data-tour={`tour-${item.id}`}
+                >
                   <SidebarItem
                     item={item}
                     isCollapsed={isCollapsed}
                     isOpen={isOpen}
                     className="flex-1 h-full"
                     onClick={handleItemClick}
+                    onNavigate={closeMobileDrawer}
                   />
                   {showChevron && (
                     <button
@@ -222,8 +252,9 @@ export default function Sidebar() {
                     <SubMenu
                       key={item.id}
                       items={item.children}
-                      isCollapsed={isCollapsed}
+                      isCollapsed={isCollapsedStore && !isMobileOpen}
                       parentLabel={item.label}
+                      onNavigate={closeMobileDrawer}
                     />
                   ) : null}
                 </AnimatePresence>
@@ -235,24 +266,27 @@ export default function Sidebar() {
         <div
           className={twMerge("mt-2 pb-3 shrink-0", isCollapsed ? "" : "px-2")}
         >
-          {footerNav.map((item) => {
+          {footerNavByRole.map((item) => {
             const isActive =
               item.path != null ? isPathMatch(pathname, item.path) : false;
+            const isIntegrationsAttention =
+              item.id === "integrations" && showIntegrationsAttention;
 
             return (
               <div
                 key={item.id}
                 className={getFooterItemClass(isActive, isCollapsed)}
+                data-tour={`tour-${item.id}`}
               >
                 <SidebarItem
                   item={item}
                   isCollapsed={isCollapsed}
                   className="w-full h-full"
                   onClick={handleFooterItemClick}
+                  onNavigate={closeMobileDrawer}
+                  showAttention={isIntegrationsAttention}
                   trailing={
-                    item.id === "integrations" &&
-                    showIntegrationsAttention &&
-                    !isCollapsed ? (
+                    isIntegrationsAttention && !isCollapsed ? (
                       <Badge variant="infoRed">연동 필요</Badge>
                     ) : undefined
                   }
@@ -261,15 +295,15 @@ export default function Sidebar() {
             );
           })}
 
-          <div className="mt-2 pt-2 border-t border-surface-300">
+          <div className="mt-2 border-t border-surface-300 pt-2 tablet:hidden">
             <button
               type="button"
               aria-label={isCollapsed ? "사이드바 펼치기" : "사이드바 접기"}
               onClick={toggleSidebar}
               className={twMerge(
-                "flex h-[55px] items-center rounded-2xl font-body2 transition-all duration-200",
+                "flex h-13.75 items-center rounded-2xl font-body2 transition-all duration-200",
                 isCollapsed
-                  ? "mx-auto w-[55px] justify-center px-0"
+                  ? "mx-auto w-13.75 justify-center px-0"
                   : "w-full gap-4 px-3",
                 "text-text-auth-sub hover:text-primary-400 hover:bg-surface-200",
               )}
@@ -293,6 +327,12 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        onClose={closeLogoutModal}
+        onConfirm={handleLogoutConfirm}
+        isLoading={isLogoutPending}
+      />
     </motion.div>
   );
 }

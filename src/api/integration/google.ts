@@ -1,4 +1,5 @@
 import type { ICommonResponse } from "@/types/common/common";
+import type { IGoogleSyncData } from "@/types/integration/platformSync";
 
 import { axiosInstance } from "@/lib/axiosInstance";
 
@@ -29,4 +30,11 @@ export async function startGoogleOAuthLogin(orgId: number): Promise<void> {
   }
 
   window.location.assign(redirectUrl);
+}
+
+export async function syncGoogleAdData(): Promise<IGoogleSyncData> {
+  const { data } = await axiosInstance.post<ICommonResponse<IGoogleSyncData>>(
+    "/api/google/ad-infos",
+  );
+  return data.data;
 }

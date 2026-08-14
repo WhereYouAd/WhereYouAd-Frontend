@@ -2,6 +2,12 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import {
+  AUTH_RETURN_URL_KEY,
+  buildPathWithReturnUrl,
+  getSafeReturnUrl,
+} from "@/utils/auth/returnUrl";
+
 import useAuthStore from "@/store/useAuthStore";
 
 export default function RedirectPage() {
@@ -24,6 +30,9 @@ export default function RedirectPage() {
         name + "=; Max-Age=0; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     };
 
+    const storedReturnUrl = sessionStorage.getItem(AUTH_RETURN_URL_KEY);
+    sessionStorage.removeItem(AUTH_RETURN_URL_KEY);
+
     const accessToken = getCookie("access_token");
 
     if (accessToken) {
@@ -31,10 +40,17 @@ export default function RedirectPage() {
       setAccessToken(accessToken);
 
       toast.success("소셜 로그인되었습니다.");
-      navigate("/dashboard", { replace: true });
+      const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
+      if (isFirstLogin) {
+        navigate("/workspace", { replace: true });
+      } else {
+        navigate(getSafeReturnUrl(storedReturnUrl), { replace: true });
+      }
     } else {
       toast.error("소셜 로그인에 실패했습니다. 다시 시도해주세요.");
-      navigate("/login", { replace: true });
+      navigate(buildPathWithReturnUrl("/login", storedReturnUrl), {
+        replace: true,
+      });
     }
   }, [navigate, setAccessToken]);
 

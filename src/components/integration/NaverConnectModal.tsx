@@ -26,6 +26,8 @@ interface INaverConnectModalProps {
   orgId: number;
   mode?: TNaverConnectMode;
   initialCustomerId?: string;
+  /** 최초 connect success 직후 sync 모달 오픈 (reconnect 제외) */
+  onConnectSuccess?: () => void;
 }
 
 type TNaverConnectFormValues = z.infer<typeof naverConnectSchema>;
@@ -36,6 +38,7 @@ export default function NaverConnectModal({
   orgId,
   mode = "connect",
   initialCustomerId,
+  onConnectSuccess,
 }: INaverConnectModalProps) {
   const {
     register,
@@ -82,6 +85,9 @@ export default function NaverConnectModal({
         );
         reset();
         onClose();
+        if (mode === "connect") {
+          onConnectSuccess?.();
+        }
       },
       userOnError: (error) => {
         toast.error(
