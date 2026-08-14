@@ -1,6 +1,9 @@
 import { twMerge } from "tailwind-merge";
 
-import type { INotificationHistoryItem } from "@/types/notification/notification";
+import type {
+  INotificationHistoryItem,
+  TNotificationType,
+} from "@/types/notification/notification";
 
 import TrendDownIcon from "@/assets/icon/chevron/trend-down.svg?react";
 import TrendUpIcon from "@/assets/icon/chevron/trend-up.svg?react";
@@ -27,19 +30,30 @@ function getClickTrend(item: INotificationHistoryItem): "up" | "down" | null {
   return null;
 }
 
+function getNotificationRowClass(
+  type: TNotificationType,
+  trend: "up" | "down" | null,
+): string {
+  if (type === "REPORT") return "bg-surface-200";
+  if (trend === "up") return "bg-info-red/[0.08]";
+  if (trend === "down") return "bg-info-blue/[0.08]";
+  return "";
+}
+
 export default function NotificationItem({ item }: INotificationItemProps) {
   const trend = getClickTrend(item);
+  const rowClass = getNotificationRowClass(item.type, trend);
   return (
     <li
       className={twMerge(
         "flex gap-3 rounded-2xl px-3 py-3",
-        !item.isRead && "bg-primary-100",
+        !item.isRead && rowClass,
       )}
     >
       <span
         className={twMerge(
           "mt-2 h-2 w-2 shrink-0 rounded-full",
-          item.isRead ? "bg-transparent" : "bg-text-body",
+          item.isRead ? "bg-transparent" : "bg-text-placeholder",
         )}
         aria-hidden
       />

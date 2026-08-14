@@ -5,6 +5,14 @@ export const MOCK_NOTIFICATION_HISTORY: INotificationHistoryData = {
   nextCursor: null,
   notifications: [
     {
+      userNotificationId: 4,
+      title: "주간 리포트",
+      message: "이번 주 성과 리포트가 이메일로 발송되었습니다.",
+      createdAt: "2026-08-13T23:00:00.000Z",
+      type: "REPORT",
+      isRead: false,
+    },
+    {
       userNotificationId: 3,
       title: "클릭수 급감 알림",
       message: "오늘 클릭수가 전일 대비 13% 감소했습니다",

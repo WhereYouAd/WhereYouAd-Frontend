@@ -20,7 +20,7 @@ export interface INotificationMemberSetting {
   isReceive: boolean;
 }
 
-export type TNotificationType = "CLICKS";
+export type TNotificationType = "CLICKS" | "REPORT";
 
 export interface INotificationHistoryItem {
   userNotificationId: number;
