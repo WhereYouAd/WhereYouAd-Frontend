@@ -7,7 +7,7 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const MOCK_LOADING_MS = 400;
 
-//API 연동전 mock데이터 활용을 위함. API함수추가시 삭제예정
+//API 연동전 mock데이터 활용을 위함. API함수추가시 삭제 예정
 async function getMockNotificationHistory(): Promise<INotificationHistoryData> {
   await new Promise((resolve) => setTimeout(resolve, MOCK_LOADING_MS));
   return MOCK_NOTIFICATION_HISTORY;

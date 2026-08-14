@@ -14,7 +14,12 @@ export default function NotificationPanel({
   children,
 }: INotificationPanelProps) {
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="알림">
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title="알림"
+      className="max-w-90 h-auto min-h-[min(72vh,560px)] my-4 rounded-l-3xl"
+    >
       {children}
     </Drawer>
   );
