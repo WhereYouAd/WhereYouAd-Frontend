@@ -8,7 +8,9 @@ import {
   getSafeReturnUrl,
 } from "@/utils/auth/returnUrl";
 
+import { queryClient } from "@/lib/queryClient";
 import useAuthStore from "@/store/useAuthStore";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export default function RedirectPage() {
   const navigate = useNavigate();
@@ -37,6 +39,8 @@ export default function RedirectPage() {
 
     if (accessToken) {
       deleteCookie("access_token");
+      queryClient.clear();
+      useWorkspaceStore.getState().reset();
       setAccessToken(accessToken);
 
       toast.success("소셜 로그인되었습니다.");
