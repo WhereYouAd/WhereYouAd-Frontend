@@ -18,6 +18,8 @@ export default function NotificationBell() {
   const togglePanel = () => setIsOpen((prev) => !prev);
 
   const badgeLabel = unreadCount > 99 ? "99+" : String(unreadCount);
+  const badgeSizeClass =
+    unreadCount > 99 ? "h-4.5 w-6.5" : unreadCount < 10 ? "h-4 w-4" : "h-4 w-5";
 
   return (
     <>
@@ -34,8 +36,8 @@ export default function NotificationBell() {
         {unreadCount > 0 ? (
           <span
             className={twMerge(
-              "absolute top-0 right-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-info-red font-caption text-surface-100",
-              unreadCount > 99 ? "h-4.5 w-6.5" : "h-4 w-5",
+              "absolute top-0 right-0.5 flex items-center justify-center rounded-full bg-info-red font-caption text-surface-100",
+              badgeSizeClass,
             )}
           >
             {badgeLabel}
