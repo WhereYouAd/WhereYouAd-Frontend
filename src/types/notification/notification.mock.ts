@@ -44,11 +44,3 @@ export const MOCK_NOTIFICATION_HISTORY_EMPTY: INotificationHistoryData = {
   nextCursor: null,
   notifications: [],
 };
-
-export const MOCK_NOTIFICATION_HISTORY_BY_ORG_ID: Record<
-  number,
-  INotificationHistoryData
-> = {
-  1: MOCK_NOTIFICATION_HISTORY,
-  2: MOCK_NOTIFICATION_HISTORY_EMPTY,
-};

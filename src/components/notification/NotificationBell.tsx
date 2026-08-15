@@ -28,13 +28,13 @@ export default function NotificationBell() {
         aria-haspopup="dialog"
         onClick={togglePanel}
         // onMouseEnter={openPanel}
-        className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-surface-200 hover:text-text-title"
+        className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-title transition-colors hover:bg-surface-200 hover:text-text-muted"
       >
-        <BellIcon className="h-5 w-5" />
+        <BellIcon className="h-6.5 w-6.5" />
         {unreadCount > 0 ? (
           <span
             className={twMerge(
-              "absolute -top-0.5 -right-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-info-red font-caption text-surface-100",
+              "absolute top-0 right-0.5 flex min-w-4.5 items-center justify-center rounded-full bg-info-red font-caption text-surface-100",
               unreadCount > 99 ? "h-4.5 w-6.5" : "h-4 w-5",
             )}
           >

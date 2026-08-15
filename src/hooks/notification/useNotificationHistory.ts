@@ -1,8 +1,5 @@
 import type { INotificationHistoryData } from "@/types/notification/notification";
-import {
-  MOCK_NOTIFICATION_HISTORY_BY_ORG_ID,
-  MOCK_NOTIFICATION_HISTORY_EMPTY,
-} from "@/types/notification/notification.mock";
+import { MOCK_NOTIFICATION_HISTORY } from "@/types/notification/notification.mock";
 
 import { useCoreQuery } from "@/hooks/customQuery";
 
@@ -11,14 +8,9 @@ import useWorkspaceStore from "@/store/useWorkspaceStore";
 const MOCK_LOADING_MS = 400;
 
 //API 연동전 mock데이터 활용을 위함. API함수추가시 삭제 예정
-async function getMockNotificationHistory(
-  orgId: number,
-): Promise<INotificationHistoryData> {
+async function getMockNotificationHistory(): Promise<INotificationHistoryData> {
   await new Promise((resolve) => setTimeout(resolve, MOCK_LOADING_MS));
-  return (
-    MOCK_NOTIFICATION_HISTORY_BY_ORG_ID[orgId] ??
-    MOCK_NOTIFICATION_HISTORY_EMPTY
-  );
+  return MOCK_NOTIFICATION_HISTORY;
 }
 
 export function useNotificationHistory() {
@@ -26,7 +18,7 @@ export function useNotificationHistory() {
 
   const query = useCoreQuery(
     ["notification-history", orgId],
-    () => getMockNotificationHistory(orgId!),
+    () => getMockNotificationHistory(),
     { enabled: orgId != null },
   );
 
