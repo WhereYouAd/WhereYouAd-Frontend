@@ -28,7 +28,7 @@ export default function NotificationBell() {
         aria-haspopup="dialog"
         onClick={togglePanel}
         // onMouseEnter={openPanel}
-        className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-title transition-colors hover:bg-surface-200 hover:text-text-muted"
+        className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-title transition-colors hover:bg-surface-200 hover:text-text-body"
       >
         <BellIcon className="h-6.5 w-6.5" />
         {unreadCount > 0 ? (
