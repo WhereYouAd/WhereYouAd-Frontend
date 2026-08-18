@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -8,9 +7,9 @@ import { useCoreMutation } from "@/hooks/customQuery";
 
 import { postLogout } from "@/api/auth/auth";
 import useAuthStore from "@/store/useAuthStore";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 export function useLogout() {
-  const nav = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const queryClient = useQueryClient();
 
@@ -18,8 +17,9 @@ export function useLogout() {
     userOnSuccess: () => {
       toast.success("로그아웃이 완료되었습니다");
       queryClient.clear();
+      useWorkspaceStore.getState().reset();
       logout();
-      nav("/", { replace: true });
+      window.location.replace("/");
     },
     userOnError: (error) => {
       const apiError = error as IApiErrorResponse;

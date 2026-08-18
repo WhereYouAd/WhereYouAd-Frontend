@@ -20,6 +20,7 @@ import {
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import OnboardingTour from "@/components/common/OnboardingTour";
+import NotificationBell from "@/components/notification/NotificationBell";
 import Sidebar from "@/components/sidebar/Sidebar";
 
 import { getMyInfo } from "@/api/auth/auth";
@@ -44,6 +45,7 @@ export default function MainLayout() {
 
   const setSelectedOrgId = useWorkspaceStore((s) => s.setSelectedOrgId);
   const setMyRole = useWorkspaceStore((s) => s.setMyRole);
+  const resetWorkspace = useWorkspaceStore((s) => s.reset);
   const myRole = useWorkspaceStore((s) => s.myRole);
 
   const savedWorkspaceQuery = useCoreQuery(
@@ -66,21 +68,32 @@ export default function MainLayout() {
   );
 
   useEffect(() => {
-    if (!workspaces?.length || !savedWorkspaceQuery.isFetched) return;
+    // undefined: 로딩 중 / []: 워크스페이스 없음(유효한 결과)
+    if (!workspaces || !savedWorkspaceQuery.isFetched) return;
 
-    // orgId는 있는데 myRole만 null/불일치인 경우(새로고침 등) 역할 동기화
-    if (selectedOrgId !== null) {
-      const workspace = workspaces.find((w) => w.orgId === selectedOrgId);
-      if (workspace && myRole !== workspace.myRole) {
-        setMyRole(workspace.myRole);
+    if (workspaces.length === 0) {
+      if (selectedOrgId !== null || myRole !== null) {
+        resetWorkspace();
       }
       return;
+    }
+
+    // 현재 유저 목록에 있는 orgId만 유지 (+ role 동기화)
+    // 목록에 없으면 return하지 않고 아래 saved/current 초기화로 계속
+    if (selectedOrgId !== null) {
+      const workspace = workspaces.find((w) => w.orgId === selectedOrgId);
+      if (workspace) {
+        if (myRole !== workspace.myRole) {
+          setMyRole(workspace.myRole);
+        }
+        return;
+      }
     }
 
     const savedId = savedData?.orgId;
     const isExist = workspaces.some((w) => w.orgId === savedId);
 
-    // 1. 현재 워크스페이스 조회 API 데이터 (저장된 워크스페이스가 있는 경우)
+    // 1. 저장된 워크스페이스가 현재 유저 목록에 있으면 선택
     if (savedId !== undefined && isExist) {
       const workspace = workspaces.find((w) => w.orgId === savedId);
       setSelectedOrgId(savedId);
@@ -99,6 +112,7 @@ export default function MainLayout() {
     savedData,
     setSelectedOrgId,
     setMyRole,
+    resetWorkspace,
     selectedOrgId,
     myRole,
   ]);
@@ -274,8 +288,9 @@ export default function MainLayout() {
               )}
             </div>
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex items-center gap-2">
               {headerRight}
+              <NotificationBell />
             </div>
           </div>
         </header>
