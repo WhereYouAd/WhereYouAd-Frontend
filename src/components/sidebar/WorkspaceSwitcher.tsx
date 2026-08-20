@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -21,6 +21,7 @@ export function WorkspaceSwitcher({
   className?: string;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const latestSaveOrgIdRef = useRef<number | null>(null);
@@ -69,6 +70,10 @@ export function WorkspaceSwitcher({
         const workspace = workspaceList.find((w) => w.orgId === orgId);
         setSelectedOrgId(orgId);
         if (workspace) setMyRole(workspace.myRole);
+
+        if (/^\/ads\/\d+\/\d+/.test(location.pathname)) {
+          navigate("/ads", { replace: true });
+        }
       },
       userOnError: (error, orgId) => {
         if (latestSaveOrgIdRef.current === orgId) {
