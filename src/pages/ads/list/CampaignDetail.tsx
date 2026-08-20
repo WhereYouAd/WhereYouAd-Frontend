@@ -62,18 +62,25 @@ export default function CampaignDetail() {
   }>();
   const orgIdNum = orgId ? Number(orgId) : null;
   const projectIdNum = projectId ? Number(projectId) : null;
+  const isOrgMatched =
+    selectedOrgId != null && orgIdNum != null && orgIdNum === selectedOrgId;
+
   useEffect(() => {
     if (selectedOrgId == null || orgIdNum == null) return;
-    if (orgIdNum !== selectedOrgId) {
+    if (!isOrgMatched) {
       navigate("/ads", { replace: true });
     }
-  }, [selectedOrgId, orgIdNum, navigate]);
-  const { data, isLoading } = useCampaignDetail();
+  }, [selectedOrgId, orgIdNum, isOrgMatched, navigate]);
 
-  const { ads, isAdLoading } = useAdList(orgIdNum, projectIdNum);
+  const { data, isLoading } = useCampaignDetail({ enabled: isOrgMatched });
+
+  const { ads, isAdLoading } = useAdList(
+    isOrgMatched ? orgIdNum : null,
+    isOrgMatched ? projectIdNum : null,
+  );
   const { mutateAsync: mutateAdStatus } = useUpdateAdStatus(
-    orgIdNum,
-    projectIdNum,
+    isOrgMatched ? orgIdNum : null,
+    isOrgMatched ? projectIdNum : null,
   );
 
   const { setCampaignDetailHeaderTitle } =
@@ -231,6 +238,10 @@ export default function CampaignDetail() {
 
   useEffect(() => {
     if (!setCampaignDetailHeaderTitle) return;
+    if (!isOrgMatched) {
+      setCampaignDetailHeaderTitle(null);
+      return undefined;
+    }
     if (data?.name) {
       setCampaignDetailHeaderTitle(data.name);
       return () => {
@@ -239,7 +250,12 @@ export default function CampaignDetail() {
     }
     setCampaignDetailHeaderTitle(null);
     return undefined;
-  }, [data?.name, setCampaignDetailHeaderTitle]);
+  }, [data?.name, isOrgMatched, setCampaignDetailHeaderTitle]);
+
+  // 선택 워크스페이스와 URL org 불일치/미확정 시 상세·캐시 노출 방지
+  if (!isOrgMatched) {
+    return <CampaignDetailPageSkeleton />;
+  }
 
   if (isLoading) {
     return <CampaignDetailPageSkeleton />;
