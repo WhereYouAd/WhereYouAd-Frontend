@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
 
@@ -32,6 +32,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   naver: "NAVER",
@@ -53,13 +54,20 @@ function providerWordmark(provider: string): string {
 }
 
 export default function CampaignDetail() {
+  const navigate = useNavigate();
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
   const orgIdNum = orgId ? Number(orgId) : null;
   const projectIdNum = projectId ? Number(projectId) : null;
-
+  useEffect(() => {
+    if (selectedOrgId == null || orgIdNum == null) return;
+    if (orgIdNum !== selectedOrgId) {
+      navigate("/ads", { replace: true });
+    }
+  }, [selectedOrgId, orgIdNum, navigate]);
   const { data, isLoading } = useCampaignDetail();
 
   const { ads, isAdLoading } = useAdList(orgIdNum, projectIdNum);
