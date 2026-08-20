@@ -71,8 +71,20 @@ export function WorkspaceSwitcher({
         setSelectedOrgId(orgId);
         if (workspace) setMyRole(workspace.myRole);
 
-        if (/^\/ads\/\d+\/\d+/.test(location.pathname)) {
+        const path = location.pathname;
+
+        // 캠페인 상세 → 목록
+        if (/^\/ads\/\d+\/\d+/.test(path)) {
           navigate("/ads", { replace: true });
+          return;
+        }
+
+        // 워크스페이스 설정/멤버/결제 → 같은 하위 경로로 org만 교체
+        const wsMatch = path.match(
+          /^\/workspace\/\d+\/(settings|members|billing)$/,
+        );
+        if (wsMatch) {
+          navigate(`/workspace/${orgId}/${wsMatch[1]}`, { replace: true });
         }
       },
       userOnError: (error, orgId) => {
