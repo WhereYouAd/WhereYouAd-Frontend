@@ -326,12 +326,12 @@ export default function WorkspaceSetting() {
                             setImageError(true);
                           }}
                         />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-text-400/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
+                        <span className="absolute inset-0 flex flex-col items-center justify-center bg-text-400/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
                           <UpLoadImgIcon className="mb-1 h-6 w-6 text-surface-100" />
                           <span className="font-caption text-surface-100">
                             사진 변경
                           </span>
-                        </div>
+                        </span>
                       </>
                     ) : (
                       <span className="font-heading1">{logoInitial}</span>
