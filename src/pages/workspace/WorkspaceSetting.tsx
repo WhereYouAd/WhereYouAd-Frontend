@@ -51,7 +51,6 @@ export default function WorkspaceSetting() {
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
-  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [transferOpen, setTransferOpen] = useState(false);
 
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
@@ -202,10 +201,6 @@ export default function WorkspaceSetting() {
 
   const onDelete = () => {
     if (orgId === null) return;
-    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
-      toast.error("워크스페이스 이름이 일치하지 않습니다");
-      return;
-    }
     deleteMutation.mutate(orgId);
   };
 
@@ -216,7 +211,6 @@ export default function WorkspaceSetting() {
       return;
     }
     setDeleteNameSnapshot(snapshot);
-    setDeleteConfirmInput("");
     setDeleteOpen(true);
   };
 
@@ -380,7 +374,7 @@ export default function WorkspaceSetting() {
                     size="small"
                     onClick={openDeleteModal}
                     disabled={saving || deleting}
-                    className="w-auto tablet:w-full"
+                    className="w-auto rounded-2xl tablet:w-full"
                   >
                     워크스페이스 삭제
                   </Button>
@@ -397,7 +391,7 @@ export default function WorkspaceSetting() {
                       !hasChanges
                     }
                     aria-label="변경사항 저장하기"
-                    className="w-auto tablet:w-full"
+                    className="w-auto rounded-2xl tablet:w-full"
                   >
                     {saving ? "저장 중.." : "저장"}
                   </Button>
