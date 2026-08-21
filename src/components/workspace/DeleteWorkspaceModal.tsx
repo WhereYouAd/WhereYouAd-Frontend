@@ -76,7 +76,7 @@ export default function DeleteWorkspaceModal({
             placeholder="워크스페이스 이름"
             autoComplete="off"
             disabled={isLoading}
-            aria-label="우커스페이스 이름 확인 입력"
+            aria-label="워크스페이스 이름 확인 입력"
             containerClassName="mt-0"
             inputClassName="font-body2"
           />
