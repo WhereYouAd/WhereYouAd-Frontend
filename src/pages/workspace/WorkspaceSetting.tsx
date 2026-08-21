@@ -374,7 +374,7 @@ export default function WorkspaceSetting() {
                     size="small"
                     onClick={openDeleteModal}
                     disabled={saving || deleting}
-                    className="w-auto tablet:w-full"
+                    className="w-auto rounded-2xl tablet:w-full"
                   >
                     워크스페이스 삭제
                   </Button>
@@ -391,7 +391,7 @@ export default function WorkspaceSetting() {
                       !hasChanges
                     }
                     aria-label="변경사항 저장하기"
-                    className="w-auto tablet:w-full"
+                    className="w-auto rounded-2xl tablet:w-full"
                   >
                     {saving ? "저장 중.." : "저장"}
                   </Button>
