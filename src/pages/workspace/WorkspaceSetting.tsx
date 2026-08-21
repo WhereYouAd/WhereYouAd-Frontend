@@ -24,6 +24,7 @@ import {
   getWorkspace,
   updateWorkspace,
 } from "@/api/workspace/org";
+import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
@@ -303,28 +304,29 @@ export default function WorkspaceSetting() {
                     disabled={!isAdmin || saving || deleting}
                     aria-label="로고 이미지 업로드 또는 변경"
                     className={twMerge(
-                      "flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40",
-
+                      "group relative flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40",
                       showLogoPlaceholder
-                        ? "bg-primary-100 text-primary-500"
-                        : "bg-surface-200 hover:bg-surface-300/70",
+                        ? "bg-primary-100 text-primary-500 hover:border-primary-400 hover:bg-primary-100/50"
+                        : "border-transparent bg-surface-200",
                     )}
                   >
-                    {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt=""
-                        className="h-full w-full object-cover rounded-lg"
-                      />
-                    ) : resolvedLogoUrl ? (
-                      <img
-                        src={resolvedLogoUrl}
-                        alt=""
-                        className="h-full w-full object-cover rounded-lg"
-                        onError={() => {
-                          setImageError(true);
-                        }}
-                      />
+                    {logoPreview || resolvedLogoUrl ? (
+                      <>
+                        <img
+                          src={logoPreview ?? resolvedLogoUrl ?? ""}
+                          alt=""
+                          className="h-full w-full rounded-lg object-cover transition-transform duration-500 group-hover:scale-110"
+                          onError={() => {
+                            if (!logoPreview) setImageError(true);
+                          }}
+                        />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-text-400/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
+                          <UpLoadImgIcon className="mb-1 h-6 w-6 text-surface-100" />
+                          <span className="font-caption text-surface-100">
+                            사진 변경
+                          </span>
+                        </div>
+                      </>
                     ) : (
                       <span className="font-heading1">{logoInitial}</span>
                     )}
