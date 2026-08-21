@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
 import type { EventData, Step } from "react-joyride";
-import { EVENTS, STATUS } from "react-joyride";
+import { ACTIONS, EVENTS, STATUS } from "react-joyride";
 
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const ONBOARDING_KEY = "hasSeenOnboarding";
+export const ONBOARDING_KEY = "hasSeenOnboarding";
 
 const ADMIN_STEPS: Step[] = [
   {
@@ -115,29 +115,26 @@ const MEMBER_STEPS: Step[] = [
 export function useOnboardingTour() {
   const myRole = useWorkspaceStore((s) => s.myRole);
   const [run, setRun] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
 
   const startTour = useCallback(() => {
+    setStepIndex(0);
     setRun(true);
   }, []);
 
+  const steps = myRole === "MEMBER" ? MEMBER_STEPS : ADMIN_STEPS;
+
   const handleEvent = useCallback((data: EventData) => {
-    const { status, type } = data;
+    const { action, index, status, type } = data;
 
-    const isFinished = status === STATUS.FINISHED || status === STATUS.SKIPPED;
-    const isError = type === EVENTS.TARGET_NOT_FOUND;
-
-    if (isFinished || isError) {
+    if (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND) {
+      setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
+    } else if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
       setRun(false);
+      setStepIndex(0);
       localStorage.setItem(ONBOARDING_KEY, "true");
     }
   }, []);
 
-  const steps =
-    myRole === "MEMBER"
-      ? MEMBER_STEPS
-      : myRole === "ADMIN"
-        ? ADMIN_STEPS
-        : ADMIN_STEPS;
-
-  return { run, startTour, handleEvent, steps, myRole };
+  return { run, startTour, handleEvent, steps, stepIndex, myRole };
 }

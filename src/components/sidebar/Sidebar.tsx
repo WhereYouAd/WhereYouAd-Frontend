@@ -38,7 +38,10 @@ function filterNavByRole(
   myRole: TMemberRole | null,
 ): INavItem[] {
   return items
-    .filter((item) => !item.requiredRole || item.requiredRole === myRole)
+    .filter(
+      (item) =>
+        myRole == null || !item.requiredRole || item.requiredRole === myRole,
+    )
     .map((item) => ({
       ...item,
       children: item.children

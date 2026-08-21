@@ -8,6 +8,8 @@ import {
   getSafeReturnUrl,
 } from "@/utils/auth/returnUrl";
 
+import { ONBOARDING_KEY } from "@/hooks/common/useOnboardingTour";
+
 import { queryClient } from "@/lib/queryClient";
 import useAuthStore from "@/store/useAuthStore";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
@@ -44,7 +46,7 @@ export default function RedirectPage() {
       setAccessToken(accessToken);
 
       toast.success("소셜 로그인되었습니다.");
-      const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
+      const isFirstLogin = !localStorage.getItem(ONBOARDING_KEY);
       if (isFirstLogin) {
         navigate("/workspace", { replace: true });
       } else {
