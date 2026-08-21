@@ -63,7 +63,7 @@ export default function DeleteWorkspaceModal({
           아래 워크스페이스 이름을 그대로 입력해 주세요
         </p>
         <div className="mb-8 space-y-3">
-          <div className="rounded-xl border border-surface-400/50 bg-surface-100 px-3 py-2.5">
+          <div className="rounded-2xl border border-surface-400/50 bg-surface-100 px-4.5 py-2.5">
             <p className="font-caption text-text-muted">확인용 이름</p>
             <p className="mt-0.5 break-all font-label text-text-title">
               {workspaceName}
