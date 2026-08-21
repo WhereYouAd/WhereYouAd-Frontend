@@ -259,7 +259,9 @@ export default function WorkspaceSetting() {
       : null;
 
   const showLogoPlaceholder = !logoPreview && !resolvedLogoUrl;
-  const logoInitial = (name.trim()[0] ?? "?").toUpperCase();
+  const logoInitial = (
+    (name.trim() || detail?.name?.trim() || "")[0] ?? "?"
+  ).toUpperCase();
 
   return (
     <section className="w-full flex flex-col gap-8">
