@@ -317,7 +317,13 @@ export default function WorkspaceSetting() {
                           alt=""
                           className="h-full w-full rounded-lg object-cover transition-transform duration-500 group-hover:scale-110"
                           onError={() => {
-                            if (!logoPreview) setImageError(true);
+                            if (logoPreview) {
+                              setLogoPreview(null);
+                              setLogoFile(null);
+                              return;
+                            }
+
+                            setImageError(true);
                           }}
                         />
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-text-400/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
