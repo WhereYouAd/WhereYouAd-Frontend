@@ -51,7 +51,6 @@ export default function WorkspaceSetting() {
 
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteNameSnapshot, setDeleteNameSnapshot] = useState("");
-  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [transferOpen, setTransferOpen] = useState(false);
 
   const [serverLogoUrl, setServerLogoUrl] = useState<string | null>(null);
@@ -202,10 +201,6 @@ export default function WorkspaceSetting() {
 
   const onDelete = () => {
     if (orgId === null) return;
-    if (deleteConfirmInput.trim() !== deleteNameSnapshot) {
-      toast.error("워크스페이스 이름이 일치하지 않습니다");
-      return;
-    }
     deleteMutation.mutate(orgId);
   };
 
@@ -216,7 +211,6 @@ export default function WorkspaceSetting() {
       return;
     }
     setDeleteNameSnapshot(snapshot);
-    setDeleteConfirmInput("");
     setDeleteOpen(true);
   };
 
