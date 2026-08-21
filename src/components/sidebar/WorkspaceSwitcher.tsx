@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -21,6 +21,7 @@ export function WorkspaceSwitcher({
   className?: string;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const latestSaveOrgIdRef = useRef<number | null>(null);
@@ -69,6 +70,22 @@ export function WorkspaceSwitcher({
         const workspace = workspaceList.find((w) => w.orgId === orgId);
         setSelectedOrgId(orgId);
         if (workspace) setMyRole(workspace.myRole);
+
+        const path = location.pathname;
+
+        // 캠페인 상세 → 목록
+        if (/^\/ads\/\d+\/\d+/.test(path)) {
+          navigate("/ads", { replace: true });
+          return;
+        }
+
+        // 워크스페이스 설정/멤버/결제 → 같은 하위 경로로 org만 교체
+        const wsMatch = path.match(
+          /^\/workspace\/\d+\/(settings|members|billing)$/,
+        );
+        if (wsMatch) {
+          navigate(`/workspace/${orgId}/${wsMatch[1]}`, { replace: true });
+        }
       },
       userOnError: (error, orgId) => {
         if (latestSaveOrgIdRef.current === orgId) {

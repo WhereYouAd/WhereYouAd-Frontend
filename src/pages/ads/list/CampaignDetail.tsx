@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
 import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
 
@@ -32,6 +32,7 @@ import ModalContent from "@/components/common/modal/ModalContent";
 
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   naver: "NAVER",
@@ -53,19 +54,33 @@ function providerWordmark(provider: string): string {
 }
 
 export default function CampaignDetail() {
+  const navigate = useNavigate();
+  const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
   const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
   const orgIdNum = orgId ? Number(orgId) : null;
   const projectIdNum = projectId ? Number(projectId) : null;
+  const isOrgMatched =
+    selectedOrgId != null && orgIdNum != null && orgIdNum === selectedOrgId;
 
-  const { data, isLoading } = useCampaignDetail();
+  useEffect(() => {
+    if (selectedOrgId == null || orgIdNum == null) return;
+    if (!isOrgMatched) {
+      navigate("/ads", { replace: true });
+    }
+  }, [selectedOrgId, orgIdNum, isOrgMatched, navigate]);
 
-  const { ads, isAdLoading } = useAdList(orgIdNum, projectIdNum);
+  const { data, isLoading } = useCampaignDetail({ enabled: isOrgMatched });
+
+  const { ads, isAdLoading } = useAdList(
+    isOrgMatched ? orgIdNum : null,
+    isOrgMatched ? projectIdNum : null,
+  );
   const { mutateAsync: mutateAdStatus } = useUpdateAdStatus(
-    orgIdNum,
-    projectIdNum,
+    isOrgMatched ? orgIdNum : null,
+    isOrgMatched ? projectIdNum : null,
   );
 
   const { setCampaignDetailHeaderTitle } =
@@ -223,6 +238,10 @@ export default function CampaignDetail() {
 
   useEffect(() => {
     if (!setCampaignDetailHeaderTitle) return;
+    if (!isOrgMatched) {
+      setCampaignDetailHeaderTitle(null);
+      return undefined;
+    }
     if (data?.name) {
       setCampaignDetailHeaderTitle(data.name);
       return () => {
@@ -231,7 +250,12 @@ export default function CampaignDetail() {
     }
     setCampaignDetailHeaderTitle(null);
     return undefined;
-  }, [data?.name, setCampaignDetailHeaderTitle]);
+  }, [data?.name, isOrgMatched, setCampaignDetailHeaderTitle]);
+
+  // 선택 워크스페이스와 URL org 불일치/미확정 시 상세·캐시 노출 방지
+  if (!isOrgMatched) {
+    return <CampaignDetailPageSkeleton />;
+  }
 
   if (isLoading) {
     return <CampaignDetailPageSkeleton />;
