@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
@@ -23,7 +24,6 @@ import {
   getWorkspace,
   updateWorkspace,
 } from "@/api/workspace/org";
-import BuildingIcon from "@/assets/icon/common/building.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
@@ -257,6 +257,9 @@ export default function WorkspaceSetting() {
       ? getImageUrl(serverLogoUrl)
       : null;
 
+  const showLogoPlaceholder = !logoPreview && !resolvedLogoUrl;
+  const logoInitial = (name.trim()[0] ?? "?").toUpperCase();
+
   return (
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
@@ -299,7 +302,13 @@ export default function WorkspaceSetting() {
                     onClick={openFilePicker}
                     disabled={!isAdmin || saving || deleting}
                     aria-label="로고 이미지 업로드 또는 변경"
-                    className="flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40"
+                    className={twMerge(
+                      "flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40",
+
+                      showLogoPlaceholder
+                        ? "bg-primary-100 text-primary-500"
+                        : "bg-surface-200 hover:bg-surface-300/70",
+                    )}
                   >
                     {logoPreview ? (
                       <img
@@ -317,10 +326,7 @@ export default function WorkspaceSetting() {
                         }}
                       />
                     ) : (
-                      <BuildingIcon
-                        aria-hidden="true"
-                        className="h-11 w-11 text-text-placeholder"
-                      />
+                      <span className="font-heading1">{logoInitial}</span>
                     )}
                   </button>
                   <div className="flex gap-2 mt-4 justify-center">
