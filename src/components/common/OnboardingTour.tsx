@@ -13,7 +13,8 @@ interface IOnboardingTourProps {
 export default function OnboardingTour({
   autoStart = false,
 }: IOnboardingTourProps) {
-  const { run, startTour, handleEvent, steps, myRole } = useOnboardingTour();
+  const { run, startTour, handleEvent, steps, stepIndex, myRole } =
+    useOnboardingTour();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tourStarted = useRef(false);
@@ -36,6 +37,7 @@ export default function OnboardingTour({
     <Joyride
       steps={steps}
       run={run}
+      stepIndex={stepIndex}
       onEvent={handleEvent}
       continuous
       scrollToFirstStep
