@@ -224,7 +224,7 @@ export default function WorkspacePage() {
       </ErrorBoundary>
 
       <Modal isOpen={createOpen} onClose={onCloseCreate} size="md" padding="lg">
-        <div className="flex flex-col items-start px-2 tablet:px-0 tablet:pr-0">
+        <div className="flex flex-col items-start px-2">
           <h2 className="mb-2 font-heading3 text-text-title">
             워크스페이스 생성
           </h2>
