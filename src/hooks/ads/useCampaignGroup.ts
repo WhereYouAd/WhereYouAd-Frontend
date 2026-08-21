@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -31,6 +31,14 @@ export const useCampaignGroup = () => {
   const [metaSelected, setMetaSelected] = useState<IPlatformCampaign | null>(
     null,
   );
+
+  useEffect(() => {
+    setName("");
+    setDescription("");
+    setGoogleSelected(null);
+    setNaverSelected(null);
+    setMetaSelected(null);
+  }, [orgId]);
 
   const { data: googleData = [], isLoading: isGoogleLoading } = useCoreQuery(
     QUERY_KEYS.campaign.platformList(orgId, "GOOGLE"),

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
@@ -27,6 +27,10 @@ export default function AdsListPage() {
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<number>>(
     () => new Set(),
   );
+
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [orgId]);
 
   const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
   const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");

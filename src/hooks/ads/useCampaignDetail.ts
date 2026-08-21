@@ -5,17 +5,15 @@ import { useCoreQuery } from "@/hooks/customQuery";
 import { getCampaignDetail } from "@/api/ads/ads";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
-export const useCampaignDetail = () => {
+export const useCampaignDetail = (options?: { enabled?: boolean }) => {
   const { orgId, projectId } = useParams<{
     orgId: string;
     projectId: string;
   }>();
 
-  // URL 파라미터를 숫자로 변환
   const parsedOrgId = Number(orgId);
   const parsedProjectId = Number(projectId);
 
-  // 유효한 ID일 때만 요청
   const isValid =
     Number.isFinite(parsedOrgId) &&
     parsedOrgId > 0 &&
@@ -25,6 +23,6 @@ export const useCampaignDetail = () => {
   return useCoreQuery(
     QUERY_KEYS.campaign.detail(parsedOrgId, parsedProjectId),
     () => getCampaignDetail(parsedOrgId, parsedProjectId),
-    { enabled: isValid },
+    { enabled: isValid && (options?.enabled ?? true) },
   );
 };
