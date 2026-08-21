@@ -12,6 +12,7 @@ import { loginSchema } from "@/utils/auth/validation";
 
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
+import { ONBOARDING_KEY } from "@/hooks/common/useOnboardingTour";
 
 import AuthFormShell from "@/components/auth/common/AuthFormShell";
 import CommonAuthInput from "@/components/auth/common/CommonAuthInput";
@@ -43,7 +44,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<TLoginFormValues> = (data) => {
     useLogin.mutate(data, {
       onSuccess: () => {
-        const isFirstLogin = !localStorage.getItem("hasSeenOnboarding");
+        const isFirstLogin = !localStorage.getItem(ONBOARDING_KEY);
         if (isFirstLogin) {
           navigate("/workspace", { replace: true });
         } else {

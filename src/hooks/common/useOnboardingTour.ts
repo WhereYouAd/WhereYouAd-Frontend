@@ -4,7 +4,7 @@ import { ACTIONS, EVENTS, STATUS } from "react-joyride";
 
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const ONBOARDING_KEY = "hasSeenOnboarding";
+export const ONBOARDING_KEY = "hasSeenOnboarding";
 
 const ADMIN_STEPS: Step[] = [
   {
@@ -122,12 +122,7 @@ export function useOnboardingTour() {
     setRun(true);
   }, []);
 
-  const steps =
-    myRole === "MEMBER"
-      ? MEMBER_STEPS
-      : myRole === "ADMIN"
-        ? ADMIN_STEPS
-        : ADMIN_STEPS;
+  const steps = myRole === "MEMBER" ? MEMBER_STEPS : ADMIN_STEPS;
 
   const handleEvent = useCallback((data: EventData) => {
     const { action, index, status, type } = data;

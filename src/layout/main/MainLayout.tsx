@@ -17,6 +17,7 @@ import {
   navItemMatchesPath,
 } from "@/utils/navigation/workspaceNavPaths";
 
+import { ONBOARDING_KEY } from "@/hooks/common/useOnboardingTour";
 import { useCoreQuery } from "@/hooks/customQuery";
 
 import OnboardingTour from "@/components/common/OnboardingTour";
@@ -201,9 +202,7 @@ export default function MainLayout() {
     <div className="flex h-dvh w-full overflow-hidden bg-surface-200">
       {(myRole !== null ||
         (workspaces !== undefined && workspaces.length === 0)) && (
-        <OnboardingTour
-          autoStart={!localStorage.getItem("hasSeenOnboarding")}
-        />
+        <OnboardingTour autoStart={!localStorage.getItem(ONBOARDING_KEY)} />
       )}
       <div
         className={twMerge(
