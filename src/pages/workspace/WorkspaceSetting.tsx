@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
 
@@ -23,7 +24,7 @@ import {
   getWorkspace,
   updateWorkspace,
 } from "@/api/workspace/org";
-import BuildingIcon from "@/assets/icon/common/building.svg?react";
+import UpLoadImgIcon from "@/assets/icon/common/uploadImg.svg?react";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
@@ -257,6 +258,11 @@ export default function WorkspaceSetting() {
       ? getImageUrl(serverLogoUrl)
       : null;
 
+  const showLogoPlaceholder = !logoPreview && !resolvedLogoUrl;
+  const logoInitial = (
+    (name.trim() || detail?.name?.trim() || "")[0] ?? "?"
+  ).toUpperCase();
+
   return (
     <section className="w-full flex flex-col gap-8">
       {loading && <WorkspaceSettingLoading />}
@@ -299,28 +305,38 @@ export default function WorkspaceSetting() {
                     onClick={openFilePicker}
                     disabled={!isAdmin || saving || deleting}
                     aria-label="로고 이미지 업로드 또는 변경"
-                    className="flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 bg-surface-200 outline-none transition-colors hover:bg-surface-300/70 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40"
+                    className={twMerge(
+                      "group relative flex h-52 w-52 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-surface-400 outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-50 tablet:h-40 tablet:w-40",
+                      showLogoPlaceholder
+                        ? "bg-primary-100 text-primary-500 hover:border-primary-400 hover:bg-primary-100/50"
+                        : "border-transparent bg-surface-200",
+                    )}
                   >
-                    {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt=""
-                        className="h-full w-full object-cover rounded-lg"
-                      />
-                    ) : resolvedLogoUrl ? (
-                      <img
-                        src={resolvedLogoUrl}
-                        alt=""
-                        className="h-full w-full object-cover rounded-lg"
-                        onError={() => {
-                          setImageError(true);
-                        }}
-                      />
+                    {logoPreview || resolvedLogoUrl ? (
+                      <>
+                        <img
+                          src={logoPreview ?? resolvedLogoUrl ?? ""}
+                          alt=""
+                          className="h-full w-full rounded-lg object-cover transition-transform duration-500 group-hover:scale-110"
+                          onError={() => {
+                            if (logoPreview) {
+                              setLogoPreview(null);
+                              setLogoFile(null);
+                              return;
+                            }
+
+                            setImageError(true);
+                          }}
+                        />
+                        <span className="absolute inset-0 flex flex-col items-center justify-center bg-text-400/40 opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
+                          <UpLoadImgIcon className="mb-1 h-6 w-6 text-surface-100" />
+                          <span className="font-caption text-surface-100">
+                            사진 변경
+                          </span>
+                        </span>
+                      </>
                     ) : (
-                      <BuildingIcon
-                        aria-hidden="true"
-                        className="h-11 w-11 text-text-placeholder"
-                      />
+                      <span className="font-heading1">{logoInitial}</span>
                     )}
                   </button>
                   <div className="flex gap-2 mt-4 justify-center">
