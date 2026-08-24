@@ -104,6 +104,48 @@ function resolveSeriesStroke(livePath: Element, clonePath: SVGElement): string {
   );
 }
 
+/** 플롯 상·하 테두리 그룹 */
+function isPlotBorderChrome(el: Element): boolean {
+  return Boolean(el.closest('[class*="grid-borders"]'));
+}
+
+/**
+ * 맨 위 가로선만 제거/그리드 가로선은 남김
+ */
+function removePlotRoofLine(clone: SVGSVGElement) {
+  clone.querySelectorAll('[class*="grid-borders"]').forEach((el) => {
+    el.remove();
+  });
+
+  const scope =
+    clone.querySelector(".apexcharts-inner") ??
+    clone.querySelector(".apexcharts-graphical") ??
+    clone;
+
+  const roofCandidates = [...scope.querySelectorAll("line")].filter((el) => {
+    // 시리즈(데이터) 선은 건드리지 않음
+    if (el.closest(".apexcharts-series")) return false;
+
+    const y1 = parseFloat(el.getAttribute("y1") ?? "NaN");
+    const y2 = parseFloat(el.getAttribute("y2") ?? "NaN");
+    const x1 = parseFloat(el.getAttribute("x1") ?? "NaN");
+    const x2 = parseFloat(el.getAttribute("x2") ?? "NaN");
+    if ([y1, y2, x1, x2].some((v) => Number.isNaN(v))) return false;
+    if (Math.abs(y1 - y2) > 0.5) return false; // 가로선만
+    if (Math.abs(x2 - x1) < 40) return false; // 짧은 tick 제외
+    return true;
+  });
+
+  if (roofCandidates.length === 0) return;
+
+  roofCandidates.sort(
+    (a, b) =>
+      parseFloat(a.getAttribute("y1")!) - parseFloat(b.getAttribute("y1")!),
+  );
+  // y가 가장 작은 가로선 = 플롯 천장
+  roofCandidates[0]?.remove();
+}
+
 /**
  * Apex dataURI는 stroke var(--*)를 해석하지 않아 선이 빠진다.
  * 화면 SVG를 복제해 실제 색을 심은 뒤 저장한다.
@@ -122,6 +164,11 @@ function cloneSvgForExport(
       !(liveNode instanceof SVGElement) ||
       !(cloneNode instanceof SVGElement)
     ) {
+      return;
+    }
+
+    // 지붕/바닥 테두리는 색 인라인하지 않음 (아래에서 그룹 제거)
+    if (isPlotBorderChrome(liveNode)) {
       return;
     }
 
@@ -195,6 +242,8 @@ function cloneSvgForExport(
     clonePath.setAttribute("stroke-linecap", "round");
     clonePath.setAttribute("stroke-linejoin", "round");
   });
+
+  removePlotRoofLine(clone);
 
   const rect = liveSvg.getBoundingClientRect();
   const width = Math.max(Math.round(rect.width), 1);
