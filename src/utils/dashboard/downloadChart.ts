@@ -1,11 +1,13 @@
 import ApexCharts from "apexcharts";
 
+import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
+
 type TExportMode = "line-forward" | "preserve-fill";
 
 type TDownloadOptions = {
   /**
    * line-forward: fill 제거 + stroke 강조 (플랫폼 전체보기)
-   * preserve-fill: 화면 fill 유지 + stroke hex 고정 (플랫폼 개별)
+   * preserve-fill: 화면 fill 유지 + stroke 색 고정 (플랫폼 개별)
    */
   mode?: TExportMode;
   /** SVG 복제 저장 시 컨테이너 ID */
@@ -19,6 +21,17 @@ const SERIES_PATH_SELECTOR = [
   ".apexcharts-area",
   ".apexcharts-line",
 ].join(", ");
+
+/** PNG/SVG에 var()가 안 먹히므로, 저장 직전에 토큰을 해석한 값을 넣음 */
+const INFO_BLUE_TOKEN = "var(--color-info-blue)";
+const EXPORT_BG_TOKEN = "var(--color-surface-100)";
+
+/** Apex seriesName → 플랫폼 차트 색 토큰 */
+const SERIES_TOKEN_BY_NAME: Record<string, string> = {
+  Google: PLATFORM_CHART_COLORS.GOOGLE,
+  NAVER: PLATFORM_CHART_COLORS.NAVER,
+  Meta: PLATFORM_CHART_COLORS.META,
+};
 
 /** 닫힌 area fill path — 여기에 stroke를 주면 아래·옆까지 테두리가 생김 */
 function isAreaFillPath(el: Element): boolean {
@@ -37,23 +50,6 @@ function isLineStrokePath(el: Element): boolean {
   return (
     (fill === "none" || fill == null) && Boolean(stroke && stroke !== "none")
   );
-}
-
-/** tokens.css --color-info-blue */
-const INFO_BLUE_HEX = "#0084fe";
-
-/** 플랫폼 시리즈명 → 토큰 hex */
-const SERIES_HEX_BY_NAME: Record<string, string> = {
-  Google: "#f9ab00",
-  NAVER: "#03c75a",
-  Meta: "#1877f2",
-};
-
-function seriesHexFallback(el: Element): string | null {
-  const group = el.closest(".apexcharts-series");
-  const rawName = group?.getAttribute("seriesName") ?? "";
-  // 플랫폼 시리즈명만 매칭. realIndex로 추론하면 통합(클릭수, index 0)이 Google 노랑으로 잘못 잡힘
-  return SERIES_HEX_BY_NAME[rawName] ?? null;
 }
 
 function resolveCssColor(color: string): string {
@@ -76,6 +72,14 @@ function resolveCssColor(color: string): string {
   return resolved;
 }
 
+function seriesColorFallback(el: Element): string | null {
+  const group = el.closest(".apexcharts-series");
+  const rawName = group?.getAttribute("seriesName") ?? "";
+  // 플랫폼 시리즈명만 매칭. realIndex로 추론하면 통합(클릭수, index 0)이 Google 노랑으로 잘못 잡힘
+  const token = SERIES_TOKEN_BY_NAME[rawName];
+  return token ? resolveCssColor(token) : null;
+}
+
 function getChartSvg(containerId: string): SVGSVGElement | null {
   const root = document.getElementById(containerId);
   if (!root) return null;
@@ -91,7 +95,7 @@ function resolveSeriesStroke(livePath: Element, clonePath: SVGElement): string {
     computed.stroke && computed.stroke !== "none" ? computed.stroke : null;
   const fromAttr = clonePath.getAttribute("stroke");
 
-  // 화면 계산색 우선 → 플랫폼 시리즈명 hex → 통합 info-blue
+  // 화면 계산색 우선 → 플랫폼 토큰 해석 → info-blue 토큰 해석
   return (
     (fromComputed && !fromComputed.includes("var(") ? fromComputed : null) ??
     (fromAttr && fromAttr !== "none"
@@ -99,8 +103,8 @@ function resolveSeriesStroke(livePath: Element, clonePath: SVGElement): string {
         ? resolveCssColor(fromAttr)
         : fromAttr
       : null) ??
-    seriesHexFallback(livePath) ??
-    INFO_BLUE_HEX
+    seriesColorFallback(livePath) ??
+    resolveCssColor(INFO_BLUE_TOKEN)
   );
 }
 
@@ -260,7 +264,7 @@ function cloneSvgForExport(
   bg.setAttribute("y", "0");
   bg.setAttribute("width", "100%");
   bg.setAttribute("height", "100%");
-  bg.setAttribute("fill", "#ffffff");
+  bg.setAttribute("fill", resolveCssColor(EXPORT_BG_TOKEN));
   clone.insertBefore(bg, clone.firstChild);
 
   return clone;
@@ -287,7 +291,7 @@ function svgToPngDataUri(svg: SVGSVGElement, scale = 2): Promise<string> {
         reject(new Error("canvas context 생성 실패"));
         return;
       }
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = resolveCssColor(EXPORT_BG_TOKEN);
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
       ctx.drawImage(img, 0, 0, width, height);
