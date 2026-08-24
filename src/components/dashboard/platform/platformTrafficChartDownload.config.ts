@@ -21,20 +21,21 @@ export function getTrafficChartDownloadItems(
   chartId: string,
   containerId: string,
   filename: string,
+  /** 전체: 겹침 대비 선만 / 개별: fill+선 */
+  mode: "line-forward" | "preserve-fill" = "line-forward",
 ) {
   return [
     {
       label: "PNG 저장",
       onClick: () =>
         downloadChartPng(chartId, filename, {
-          mode: "line-forward",
+          mode,
           containerId,
         }),
     },
     {
       label: "SVG 저장",
-      onClick: () =>
-        downloadChartSvg(containerId, filename, { mode: "line-forward" }),
+      onClick: () => downloadChartSvg(containerId, filename, { mode }),
     },
     {
       label: "CSV 다운로드",
