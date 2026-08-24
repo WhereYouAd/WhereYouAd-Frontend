@@ -1,4 +1,5 @@
 import ApexCharts from "apexcharts";
+import { toast } from "sonner";
 
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 
@@ -317,8 +318,7 @@ async function downloadWithSvgClone(
 ) {
   const liveSvg = getChartSvg(containerId);
   if (!liveSvg) {
-    console.error("차트 SVG를 찾을 수 없습니다:", containerId);
-    return;
+    throw new Error(`차트 SVG를 찾을 수 없습니다: ${containerId}`);
   }
 
   const exportSvg = cloneSvgForExport(liveSvg, mode);
@@ -354,6 +354,7 @@ export async function downloadChartPng(
     triggerDownload(imgURI, `${filename}.png`);
   } catch (e) {
     console.error("PNG 저장 실패:", e);
+    toast.error("차트 저장에 실패했습니다.");
   }
 }
 
@@ -369,7 +370,9 @@ export async function downloadChartSvg(
     }
 
     const svgEl = document.getElementById(containerId)?.querySelector("svg");
-    if (!svgEl) return;
+    if (!svgEl) {
+      throw new Error(`차트 SVG를 찾을 수 없습니다: ${containerId}`);
+    }
     const svgData = new XMLSerializer().serializeToString(svgEl);
     const blob = new Blob([svgData], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
@@ -377,6 +380,7 @@ export async function downloadChartSvg(
     URL.revokeObjectURL(url);
   } catch (e) {
     console.error("SVG 저장 실패:", e);
+    toast.error("차트 저장에 실패했습니다.");
   }
 }
 
