@@ -26,18 +26,11 @@ const FILENAME = `overview-traffic-chart-${TODAY}`;
 export const DOWNLOAD_ITEMS = [
   {
     label: "PNG 저장",
-    onClick: () =>
-      downloadChartPng(CHART_ID, FILENAME, {
-        mode: "preserve-fill",
-        containerId: CHART_CONTAINER_ID,
-      }),
+    onClick: () => downloadChartPng(CHART_ID, FILENAME),
   },
   {
     label: "SVG 저장",
-    onClick: () =>
-      downloadChartSvg(CHART_CONTAINER_ID, FILENAME, {
-        mode: "preserve-fill",
-      }),
+    onClick: () => downloadChartSvg(CHART_CONTAINER_ID, FILENAME),
   },
   {
     label: "CSV 다운로드",
