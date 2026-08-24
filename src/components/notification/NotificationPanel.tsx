@@ -24,7 +24,7 @@ export default function NotificationPanel({
           <BellIcon className="h-6 w-6 text-text-title" /> 알림
         </h2>
       }
-      className="max-w-90 h-auto min-h-[min(72vh,560px)] my-4 rounded-l-3xl"
+      className="max-w-90 h-auto min-h-[min(72vh,560px)] my-4 rounded-l-3xl tablet:my-0"
     >
       {children}
     </Drawer>

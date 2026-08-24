@@ -13,7 +13,8 @@ interface IOnboardingTourProps {
 export default function OnboardingTour({
   autoStart = false,
 }: IOnboardingTourProps) {
-  const { run, startTour, handleEvent, steps, myRole } = useOnboardingTour();
+  const { run, startTour, handleEvent, steps, stepIndex, myRole } =
+    useOnboardingTour();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const tourStarted = useRef(false);
@@ -36,13 +37,14 @@ export default function OnboardingTour({
     <Joyride
       steps={steps}
       run={run}
+      stepIndex={stepIndex}
       onEvent={handleEvent}
       continuous
       scrollToFirstStep
       tooltipComponent={OnboardingTooltip}
       styles={{
         spotlight: {
-          style: { transition: "d 280ms cubic-bezier(0.4, 0, 0.2, 1)" },
+          style: { transition: "all 280ms cubic-bezier(0.4, 0, 0.2, 1)" },
         },
         overlay: { transition: "opacity 200ms ease-out" },
       }}
