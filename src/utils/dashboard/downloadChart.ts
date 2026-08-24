@@ -4,8 +4,8 @@ type TExportMode = "line-forward" | "preserve-fill";
 
 type TDownloadOptions = {
   /**
-   * line-forward: fill 제거 + stroke 강조 (플랫폼 전체/개별)
-   * preserve-fill: 화면 fill 유지 + stroke를 hex로 고정 (통합)
+   * line-forward: fill 제거 + stroke 강조 (플랫폼 전체보기)
+   * preserve-fill: 화면 fill 유지 + stroke hex 고정 (통합·플랫폼 개별)
    */
   mode?: TExportMode;
   /** SVG 복제 저장 시 컨테이너 ID */
