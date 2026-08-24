@@ -25,11 +25,16 @@ export function getTrafficChartDownloadItems(
   return [
     {
       label: "PNG 저장",
-      onClick: () => downloadChartPng(chartId, filename),
+      onClick: () =>
+        downloadChartPng(chartId, filename, {
+          mode: "line-forward",
+          containerId,
+        }),
     },
     {
       label: "SVG 저장",
-      onClick: () => downloadChartSvg(containerId, filename),
+      onClick: () =>
+        downloadChartSvg(containerId, filename, { mode: "line-forward" }),
     },
     {
       label: "CSV 다운로드",

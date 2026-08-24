@@ -17,6 +17,10 @@ import type {
 } from "@/types/dashboard/overview";
 import { PLATFORM_CHART_COLORS } from "@/types/dashboard/provider";
 import {
+  SINGLE_PLATFORM_TRAFFIC_FILL,
+  SINGLE_PLATFORM_TRAFFIC_STROKE,
+} from "@/constants/dashboard/trafficChartExportStyles";
+import {
   PLATFORM_TRAFFIC_CHART_HEIGHT_DUAL_MIN,
   PLATFORM_TRAFFIC_CHART_HEIGHT_SINGLE,
 } from "@/constants/dashboard/trafficChartHeights";
@@ -190,19 +194,10 @@ const PlatformTrafficChart = memo(function PlatformTrafficChart({
     },
     dataLabels: { enabled: false },
     stroke: {
-      curve: "smooth",
-      width: 2,
+      ...SINGLE_PLATFORM_TRAFFIC_STROKE,
       colors: [platformColor],
     },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.45,
-        opacityTo: 0.05,
-        stops: [20, 100],
-      },
-    },
+    fill: SINGLE_PLATFORM_TRAFFIC_FILL,
     colors: [platformColor],
     markers: { size: 0, hover: { size: 5 } },
     annotations: {
