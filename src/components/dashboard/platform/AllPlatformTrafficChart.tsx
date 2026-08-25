@@ -7,6 +7,10 @@ import {
   PLATFORM_MAP,
   PROVIDER_TYPES,
 } from "@/types/dashboard/provider";
+import {
+  ALL_PLATFORM_TRAFFIC_FILL,
+  ALL_PLATFORM_TRAFFIC_STROKE,
+} from "@/constants/dashboard/trafficChartExportStyles";
 
 import {
   formatCountChartAxis,
@@ -105,19 +109,9 @@ const AllPlatformTrafficChart = memo(function AllPlatformTrafficChart() {
       animations: { enabled: true, speed: 800 },
     },
     dataLabels: { enabled: false },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.2,
-        opacityTo: 0.05,
-        stops: [20, 100],
-      },
-    },
+    stroke: ALL_PLATFORM_TRAFFIC_STROKE,
+    fill: ALL_PLATFORM_TRAFFIC_FILL,
+    colors: PROVIDER_TYPES.map((platform) => PLATFORM_CHART_COLORS[platform]),
     markers: { size: 0, hover: { size: 5 } },
     xaxis: {
       type: "numeric",
