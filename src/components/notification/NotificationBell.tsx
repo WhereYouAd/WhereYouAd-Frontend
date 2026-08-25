@@ -87,15 +87,8 @@ export default function NotificationBell() {
       <NotificationPanel
         isOpen={isOpen}
         onClose={closePanel}
-        dropdownItems={
-          unreadCount > 0
-            ? [
-                {
-                  label: "모두 읽음",
-                  onClick: () => readAllNotifications.mutate(),
-                },
-              ]
-            : undefined
+        onReadAll={
+          unreadCount > 0 ? () => readAllNotifications.mutate() : undefined
         }
       >
         <NotificationList
