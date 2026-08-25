@@ -95,7 +95,11 @@ export default function NotificationList({
       {hasNextPage ? (
         <li ref={sentinelRef} className="h-4" aria-hidden />
       ) : null}
-      {isFetchingNextPage ? <NotificationListSkeleton /> : null}
+      {isFetchingNextPage ? (
+        <li aria-hidden="true">
+          <NotificationListSkeleton />
+        </li>
+      ) : null}
     </ul>
   );
 }
