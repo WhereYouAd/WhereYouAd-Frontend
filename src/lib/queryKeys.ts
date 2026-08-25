@@ -105,6 +105,6 @@ export const QUERY_KEYS = {
       ["notification", "settings", orgId] as const,
     members: (orgId: number) => ["notification", "members", orgId] as const,
     history: (orgId: number | null) =>
-      ["notification", history, orgId] as const,
+      ["notification", "history", orgId] as const,
   },
 } as const;

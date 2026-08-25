@@ -8,17 +8,20 @@ interface INotificationPanelProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  dropdownItems?: { label: string; onClick: () => void }[];
 }
 
 export default function NotificationPanel({
   isOpen,
   onClose,
   children,
+  dropdownItems,
 }: INotificationPanelProps) {
   return (
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
+      dropdownItems={dropdownItems}
       title={
         <h2 className="flex items-center gap-2 pl-2 pt-2 font-heading4 text-text-title">
           <BellIcon className="h-6 w-6 text-text-title" /> 알림

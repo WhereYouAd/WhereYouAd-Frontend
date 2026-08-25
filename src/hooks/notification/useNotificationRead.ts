@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
+import type { TNotificationEmptyData } from "@/types/setting/notification";
 
 import { useCoreMutation } from "@/hooks/customQuery";
 
@@ -27,7 +28,7 @@ export function useReadNotification() {
       userOnError: (error) => {
         toast.error(
           (error as IApiErrorResponse).message ??
-            "알림을 읽음 처리하지 못헀습니다",
+            "알림을 읽음 처리하지 못했습니다",
         );
       },
     },
@@ -37,7 +38,7 @@ export function useReadNotification() {
 export function useAllReadNotifications() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  return useCoreMutation(
+  return useCoreMutation<TNotificationEmptyData, void>(
     () => {
       if (orgId == null) {
         return Promise.reject(new Error("워크스페이스를 선택해주세요"));
