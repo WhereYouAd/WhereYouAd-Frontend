@@ -51,7 +51,7 @@ export function useAllReadNotifications() {
       userOnError: (error) => {
         toast.error(
           (error as IApiErrorResponse).message ??
-            "알림을 모두 읽음 처리하지 못헀습니다",
+            "알림을 모두 읽음 처리하지 못했습니다",
         );
       },
     },
