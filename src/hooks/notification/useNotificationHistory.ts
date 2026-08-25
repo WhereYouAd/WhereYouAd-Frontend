@@ -1,28 +1,40 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
+
+import type { IApiErrorResponse } from "@/types/common/common";
 import type { INotificationHistoryData } from "@/types/notification/notification";
 import { MOCK_NOTIFICATION_HISTORY } from "@/types/notification/notification.mock";
 
-import { useCoreQuery } from "@/hooks/customQuery";
-
+import { getNotificationHistory } from "@/api/notification/notification";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
-const MOCK_LOADING_MS = 400;
-
-//API 연동전 mock데이터 활용을 위함. API함수추가시 삭제 예정
-async function getMockNotificationHistory(): Promise<INotificationHistoryData> {
-  await new Promise((resolve) => setTimeout(resolve, MOCK_LOADING_MS));
-  return MOCK_NOTIFICATION_HISTORY;
-}
+// 확인 끝나면 false로 되돌리고 mock 파일 삭제
+const USE_MOCK_NOTIFICATION_HISTORY = true;
 
 export function useNotificationHistory() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  const query = useCoreQuery(
-    ["notification-history", orgId],
-    () => getMockNotificationHistory(),
-    { enabled: orgId != null },
-  );
+  const query = useInfiniteQuery<INotificationHistoryData, IApiErrorResponse>({
+    queryKey: [
+      ...QUERY_KEYS.notification.history(orgId),
+      USE_MOCK_NOTIFICATION_HISTORY ? "mock" : "api",
+    ],
+    queryFn: ({ pageParam }) => {
+      if (USE_MOCK_NOTIFICATION_HISTORY) {
+        return Promise.resolve(MOCK_NOTIFICATION_HISTORY);
+      }
+      return getNotificationHistory(orgId as number, {
+        cursor: (pageParam as string | null) ?? undefined,
+      });
+    },
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNext ? lastPage.nextCursor : undefined,
+    enabled: orgId != null,
+  });
 
-  const notifications = query.data?.notifications ?? [];
+  const notifications =
+    query.data?.pages.flatMap((page) => page.notifications) ?? [];
   const unreadCount = notifications.filter((item) => !item.isRead).length;
 
   return {
@@ -31,5 +43,8 @@ export function useNotificationHistory() {
     unreadCount,
     isLoading: query.isLoading,
     isError: query.isError,
+    hasNextPage: query.hasNextPage,
+    isFetchingNextPage: query.isFetchingNextPage,
+    fetchNextPage: query.fetchNextPage,
   };
 }
