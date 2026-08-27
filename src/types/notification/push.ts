@@ -17,3 +17,7 @@ export interface IPushSubscriptionRequest {
   validPushSubscription: boolean;
   endpointValid: boolean;
 }
+
+export interface IDeletePushSubscriptionReqest {
+  endpoing: string;
+}
