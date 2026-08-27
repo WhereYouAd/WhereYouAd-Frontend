@@ -65,6 +65,7 @@ const SYNC_LINK_CLASS =
   "inline-flex shrink-0 items-center gap-1 font-body2 text-text-muted transition-colors hover:text-primary-400 disabled:cursor-wait disabled:opacity-50";
 
 function PlatformConnectionMeta({
+  provider,
   status,
   syncedAt,
   externalAccountId,
@@ -74,6 +75,7 @@ function PlatformConnectionMeta({
   isSyncLoading = false,
 }: Pick<
   IPlatformConnectionItem,
+  | "provider"
   | "status"
   | "syncedAt"
   | "externalAccountId"
@@ -88,6 +90,8 @@ function PlatformConnectionMeta({
   const expireTone = getTokenExpireTone(tokenExpireAt);
   const isSoftDisconnected =
     status === "disconnected" && platformAccountId != null;
+  // 구글: refresh 장기 유효·단기 access만료일은 연동 수명이 아님 → 토큰 만료 예정 미표시
+  const showTokenExpire = provider !== "GOOGLE";
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -104,16 +108,18 @@ function PlatformConnectionMeta({
               </span>
             </p>
           ) : null}
-          <p className="font-body2 text-text-muted">
-            <span>토큰 만료 예정 · </span>
-            {expireLabel ? (
-              <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
-                {expireLabel}
-              </span>
-            ) : (
-              <span className="text-text-muted/60">—</span>
-            )}
-          </p>
+          {showTokenExpire ? (
+            <p className="font-body2 text-text-muted">
+              <span>토큰 만료 예정 · </span>
+              {expireLabel ? (
+                <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
+                  {expireLabel}
+                </span>
+              ) : (
+                <span className="text-text-muted/60">—</span>
+              )}
+            </p>
+          ) : null}
         </>
       ) : status === "disconnected" ? (
         <>
@@ -125,10 +131,12 @@ function PlatformConnectionMeta({
             <span>연동 계정 · </span>
             <span className="text-text-muted/60">—</span>
           </p>
-          <p className="font-body2 text-text-muted/60">
-            <span>토큰 만료 예정 · </span>
-            <span className="text-text-muted/60">—</span>
-          </p>
+          {showTokenExpire ? (
+            <p className="font-body2 text-text-muted/60">
+              <span>토큰 만료 예정 · </span>
+              <span className="text-text-muted/60">—</span>
+            </p>
+          ) : null}
         </>
       ) : status === "connected" ? (
         <>
@@ -174,19 +182,21 @@ function PlatformConnectionMeta({
             </p>
           ) : null}
 
-          {expireLabel ? (
-            <p className="font-body2 text-text-muted">
-              <span>토큰 만료 예정 · </span>
-              <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
-                {expireLabel}
-              </span>
-            </p>
-          ) : (
-            <p className="font-body2 text-text-muted">
-              <span>토큰 만료 예정 · </span>
-              <span className="text-text-muted/60">—</span>
-            </p>
-          )}
+          {showTokenExpire ? (
+            expireLabel ? (
+              <p className="font-body2 text-text-muted">
+                <span>토큰 만료 예정 · </span>
+                <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
+                  {expireLabel}
+                </span>
+              </p>
+            ) : (
+              <p className="font-body2 text-text-muted">
+                <span>토큰 만료 예정 · </span>
+                <span className="text-text-muted/60">—</span>
+              </p>
+            )
+          ) : null}
         </>
       ) : (
         <>
@@ -209,19 +219,21 @@ function PlatformConnectionMeta({
             </p>
           ) : null}
 
-          {expireLabel ? (
-            <p className="font-body2 text-text-muted">
-              <span>토큰 만료 예정 · </span>
-              <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
-                {expireLabel}
-              </span>
-            </p>
-          ) : (
-            <p className="font-body2 text-text-muted">
-              <span>토큰 만료 예정 · </span>
-              <span className="text-text-muted/60">—</span>
-            </p>
-          )}
+          {showTokenExpire ? (
+            expireLabel ? (
+              <p className="font-body2 text-text-muted">
+                <span>토큰 만료 예정 · </span>
+                <span className={TOKEN_EXPIRE_TEXT[expireTone]}>
+                  {expireLabel}
+                </span>
+              </p>
+            ) : (
+              <p className="font-body2 text-text-muted">
+                <span>토큰 만료 예정 · </span>
+                <span className="text-text-muted/60">—</span>
+              </p>
+            )
+          ) : null}
         </>
       )}
     </div>
@@ -267,6 +279,7 @@ function PlatformIntegrationCard({
       </div>
 
       <PlatformConnectionMeta
+        provider={provider}
         status={status}
         syncedAt={syncedAt}
         externalAccountId={externalAccountId}
