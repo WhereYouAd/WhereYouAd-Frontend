@@ -4,6 +4,8 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data ? event.data.json() : {};
   } catch {
+    //JSON이 깨져서 실패하면, 그냥 글자로 읽어서 {body: "글자"} 로 저장.
+    //그래도 알림은 띄우기 위함. data가 있을때만 .text() 호출. 없으면 빈문자열
     payload = { body: event.data?.text() ?? "" };
   }
 
