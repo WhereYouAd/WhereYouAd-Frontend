@@ -141,7 +141,7 @@ export const readAllNotificationHistory = async (
 };
 
 //VAPID 공개키 조회
-export const getVapidKey = async (): Promise<IVapidPublicKeyData> => {
+export const getVapidPublicKey = async (): Promise<IVapidPublicKeyData> => {
   const { data } = await axiosInstance.get<
     ICommonResponse<IVapidPublicKeyData>
   >(`/api/notification/push/vapid-public-key`);

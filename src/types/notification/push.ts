@@ -3,7 +3,7 @@ export interface IVapidPublicKeyData {
 }
 
 export interface IPushSubscriptionKeys {
-  p256pdh: string;
+  p256dh: string;
   auth: string;
   p256dhValid: boolean;
   authValid: boolean;
@@ -19,5 +19,5 @@ export interface IPushSubscriptionRequest {
 }
 
 export interface IDeletePushSubscriptionReqest {
-  endpoing: string;
+  endpoint: string;
 }
