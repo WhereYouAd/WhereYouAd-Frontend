@@ -54,7 +54,7 @@ function toPushSubscriptionRequest(
 }
 
 //구독 가져오거나 만들기
-async function getOrCreateSubscruption(publicKey: string) {
+async function getOrCreateSubscription(publicKey: string) {
   const registration = await navigator.serviceWorker.ready;
   const existing = await registration.pushManager.getSubscription();
   if (existing) return existing;
@@ -79,7 +79,7 @@ export async function enableBrowserPushSubscription(orgId: number) {
   }
 
   const { publicKey } = await getVapidPublicKey();
-  const subscription = await getOrCreateSubscruption(publicKey);
+  const subscription = await getOrCreateSubscription(publicKey);
   await registerPushSubscription(
     orgId,
     toPushSubscriptionRequest(subscription),
@@ -104,7 +104,7 @@ export async function syncPushSubscription(orgId: number) {
 
   await registerPushServiceWorker();
   const { publicKey } = await getVapidPublicKey();
-  const subscription = await getOrCreateSubscruption(publicKey);
+  const subscription = await getOrCreateSubscription(publicKey);
   await registerPushSubscription(
     orgId,
     toPushSubscriptionRequest(subscription),
