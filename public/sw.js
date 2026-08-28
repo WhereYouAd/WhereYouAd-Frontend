@@ -1,4 +1,4 @@
-//푸시가 왔을때. 토글 on시
+//푸시가 왔을때.
 self.addEventListener("push", (event) => {
   let payload = {};
   try {
