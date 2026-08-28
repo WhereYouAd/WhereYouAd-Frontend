@@ -12,6 +12,11 @@ import {
   type IWorkspaceNotificationSettings,
 } from "@/types/setting/settingPage";
 
+import {
+  disableBrowserPushSubscription,
+  enableBrowserPushSubscription,
+} from "@/utils/notification/webPush";
+
 import { useCoreQuery } from "@/hooks/customQuery";
 import { useMyNotificationSettings } from "@/hooks/setting/useMyNotificationSettings";
 import { useUpdateAlertsNotificationSettings } from "@/hooks/setting/useUpdateAlertsNotificationSettings";
@@ -44,6 +49,8 @@ export default function useSettingNotifications() {
   const [pendingOrgAction, setPendingOrgAction] = useState<
     "slack" | "discord" | null
   >(null);
+
+  const [isPushPending, setIsPushPending] = useState(false);
 
   const selectedOrgId = useWorkspaceStore((s) => s.selectedOrgId);
 
@@ -99,6 +106,37 @@ export default function useSettingNotifications() {
     alertReport: alerts.alertReport,
     ...overrides,
   });
+
+  const handleBrowserPushChange = async (value: boolean) => {
+    if (selectedOrgId == null) return;
+    setIsPushPending(true);
+    try {
+      if (value) {
+        await enableBrowserPushSubscription(selectedOrgId);
+      } else {
+        await disableBrowserPushSubscription(selectedOrgId);
+      }
+
+      await updateChannels.mutateAsync({
+        isBrowserPushEnabled: value,
+        isEmailEnabled: draftChannel.emailNotif,
+      });
+
+      const nextChannel = { ...draftChannel, browserPush: value };
+      setDraftChannel(nextChannel);
+      setSavedChannel(nextChannel);
+      toast.success(
+        value
+          ? "브라우저 푸시 알림이 켜졌습니다"
+          : "브라우저 푸시 알림이 꺼졌습니다",
+      );
+    } catch (e) {
+      const error = e as IApiErrorResponse;
+      toast.error(error.message ?? "브라우저 푸시 설정에 실패했습니다");
+    } finally {
+      setIsPushPending(false);
+    }
+  };
 
   const handleConnectSlack = async () => {
     const url = slackWebhookUrl.trim();
@@ -366,6 +404,7 @@ export default function useSettingNotifications() {
     isNotificationError,
     notificationError,
     refetchNotificationSettings,
+    isPushPending,
 
     draftChannel,
     setDraftChannel,
@@ -390,6 +429,7 @@ export default function useSettingNotifications() {
     setDiscordWebhookUrl,
     setDiscordWebhookError,
 
+    handleBrowserPushChange,
     handleMasterEnableChange,
     handleConnectSlack,
     handleDisconnectSlack,
