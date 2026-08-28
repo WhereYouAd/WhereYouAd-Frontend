@@ -12,6 +12,7 @@ self.addEventListener("push", (event) => {
   const title = payload.title ?? "알림";
   const body = payload.body ?? payload.message ?? "";
 
+  //함수만 넘기는 것이 아닌. 만들어서 바로 호출하여, 알림 끊기거나 안뜨는일 없도록
   event.waitUntil(
     (async () => {
       await self.registration.showNotification(title, {
