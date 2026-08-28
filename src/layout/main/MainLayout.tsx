@@ -19,6 +19,7 @@ import {
 
 import { ONBOARDING_KEY } from "@/hooks/common/useOnboardingTour";
 import { useCoreQuery } from "@/hooks/customQuery";
+import { usePushNotificationRuntime } from "@/hooks/notification/usePushNotificationRuntime";
 
 import OnboardingTour from "@/components/common/OnboardingTour";
 import NotificationBell from "@/components/notification/NotificationBell";
@@ -37,6 +38,7 @@ export type TMainLayoutOutletContext = {
 };
 
 export default function MainLayout() {
+  usePushNotificationRuntime();
   useCoreQuery(QUERY_KEYS.auth.myInfo(), getMyInfo);
   const location = useLocation();
   const [headerRight, setHeaderRight] = useState<ReactNode | null>(null);

@@ -1,4 +1,4 @@
-//푸시가 왔을때.
+//서버가 푸시를 보냈을때. 푸시가 왔을때.
 self.addEventListener("push", (event) => {
   let payload = {};
   try {
