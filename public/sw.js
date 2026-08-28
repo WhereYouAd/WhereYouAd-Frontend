@@ -12,19 +12,21 @@ self.addEventListener("push", (event) => {
   const title = payload.title ?? "알림";
   const body = payload.body ?? payload.message ?? "";
 
-  event.waitUntil(async () => {
-    await self.registration.showNotification(title, {
-      body,
-      data: payload,
-    });
-    const clients = await self.clients.matchAll({
-      type: "window",
-      includeUncontrolled: true,
-    });
-    clients.forEach((client) => {
-      client.postMessage({ type: "PUSH_RECEIVED" });
-    });
-  });
+  event.waitUntil(
+    (async () => {
+      await self.registration.showNotification(title, {
+        body,
+        data: payload,
+      });
+      const clients = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      clients.forEach((client) => {
+        client.postMessage({ type: "PUSH_RECEIVED" });
+      });
+    })(),
+  );
 });
 
 //알림 클릭시
