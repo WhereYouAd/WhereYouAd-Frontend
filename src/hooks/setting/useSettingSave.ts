@@ -105,6 +105,8 @@ export default function useSettingSave({
         try {
           if (shouldSaveChannel) {
             if (
+              //토글 원래값(saved)은 켜짐이었다가 새로운값(draft)은 꺼짐으로 토글변환했을대만 작동
+              //off -> on은 hanldeBrowserPushChange 핸들러가 작동되니까 (토글 -> handleBrowserPushChange(true) -> 구독 등록)
               !notifications.draftChannel.browserPush &&
               notifications.savedChannel.browserPush &&
               selectedOrgId != null
