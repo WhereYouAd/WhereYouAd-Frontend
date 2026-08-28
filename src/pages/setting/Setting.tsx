@@ -59,6 +59,7 @@ export default function Setting() {
     isNotificationError,
     notificationError,
     refetchNotificationSettings,
+    isPushPending,
     draftChannel,
     setDraftChannel,
     draftWorkspaceNotif,
@@ -74,6 +75,7 @@ export default function Setting() {
     setSlackWebhookError,
     setDiscordWebhookUrl,
     setDiscordWebhookError,
+    handleBrowserPushChange,
     handleMasterEnableChange,
     handleConnectSlack,
     handleDisconnectSlack,
@@ -145,9 +147,8 @@ export default function Setting() {
               onMasterEnabledChange={handleMasterEnableChange}
               browserPush={draftChannel.browserPush}
               emailNotif={draftChannel.emailNotif}
-              onBrowserPushChange={(value) =>
-                setDraftChannel((prev) => ({ ...prev, browserPush: value }))
-              }
+              isPushPending={isPushPending}
+              onBrowserPushChange={handleBrowserPushChange}
               onEmailNotifChange={(value) =>
                 setDraftChannel((prev) => ({ ...prev, emailNotif: value }))
               }

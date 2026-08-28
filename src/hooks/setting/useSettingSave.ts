@@ -3,6 +3,8 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
+import { disableBrowserPushSubscription } from "@/utils/notification/webPush";
+
 import type useSettingNotifications from "@/hooks/setting/useSettingNotifications";
 import type useSettingPassword from "@/hooks/setting/useSettingPassword";
 import type useSettingProfile from "@/hooks/setting/useSettingProfile";
@@ -102,6 +104,13 @@ export default function useSettingSave({
         const savedSteps: string[] = [];
         try {
           if (shouldSaveChannel) {
+            if (
+              !notifications.draftChannel.browserPush &&
+              notifications.savedChannel.browserPush &&
+              selectedOrgId != null
+            ) {
+              await disableBrowserPushSubscription(selectedOrgId);
+            }
             await notifications.updateChannels.mutateAsync({
               isBrowserPushEnabled: notifications.draftChannel.browserPush,
               isEmailEnabled: notifications.draftChannel.emailNotif,
