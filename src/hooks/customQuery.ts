@@ -1,7 +1,10 @@
 import {
+  type InfiniteData,
   type MutationFunction,
   type QueryFunction,
   type QueryKey,
+  useInfiniteQuery,
+  type UseInfiniteQueryResult,
   useMutation,
   useQuery,
   useQueryClient,
@@ -10,6 +13,7 @@ import {
 
 import type {
   IApiErrorResponse,
+  TUseInfiniteQueryCustomOptions,
   TUseMutationCustomOptions,
   TUseQueryCustomOptions,
 } from "@/types/common/common";
@@ -20,6 +24,22 @@ export function useCoreQuery<TQueryFnData, TData = TQueryFnData>(
   options?: TUseQueryCustomOptions<TQueryFnData, TData>,
 ): UseQueryResult<TData, IApiErrorResponse> {
   return useQuery({
+    queryKey: keyName,
+    queryFn: query,
+    ...options,
+  });
+}
+
+export function useCoreInfiniteQuery<
+  TQueryFnData,
+  TData = InfiniteData<TQueryFnData>,
+  TPageParam = string | null,
+>(
+  keyName: QueryKey,
+  query: QueryFunction<TQueryFnData, QueryKey, TPageParam>,
+  options: TUseInfiniteQueryCustomOptions<TQueryFnData, TData, TPageParam>,
+): UseInfiniteQueryResult<TData, IApiErrorResponse> {
+  return useInfiniteQuery({
     queryKey: keyName,
     queryFn: query,
     ...options,
