@@ -1,8 +1,7 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-
-import type { IApiErrorResponse } from "@/types/common/common";
 import type { INotificationHistoryData } from "@/types/notification/notification";
 import { MOCK_NOTIFICATION_HISTORY } from "@/types/notification/notification.mock";
+
+import { useCoreInfiniteQuery } from "@/hooks/customQuery";
 
 import { getNotificationHistory } from "@/api/notification/notification";
 import { QUERY_KEYS } from "@/lib/queryKeys";
@@ -14,24 +13,26 @@ const USE_MOCK_NOTIFICATION_HISTORY = true;
 export function useNotificationHistory() {
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
 
-  const query = useInfiniteQuery<INotificationHistoryData, IApiErrorResponse>({
-    queryKey: [
+  const query = useCoreInfiniteQuery<INotificationHistoryData>(
+    [
       ...QUERY_KEYS.notification.history(orgId),
       USE_MOCK_NOTIFICATION_HISTORY ? "mock" : "api",
     ],
-    queryFn: ({ pageParam }) => {
+    ({ pageParam }) => {
       if (USE_MOCK_NOTIFICATION_HISTORY) {
         return Promise.resolve(MOCK_NOTIFICATION_HISTORY);
       }
       return getNotificationHistory(orgId as number, {
-        cursor: (pageParam as string | null) ?? undefined,
+        cursor: pageParam ?? undefined,
       });
     },
-    initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNext ? lastPage.nextCursor : undefined,
-    enabled: orgId != null,
-  });
+    {
+      initialPageParam: null,
+      getNextPageParam: (lastPage) =>
+        lastPage.hasNext ? lastPage.nextCursor : undefined,
+      enabled: orgId != null,
+    },
+  );
 
   const notifications =
     query.data?.pages.flatMap((page) => page.notifications) ?? [];
