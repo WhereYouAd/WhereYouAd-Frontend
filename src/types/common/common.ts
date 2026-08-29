@@ -1,5 +1,7 @@
 import type {
+  InfiniteData,
   QueryKey,
+  UseInfiniteQueryOptions,
   UseMutationOptions,
   UseQueryOptions,
 } from "@tanstack/react-query";
@@ -24,6 +26,21 @@ export type TUseQueryCustomOptions<
   TData = TQueryFnData,
 > = Omit<
   UseQueryOptions<TQueryFnData, IApiErrorResponse, TData, QueryKey>,
+  "queryKey" | "queryFn"
+>;
+
+export type TUseInfiniteQueryCustomOptions<
+  TQueryFnData = unknown,
+  TData = InfiniteData<TQueryFnData>,
+  TPageParam = unknown,
+> = Omit<
+  UseInfiniteQueryOptions<
+    TQueryFnData,
+    IApiErrorResponse,
+    TData,
+    QueryKey,
+    TPageParam
+  >,
   "queryKey" | "queryFn"
 >;
 
