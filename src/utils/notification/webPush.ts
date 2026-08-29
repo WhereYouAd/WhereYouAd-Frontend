@@ -90,7 +90,8 @@ export async function enableBrowserPushSubscription(orgId: number) {
 export async function disableBrowserPushSubscription(orgId: number) {
   if (!("serviceWorker" in navigator)) return;
 
-  const registration = await navigator.serviceWorker.ready;
+  const registration = await navigator.serviceWorker.getRegistration();
+  if (!registration?.active) return;
   const subscription = await registration.pushManager.getSubscription();
   if (!subscription) return;
 
