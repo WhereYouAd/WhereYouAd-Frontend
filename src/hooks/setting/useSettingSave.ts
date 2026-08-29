@@ -3,7 +3,10 @@ import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 
-import { disableBrowserPushSubscription } from "@/utils/notification/webPush";
+import {
+  disableBrowserPushSubscription,
+  enableBrowserPushSubscription,
+} from "@/utils/notification/webPush";
 
 import type useSettingNotifications from "@/hooks/setting/useSettingNotifications";
 import type useSettingPassword from "@/hooks/setting/useSettingPassword";
@@ -104,9 +107,18 @@ export default function useSettingSave({
         const savedSteps: string[] = [];
         try {
           if (shouldSaveChannel) {
+            //off -> on
+            //토글 원래값(saved)은 꺼짐이었다가 새로운값(draft)은 켜짐으로 토글변환했을때만 작동
             if (
-              //토글 원래값(saved)은 켜짐이었다가 새로운값(draft)은 꺼짐으로 토글변환했을대만 작동
-              //off -> on은 hanldeBrowserPushChange 핸들러가 작동되니까 (토글 -> handleBrowserPushChange(true) -> 구독 등록)
+              notifications.draftChannel.browserPush &&
+              !notifications.savedChannel.browserPush &&
+              selectedOrgId != null
+            ) {
+              await enableBrowserPushSubscription(selectedOrgId);
+            }
+            if (
+              //on -> off
+              //토글 원래값(saved)은 켜짐이었다가 새로운값(draft)은 꺼짐으로 토글변환했을때만 작동
               !notifications.draftChannel.browserPush &&
               notifications.savedChannel.browserPush &&
               selectedOrgId != null

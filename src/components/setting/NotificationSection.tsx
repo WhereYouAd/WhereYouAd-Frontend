@@ -18,7 +18,6 @@ type TNotificationSectionProps = {
   //channel
   browserPush: boolean;
   emailNotif: boolean;
-  isPushPending?: boolean;
   onBrowserPushChange: (value: boolean) => void;
   onEmailNotifChange: (value: boolean) => void;
   slackEnabled: boolean;
@@ -54,7 +53,6 @@ export default function NotificationSection({
   onMasterEnabledChange,
   browserPush,
   emailNotif,
-  isPushPending,
   onBrowserPushChange,
   onEmailNotifChange,
   slackEnabled,
@@ -130,7 +128,7 @@ export default function NotificationSection({
             <div className="shrink-0">
               <Toggle
                 checked={browserPush}
-                disabled={channelDisabled || isPushPending}
+                disabled={channelDisabled}
                 onToggle={() => onBrowserPushChange(!browserPush)}
                 ariaLabel="브라우저 푸시 알림 켜기/끄기"
               />
