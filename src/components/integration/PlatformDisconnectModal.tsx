@@ -10,7 +10,6 @@ interface IPlatformDisconnectModalProps {
   isOpen: boolean;
   onClose: () => void;
   provider: TIntegrationProvider;
-  externalAccountId?: string;
   onConfirm: () => void;
   isLoading?: boolean;
 }
@@ -19,7 +18,6 @@ export default function PlatformDisconnectModal({
   isOpen,
   onClose,
   provider,
-  externalAccountId,
   onConfirm,
   isLoading = false,
 }: IPlatformDisconnectModalProps) {
@@ -55,14 +53,6 @@ export default function PlatformDisconnectModal({
         </h3>
 
         <p className="mb-7 font-body1 text-text-auth-sub">
-          {externalAccountId ? (
-            <>
-              연동 계정 ·{" "}
-              <span className="text-text-title">{externalAccountId}</span>
-              <br />
-              <br />
-            </>
-          ) : null}
           해제 후에도 기존 계정을 다시 연동할 수 있으며, 계정은 매일 새벽 4시에
           삭제됩니다.
           <br />
