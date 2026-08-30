@@ -1,21 +1,41 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useControlModal } from "@/hooks/ads/useControlModal";
+import type { ICampaign } from "@/types/ads/campaign";
+
+import {
+  type IBulkOperableCopy,
+  useBulkOperableControl,
+} from "@/hooks/ads/useBulkOperableControl";
 import { useUpdateCampaignStatus } from "@/hooks/ads/useUpdateCampaignStatus";
 import { useOverviewCampaignList } from "@/hooks/dashboard/useOverviewCampaignList";
 
+import BulkStatusActionModals from "@/components/ads/BulkStatusActionModals";
 import CampaignTable from "@/components/ads/CampaignTable";
 import AdsListPageSkeleton from "@/components/ads/skeleton/AdsSkeleton";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
-import Modal from "@/components/common/modal/Modal";
-import ModalContent from "@/components/common/modal/ModalContent";
 
-import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+const CAMPAIGN_BULK_COPY: IBulkOperableCopy = {
+  entityName: "캠페인",
+  entityObject: "캠페인을",
+  pauseModalTitle: "캠페인 운영 중단",
+  resumeModalTitle: "캠페인 운영 재개",
+  pauseDetailListTitle: "중단 대상 캠페인",
+  resumeDetailListTitle: "재개 대상 캠페인",
+  successMessage: "캠페인 운영 상태가 반영되었습니다.",
+  pauseErrorMessage: "중단 처리에 실패하였습니다.",
+  resumeErrorMessage: "재개 처리에 실패하였습니다.",
+  exposureNoun: "광고 노출",
+};
+
+const getCampaignId = (campaign: ICampaign) => campaign.projectId;
+const getCampaignLabel = (campaign: ICampaign) => campaign.name;
+const getCampaignStatus = (campaign: ICampaign) => campaign.status;
 
 export default function AdsListPage() {
   const navigate = useNavigate();
@@ -32,12 +52,19 @@ export default function AdsListPage() {
     setSelectedIds(new Set());
   }, [orgId]);
 
-  const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
-  const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
-
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set());
   }, []);
+
+  const bulk = useBulkOperableControl({
+    items: campaigns,
+    selectedIds,
+    getId: getCampaignId,
+    getLabel: getCampaignLabel,
+    getStatus: getCampaignStatus,
+    copy: CAMPAIGN_BULK_COPY,
+    onSuccess: clearSelection,
+  });
 
   const toggleProject = useCallback((projectId: number) => {
     setSelectedIds((prev) => {
@@ -63,78 +90,6 @@ export default function AdsListPage() {
       return new Set([...prev, ...visibleIds]);
     });
   }, [campaigns]);
-
-  const selectedOngoingIds = useMemo(() => {
-    return [...selectedIds].filter((id) =>
-      campaigns.some((c) => c.projectId === id && c.status === "ON_GOING"),
-    );
-  }, [selectedIds, campaigns]);
-
-  const selectedPausedIds = useMemo(() => {
-    return [...selectedIds].filter((id) =>
-      campaigns.some((c) => c.projectId === id && c.status === "PAUSED"),
-    );
-  }, [selectedIds, campaigns]);
-
-  const ongoingAllCount = useMemo(
-    () => campaigns.filter((c) => c.status === "ON_GOING").length,
-    [campaigns],
-  );
-
-  const pausedAllCount = useMemo(
-    () => campaigns.filter((c) => c.status === "PAUSED").length,
-    [campaigns],
-  );
-
-  const canPause = useMemo(() => {
-    if (selectedOngoingIds.length > 0) return true;
-    return selectedIds.size === 0 && ongoingAllCount > 0;
-  }, [selectedOngoingIds.length, selectedIds.size, ongoingAllCount]);
-
-  const canResume = useMemo(() => {
-    if (selectedPausedIds.length > 0) return true;
-    return selectedIds.size === 0 && pausedAllCount > 0;
-  }, [selectedPausedIds.length, selectedIds.size, pausedAllCount]);
-
-  const bulkStop = useControlModal({
-    successMessage: "캠페인 운영 상태가 반영되었습니다.",
-    errorMessage: "중단 처리에 실패하였습니다.",
-    onSuccess: clearSelection,
-  });
-
-  const bulkResume = useControlModal({
-    successMessage: "캠페인 운영 상태가 반영되었습니다.",
-    errorMessage: "재개 처리에 실패하였습니다.",
-    onSuccess: clearSelection,
-  });
-
-  const openPauseModal = () => {
-    const scope = selectedOngoingIds.length > 0 ? "selection" : "all";
-    setPauseScope(scope);
-    bulkStop.openModal();
-  };
-
-  const openResumeModal = () => {
-    const scope = selectedPausedIds.length > 0 ? "selection" : "all";
-    setResumeScope(scope);
-    bulkResume.openModal();
-  };
-
-  const pauseDetailItems = useMemo(() => {
-    const rows =
-      pauseScope === "selection"
-        ? campaigns.filter((c) => selectedOngoingIds.includes(c.projectId))
-        : campaigns.filter((c) => c.status === "ON_GOING");
-    return rows.map((c) => ({ id: c.projectId, label: c.name }));
-  }, [pauseScope, campaigns, selectedOngoingIds]);
-
-  const resumeDetailItems = useMemo(() => {
-    const rows =
-      resumeScope === "selection"
-        ? campaigns.filter((c) => selectedPausedIds.includes(c.projectId))
-        : campaigns.filter((c) => c.status === "PAUSED");
-    return rows.map((c) => ({ id: c.projectId, label: c.name }));
-  }, [resumeScope, campaigns, selectedPausedIds]);
 
   const handleCampaignClick = (id: number) => {
     navigate(`/ads/${orgId}/${id}`);
@@ -179,8 +134,8 @@ export default function AdsListPage() {
                 size="small"
                 variant="dangerSoft"
                 className="mobile:min-w-0 mobile:flex-1"
-                onClick={openPauseModal}
-                disabled={!canPause || bulkStop.isLoading}
+                onClick={bulk.openPauseModal}
+                disabled={!bulk.canPause || bulk.pauseModal.isLoading}
               >
                 중단
               </Button>
@@ -189,8 +144,8 @@ export default function AdsListPage() {
                 size="small"
                 variant="outline"
                 className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
-                onClick={openResumeModal}
-                disabled={!canResume || bulkResume.isLoading}
+                onClick={bulk.openResumeModal}
+                disabled={!bulk.canResume || bulk.resumeModal.isLoading}
               >
                 재개
               </Button>
@@ -224,75 +179,39 @@ export default function AdsListPage() {
         </div>
       </Card>
 
-      <Modal
-        isOpen={bulkStop.isOpen}
-        onClose={bulkStop.closeModal}
-        title="캠페인 운영 중단"
-      >
-        <ModalContent
-          icon={<WarnCircleIcon className="h-7 w-7 text-info-red" />}
-          title={
-            pauseScope === "all"
-              ? "운영 중인 캠페인을 모두 중단할까요?"
-              : "선택한 캠페인을 중단할까요?"
-          }
-          description={
-            pauseScope === "all"
-              ? `운영 중인 ${ongoingAllCount}개 캠페인의 광고 노출이 즉시 중단됩니다.`
-              : `선택한 ${selectedOngoingIds.length}개 캠페인의 광고 노출이 즉시 중단됩니다.`
-          }
-          detailItems={pauseDetailItems}
-          detailListTitle="중단 대상 캠페인"
-          buttonText="중단하기"
-          onConfirm={() =>
-            bulkStop.handleConfirm(() =>
-              mutateCampaignStatus({
-                scope: pauseScope,
-                status: "PAUSED",
-                projectIds:
-                  pauseScope === "selection" ? selectedOngoingIds : undefined,
-              }),
-            )
-          }
-          isLoading={bulkStop.isLoading}
-          variant="danger"
-        />
-      </Modal>
-
-      <Modal
-        isOpen={bulkResume.isOpen}
-        onClose={bulkResume.closeModal}
-        title="캠페인 운영 재개"
-      >
-        <ModalContent
-          icon={<WarnCircleIcon className="h-7 w-7 text-info-blue" />}
-          title={
-            resumeScope === "all"
-              ? "중단된 캠페인을 모두 재개할까요?"
-              : "선택한 캠페인을 재개할까요?"
-          }
-          description={
-            resumeScope === "all"
-              ? `중단된 ${pausedAllCount}개 캠페인의 광고 노출이 즉시 재개됩니다.`
-              : `선택한 ${selectedPausedIds.length}개 캠페인의 광고 노출이 즉시 재개됩니다.`
-          }
-          detailItems={resumeDetailItems}
-          detailListTitle="재개 대상 캠페인"
-          buttonText="재개하기"
-          onConfirm={() =>
-            bulkResume.handleConfirm(() =>
-              mutateCampaignStatus({
-                scope: resumeScope,
-                status: "ON_GOING",
-                projectIds:
-                  resumeScope === "selection" ? selectedPausedIds : undefined,
-              }),
-            )
-          }
-          isLoading={bulkResume.isLoading}
-          variant="primary"
-        />
-      </Modal>
+      <BulkStatusActionModals
+        copy={CAMPAIGN_BULK_COPY}
+        pauseScope={bulk.pauseScope}
+        resumeScope={bulk.resumeScope}
+        selectedOngoingCount={bulk.selectedOngoingIds.length}
+        selectedPausedCount={bulk.selectedPausedIds.length}
+        ongoingAllCount={bulk.ongoingAllCount}
+        pausedAllCount={bulk.pausedAllCount}
+        pauseDetailItems={bulk.pauseDetailItems}
+        resumeDetailItems={bulk.resumeDetailItems}
+        pauseModal={bulk.pauseModal}
+        resumeModal={bulk.resumeModal}
+        onConfirmPause={() =>
+          mutateCampaignStatus({
+            scope: bulk.pauseScope,
+            status: "PAUSED",
+            projectIds:
+              bulk.pauseScope === "selection"
+                ? bulk.selectedOngoingIds
+                : undefined,
+          })
+        }
+        onConfirmResume={() =>
+          mutateCampaignStatus({
+            scope: bulk.resumeScope,
+            status: "ON_GOING",
+            projectIds:
+              bulk.resumeScope === "selection"
+                ? bulk.selectedPausedIds
+                : undefined,
+          })
+        }
+      />
     </section>
   );
 }
