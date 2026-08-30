@@ -54,7 +54,7 @@ export function getPlatformSyncToast(
   if ("message" in data) {
     return {
       type: "success",
-      message: data.message || `${label} 데이터를 동기화했습니다.`,
+      message: `${label} 데이터를 동기화했습니다.`,
     };
   }
 
