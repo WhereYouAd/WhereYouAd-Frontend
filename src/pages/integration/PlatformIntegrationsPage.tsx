@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { toast } from "sonner";
 
-import type { IApiErrorResponse } from "@/types/common/common";
-import type {
-  IPlatformConnectionItem,
-  TIntegrationProvider,
-} from "@/types/integration/platformConnection";
+import type { TIntegrationProvider } from "@/types/integration/platformConnection";
 
 import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
-import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
-import { usePlatformConnectionActions } from "@/hooks/integration/usePlatformConnectionActions";
+import {
+  type TDisconnectTarget,
+  usePlatformConnectionActions,
+} from "@/hooks/integration/usePlatformConnectionActions";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
+import { useRequireOrgId } from "@/hooks/integration/useRequireOrgId";
 
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
@@ -26,16 +24,8 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
-import useWorkspaceStore from "@/store/useWorkspaceStore";
-
-type TDisconnectTarget = {
-  orgId: number;
-  provider: TIntegrationProvider;
-  platformAccountId: number;
-};
-
 export default function PlatformIntegrationsPage() {
-  const orgId = useWorkspaceStore((s) => s.selectedOrgId);
+  const { orgId, requireOrgId } = useRequireOrgId();
   const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
   const [naverModalMode, setNaverModalMode] = useState<"connect" | "reconnect">(
     "connect",
@@ -55,10 +45,23 @@ export default function PlatformIntegrationsPage() {
     error,
   } = usePlatformConnections();
 
-  const { disconnectMutation, reconnectMutation } =
-    usePlatformConnectionActions({
-      onDisconnectSuccess: () => setDisconnectTarget(null),
-    });
+  const {
+    handleConnect,
+    handleDisconnect,
+    handleConfirmDisconnect,
+    disconnectMutation,
+    reconnectMutation,
+  } = usePlatformConnectionActions({
+    platformConnections,
+    disconnectTarget,
+    onOpenNaverConnect: (mode, customerId) => {
+      setNaverModalMode(mode);
+      setNaverCustomerId(customerId);
+      setIsNaverModalOpen(true);
+    },
+    onRequestDisconnect: setDisconnectTarget,
+    onDisconnectSuccess: () => setDisconnectTarget(null),
+  });
 
   const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
     usePlatformSyncMutations({
@@ -70,91 +73,9 @@ export default function PlatformIntegrationsPage() {
     setIsNaverSyncModalOpen(true);
   };
 
-  const startNewConnect = async (provider: TIntegrationProvider) => {
-    if (orgId == null) {
-      toast.error("워크스페이스를 선택해 주세요.");
-      return;
-    }
-
-    if (provider === "NAVER") {
-      setNaverModalMode("connect");
-      setNaverCustomerId(undefined);
-      setIsNaverModalOpen(true);
-      return;
-    }
-
-    try {
-      await startPlatformConnect(provider, orgId);
-    } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : ((err as IApiErrorResponse)?.message ??
-            "플랫폼 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
-      toast.error(message);
-    }
-  };
-
-  const handleConnect = async (provider: TIntegrationProvider) => {
-    if (orgId == null) {
-      toast.error("워크스페이스를 선택해 주세요.");
-      return;
-    }
-
-    const item = platformConnections.find((p) => p.provider === provider);
-    if (item?.status === "disconnected" && item.platformAccountId != null) {
-      if (reconnectMutation.isPending) return;
-      reconnectMutation.mutate({
-        orgId,
-        accountId: item.platformAccountId,
-      });
-      return;
-    }
-
-    if (provider === "NAVER") {
-      const naverItem = platformConnections.find((p) => p.provider === "NAVER");
-
-      if (naverItem?.platformAccountId != null) {
-        setNaverModalMode("reconnect");
-        setNaverCustomerId(naverItem.externalAccountId);
-        setIsNaverModalOpen(true);
-        return;
-      }
-    }
-
-    await startNewConnect(provider);
-  };
-
-  const handleDisconnect = (item: IPlatformConnectionItem) => {
-    if (orgId == null) {
-      toast.error("워크스페이스를 선택해 주세요.");
-      return;
-    }
-    if (item.platformAccountId == null) {
-      toast.error("연동 계정 정보를 찾을 수 없습니다.");
-      return;
-    }
-    setDisconnectTarget({
-      orgId,
-      provider: item.provider,
-      platformAccountId: item.platformAccountId,
-    });
-  };
-
-  const handleConfirmDisconnect = () => {
-    if (disconnectTarget == null || disconnectMutation.isPending) return;
-
-    disconnectMutation.mutate({
-      orgId: disconnectTarget.orgId,
-      accountId: disconnectTarget.platformAccountId,
-    });
-  };
-
   const handleSync = (provider: TIntegrationProvider) => {
-    if (orgId == null) {
-      toast.error("워크스페이스를 선택해 주세요.");
-      return;
-    }
+    const currentOrgId = requireOrgId();
+    if (currentOrgId == null) return;
 
     if (isSyncPending) return;
 
@@ -169,12 +90,12 @@ export default function PlatformIntegrationsPage() {
     setSyncingProvider(provider);
 
     if (provider === "META") {
-      syncMeta(orgId);
+      syncMeta(currentOrgId);
       return;
     }
 
     if (provider === "GOOGLE") {
-      syncGoogle(orgId);
+      syncGoogle(currentOrgId);
     }
   };
 

@@ -1,7 +1,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { IApiErrorResponse } from "@/types/common/common";
+import type {
+  IPlatformConnectionItem,
+  TIntegrationProvider,
+} from "@/types/integration/platformConnection";
+
+import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
+
 import { useCoreMutation } from "@/hooks/customQuery";
+import { useRequireOrgId } from "@/hooks/integration/useRequireOrgId";
 
 import {
   disconnectPlatformAccount,
@@ -9,17 +18,31 @@ import {
 } from "@/api/integration/platformAccounts";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 
-interface IUsePlatformConnectionActionsOptions {
-  /** 연동 해제 성공 — 해제 모달 닫기 */
+export type TNaverConnectMode = "connect" | "reconnect";
+
+export type TDisconnectTarget = {
+  orgId: number;
+  provider: TIntegrationProvider;
+  platformAccountId: number;
+};
+
+interface IUsePlatformConnectionActionsParams {
+  platformConnections: IPlatformConnectionItem[];
+  disconnectTarget: TDisconnectTarget | null;
+  onOpenNaverConnect: (mode: TNaverConnectMode, customerId?: string) => void;
+  onRequestDisconnect: (target: TDisconnectTarget) => void;
   onDisconnectSuccess?: () => void;
 }
 
-/** 플랫폼 연동 해제·재연동 mutation */
-export function usePlatformConnectionActions(
-  options?: IUsePlatformConnectionActionsOptions,
-) {
+export function usePlatformConnectionActions({
+  platformConnections,
+  disconnectTarget,
+  onOpenNaverConnect,
+  onRequestDisconnect,
+  onDisconnectSuccess,
+}: IUsePlatformConnectionActionsParams) {
   const queryClient = useQueryClient();
-  const { onDisconnectSuccess } = options ?? {};
+  const { requireOrgId } = useRequireOrgId();
 
   const invalidateConnections = async (requestOrgId: number) => {
     await queryClient.invalidateQueries({
@@ -62,7 +85,82 @@ export function usePlatformConnectionActions(
     },
   );
 
+  const startNewConnect = async (provider: TIntegrationProvider) => {
+    const orgId = requireOrgId();
+    if (orgId == null) return;
+
+    if (provider === "NAVER") {
+      onOpenNaverConnect("connect");
+      return;
+    }
+
+    try {
+      await startPlatformConnect(provider, orgId);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : ((err as IApiErrorResponse)?.message ??
+            "플랫폼 연동을 시작하지 못했습니다. 다시 시도해 주세요.");
+      toast.error(message);
+    }
+  };
+
+  const handleConnect = async (provider: TIntegrationProvider) => {
+    const orgId = requireOrgId();
+    if (orgId == null) return;
+
+    const item = platformConnections.find((p) => p.provider === provider);
+    if (item?.status === "disconnected" && item.platformAccountId != null) {
+      if (reconnectMutation.isPending) return;
+      reconnectMutation.mutate({
+        orgId,
+        accountId: item.platformAccountId,
+      });
+      return;
+    }
+
+    if (provider === "NAVER") {
+      const naverItem = platformConnections.find((p) => p.provider === "NAVER");
+
+      if (naverItem?.platformAccountId != null) {
+        onOpenNaverConnect("reconnect", naverItem.externalAccountId);
+        return;
+      }
+    }
+
+    await startNewConnect(provider);
+  };
+
+  const handleDisconnect = (item: IPlatformConnectionItem) => {
+    const orgId = requireOrgId();
+    if (orgId == null) return;
+
+    if (item.platformAccountId == null) {
+      toast.error("연동 계정 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    onRequestDisconnect({
+      orgId,
+      provider: item.provider,
+      platformAccountId: item.platformAccountId,
+    });
+  };
+
+  const handleConfirmDisconnect = () => {
+    if (disconnectTarget == null || disconnectMutation.isPending) return;
+
+    disconnectMutation.mutate({
+      orgId: disconnectTarget.orgId,
+      accountId: disconnectTarget.platformAccountId,
+    });
+  };
+
   return {
+    handleConnect,
+    handleDisconnect,
+    handleConfirmDisconnect,
     disconnectMutation,
     reconnectMutation,
   };
