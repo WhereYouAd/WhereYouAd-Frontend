@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -7,9 +8,11 @@ import type {
   TIntegrationProvider,
 } from "@/types/integration/platformConnection";
 
+import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
 import { useCoreMutation } from "@/hooks/customQuery";
+import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 import { useRequireOrgId } from "@/hooks/integration/useRequireOrgId";
 
 import {
@@ -30,6 +33,8 @@ interface IUsePlatformConnectionActionsParams {
   platformConnections: IPlatformConnectionItem[];
   disconnectTarget: TDisconnectTarget | null;
   onOpenNaverConnect: (mode: TNaverConnectMode, customerId?: string) => void;
+  onOpenNaverSync: () => void;
+  onNaverSyncSuccess?: () => void;
   onRequestDisconnect: (target: TDisconnectTarget) => void;
   onDisconnectSuccess?: () => void;
 }
@@ -38,11 +43,21 @@ export function usePlatformConnectionActions({
   platformConnections,
   disconnectTarget,
   onOpenNaverConnect,
+  onOpenNaverSync,
+  onNaverSyncSuccess,
   onRequestDisconnect,
   onDisconnectSuccess,
 }: IUsePlatformConnectionActionsParams) {
   const queryClient = useQueryClient();
   const { requireOrgId } = useRequireOrgId();
+  const [syncingProvider, setSyncingProvider] =
+    useState<TIntegrationProvider | null>(null);
+
+  const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
+    usePlatformSyncMutations({
+      onSyncSettled: () => setSyncingProvider(null),
+      onNaverSyncSuccess,
+    });
 
   const invalidateConnections = async (requestOrgId: number) => {
     await queryClient.invalidateQueries({
@@ -157,11 +172,50 @@ export function usePlatformConnectionActions({
     });
   };
 
+  const handleSync = (provider: TIntegrationProvider) => {
+    const orgId = requireOrgId();
+    if (orgId == null) return;
+
+    if (isSyncPending) return;
+
+    const item = platformConnections.find((p) => p.provider === provider);
+    if (item?.status !== "connected") return;
+
+    if (provider === "NAVER") {
+      onOpenNaverSync();
+      return;
+    }
+
+    setSyncingProvider(provider);
+
+    if (provider === "META") {
+      syncMeta(orgId);
+      return;
+    }
+
+    if (provider === "GOOGLE") {
+      syncGoogle(orgId);
+    }
+  };
+
+  const handleNaverSyncSubmit = (values: TNaverSyncFormValues) => {
+    const orgId = requireOrgId();
+    if (orgId == null || isNaverSyncPending) return;
+
+    setSyncingProvider("NAVER");
+    syncNaver(orgId, values);
+  };
+
   return {
     handleConnect,
     handleDisconnect,
     handleConfirmDisconnect,
+    handleSync,
+    handleNaverSyncSubmit,
     disconnectMutation,
     reconnectMutation,
+    isSyncPending,
+    isNaverSyncPending,
+    syncingProvider,
   };
 }

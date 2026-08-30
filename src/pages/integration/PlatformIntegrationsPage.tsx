@@ -1,15 +1,10 @@
 import { useState } from "react";
 
-import type { TIntegrationProvider } from "@/types/integration/platformConnection";
-
-import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
-
 import {
   type TDisconnectTarget,
   usePlatformConnectionActions,
 } from "@/hooks/integration/usePlatformConnectionActions";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
-import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 import { useRequireOrgId } from "@/hooks/integration/useRequireOrgId";
 
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
@@ -25,16 +20,13 @@ import {
 } from "@/components/integration/UpcomingPlatformCard";
 
 export default function PlatformIntegrationsPage() {
-  const { orgId, requireOrgId } = useRequireOrgId();
+  const { orgId } = useRequireOrgId();
   const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
   const [naverModalMode, setNaverModalMode] = useState<"connect" | "reconnect">(
     "connect",
   );
   const [naverCustomerId, setNaverCustomerId] = useState<string | undefined>();
   const [isNaverSyncModalOpen, setIsNaverSyncModalOpen] = useState(false);
-  const [syncingProvider, setSyncingProvider] =
-    useState<TIntegrationProvider | null>(null);
-
   const [disconnectTarget, setDisconnectTarget] =
     useState<TDisconnectTarget | null>(null);
 
@@ -49,8 +41,13 @@ export default function PlatformIntegrationsPage() {
     handleConnect,
     handleDisconnect,
     handleConfirmDisconnect,
+    handleSync,
+    handleNaverSyncSubmit,
     disconnectMutation,
     reconnectMutation,
+    isSyncPending,
+    isNaverSyncPending,
+    syncingProvider,
   } = usePlatformConnectionActions({
     platformConnections,
     disconnectTarget,
@@ -59,52 +56,11 @@ export default function PlatformIntegrationsPage() {
       setNaverCustomerId(customerId);
       setIsNaverModalOpen(true);
     },
+    onOpenNaverSync: () => setIsNaverSyncModalOpen(true),
+    onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
     onRequestDisconnect: setDisconnectTarget,
     onDisconnectSuccess: () => setDisconnectTarget(null),
   });
-
-  const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
-    usePlatformSyncMutations({
-      onSyncSettled: () => setSyncingProvider(null),
-      onNaverSyncSuccess: () => setIsNaverSyncModalOpen(false),
-    });
-
-  const handleNaverConnectSuccess = () => {
-    setIsNaverSyncModalOpen(true);
-  };
-
-  const handleSync = (provider: TIntegrationProvider) => {
-    const currentOrgId = requireOrgId();
-    if (currentOrgId == null) return;
-
-    if (isSyncPending) return;
-
-    const item = platformConnections.find((p) => p.provider === provider);
-    if (item?.status !== "connected") return;
-
-    if (provider === "NAVER") {
-      setIsNaverSyncModalOpen(true);
-      return;
-    }
-
-    setSyncingProvider(provider);
-
-    if (provider === "META") {
-      syncMeta(currentOrgId);
-      return;
-    }
-
-    if (provider === "GOOGLE") {
-      syncGoogle(currentOrgId);
-    }
-  };
-
-  const handleNaverSyncSubmit = (values: TNaverSyncFormValues) => {
-    if (orgId == null || isNaverSyncPending) return;
-
-    setSyncingProvider("NAVER");
-    syncNaver(orgId, values);
-  };
 
   return (
     <section className="flex w-full min-w-0 flex-col gap-6">
@@ -174,7 +130,7 @@ export default function PlatformIntegrationsPage() {
           orgId={orgId}
           mode={naverModalMode}
           initialCustomerId={naverCustomerId}
-          onConnectSuccess={handleNaverConnectSuccess}
+          onConnectSuccess={() => setIsNaverSyncModalOpen(true)}
         />
       ) : null}
       {orgId != null ? (
