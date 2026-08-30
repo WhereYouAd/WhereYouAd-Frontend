@@ -24,8 +24,10 @@ export interface IBulkOperableItem {
  * 캠페인 목록 / 캠페인 상세(광고 소재)에서 entityName 등만 바꿔 재사용
  */
 export interface IBulkOperableCopy {
-  /** "캠페인" | "광고 소재" — 모달 제목·설명에 삽입 */
+  /** "캠페인" | "광고 소재" — 모달 설명에 삽입 */
   entityName: string;
+  /** 목적격 조사 포함 — "캠페인을" | "광고 소재를" (모달 제목용) */
+  entityObject: string;
   pauseModalTitle: string;
   resumeModalTitle: string;
   pauseDetailListTitle: string;
