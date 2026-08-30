@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 
-import type { IPlatformBudgetSummary, TPlatform } from "@/types/ads/campaign";
+import type {
+  IAd,
+  IPlatformBudgetSummary,
+  TPlatform,
+} from "@/types/ads/campaign";
 
 import { AD_PLATFORM_ORDER, groupAdsByPlatform } from "@/utils/ads/adPlatform";
 import {
@@ -11,11 +15,15 @@ import {
 } from "@/utils/ads/projectBudget";
 
 import { useAdList } from "@/hooks/ads/useAdList";
+import {
+  type IBulkOperableCopy,
+  useBulkOperableControl,
+} from "@/hooks/ads/useBulkOperableControl";
 import { useCampaignDetail } from "@/hooks/ads/useCampaignDetail";
-import { useControlModal } from "@/hooks/ads/useControlModal";
 import { useUpdateAdStatus } from "@/hooks/ads/useUpdateAdStatus";
 
 import AdListTable from "@/components/ads/AdListTable";
+import BulkStatusActionModals from "@/components/ads/BulkStatusActionModals";
 import CampaignPlatformSection from "@/components/ads/CampaignPlatformSection";
 import EditPlatformBudgetModal from "@/components/ads/EditPlatformBudgetModal";
 import {
@@ -27,12 +35,26 @@ import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
-import Modal from "@/components/common/modal/Modal";
-import ModalContent from "@/components/common/modal/ModalContent";
 
-import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
+
+const AD_BULK_COPY: IBulkOperableCopy = {
+  entityName: "광고 소재",
+  entityObject: "광고 소재를",
+  pauseModalTitle: "광고 소재 중단",
+  resumeModalTitle: "광고 소재 재개",
+  pauseDetailListTitle: "중단 대상 광고",
+  resumeDetailListTitle: "재개 대상 광고",
+  successMessage: "광고 소재 운영 상태가 반영되었습니다.",
+  pauseErrorMessage: "중단 처리에 실패했습니다.",
+  resumeErrorMessage: "재개 처리에 실패했습니다.",
+  exposureNoun: "노출",
+};
+
+const getAdId = (ad: IAd) => ad.id;
+const getAdLabel = (ad: IAd) => ad.name;
+const getAdStatus = (ad: IAd) => ad.status;
 
 const PLATFORM_WORDMARK: Record<TPlatform, string> = {
   naver: "NAVER",
@@ -91,8 +113,6 @@ export default function CampaignDetail() {
   const [selectedAdIds, setSelectedAdIds] = useState<ReadonlySet<number>>(
     () => new Set(),
   );
-  const [pauseScope, setPauseScope] = useState<"selection" | "all">("all");
-  const [resumeScope, setResumeScope] = useState<"selection" | "all">("all");
 
   const [budgetEditTarget, setBudgetEditTarget] =
     useState<IPlatformBudgetSummary | null>(null);
@@ -101,6 +121,16 @@ export default function CampaignDetail() {
   const clearAdSelection = useCallback(() => {
     setSelectedAdIds(new Set());
   }, []);
+
+  const bulk = useBulkOperableControl({
+    items: adsList,
+    selectedIds: selectedAdIds,
+    getId: getAdId,
+    getLabel: getAdLabel,
+    getStatus: getAdStatus,
+    copy: AD_BULK_COPY,
+    onSuccess: clearAdSelection,
+  });
 
   const toggleAd = useCallback((adId: number) => {
     setSelectedAdIds((prev) => {
@@ -123,82 +153,6 @@ export default function CampaignDetail() {
       return new Set([...prev, ...targetIds]);
     });
   }, []);
-
-  const selectedOngoingIds = useMemo(
-    () =>
-      [...selectedAdIds].filter((id) =>
-        adsList.some((a) => a.id === id && a.status === "ON_GOING"),
-      ),
-    [selectedAdIds, adsList],
-  );
-
-  const selectedPausedIds = useMemo(
-    () =>
-      [...selectedAdIds].filter((id) =>
-        adsList.some((a) => a.id === id && a.status === "PAUSED"),
-      ),
-    [selectedAdIds, adsList],
-  );
-
-  const ongoingAllCount = useMemo(
-    () => adsList.filter((a) => a.status === "ON_GOING").length,
-    [adsList],
-  );
-
-  const pausedAllCount = useMemo(
-    () => adsList.filter((a) => a.status === "PAUSED").length,
-    [adsList],
-  );
-
-  const canPauseAds = useMemo(() => {
-    if (selectedOngoingIds.length > 0) return true;
-    return selectedAdIds.size === 0 && ongoingAllCount > 0;
-  }, [selectedOngoingIds.length, selectedAdIds.size, ongoingAllCount]);
-
-  const canResumeAds = useMemo(() => {
-    if (selectedPausedIds.length > 0) return true;
-    return selectedAdIds.size === 0 && pausedAllCount > 0;
-  }, [selectedPausedIds.length, selectedAdIds.size, pausedAllCount]);
-
-  const bulkAdPause = useControlModal({
-    successMessage: "광고 소재 운영 상태가 반영되었습니다.",
-    errorMessage: "중단 처리에 실패했습니다.",
-    onSuccess: clearAdSelection,
-  });
-
-  const bulkAdResume = useControlModal({
-    successMessage: "광고 소재 운영 상태가 반영되었습니다.",
-    errorMessage: "재개 처리에 실패했습니다.",
-    onSuccess: clearAdSelection,
-  });
-
-  const openAdPauseModal = () => {
-    const scope = selectedOngoingIds.length > 0 ? "selection" : "all";
-    setPauseScope(scope);
-    bulkAdPause.openModal();
-  };
-
-  const openAdResumeModal = () => {
-    const scope = selectedPausedIds.length > 0 ? "selection" : "all";
-    setResumeScope(scope);
-    bulkAdResume.openModal();
-  };
-
-  const pauseAdDetailItems = useMemo(() => {
-    const rows =
-      pauseScope === "selection"
-        ? adsList.filter((a) => selectedOngoingIds.includes(a.id))
-        : adsList.filter((a) => a.status === "ON_GOING");
-    return rows.map((a) => ({ id: a.id, label: a.name }));
-  }, [pauseScope, adsList, selectedOngoingIds]);
-
-  const resumeAdDetailItems = useMemo(() => {
-    const rows =
-      resumeScope === "selection"
-        ? adsList.filter((a) => selectedPausedIds.includes(a.id))
-        : adsList.filter((a) => a.status === "PAUSED");
-    return rows.map((a) => ({ id: a.id, label: a.name }));
-  }, [resumeScope, adsList, selectedPausedIds]);
 
   const platformBudgets = useMemo(
     () =>
@@ -356,8 +310,8 @@ export default function CampaignDetail() {
                 size="small"
                 variant="dangerSoft"
                 className="mobile:min-w-0 mobile:flex-1"
-                onClick={openAdPauseModal}
-                disabled={!canPauseAds || bulkAdPause.isLoading}
+                onClick={bulk.openPauseModal}
+                disabled={!bulk.canPause || bulk.pauseModal.isLoading}
               >
                 중단
               </Button>
@@ -366,8 +320,8 @@ export default function CampaignDetail() {
                 size="small"
                 variant="outline"
                 className="border-info-blue text-info-blue hover:bg-info-blue/5 mobile:min-w-0 mobile:flex-1"
-                onClick={openAdResumeModal}
-                disabled={!canResumeAds || bulkAdResume.isLoading}
+                onClick={bulk.openResumeModal}
+                disabled={!bulk.canResume || bulk.resumeModal.isLoading}
               >
                 재개
               </Button>
@@ -423,81 +377,39 @@ export default function CampaignDetail() {
         </Card>
       )}
 
-      <Modal
-        isOpen={bulkAdPause.isOpen}
-        onClose={bulkAdPause.closeModal}
-        title="광고 소재 중단"
-      >
-        <ModalContent
-          icon={<WarnCircleIcon className="h-7 w-7 text-info-red" />}
-          title={
-            pauseScope === "all"
-              ? "운영 중인 광고 소재를 모두 중단할까요?"
-              : "선택한 광고 소재를 중단할까요?"
-          }
-          description={
-            pauseScope === "all"
-              ? `운영 중인 ${ongoingAllCount}개 광고 소재의 노출이 즉시 중단됩니다.`
-              : `선택한 ${selectedOngoingIds.length}개 광고 소재의 노출이 즉시 중단됩니다.`
-          }
-          detailItems={pauseAdDetailItems}
-          detailListTitle="중단 대상 광고"
-          buttonText="중단하기"
-          onConfirm={() =>
-            bulkAdPause.handleConfirm(() =>
-              mutateAdStatus({
-                adContentIds:
-                  pauseScope === "all"
-                    ? adsList
-                        .filter((a) => a.status === "ON_GOING")
-                        .map((a) => a.id)
-                    : selectedOngoingIds,
-                status: "PAUSED",
-              }),
-            )
-          }
-          isLoading={bulkAdPause.isLoading}
-          variant="danger"
-        />
-      </Modal>
-
-      <Modal
-        isOpen={bulkAdResume.isOpen}
-        onClose={bulkAdResume.closeModal}
-        title="광고 소재 재개"
-      >
-        <ModalContent
-          icon={<WarnCircleIcon className="h-7 w-7 text-info-blue" />}
-          title={
-            resumeScope === "all"
-              ? "중단된 광고 소재를 모두 재개할까요?"
-              : "선택한 광고 소재를 재개할까요?"
-          }
-          description={
-            resumeScope === "all"
-              ? `중단된 ${pausedAllCount}개 광고 소재의 노출이 즉시 재개됩니다.`
-              : `선택한 ${selectedPausedIds.length}개 광고 소재의 노출이 즉시 재개됩니다.`
-          }
-          detailItems={resumeAdDetailItems}
-          detailListTitle="재개 대상 광고"
-          buttonText="재개하기"
-          onConfirm={() =>
-            bulkAdResume.handleConfirm(() =>
-              mutateAdStatus({
-                adContentIds:
-                  resumeScope === "all"
-                    ? adsList
-                        .filter((a) => a.status === "PAUSED")
-                        .map((a) => a.id)
-                    : selectedPausedIds,
-                status: "ON_GOING",
-              }),
-            )
-          }
-          isLoading={bulkAdResume.isLoading}
-          variant="primary"
-        />
-      </Modal>
+      <BulkStatusActionModals
+        copy={AD_BULK_COPY}
+        pauseScope={bulk.pauseScope}
+        resumeScope={bulk.resumeScope}
+        selectedOngoingCount={bulk.selectedOngoingIds.length}
+        selectedPausedCount={bulk.selectedPausedIds.length}
+        ongoingAllCount={bulk.ongoingAllCount}
+        pausedAllCount={bulk.pausedAllCount}
+        pauseDetailItems={bulk.pauseDetailItems}
+        resumeDetailItems={bulk.resumeDetailItems}
+        pauseModal={bulk.pauseModal}
+        resumeModal={bulk.resumeModal}
+        onConfirmPause={() =>
+          mutateAdStatus({
+            adContentIds:
+              bulk.pauseScope === "all"
+                ? adsList
+                    .filter((a) => a.status === "ON_GOING")
+                    .map((a) => a.id)
+                : bulk.selectedOngoingIds,
+            status: "PAUSED",
+          })
+        }
+        onConfirmResume={() =>
+          mutateAdStatus({
+            adContentIds:
+              bulk.resumeScope === "all"
+                ? adsList.filter((a) => a.status === "PAUSED").map((a) => a.id)
+                : bulk.selectedPausedIds,
+            status: "ON_GOING",
+          })
+        }
+      />
       {orgIdNum != null && projectIdNum != null ? (
         <EditPlatformBudgetModal
           isOpen={isBudgetEditOpen}
