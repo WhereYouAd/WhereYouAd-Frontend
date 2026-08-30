@@ -68,19 +68,13 @@ function PlatformConnectionMeta({
   provider,
   status,
   syncedAt,
-  externalAccountId,
   platformAccountId,
   tokenExpireAt,
   onSync,
   isSyncLoading = false,
 }: Pick<
   IPlatformConnectionItem,
-  | "provider"
-  | "status"
-  | "syncedAt"
-  | "externalAccountId"
-  | "platformAccountId"
-  | "tokenExpireAt"
+  "provider" | "status" | "syncedAt" | "platformAccountId" | "tokenExpireAt"
 > & {
   onSync?: () => void;
   isSyncLoading?: boolean;
@@ -97,17 +91,6 @@ function PlatformConnectionMeta({
     <div className="flex w-full flex-col gap-2">
       {isSoftDisconnected ? (
         <>
-          {externalAccountId ? (
-            <p className="min-w-0 font-body2 text-text-muted">
-              <span>연동 계정 · </span>
-              <span
-                className="truncate text-text-title"
-                title={externalAccountId}
-              >
-                {externalAccountId}
-              </span>
-            </p>
-          ) : null}
           {showTokenExpire ? (
             <p className="font-body2 text-text-muted">
               <span>토큰 만료 예정 · </span>
@@ -125,10 +108,6 @@ function PlatformConnectionMeta({
         <>
           <p className="font-body2 text-text-muted/60">
             <span>마지막 동기화 · </span>
-            <span className="text-text-muted/60">—</span>
-          </p>
-          <p className="font-body2 text-text-muted/60">
-            <span>연동 계정 · </span>
             <span className="text-text-muted/60">—</span>
           </p>
           {showTokenExpire ? (
@@ -170,18 +149,6 @@ function PlatformConnectionMeta({
             </p>
           ) : null}
 
-          {externalAccountId ? (
-            <p className="min-w-0 font-body2 text-text-muted">
-              <span>연동 계정 · </span>
-              <span
-                className="truncate text-text-title"
-                title={externalAccountId}
-              >
-                {externalAccountId}
-              </span>
-            </p>
-          ) : null}
-
           {showTokenExpire ? (
             expireLabel ? (
               <p className="font-body2 text-text-muted">
@@ -204,18 +171,6 @@ function PlatformConnectionMeta({
             <p className="font-body2 text-text-muted">
               <span>마지막 동기화 · </span>
               <span className="text-text-title">{syncedLabel}</span>
-            </p>
-          ) : null}
-
-          {externalAccountId ? (
-            <p className="min-w-0 font-body2 text-text-muted">
-              <span>연동 계정 · </span>
-              <span
-                className="truncate text-text-title"
-                title={externalAccountId}
-              >
-                {externalAccountId}
-              </span>
             </p>
           ) : null}
 
@@ -244,7 +199,6 @@ function PlatformIntegrationCard({
   provider,
   status,
   syncedAt,
-  externalAccountId,
   platformAccountId,
   tokenExpireAt,
   errorMessage,
@@ -282,7 +236,6 @@ function PlatformIntegrationCard({
         provider={provider}
         status={status}
         syncedAt={syncedAt}
-        externalAccountId={externalAccountId}
         platformAccountId={platformAccountId}
         tokenExpireAt={tokenExpireAt}
         onSync={status === "connected" ? onSync : undefined}
