@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
@@ -11,7 +10,7 @@ import type {
 import type { TNaverSyncFormValues } from "@/utils/integration/naverSyncSchema";
 import { startPlatformConnect } from "@/utils/integration/startPlatformConnect";
 
-import { useCoreMutation } from "@/hooks/customQuery";
+import { usePlatformConnectionActions } from "@/hooks/integration/usePlatformConnectionActions";
 import { usePlatformConnections } from "@/hooks/integration/usePlatformConnections";
 import { usePlatformSyncMutations } from "@/hooks/integration/usePlatformSyncMutations";
 
@@ -27,11 +26,6 @@ import {
   KakaoUpcomingCard,
 } from "@/components/integration/UpcomingPlatformCard";
 
-import {
-  disconnectPlatformAccount,
-  reconnectPlatformAccount,
-} from "@/api/integration/platformAccounts";
-import { QUERY_KEYS } from "@/lib/queryKeys";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
 type TDisconnectTarget = {
@@ -41,7 +35,6 @@ type TDisconnectTarget = {
 };
 
 export default function PlatformIntegrationsPage() {
-  const queryClient = useQueryClient();
   const orgId = useWorkspaceStore((s) => s.selectedOrgId);
   const [isNaverModalOpen, setIsNaverModalOpen] = useState(false);
   const [naverModalMode, setNaverModalMode] = useState<"connect" | "reconnect">(
@@ -62,44 +55,10 @@ export default function PlatformIntegrationsPage() {
     error,
   } = usePlatformConnections();
 
-  const disconnectMutation = useCoreMutation<
-    void,
-    { orgId: number; accountId: number }
-  >(
-    ({ orgId: requestOrgId, accountId }) =>
-      disconnectPlatformAccount(requestOrgId, accountId),
-    {
-      userOnSuccess: async (_, { orgId: requestOrgId }) => {
-        await queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.platform.connections(requestOrgId),
-        });
-        toast.success("광고 계정 연동을 해제했습니다.");
-        setDisconnectTarget(null);
-      },
-      userOnError: (apiError) => {
-        toast.error(apiError.message ?? "연동 해제에 실패했습니다.");
-      },
-    },
-  );
-
-  const reconnectMutation = useCoreMutation<
-    void,
-    { orgId: number; accountId: number }
-  >(
-    ({ orgId: requestOrgId, accountId }) =>
-      reconnectPlatformAccount(requestOrgId, accountId),
-    {
-      userOnSuccess: async (_, { orgId: requestOrgId }) => {
-        await queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.platform.connections(requestOrgId),
-        });
-        toast.success("광고 계정을 다시 연동했습니다.");
-      },
-      userOnError: (apiError) => {
-        toast.error(apiError.message ?? "재연동에 실패했습니다.");
-      },
-    },
-  );
+  const { disconnectMutation, reconnectMutation } =
+    usePlatformConnectionActions({
+      onDisconnectSuccess: () => setDisconnectTarget(null),
+    });
 
   const { syncMeta, syncGoogle, syncNaver, isSyncPending, isNaverSyncPending } =
     usePlatformSyncMutations({
