@@ -48,7 +48,7 @@ export async function syncNaverAdData(
   body: INaverSyncRequest,
 ): Promise<INaverSyncData> {
   const { data } = await axiosInstance.post<ICommonResponse<INaverSyncData>>(
-    `/api/naver/${orgId}/sync`,
+    `/api/naver/organizations/${orgId}/sync`,
     body,
   );
   return data.data;
