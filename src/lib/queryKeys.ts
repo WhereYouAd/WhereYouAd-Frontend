@@ -104,5 +104,8 @@ export const QUERY_KEYS = {
     settings: (orgId: number | null) =>
       ["notification", "settings", orgId] as const,
     members: (orgId: number) => ["notification", "members", orgId] as const,
+    history: (orgId: number | null) =>
+      ["notification", "history", orgId] as const,
+    vapid: () => ["notification", "vapid"] as const,
   },
 } as const;

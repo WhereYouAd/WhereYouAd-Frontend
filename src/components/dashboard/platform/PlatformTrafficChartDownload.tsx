@@ -46,7 +46,12 @@ export default function PlatformTrafficChartDownload({
           />
         </button>
       }
-      items={getTrafficChartDownloadItems(chartId, containerId, filename)}
+      items={getTrafficChartDownloadItems(
+        chartId,
+        containerId,
+        filename,
+        platform ? "preserve-fill" : "line-forward",
+      )}
     />
   );
 }

@@ -38,7 +38,6 @@ type TDisconnectTarget = {
   orgId: number;
   provider: TIntegrationProvider;
   platformAccountId: number;
-  externalAccountId?: string;
 };
 
 export default function PlatformIntegrationsPage() {
@@ -180,7 +179,6 @@ export default function PlatformIntegrationsPage() {
       orgId,
       provider: item.provider,
       platformAccountId: item.platformAccountId,
-      externalAccountId: item.externalAccountId,
     });
   };
 
@@ -314,7 +312,6 @@ export default function PlatformIntegrationsPage() {
         isOpen={disconnectTarget != null}
         onClose={() => setDisconnectTarget(null)}
         provider={disconnectTarget?.provider ?? "META"}
-        externalAccountId={disconnectTarget?.externalAccountId}
         onConfirm={handleConfirmDisconnect}
         isLoading={disconnectMutation.isPending}
       />

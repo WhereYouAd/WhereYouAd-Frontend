@@ -1,5 +1,14 @@
 import type { ICommonResponse } from "@/types/common/common";
 import type {
+  INotificationHistoryData,
+  INotificationHistoryParams,
+} from "@/types/notification/notification";
+import type {
+  IDeletePushSubscriptionReqest,
+  IPushSubscriptionRequest,
+  IVapidPublicKeyData,
+} from "@/types/notification/push";
+import type {
   IMyNotificationSettings,
   INotificationMembersData,
   INotificationMembersParams,
@@ -88,5 +97,74 @@ export const updateMasterNotificationSetting = async (
   const { data } = await axiosInstance.patch<
     ICommonResponse<TNotificationEmptyData>
   >(`/api/notification/settings/${orgId}/master`, body);
+  return data.data;
+};
+
+const NOTIFICATION_HISTORY_SIZE = 20;
+
+// 알림 기록 조회
+export const getNotificationHistory = async (
+  orgId: number,
+  params?: INotificationHistoryParams,
+): Promise<INotificationHistoryData> => {
+  const query: Record<string, string | number> = {
+    size: params?.size ?? NOTIFICATION_HISTORY_SIZE,
+  };
+  if (params?.cursor) {
+    query.cursor = params?.cursor;
+  }
+  const { data } = await axiosInstance.get<
+    ICommonResponse<INotificationHistoryData>
+  >(`/api/notification/history/${orgId}`, { params: query });
+  return data.data;
+};
+
+//알림 단건 읽음 처리
+export const readNotificationHistory = async (
+  orgId: number,
+  userNotificationsId: number,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/history/${orgId}/${userNotificationsId}/read`);
+  return data.data;
+};
+
+//알림 모두 읽음 처리
+export const readAllNotificationHistory = async (
+  orgId: number,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.patch<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/history/${orgId}/read-all`);
+  return data.data;
+};
+
+//VAPID 공개키 조회
+export const getVapidPublicKey = async (): Promise<IVapidPublicKeyData> => {
+  const { data } = await axiosInstance.get<
+    ICommonResponse<IVapidPublicKeyData>
+  >(`/api/notification/push/vapid-public-key`);
+  return data.data;
+};
+//브라우저 푸시 구독 등록
+export const registerPushSubscription = async (
+  orgId: number,
+  body: IPushSubscriptionRequest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.post<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/push/subscriptions/${orgId}`, body);
+  return data.data;
+};
+
+//브라우저 푸시 구독 해제
+export const deletePushSubscription = async (
+  orgId: number,
+  body: IDeletePushSubscriptionReqest,
+): Promise<TNotificationEmptyData> => {
+  const { data } = await axiosInstance.delete<
+    ICommonResponse<TNotificationEmptyData>
+  >(`/api/notification/push/subscriptions/${orgId}`, { data: body });
   return data.data;
 };

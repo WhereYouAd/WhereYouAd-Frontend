@@ -20,7 +20,7 @@ export interface INotificationMemberSetting {
   isReceive: boolean;
 }
 
-export type TNotificationType = "CLICKS" | "REPORT";
+export type TNotificationType = "BOT_CLICKS" | "CLICKS_INCREASE" | "REPORT";
 
 export interface INotificationHistoryItem {
   userNotificationId: number;
@@ -35,4 +35,9 @@ export interface INotificationHistoryData {
   hasNext: boolean;
   nextCursor: string | null;
   notifications: INotificationHistoryItem[];
+}
+
+export interface INotificationHistoryParams {
+  cursor?: string;
+  size?: number;
 }

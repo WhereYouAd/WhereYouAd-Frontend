@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { IApiErrorResponse } from "@/types/common/common";
 import {
+  type TGetWorkspaceMembersData,
   type TMemberRole,
   type TUpdateMemberRoleRequest,
   type TWorkspaceMember,
 } from "@/types/workspace/workspace";
 
-import { useCoreMutation, useCoreQuery } from "@/hooks/customQuery";
+import {
+  useCoreInfiniteQuery,
+  useCoreMutation,
+  useCoreQuery,
+} from "@/hooks/customQuery";
 import { useNotificationMembers } from "@/hooks/setting/useNotificationMembers";
 import { useUpdateNotificationMembers } from "@/hooks/setting/useUpdateNotificationMembers";
 
@@ -52,17 +56,18 @@ export default function MemberManagement() {
     { enabled: Number.isFinite(orgId) && orgId > 0 },
   );
 
-  const membersQuery = useInfiniteQuery({
-    queryKey: QUERY_KEYS.workspace.membersWithPageSize(orgId, PAGE_SIZE),
-    queryFn: ({ pageParam }: { pageParam: string | null }) =>
-      getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
-    initialPageParam: null,
-    getNextPageParam: (lastPage) => {
-      if (!lastPage.hasNext) return undefined;
-      return lastPage.nextCursor;
+  const membersQuery = useCoreInfiniteQuery<TGetWorkspaceMembersData>(
+    QUERY_KEYS.workspace.membersWithPageSize(orgId, PAGE_SIZE),
+    ({ pageParam }) => getWorkspaceMembers(orgId, pageParam, PAGE_SIZE),
+    {
+      initialPageParam: null,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.hasNext) return undefined;
+        return lastPage.nextCursor;
+      },
+      enabled: Number.isFinite(orgId) && orgId > 0,
     },
-    enabled: Number.isFinite(orgId) && orgId > 0,
-  });
+  );
 
   const members = useMemo(() => {
     return membersQuery.data?.pages.flatMap((page) => page.members) ?? [];

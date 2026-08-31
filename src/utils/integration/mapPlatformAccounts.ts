@@ -110,7 +110,11 @@ export function formatConnectionDate(value?: string): string | null {
 function mapApiStatusToUi(
   account: IPlatformAccountApi,
 ): TPlatformConnectionStatus {
-  if (account.status === "EXPIRED" || isTokenExpired(account.tokenExpireAt)) {
+  // 구글: tokenExpireAt은 단기 액세스 토큰 만료라 연동 수명과 무관 → status만 신뢰
+  const isExpiredByToken =
+    account.provider !== "GOOGLE" && isTokenExpired(account.tokenExpireAt);
+
+  if (account.status === "EXPIRED" || isExpiredByToken) {
     return "error";
   }
   if (account.status === "ACTIVE") {
@@ -129,7 +133,10 @@ function mapAccountToConnection(
     platformAccountId: account.platformAccountId,
     externalAccountId: account.externalAccountId,
     syncedAt: account.syncedAt,
-    tokenExpireAt: account.tokenExpireAt,
+    // 구글은 만료 UI/판정에 쓰지 않음 (메타,네이버만 전달)
+    ...(account.provider !== "GOOGLE" && {
+      tokenExpireAt: account.tokenExpireAt,
+    }),
   };
 
   if (status === "error") {
