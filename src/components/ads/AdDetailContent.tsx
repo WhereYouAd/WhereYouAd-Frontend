@@ -130,6 +130,12 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                   <LinkIcon className="h-5 w-5" />
                 </button>
               </div>
+              {!isTrackingActive ? (
+                <p className="mt-1.5 pl-1.5 font-caption text-text-muted">
+                  입력한 URL은 트래킹 링크 발급 시 저장됩니다. 발급하지 않거나
+                  취소하면 저장되지 않습니다.
+                </p>
+              ) : null}
             </div>
           </section>
         </div>
