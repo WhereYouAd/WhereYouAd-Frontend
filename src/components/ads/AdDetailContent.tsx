@@ -196,20 +196,21 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
             </>
           }
           buttonText="발급하기"
-          onConfirm={() =>
+          onConfirm={() => {
+            if (!landingUrlValue) {
+              toast.error(
+                "랜딩 URL을 입력해야 트래킹 링크를 발급할 수 있습니다.",
+              );
+              return;
+            }
+
             trackControl.handleConfirm(async () => {
-              if (!landingUrlValue) {
-                toast.error(
-                  "랜딩 URL을 입력해야 트래킹 링크를 발급할 수 있습니다.",
-                );
-                throw new Error("랜딩 URL이 없습니다.");
-              }
               await mutateCreateTrackingUrl({
                 adContentId: ad.id,
                 landingUrl: landingUrlValue,
               });
-            })
-          }
+            });
+          }}
           isLoading={trackControl.isLoading}
           variant="primary"
         />
