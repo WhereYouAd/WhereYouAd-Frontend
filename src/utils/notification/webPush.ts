@@ -103,11 +103,15 @@ export async function syncPushSubscription(orgId: number) {
   if (!isWebPushSupported()) return;
   if (Notification.permission !== "granted") return;
 
-  await registerPushServiceWorker();
-  const { publicKey } = await getVapidPublicKey();
-  const subscription = await getOrCreateSubscription(publicKey);
-  await registerPushSubscription(
-    orgId,
-    toPushSubscriptionRequest(subscription),
-  );
+  try {
+    await registerPushServiceWorker();
+    const { publicKey } = await getVapidPublicKey();
+    const subscription = await getOrCreateSubscription(publicKey);
+    await registerPushSubscription(
+      orgId,
+      toPushSubscriptionRequest(subscription),
+    );
+  } catch {
+    // 백그라운드 동기화 실패는 설정 저장 흐름이 아님. unhandled rejection으로 Sentry에 올리지 않음
+  }
 }
