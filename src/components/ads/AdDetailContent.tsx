@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -34,6 +35,14 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
   });
 
   const isTrackingActive = !!ad.trackingUrl && ad.trackingUrl.length > 0;
+
+  const [landingUrlInput, setLandingUrlInput] = useState(ad.landingUrl ?? "");
+
+  useEffect(() => {
+    setLandingUrlInput(ad.landingUrl ?? "");
+  }, [ad.id, ad.landingUrl]);
+
+  const landingUrlValue = landingUrlInput.trim();
 
   //targetInfo 변환
   const targetTags = () => {
@@ -96,22 +105,37 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
               랜딩 URL
             </h3>
             <div className="relative w-full max-w-160">
-              <div className="flex h-9 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors hover:border-primary-200">
-                <span className="truncate pr-10 font-body2 text-text-auth-sub select-all">
-                  {ad.landingUrl}
-                </span>
+              <div className="flex h-9 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors focus-within:border-primary-200 hover:border-primary-200">
+                <input
+                  type="url"
+                  value={landingUrlInput}
+                  readOnly={isTrackingActive}
+                  placeholder="https://example.com"
+                  onChange={(e) => setLandingUrlInput(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  className="min-w-0 flex-1 truncate border-none bg-transparent pr-2 font-body2 text-text-auth-sub outline-none placeholder:text-text-placeholder read-only:cursor-default disabled:cursor-not-allowed"
+                  aria-label="랜딩 URL"
+                />
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    ad.landingUrl && handleCopy(ad.landingUrl);
+                    landingUrlValue && handleCopy(landingUrlValue);
                   }}
-                  className="shrink-0 p-1 text-text-placeholder transition-colors hover:text-primary-500"
+                  disabled={!landingUrlValue}
+                  className="shrink-0 p-1 text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40"
                   title="링크 복사"
                 >
                   <LinkIcon className="h-5 w-5" />
                 </button>
               </div>
+              {!isTrackingActive ? (
+                <p className="mt-1.5 pl-1.5 font-caption text-text-muted">
+                  입력한 URL은 트래킹 링크 발급 시 저장됩니다. 발급하지 않거나
+                  취소하면 저장되지 않습니다.
+                </p>
+              ) : null}
             </div>
           </section>
         </div>
@@ -172,20 +196,21 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
             </>
           }
           buttonText="발급하기"
-          onConfirm={() =>
+          onConfirm={() => {
+            if (!landingUrlValue) {
+              toast.error(
+                "랜딩 URL을 입력해야 트래킹 링크를 발급할 수 있습니다.",
+              );
+              return;
+            }
+
             trackControl.handleConfirm(async () => {
-              if (!ad.landingUrl) {
-                toast.error(
-                  "광고에 등록된 랜딩 URL이 없어 발급이 불가능합니다.",
-                );
-                throw new Error("랜딩 URL이 없습니다.");
-              }
               await mutateCreateTrackingUrl({
                 adContentId: ad.id,
-                landingUrl: ad.landingUrl,
+                landingUrl: landingUrlValue,
               });
-            })
-          }
+            });
+          }}
           isLoading={trackControl.isLoading}
           variant="primary"
         />
