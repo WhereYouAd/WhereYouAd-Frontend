@@ -18,6 +18,10 @@ interface ITrackingUrlResponse {
   trackingUrl: string;
 }
 
+interface IDeleteTrackingUrlResponse {
+  deletedTrackingUrl: string;
+}
+
 interface IPlatformCampaignResponse {
   adCampaigns: IPlatformCampaign[];
 }
@@ -93,6 +97,16 @@ export const createTrackingUrl = async (
   >(`/api/clicks/${orgId}/${adContentId}/tracking-url`, {
     landingUrl,
   });
+  return data.data;
+};
+
+export const deleteTrackingUrl = async (
+  orgId: number,
+  adContentId: number,
+): Promise<IDeleteTrackingUrlResponse> => {
+  const { data } = await axiosInstance.delete<
+    ICommonResponse<IDeleteTrackingUrlResponse>
+  >(`/api/clicks/${orgId}/${adContentId}/tracking-url`);
   return data.data;
 };
 
