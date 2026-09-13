@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 import type { IAd } from "@/types/ads/campaign";
 
@@ -13,7 +14,6 @@ import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function AdDetailContent({ ad }: { ad: IAd }) {
@@ -135,7 +135,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                   className="min-w-0 flex-1 truncate border-none bg-transparent pr-2 font-body2 text-text-auth-sub outline-none placeholder:text-text-placeholder read-only:cursor-default disabled:cursor-not-allowed"
                   aria-label="랜딩 URL"
                 />
-                <div className="flex shrink-0 items-center gap-1">
+                <div className="flex shrink-0 items-center gap-0.5">
                   {isTrackingActive && isEditingLandingUrl ? (
                     <>
                       <button
@@ -186,10 +186,12 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                       landingUrlValue && handleCopy(landingUrlValue);
                     }}
                     disabled={!landingUrlValue}
-                    className="p-1 text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40"
-                    title="링크 복사"
+                    className={twMerge(
+                      "px-1.5 font-caption text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
+                      isTrackingActive && "border-l border-surface-400 pl-2",
+                    )}
                   >
-                    <LinkIcon className="h-5 w-5" />
+                    복사
                   </button>
                 </div>
               </div>
