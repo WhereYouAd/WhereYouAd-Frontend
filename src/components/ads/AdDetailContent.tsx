@@ -214,7 +214,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
         </div>
 
         <div className="mx-4 mb-4 mt-1 overflow-hidden rounded-lg border border-surface-400/40 bg-surface-100 tablet:mx-5 mobile:mx-4 mobile:mb-3">
-          <div className="flex flex-wrap items-start justify-between gap-3 gap-y-3 px-4 py-4 mobile:px-3 mobile:py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 gap-y-3 px-4 py-4 mobile:px-3 mobile:py-3">
             <div className="min-w-0 flex-1">
               <p className="font-caption text-text-placeholder">트래킹</p>
               <p className="mt-1 font-body1 text-text-title">
