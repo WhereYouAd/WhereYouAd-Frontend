@@ -162,7 +162,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                           }
                           changeLandingUrlControl.openModal();
                         }}
-                        className="px-1.5 font-caption text-primary-400 transition-colors hover:text-primary-500"
+                        className="border-l border-surface-400 pl-2 pr-1.5 font-caption text-primary-400 transition-colors hover:text-primary-500"
                       >
                         저장
                       </button>
@@ -179,20 +179,22 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                       수정
                     </button>
                   ) : null}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      landingUrlValue && handleCopy(landingUrlValue);
-                    }}
-                    disabled={!landingUrlValue}
-                    className={twMerge(
-                      "px-1.5 font-caption text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
-                      isTrackingActive && "border-l border-surface-400 pl-2",
-                    )}
-                  >
-                    복사
-                  </button>
+                  {!isEditingLandingUrl ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        landingUrlValue && handleCopy(landingUrlValue);
+                      }}
+                      disabled={!landingUrlValue}
+                      className={twMerge(
+                        "px-1.5 font-caption text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
+                        isTrackingActive && "border-l border-surface-400 pl-2",
+                      )}
+                    >
+                      복사
+                    </button>
+                  ) : null}
                 </div>
               </div>
               {isEditingLandingUrl ? (
