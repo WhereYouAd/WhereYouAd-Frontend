@@ -30,12 +30,14 @@ import {
   CampaignDetailAdsSectionSkeleton,
   CampaignDetailPageSkeleton,
 } from "@/components/ads/skeleton/AdsSkeleton";
+import Alert from "@/components/common/alert/Alert";
 import Badge from "@/components/common/badge/Badge";
 import Button from "@/components/common/button/Button";
 import Card from "@/components/common/card/Card";
 import AreaErrorFallback from "@/components/common/error/AreaErrorFallback";
 import { ErrorBoundary } from "@/components/common/error/ErrorBoundary";
 
+import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 import type { TMainLayoutOutletContext } from "@/layout/main/MainLayout";
 import useWorkspaceStore from "@/store/useWorkspaceStore";
 
@@ -278,6 +280,18 @@ export default function CampaignDetail() {
           ) : null}
         </header>
       </Card>
+
+      {data.status === "PAUSED" ? (
+        <Alert
+          variant="warning"
+          icon={<WarnCircleIcon className="h-5 w-5" />}
+          title="캠페인이 중단되었습니다"
+          className="border border-info-yellow/30 bg-info-yellow/10"
+        >
+          캠페인이 중단되어 있어 하위 광고 상태와 무관하게 실제로는 노출되지
+          않습니다. 광고 상태나 랜딩 URL 등은 계속 변경할 수 있습니다.
+        </Alert>
+      ) : null}
 
       {isAdLoading ? (
         <CampaignDetailAdsSectionSkeleton />
