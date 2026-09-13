@@ -122,8 +122,8 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
             <h3 className="mb-2 font-caption text-text-placeholder">
               랜딩 URL
             </h3>
-            <div className="relative w-full max-w-160">
-              <div className="flex h-9 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors focus-within:border-primary-200 hover:border-primary-200">
+            <div className="relative w-full">
+              <div className="flex h-10 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors focus-within:border-primary-200 hover:border-primary-200">
                 <input
                   type="url"
                   value={landingUrlInput}
@@ -144,7 +144,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                           e.stopPropagation();
                           handleCancelEditingLandingUrl();
                         }}
-                        className="px-1.5 font-caption text-text-placeholder transition-colors hover:text-text-body"
+                        className="px-1.5 font-body3 text-text-placeholder transition-colors hover:text-text-body"
                       >
                         취소
                       </button>
@@ -162,7 +162,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                           }
                           changeLandingUrlControl.openModal();
                         }}
-                        className="border-l border-surface-400 pl-2 pr-1.5 font-caption text-primary-400 transition-colors hover:text-primary-500"
+                        className="border-l border-surface-400 pl-2 pr-1.5 font-body3 text-primary-400 transition-colors hover:text-primary-500"
                       >
                         저장
                       </button>
@@ -174,7 +174,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                         e.stopPropagation();
                         setIsEditingLandingUrl(true);
                       }}
-                      className="px-1.5 font-caption text-text-placeholder transition-colors hover:text-primary-500"
+                      className="px-1.5 font-body3 text-text-placeholder transition-colors hover:text-primary-500"
                     >
                       수정
                     </button>
@@ -188,7 +188,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                       }}
                       disabled={!landingUrlValue}
                       className={twMerge(
-                        "px-1.5 font-caption text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
+                        "px-1.5 font-body3 text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
                         isTrackingActive && "border-l border-surface-400 pl-2",
                       )}
                     >
