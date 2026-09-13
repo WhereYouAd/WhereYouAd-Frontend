@@ -43,9 +43,14 @@ export function useUpdateCampaignStatus(orgId: number | null) {
       );
 
       if (result.successCount > 0 && result.successCount < result.total) {
-        await queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.campaign.list(orgId),
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.campaign.list(orgId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: QUERY_KEYS.campaign.detailPrefix(orgId),
+          }),
+        ]);
       }
 
       assertBulkSettleResult(result, {
@@ -54,7 +59,13 @@ export function useUpdateCampaignStatus(orgId: number | null) {
       });
     },
     {
-      invalidateKeys: orgId != null ? [QUERY_KEYS.campaign.list(orgId)] : [],
+      invalidateKeys:
+        orgId != null
+          ? [
+              QUERY_KEYS.campaign.list(orgId),
+              QUERY_KEYS.campaign.detailPrefix(orgId),
+            ]
+          : [],
     },
   );
 }

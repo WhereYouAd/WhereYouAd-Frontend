@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 import type { IAd } from "@/types/ads/campaign";
 
 import { useControlModal } from "@/hooks/ads/useControlModal";
 import { useCreateTrackingUrl } from "@/hooks/ads/useCreateTrackingUrl";
+import { useDeleteTrackingUrl } from "@/hooks/ads/useDeleteTrackingUrl";
 
 import Badge from "../common/badge/Badge";
 import Button from "../common/button/Button";
 import Modal from "../common/modal/Modal";
 import ModalContent from "../common/modal/ModalContent";
 
-import LinkIcon from "@/assets/icon/common/link.svg?react";
 import WarnCircleIcon from "@/assets/icon/common/warn-circle.svg?react";
 
 export default function AdDetailContent({ ad }: { ad: IAd }) {
@@ -29,17 +30,29 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
     projectIdNum,
   );
 
+  const { mutateAsync: mutateDeleteTrackingUrl } = useDeleteTrackingUrl(
+    orgIdNum,
+    projectIdNum,
+  );
+
   const trackControl = useControlModal({
     successMessage: "트래킹 링크가 발급되었습니다.",
     errorMessage: "트래킹 링크 발급에 실패했습니다.",
   });
 
+  const changeLandingUrlControl = useControlModal({
+    successMessage: "랜딩 URL이 변경되었습니다.",
+    errorMessage: "랜딩 URL 변경에 실패했습니다.",
+  });
+
   const isTrackingActive = !!ad.trackingUrl && ad.trackingUrl.length > 0;
 
   const [landingUrlInput, setLandingUrlInput] = useState(ad.landingUrl ?? "");
+  const [isEditingLandingUrl, setIsEditingLandingUrl] = useState(false);
 
   useEffect(() => {
     setLandingUrlInput(ad.landingUrl ?? "");
+    setIsEditingLandingUrl(false);
   }, [ad.id, ad.landingUrl]);
 
   const landingUrlValue = landingUrlInput.trim();
@@ -64,6 +77,11 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
     } catch {
       toast.error("복사에 실패했습니다.");
     }
+  };
+
+  const handleCancelEditingLandingUrl = () => {
+    setLandingUrlInput(ad.landingUrl ?? "");
+    setIsEditingLandingUrl(false);
   };
 
   return (
@@ -104,12 +122,12 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
             <h3 className="mb-2 font-caption text-text-placeholder">
               랜딩 URL
             </h3>
-            <div className="relative w-full max-w-160">
-              <div className="flex h-9 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors focus-within:border-primary-200 hover:border-primary-200">
+            <div className="relative w-full">
+              <div className="flex h-10 w-full items-center justify-between rounded-lg border border-surface-400 bg-surface-100 px-4 py-2 transition-colors focus-within:border-primary-200 hover:border-primary-200">
                 <input
                   type="url"
                   value={landingUrlInput}
-                  readOnly={isTrackingActive}
+                  readOnly={isTrackingActive && !isEditingLandingUrl}
                   placeholder="https://example.com"
                   onChange={(e) => setLandingUrlInput(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
@@ -117,20 +135,75 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
                   className="min-w-0 flex-1 truncate border-none bg-transparent pr-2 font-body2 text-text-auth-sub outline-none placeholder:text-text-placeholder read-only:cursor-default disabled:cursor-not-allowed"
                   aria-label="랜딩 URL"
                 />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    landingUrlValue && handleCopy(landingUrlValue);
-                  }}
-                  disabled={!landingUrlValue}
-                  className="shrink-0 p-1 text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40"
-                  title="링크 복사"
-                >
-                  <LinkIcon className="h-5 w-5" />
-                </button>
+                <div className="flex shrink-0 items-center gap-0.5">
+                  {isTrackingActive && isEditingLandingUrl ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCancelEditingLandingUrl();
+                        }}
+                        className="px-1.5 font-body3 text-text-placeholder transition-colors hover:text-text-body"
+                      >
+                        취소
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!landingUrlValue) {
+                            toast.error("랜딩 URL을 입력해주세요.");
+                            return;
+                          }
+                          if (landingUrlValue === (ad.landingUrl ?? "")) {
+                            toast.error("변경된 URL이 없습니다.");
+                            return;
+                          }
+                          changeLandingUrlControl.openModal();
+                        }}
+                        className="border-l border-surface-400 pl-2 pr-1.5 font-body3 text-primary-400 transition-colors hover:text-primary-500"
+                      >
+                        저장
+                      </button>
+                    </>
+                  ) : isTrackingActive ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsEditingLandingUrl(true);
+                      }}
+                      className="px-1.5 font-body3 text-text-placeholder transition-colors hover:text-primary-500"
+                    >
+                      수정
+                    </button>
+                  ) : null}
+                  {!isEditingLandingUrl ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        landingUrlValue && handleCopy(landingUrlValue);
+                      }}
+                      disabled={!landingUrlValue}
+                      className={twMerge(
+                        "px-1.5 font-body3 text-text-placeholder transition-colors hover:text-primary-500 disabled:cursor-not-allowed disabled:opacity-40",
+                        isTrackingActive && "border-l border-surface-400 pl-2",
+                      )}
+                    >
+                      복사
+                    </button>
+                  ) : null}
+                </div>
               </div>
-              {!isTrackingActive ? (
+              {isEditingLandingUrl ? (
+                <p className="mt-1.5 pl-1.5 font-caption text-info-red">
+                  트래킹 링크를 삭제하면 기존 광고에 등록된 해당 링크를 통한
+                  접근이 불가능해지므로, 광고 플랫폼의 URL 변경 및 재심사가
+                  필요합니다.
+                </p>
+              ) : !isTrackingActive ? (
                 <p className="mt-1.5 pl-1.5 font-caption text-text-muted">
                   입력한 URL은 트래킹 링크 발급 시 저장됩니다. 발급하지 않거나
                   취소하면 저장되지 않습니다.
@@ -141,7 +214,7 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
         </div>
 
         <div className="mx-4 mb-4 mt-1 overflow-hidden rounded-lg border border-surface-400/40 bg-surface-100 tablet:mx-5 mobile:mx-4 mobile:mb-3">
-          <div className="flex flex-wrap items-start justify-between gap-3 gap-y-3 px-4 py-4 mobile:px-3 mobile:py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 gap-y-3 px-4 py-4 mobile:px-3 mobile:py-3">
             <div className="min-w-0 flex-1">
               <p className="font-caption text-text-placeholder">트래킹</p>
               <p className="mt-1 font-body1 text-text-title">
@@ -213,6 +286,39 @@ export default function AdDetailContent({ ad }: { ad: IAd }) {
           }}
           isLoading={trackControl.isLoading}
           variant="primary"
+        />
+      </Modal>
+
+      {/* 랜딩 URL 변경 (기존 트래킹 링크 삭제 후 재발급) */}
+      <Modal
+        isOpen={changeLandingUrlControl.isOpen}
+        onClose={changeLandingUrlControl.closeModal}
+        title="랜딩 URL 변경"
+      >
+        <ModalContent
+          icon={<WarnCircleIcon className="text-info-red" />}
+          title="랜딩 URL을 변경하시겠습니까?"
+          description={
+            <>
+              트래킹 링크를 삭제하면 기존 광고에 등록된 해당 링크를 통한 접근이
+              불가능해지므로,
+              <br />
+              광고 플랫폼의 URL 변경 및 재심사가 필요합니다.
+            </>
+          }
+          buttonText="변경하기"
+          onConfirm={() => {
+            changeLandingUrlControl.handleConfirm(async () => {
+              await mutateDeleteTrackingUrl({ adContentId: ad.id });
+              await mutateCreateTrackingUrl({
+                adContentId: ad.id,
+                landingUrl: landingUrlValue,
+              });
+              setIsEditingLandingUrl(false);
+            });
+          }}
+          isLoading={changeLandingUrlControl.isLoading}
+          variant="danger"
         />
       </Modal>
     </div>

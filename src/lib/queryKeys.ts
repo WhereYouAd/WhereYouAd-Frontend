@@ -31,6 +31,8 @@ export const QUERY_KEYS = {
     /** 캠페인 그룹 상세 */
     detail: (orgId: number, projectId: number) =>
       ["campaignDetail", orgId, projectId] as const,
+    /** 캠페인 그룹 상세 (invalidate 전용 prefix) */
+    detailPrefix: (orgId: number) => ["campaignDetail", orgId] as const,
     /** 프로젝트별(캠페인) 광고 소재 목록 (CampaignDetail · useAdList) */
     ads: (orgId: number, projectId: number) =>
       ["adList", orgId, projectId] as const,
