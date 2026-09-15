@@ -24,7 +24,7 @@ self.addEventListener("push", (event) => {
         includeUncontrolled: true,
       });
       clients.forEach((client) => {
-        client.postMessage({ type: "PUSH_RECEIVED" });
+        client.postMessage({ type: "PUSH_RECEIVED" }, payload);
       });
     })(),
   );
