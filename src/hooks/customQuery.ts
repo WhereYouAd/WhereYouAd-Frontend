@@ -91,11 +91,15 @@ export function useCoreMutation<
     },
 
     onError: (error, vars, ctx) => {
-      if (optimisticUpdate && ctx?.prevData !== undefined) {
-        queryClient.setQueryData<TCache>(
-          optimisticUpdate.key,
-          ctx.prevData as TCache,
-        );
+      if (optimisticUpdate) {
+        // setQueryData로 캐시를 복구하는 대신, 퀴리를 취소하여 이전 데이터를 유지하도록 함
+        void queryClient.cancelQueries({ queryKey: optimisticUpdate.key });
+      }
+      // invalidateKeys가 존재하면 해당 키들을 무효화하여 데이터를 다시 가져오도록 함
+      if (invalidateKeys?.length) {
+        invalidateKeys.forEach((key) => {
+          void queryClient.invalidateQueries({ queryKey: key });
+        });
       }
       userOnError?.(error, vars, ctx);
     },
