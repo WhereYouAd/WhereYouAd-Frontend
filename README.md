@@ -4,7 +4,8 @@
 
 **분산된 광고 데이터를 하나의 대시보드로 광고 성과를 통합하고 AI가 분석해 드립니다**
 
-<img width="3145" height="1769" alt="wyad" src="https://github.com/user-attachments/assets/9c284495-258e-4fd1-97f7-027a5034774f" />
+
+<img width="3145" height="1769" alt="wyad_readme" src="https://github.com/user-attachments/assets/57811490-13e6-4331-9ac8-f341ba9f262f" />
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
